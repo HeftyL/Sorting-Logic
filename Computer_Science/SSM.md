@@ -789,7 +789,7 @@ Bean标签
   public class MyAspect { //前置增强方法
   	public void before(){
   	System.out.println("前置代码增强.....");
-  	} 
+  	}
   }
   ```
 
@@ -917,7 +917,8 @@ Bean标签
 - ```java
   //5.对目标类和切面类使用@component注解，将创建权交给spring
   //6.在切面类中使用注解配置织入关系
-  @Component("myAspect") @Aspect
+  @Component("myAspect") 
+  @Aspect
   public class MyAspect {
   		@Before("execution(* com.aop.*.*(..))") 
       public void before(){
@@ -925,7 +926,7 @@ Bean标签
   		}
   }
   ```
-
+  
 - ```xml
   //7.在applicationContext.xml中开启组件扫描和 AOP 的自动代理
   //组件扫描
@@ -1149,7 +1150,7 @@ Bean标签
 
 - 使用@Transactional在需要进行事务控制的类或是方法上修饰，注解可用的属性同xml配置方式，例如隔离级别、传播行为等。
 - 注解使用在类上，那么该类下的所有方法都使用同一套注解参数配置。使用在方法上，不同的方法可以采用不同的事务参数配置。
-- Xml配置文件中要开启事务的注解驱动<tx : annotation-driven />
+- Xml配置文件中要开启事务的注解驱动`<tx : annotation-driven />`
 
 ## SpringMVC
 
@@ -1700,7 +1701,7 @@ Bean标签
   		System.out.println("postHandle running..."); 
     }
     
-  	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) { 	System.out.println("afterCompletion running...");
+  	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) { 				System.out.println("afterCompletion running...");
   	}
   }
   ```
@@ -1827,95 +1828,9 @@ Bean标签
 - 编写核心文件SqlMapConfig.xml
 - 编写测试类
 
-- <mapper namespace="userMapper">
-  <select id="findA11"resultType="com.itheima. domain.User">
-      select * from user
-  </select>
-  </mapper>
-- 插入操作
+#### 增删改查
 
-	- 插入语句使用insert标签
-	- 在映射文件中使用parameterType属性指定要插入的数据类型
-	- Sql语句中使用#{实体属性名}方式引用实体中的属性值
-	- 插入操作使用的API是sqlSession.insert(“命名空间.id”,实体对象);
-	- 插入操作涉及数据库数据变化，所以要使用sqlSession对象显示的提交事务，即sqlSession.commit)
-
-编写核心文件SqlMapConfig.xml
-
-- <!--数据源环境-->
-<environments default="developement">
-  <environment id=" developement">
-      <transactionManager type="JDBC"></transactionManager>
-      <dataSource type="POOLED">
-          <property name="driver" value="com. mysql. jdbc.Driver" />
-          <property name="ur1" value="jdbc:mysq1://1ocalhost:3306/test" />
-          <property name="username" value="root" />
-          <property name="password" va1ue="root" />
-      </dataSource>
-  </environment>
-</environments>
-<!--加载映射文件-->
-<mappers>
-<mapper resource="com/itheima/mapper/UserMapper. xml"></mapper>
-</mappers>
-- 核心文件配置
-
-	- configuration配置
-	- ​	properties属性
-
-		- 导入属性文件，可以将属性单独抽取到一个文件
-
-	- ​	settings设置
-	- ​	typeAliases类型别名 
-
-		- 自定义别名
-
-	- ​	typeHandlers类型处理器
-	- ​	objectFactory对象工厂
-	- ​	plugins插件
-	- ​	environnents环境
-
-		- ​		environrmnent 环境变量
-
-			- ​			dataSource数据源
-
-				- . UNPOOLED:这个数据源的实现只是每次被请求时打开和关闭连接。
-				- . POOLED:这种数据源的实现利用“池”的概念将JDBC连接对象组织起来。
-				- ·JNDI:这个数据源的实现是为了能在如EJB或应用服务器这类容器中使用，容器可以集中或在外部配置数据源，然后放置一个JNDI上下文的引用。
-
-			- ​			transactionManager 事务管理器
-
-				- .JDBC:这个配置就是直接使用了JDBC的提交和回滚设置，它依赖于从数据源得到的连接来管理第务作用域。
-				- MANAGED:这个配置几乎没做什么。它从来不提交或回滚一个连接，而是让容器来管理事务的整个生命周期(比如JEE应用服务器的上下文)。默认情况下它会关闭连接，然而一些容器并不希望这样，因此需要将closeConnection属性设置为false 来阻止它默认的关闭行为。
-
-	- ​	databaseaProvider数据库厂商标识
-	- mappers映射器
-
-		- 该标签的作用是加载映射的，加载方式有如下几种:
-		- ·使用相对于类路径的资源引用，例如: <mapper resource="org/mybatis/builder/AuthorMapper.xml"/>
-		- 使用完全限定资源定位符（URL)，例如: <mapper url="file:///var/mappers/AuthorMapper.xml"/>·
-		- ·使用映射器接口实现类的完全限定类名，例如: <mapper class="org.mybatis.builder.AuthorMapper"/>·
-		- 将包内的映射器接口实现全部注册为映射器，例如: <package name="org.mybatis.builder"/>
-
-编写测试类
-
--     //获得核心配置文件
-  InputStream resourceAsStream = Resources.getResourceAsStream("sq1MapConfig.xm1");
-  //获得session工厂对象
-  SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resouurceAsStream)
-  //获得session回话对象
-  Sq1Session sqlSession = sqlSessionFactory.openSession();
-  //执行操作参数: namespace+id
-  List<User> userList = sqlSession.selectList(  "userMapper.findA11");
-  //打印数据
-  System. out. print ln(userList);
-  /释放资源
-  sqlSession.close() ;
-  - Resources 工具类，这个类在org.apache.ibatis.io包中。Resources类帮助你从类路径下、文件系统或一个web URL中加载资源文件。
-
-### 增删改查
-
-#### 查询
+##### 查询
 
 - ```java
   //1.导入MyBatis、mysql驱动、单元测试坐标和日志坐标
@@ -1980,7 +1895,7 @@ Bean标签
   sqlSession.close();
   ```
 
-#### 插入
+##### 插入
 
 - 插入语句使用insert标签
 
@@ -2012,7 +1927,7 @@ Bean标签
   sqlSession.close();
   ```
 
-#### 修改
+##### 修改
 
 - 修改语句使用update标签
 
@@ -2030,7 +1945,7 @@ Bean标签
   sqlSession.update("userMapper.update", user);
   ```
 
-#### 删除
+#####删除
 
 - 删除语句使用delete标签
 
@@ -2049,6 +1964,239 @@ Bean标签
 - ```java
   sqlSession.delete("userMapper.delete",3);
   ```
+
+#### 代理开发
+
+- 采用Mybatis的代理开发方式实现DAO层的开发，这种方式是我们后面进入企业的主流。
+
+- Mapper接口开发方法只需要程序员编写Mapper接口(相当于Dao接口)，由Mybatis框架根据接口定义创建接口的动态代理对象，代理对象的方法体同上边Dao接口实现类方法。
+
+- Mapper接口开发需要遵循的规范
+
+  - 1、Mapper.xml文件中的namespace与mapper接口的全限定名相同
+  - 2、Mapper接口方法名和Mapper.xml中定义的每个statement的id相同
+  - 3、Mapper接口方法的输入参数类型和mapper.xml中定义的每个sql的parameterType的类型相同
+  - 4、Mapper接口方法的输出参数类型和mapper.xml中定义的每个sql的resultType的类型相同
+  - ![image-20220502230652929](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220502230652929.png)
+
+- ```java
+  @Test
+  public void testProxyDao() throws IOException {
+  	InputStream resourceAsStream = Resources.getResourceAsStream("SqlMapConfig.xml"); 
+    SqlSessionFactory sqlSessionFactory  = new SqlSessionFactoryBuilder().build(resourceAsStream); 
+    SqlSession sqlSession  = sqlSessionFactory.openSession();
+    UserMapper userMapper = sqlSession.getMapper(UserMapper.class); 
+    User user = userMapper.findById(1);
+  	System.out.println(user); sqlSession.close();
+  }
+  ```
+
+#### 动态sql
+
+Mybatis 的映射文件中，前面我们的  SQL 都是比较简单的，有些时候业务逻辑复杂时，我们的  SQL是动态变化的， 此时在前面的学习中我们的  SQL 就不能满足要求了。
+
+##### `<if>`
+
+- 我们根据实体类的不同取值，使用不同的  SQL语句来进行查询。比如在  id如果不为空时可以根据id查询，如果 username 不同空时还要加入用户名作为条件。这种情况在我们的多条件组合查询中经常会碰到。
+
+- ```xml-dtd
+  <select id="findByCondition" parameterType="user" resultType="user"> 
+  	select * from User
+  	<where>
+  		<if test="id!=0">
+  		and id=#{id} 
+  		</if>
+  		<if test="username!=null">
+  		and username=#{username} 
+  		</if>
+  	</where> 
+  </select>
+  ```
+
+##### `<foreach>`
+
+- 循环执行sql的拼接操作，例如：SELECT * FROM USER WHERE id IN (1,2,5)。
+
+- ```xml-dtd
+  <select id="findByIds" parameterType="list" resultType="user"> 
+  select * from User
+  	<where>
+  		<foreach collection="array" open="id in(" close=")" item="id" separator=",">
+  			#{id} 
+  		</foreach>
+  	</where> 
+  </select>
+  ```
+
+- | 属性       | 说明                                      |
+  | ---------- | ----------------------------------------- |
+  | collection | 代表要遍历的集合元素，注意编写时不要写#{} |
+  | open       | 代表语句的开始部分                        |
+  | close      | 代表结束部分                              |
+  | item       | 代表遍历集合的每个元素，生成的变量名      |
+  | sperator   | 代表分隔符                                |
+
+##### SQL片段抽取
+
+- Sql 中可将重复的  sql 提取出来，使用时用  include 引用即可，最终达到  sql 重用的目的
+
+- ```xml-dtd
+  <sql id="selectUser" select * from User</sql>
+  <select id="findById" parameterType="int" resultType="user">
+  	<include refid="selectUser"></include> where id=#{id} 
+  </select>
+  <select id="findByIds" parameterType="list" resultType="user"> 
+  	<include refid="selectUser"></include>
+  	<where>
+  		<foreach collection="array" open="id in(" close=")" item="id" separator=",">
+  			#{id} 
+  		</foreach>
+  	</where> 
+  </select>
+  ```
+
+#### 多表操作
+
+##### 一对一查询
+
+- 用户表和订单表的关系为，一个用户有多个订单，一个订单只从属于一个用户 
+
+- 需求：查询一个订单，与此同时查询出该订单所属的用户
+
+- ```java
+  //1.创建实体
+  public class Order {
+  	private int id;
+  	private Date ordertime;
+  	private double total;
+  	//代表当前订单从属于哪一个客户
+  	private User user; 
+  }
+  public class User {
+  	private int id;
+  	private String username;
+  	private String password;
+  	private Date birthday;
+  }
+  //2.创建OrderMapper接口
+  public interface OrderMapper {
+  	List<Order> findAll(); 
+  }
+  ```
+
+- ```xml
+  //3.配置OrderMapper.xml
+  <mapper namespace="com.mapper.OrderMapper">
+  	<resultMap id="orderMap" type="com.domain.Order">
+  		<result column="uid" property="user.id"></result>
+  		<result column="username" property="user.username"></result> 
+      <result column="password" property="user.password"></result> 		
+      <result column="birthday" property="user.birthday"></result>
+  	</resultMap>
+  	<select id="findAll" resultMap="orderMap">
+  		select * from orders o,user u where o.uid=u.id 
+    </select>
+  </mapper>
+  //resultMap还可以使用association标签
+  <resultMap id="orderMap" type="com.itheima.domain.Order">
+  	<result property="id" column="id"></result>
+  	<result property="ordertime" column="ordertime"></result> 
+    <result property="total" column="total"></result>
+  	<association property="user" javaType="com.domain.User">
+  		<result column="uid" property="id"></result>
+  		<result column="username" property="username"></result> 
+      <result column="password" property="password"></result> 
+      <result column="birthday" property="birthday"></result>
+  	</association> 
+  </resultMap>
+  ```
+
+##### 一对多查询
+
+- 用户表和订单表的关系为，一个用户有多个订单，一个订单只从属于一个用户
+
+- 需求：查询一个用户，与此同时查询出该用户具有的订单
+
+- ```java
+  //1.修改User实体
+  public class User {
+  	private int id;
+  	private String username;
+  	private String password;
+  	private Date birthday;
+  	//代表当前用户具备哪些订单
+  	private List<Order> orderList; 
+  	}
+  //2.创建UserMapper接口
+  public interface UserMapper {
+  	List<User> findAll(); 
+  }
+  ```
+
+- ```xml-dtd
+  //3.配置UserMapper.xml
+  <mapper namespace="com.mapper.UserMapper">
+  	<resultMap id="userMap" type="com.domain.User">
+  		<result column="id" property="id"></result>
+  		<result column="username" property="username"></result> 
+  		<result column="password" property="password"></result> 
+  		<result column="birthday" property="birthday"></result>
+  		<collection property="orderList" ofType="com.domain.Order">
+  			<result column="oid" property="id"></result>
+  			<result column="ordertime" property="ordertime"></result> 
+  			<result column="total" property="total"></result>
+  		</collection> 
+  	</resultMap>
+  	<select id="findAll" resultMap="userMap">
+  		select *,o.id oid from user u left join orders o on u.id=o.uid 
+  	</select>
+  </mapper>
+  ```
+
+##### 多对多查询
+
+- 用户表和角色表的关系为，一个用户有多个角色，一个角色被多个用户使用
+
+- 多对多查询的需求：查询用户同时查询出该用户的所有角色
+
+- ```java
+  //1. 创建Role实体，修改User实体
+  public class User {
+  	private int id;
+  	private String username;
+  	private String password;
+  	private Date birthday;
+  	//代表当前用户具备哪些订单 
+  	private List<Order> orderList; 
+    //代表当前用户具备哪些角色
+  	private List<Role> roleList; 
+  }
+  public class Role {
+  	private int id; 
+    private String rolename;
+  }
+  //2.添加UserMapper接口方法
+  List<User> findAllUserAndRole();
+  ```
+
+- ```xml-dtd
+  //3.配置UserMapper.xml
+  <resultMap id="userRoleMap" type="com.domain.User">
+  	<result column="id" property="id"></result>
+  	<result column="username" property="username"></result> 
+  	<result column="password" property="password"></result> 
+  	<result column="birthday" property="birthday"></result>
+  	<collection property="roleList" ofType="com.itheima.domain.Role">
+  		<result column="rid" property="id"></result>
+  		<result column="rolename" property="rolename"></result> 
+  	</collection>
+  </resultMap>
+  <select id="findAllUserAndRole" resultMap="userRoleMap">
+  	select u.*,r.*,r.id rid from user u left join user_role ur on u.id=ur.user_id inner join role r on ur.role_id=r.id 
+  </select>
+  ```
+
+  
 
 ### 核心配置文件
 
@@ -2146,6 +2294,91 @@ Bean标签
 | double  | Double   |
 | boolean | Boolean  |
 
+#### typeHandlers标签
+
+- 无论是  MyBatis 在预处理语句（PreparedStatement）中设置一个参数时，还是从结果集中取出一个值时，  都会用 类型处理器将获取的值以合适的方式转换成  Java 类型。
+- 默认的类型处理器（截取部分）。
+  - ![image-20220502232158668](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220502232158668.png)
+- 使用方法：实现org.apache.ibatis.type.TypeHandler 接口，  或继承一个很便利的类  org.apache.ibatis.type.BaseTypeHandler，  然 后可以选择性地将它映射到一个JDBC类型。
+
+##### 步骤
+
+1. 定义转换类继承类`BaseTypeHandler<T>`
+2. 覆盖4个未实现的方法，其中setNonNullParameter为java程序设置数据到数据库的回调方法，getNullableResult 为查询时  mysql的字符串类型转换成  java的Type类型的方法
+3. 在MyBatis核心配置文件中进行注册
+4. 测试转换是否正确
+
+```java
+需求：一个Java中的Date数据类型，将之存到数据库的时候存成一 个1970年至今的毫秒数，取出来时转换成java的Date，即java的Date与数据库的varchar毫秒值之间转换。
+//1.定义转换类继承类`BaseTypeHandler<T>`
+public class MyDateTypeHandler extends BaseTypeHandler<Date> {
+	public void setNonNullParameter(PreparedStatement preparedStatement, int i, Date date, JdbcType type) {
+		preparedStatement.setString(i,date.getTime()+""); 
+  }
+	public Date getNullableResult(ResultSet resultSet, String s) throws SQLException {
+		return new Date(resultSet.getLong(s)); 
+  }
+	public Date getNullableResult(ResultSet resultSet, int i) throws SQLException {
+		return new Date(resultSet.getLong(i)); 
+  }
+	public Date getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
+		return callableStatement.getDate(i); 
+  }
+}
+```
+
+```
+2.注册标签
+<typeHandlers>
+	<typeHandler handler="com.typeHandlers.MyDateTypeHandler"></typeHandler> 
+</typeHandlers>
+3.测试
+```
+
+#### plugins标签
+
+- MyBatis可以使用第三方的插件来对功能进行扩展，分页助手PageHelper是将分页的复杂操作进行封装，使用简单的方式即 可获得分页的相关数据
+
+##### 步骤
+
+- 导入通用PageHelper的坐标
+
+- 在mybatis核心配置文件中配置PageHelper插件
+
+- 测试分页数据获取
+
+- ```xml-dtd
+  //1.导入通用PageHelper的坐标
+  //2.在mybatis核心配置文件中配置PageHelper插件
+  //注意：分页助手的插件配置在通用mapper之前
+  <plugin interceptor="com.github.pagehelper.PageHelper">
+  	//指定方言
+  	<property name="dialect" value="mysql"/> 
+  </plugin>
+  ```
+
+- ```java
+  测试分页数据获取
+  @Test
+  public void testPageHelper(){
+  	//设置分页参数
+  	PageHelper.startPage(1,2);
+  	List<User> select = userMapper2.select(null); for(User user : select){
+  	System.out.println(user); 
+    //其他分页的数据
+  	PageInfo<User> pageInfo = new PageInfo<User>(select);
+  	System.out.println("总条数："+pageInfo.getTotal());
+  	System.out.println("总页数："+pageInfo.getPages());
+  	System.out.println("当前页："+pageInfo.getPageNum());
+  	System.out.println("每 页 显 示 长 度："+pageInfo.getPageSize());
+  	System.out.println("是否第一页："+pageInfo.isIsFirstPage());
+  	System.out.println("是 否 最 后 一 页："+pageInfo.isIsLastPage());
+    }
+  }
+  ```
+
+  
+
 
 
 ### API
@@ -2220,55 +2453,104 @@ Bean标签
 	- UserMapper mapper = sqlSession. getMapper(UserMapper.class) ;
 List<User> all = mapper. f indAl1();
 
-### 注解开发
+### 基于注解
 
-- 注解
+- | 注解     | 说明                                  |
+  | -------- | ------------------------------------- |
+  | @Select  | 实现查询                              |
+  | @lnsert  | 实现新增                              |
+  | @Update  | 实现更新                              |
+  | @Delete  | 实现删除                              |
+  | @Result  | 实现结果集封装                        |
+  | @Results | 可以与@Result一起使用，封装多个结果集 |
+  | @One     | 实现一对一结果集封装                  |
+  | @Many    | 实现一对多结果集封装                  |
 
-	- @Select:实现查询
-	- @lnsert:实现新增
-	- @Update:实现更新
-	- @Delete:实现删除
-	- @Result:实现结果集封装
-	- Results:可以与@Result一起使用，封装多个结果集
-	- @One:实现一对一结果集封装
-	- @Many:实现一对多结果集封装
+  增删改查
 
-- 加载映射关系
+  ```xml-dtd
+  //1.修改MyBatis的核心配置文件，我们使用了注解替代的映射文件，所以我们只需要加载使用了注解的Mapper接口即可
+  <mappers>
+  	<!--扫描使用注解的类-->
+  	<mapper class="com.mapper.UserMapper"></mapper> 
+  </mappers>
+  //或者指定扫描包含映射关系的接口所在的包也可以
+  <mappers>
+  	<!--扫描使用注解的类所在的包-->
+  	<package name="com.itheima.mapper"></package> 
+  </mappers>
+  //2.在对应的接口方法上使用注解，实现简单的增删改查
+  ```
 
-	- <mappers>
-<!--指定接口所在的包-->
-<package name="包全限定名"/package>
-</mappers>
+#### 复杂映射开发
 
-- 实现复杂关系映射之前我们可以在映射文件中通过配置<resultMap>来实现，使用注解开发后，我们可以使用@Results注解，@Result注解，@One注解，@Many注解组合完成复杂关系的配置
+- 实现复杂关系映射之前我们可以在映射文件中通过配置<resultMap>来实现，使用注解开发后，我们可以使用@Results注解 ，@Result注解，@One注解，@Many注解组合完成复杂关系的配置
 
-	- @Results
+- | 注解     | 说明                                                         |
+  | -------- | ------------------------------------------------------------ |
+  | @Results | 代替的是标签<resultMap>该注解中可以使用单个@Result注解，也可以使用@Result集 合。使用格式：@Results（{@Result（），@Result（）}）或@Results（@Result（）） |
+  | @Resut   | 代替了<id>标签和<result>标签 @Result中属性介绍:<br />column：数据库的列名 <br />property：需要装配的属性名<br/>one：需要使用的@One 注解（@Result（one=@One）（））） <br />many：需要使用的@Many 注解（@Result（many=@many）（））） |
+  | @One     | 代替了<assocation> 标签，是多表查询的关键，在注解中 用来指 定子查 询返回 单一对 象。 @One注解属性介绍：<br/>select: 指定用来多表查询的    sqlmapper<br/>使用格式：@Result(column="  ",property="",one=@One(select="")) |
+  | @Many    | 代替了<collection>标签,  是是多表查询的关键，在注解中用来 指定子 查询返 回对象 集合。 <br />使用格式：@Result(property="",column="",many=@Many(select="")) |
 
-		- 代替的是标签<resultMap>该注解中可以使用单个@Result注解，也可以使用@Result集
-	合。使用格式: @Results ({@Result () ，@Result () })或@Results (@Result () )
+- ```java
+  //1. 创建Role实体，User实体,Order实体
+  public class User {
+  	private int id;
+  	private String username;
+  	private String password;
+  	private Date birthday;
+  	//代表当前用户具备哪些订单 
+  	private List<Order> orderList; 
+    //代表当前用户具备哪些角色
+  	private List<Role> roleList; 
+  }
+  public class Role {
+  	private int id; 
+    private String rolename;
+  }
+  public class Order {
+  	private int id;
+  	private Date ordertime;
+  	private double total;
+  	//代表当前订单从属于哪一个客户
+  	private User user; 
+  }
+  ```
 
-	- @Resut
+#### 一对一
 
-		- 代替了<id>标签和<result>标签
-		- 属性
+![image-20220503002855304](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503002855304.png)
 
-			- column:数据库的列名
-			- property:需要装配的属性名
-			- javaType：属性的类型
-			- one:需要使用的@One注解(@Result (one=@One)() ) )
+#### 一对多
 
-				- @One(一对一)
+![image-20220503003005128](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503003005128.png)
 
-					- 代替了<assocation>标签，是多表查询的关键，在注解中用来指定子查询返回单一对象。
-					- @One注解属性介绍:
 
-						- select:指定用来多表查询的sqlmapper
-						- 使用格式:@Result(column="",property="".one=@One(select=""))
 
-			- may:需要使用的@Many注解（@Result (many=@many)() ) )
+#### 多对多
 
-				- Many(多对一)
+![image-20220503003037432](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503003037432.png)
 
-					- 代替了<collection>标签,是是多表查询的关键，在注解中用来指定子查询返回对象集合。
-					- 使用格式: @Result(property="",column="",many=@Many(select=""))
+### 缓存机制
 
+#### 一级缓存
+
+- 一级缓存是SqlSession级别的，通过同一个SqlSession查询的数据会被缓存，下次查询相同的数据，就会从缓存中直接获取，不会从数据库重新访问
+- 使一级缓存失效的四种情况:
+  - 不同的SqlSession对应不同的—级缓存
+  - 同一个SqlSession但是查询条件不同
+  - 同一个SqlSession两次查询相同：
+    - 两次查询期间执行了任何一次增删改操作
+    - 两次查询期间手动清空了缓存
+
+#### 二级缓存
+
+- 二级缓存是SqlSessionFactory级别，通过同一个SqlSessionFactory创建的SqlSession查询的结果会被缓存;此后若再次执行相同的查询语句，结果就会从缓存中获取
+- 二级缓存开启的条件:
+  - 在核心配置文件中，设置全局配置属性cacheEnabled="true"，默认为true，不需要设置
+  - 在映射文件中设置标签`<cache />`
+  - 二级缓存必须在SqlSession关闭或提交之后有效
+  - 查询的数据所转换的实体类类型必须实现序列化的接口
+- 使二级缓存失效的情况:
+  - 两次查询之间执行了任意的增删改，会使—级和二级缓存同时失效
