@@ -1,5 +1,8 @@
 # 长难句
 
+- 准确、完整和通顺
+  - 不要跑偏，不要漏译，听起来像人话
+
 - 主干+修饰成分
 - 任何语法现象都是语义的表现法
 - 学习英语的最小单位应该是句子，而不是单词
@@ -156,7 +159,7 @@
     - 非限制性定语从句：，而这。。。
     - 同谓语，即。。。/也就是。。。
 
-# 实践
+## 实践
 
 ### 形式主语的翻译
 
@@ -199,11 +202,11 @@
 ### 定语从句
 
 - 关系副词引导定从和状从的区别
-  - 沿着关系副词往前看，如果有和关系副词匹配的名词，一定是状语从句
+  - 沿着关系副词往前看，如果有和关系副词匹配的名词，一定是定语从句
     - when-> time/age...
     - where->place/city...
     - why->reason/cause...
-  - 没有则是定语从句
+  - 没有则是状语从句
   - It is difficult to the point of impossibility for the average reader under the age of forty to imagine a time when high-quality arts criticism could be found in most big-city newspapers.
   - 简化
     - 关系代词在定语从句中做主语
@@ -215,6 +218,25 @@
 
 ### 状语从句
 
+- 关系代词在状语从句中做主语
+- 步骤
+  1. 将关系代词省略
+  2. 将定语从句的谓语变为非谓语
+     - be+其他->其他
+     - 非be->doing
+
+### 独立主格
+
+- 两个句子的主语不同，变为一句话时，将另外一句的的谓语动词变为非谓语：
+  - be+其他->其他
+  - 非be->doing
+- Marry stood under a tree。 Her dog sat at her feet。
+- 转换
+  - Marry stood under a tree，with her dog setting at her feet。
+  - with her dog setting at her feet，Marry stood under a tree。
+  - Marry stood under a tree with her dog setting at her feet。
+  - Marry stood under a tree ， her dog setting at her feet。
+
 ### 不定式
 
 ### 动名词
@@ -222,6 +244,10 @@
 ### 分词
 
 ### 从句的嵌套
+
+- 名词性从句（主/宾/表/同）
+- 形容词性从句（定语从句）
+- 副词性从句（状语从句）
 
 ### 定语从句的简化
 
@@ -232,3 +258,7 @@
 ### 省略
 
 ### 综合应用
+
+# 单词
+
+初学词汇，应选取简单但能体现生词典型意思与用法的词典例句!
