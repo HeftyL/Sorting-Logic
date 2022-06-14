@@ -259,6 +259,86 @@
 
 ### 综合应用
 
+#### 难题
+
+1. 句中ed 形式结尾的词是 did、done还是adj?
+2. 复杂句的主干把握、从句的范围以及综合翻译问题
+3. 被省略的定语从句甚至名词性从句引导词。
+4. that引导了什么从句;which引导的是不是非限?
+5. for、as等词是介词还是连词?and并列的是名词还是句子?
+6. 倒装、插入、省略、强调、后置等干扰正常语序的语法现象。
+
+#### 核心原则
+
+- 拒绝晴天借伞,雨天收伞。专为长难句打造策略，雪中送炭!
+
+- 涉及国王身份（谓语)的问题都是天大的问题!
+- 主谓宾状定补，目的、因果与条件!
+- 实践是对抗不确定性的最佳武器―—二分原则
+- 以史为鉴一一大数定律
+  - that省略or==没省略==? that引导了名从or==定从==? that==引导了从句==or只是个代词?
+  - which引导的是限制性定语从句or非限制性定语从句?(==Ta or 这==)
+  - as、for后跟的是从句or==名词==?
+  - and 并列的是句子、动词o==其它==?
+  - ed结尾的词是did or ==done和adj==?
+  - 谓语是谁的谓语
+
+#### 步骤
+
+![image-20220612181918161](E:\My Documents\xmind\English\Grammar.assets\image-20220612181918161.png)
+
+![image-20220612182129578](E:\My Documents\xmind\English\Grammar.assets\image-20220612182129578.png)
+
+### 特殊语法专题
+
+#### 后置
+
+##### 定语
+
+- 定语后置:定语本体超过1词时需要放在所修饰的名词后，避免喧宾夺主。
+- The man in the stage is Monkey.
+
+##### 主语
+
+- 主语后置: it做形式主语――避免头重脚轻，使语句结构更易识别。
+- That he came to the party vasa surprise. 
+
+##### 宾语
+
+- it做形式宾语―突出“主谓宾补”、“主谓双宾”句型的主干结构
+- 谓语+长宾语+补语结构的后置→谓语+补语+宾语（难!)
+  - We often define what earlier generation considered as weakness of will as addictions.
+  - 培养“主干强迫症”!积累有双宾语、宾补用法的典型单词!
+
+#### 强调
+
+- it is/was...that...句型强调主语、宾语、状语
+  - 强调句的本质:重要的内容优先、突出说明!众星捧月!
+- do, did, does 强调谓语(仅限现在时和过去时)将所强调的谓语动词原型分离，将所强调的谓语动词原型分离，并添加do, did,does承接其时态与单三特征，如take→ do take; takes→ does take; took→ did take
+- so that; too, to; such that 强调程度so... that...强调形容词、副词的程度
+  - She is so beautiful that Tom cannot take his eyes off her.
+- too...to...强调形容词、副词的程度+引向否定性结果
+  - She is so beautiful that she must be an angel.→She is too beautiful to be a human/mortal.
+- such. ..that...强调名词的程度
+
+#### 倒装
+
+- 存在即合理，无需刻意还原语序!
+
+  - Here is a ticket for you.
+
+  - Now comes your turn.
+
+#### 插入
+
+- 情景特点:节外生枝，心血来潮。识别特征:双逗号包夹
+- 不违反语法规则的插入语
+  - 做同位语: Steve Jobs,CEO of Apple, was rich.
+  - 做定语: Steve Jobs, who was the CEO of Apple, was rich
+  - 做状语:Bill Gates, in my view, is a great man.
+- 违反语法规则的插入语――有(主)谓
+  - Bill Gates, she said, is a great man.→She said that Bill Gates is a great man.
+
 # 单词
 
 初学词汇，应选取简单但能体现生词典型意思与用法的词典例句!

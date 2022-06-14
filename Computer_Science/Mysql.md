@@ -1094,10 +1094,6 @@ CREATE TABLE emp1 AS SELECT * FROM employees;
     - DDL的操作一旦执行，就不可回滚。指令SET autocommit = FALSE对DDL操作失效。(因为在执行完DDL操作之后，一定会执行一次COMMIT。而此COMMIT操作不受SET autocommit = FALSE影响的。)
     - DML的操作默认情况，一旦执行，也是不可回滚的。但是，如果在执行DML之前，执行了 SET autocommit = FALSE，则执行的DML操作就可以实现回滚。
 
-
-
-# DCL
-
 # 约束
 
 ## 背景
