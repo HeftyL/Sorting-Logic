@@ -606,7 +606,7 @@
 
 ### 表格布局
 
-- 表格布局由TableL ayout所代表，**TableLayout 继承了LinearLayout**,因此它的本质依然是线性布局管理器。
+- 表格布局由TableLayout所代表，**TableLayout 继承了LinearLayout**,因此它的本质依然是线性布局管理器。
 
 - 表格布局**采用行、列的形式**来管理UI组件，TableLayout并不需要明确地声明包含多少行、多少列，而是通过添加TableRow、其他组件来控制表格的行数和列数。
 
@@ -651,7 +651,7 @@
 
 - 绝对布局由**AbsoluteLayout**所代表。**AbsoluteLayout继承自LinearLayout**
 
-- Android不提供任何布局控制，而是由开发人员自己通过X、Y坐标来控制组件的位置。当使用AbsoluteLayout作为布局容器时，布局容器不再管理子组件的位置、大小一这 些都需要开发人员自己控制。
+- Android**不提供任何布局控制**，而是由开发人员自己通过X、Y坐标来控制组件的位置。当使用AbsoluteLayout作为布局容器时，布局容器不再管理子组件的位置、大小一这 些都需要开发人员自己控制。
 
 - 注意：使用绝对布局会很难兼顾不同屏幕大小、分辨率的问题。因此，AbsoluteLayout 布局管理器已经过时。
 
