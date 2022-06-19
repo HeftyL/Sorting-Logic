@@ -1173,7 +1173,7 @@
 
 ## 基于监听的事件处理
 
-- ![image-20220617133426871](D:\Sorting-Logic\Computer_Science\Android.assets\image-20220617133426871.png)
+- ![image-20220617133426871](Android.assets\image-20220617133426871.png)
 
 - 处理模型对象
   - Event Source (事件源) ;事件发生的场所，通常就是各个组件，例如按钮、窗口、菜单等。
@@ -1416,7 +1416,7 @@
 
 - Activity是Android应用中最重要、最常见的应用组件(此处的组件是**粗粒度的系统组成部分**，并非指界面控件: widget)。 
 
-- ![image-20220617165657046](D:\Sorting-Logic\Computer_Science\Android.assets\image-20220617165657046.png)
+- ![image-20220617165657046](Android.assets\image-20220617165657046.png)
 
 - 当一个Activity 类定义出来之后，这个Activity类何时被实例化、它所包含的方法何时被调用，这些都不是由开发者决定的，都应该由Android系统来决定。
 - 创建一个 Activity 也需要实现一个或多个方法，其中最常见的就是实现onCreate(Bundle status)方法，该方法将会在Activity创建时被回调，该方法调用Activity 的setContentView(View view)方法来显示要展示的View。为了管理应用程序界面中的各组件，调用Activity的findViewByld(int id)方法来获取程序界面中的组件。
