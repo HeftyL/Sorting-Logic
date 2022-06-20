@@ -208,13 +208,19 @@
     - why->reason/cause...
   - 没有则是状语从句
   - It is difficult to the point of impossibility for the average reader under the age of forty to imagine a time when high-quality arts criticism could be found in most big-city newspapers.
-  - 简化
-    - 关系代词在定语从句中做主语
-    - 步骤
-      1. 将关系代词省略
-      2. 将定语从句的谓语变为非谓语
-         - be+其他->其他
-         - 非be->doing
+- 简化
+  - 关系代词在定语从句中做主语
+  - 步骤
+    1. 将关系代词省略
+    2. 将定语从句的谓语变为非谓语
+       - be+其他->其他
+       - 非be->doing
+- 名词性从句的翻译->转换为定语从句
+  - where->the place that
+  - when->the thing that
+  - why->the reason that
+  - how->the way that
+
 
 ### 状语从句
 
