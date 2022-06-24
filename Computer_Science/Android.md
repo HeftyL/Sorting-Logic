@@ -7,13 +7,13 @@
 
 ## Android9.x平台特性
 
+- ![Android 软件堆栈](Android.assets/android-stack_2x.png)
 - Android的底层建立在linux之上，主要由操作系统、中间件、用户界面和应用软件4层组成
   - 设计思路：采用一种被称为软件叠层(Software Stack)的方式进行构建。
   - 作用
     - 使得层与层之间互相分离，明确各层的分工
     - 保证了层与层的低耦合，当下层的层内或层下发生改变时，上层应用程序无需任何改变
   - 和网络以及java web的后端一样都使用了分层的思想去解决问题。
-
 - Android系统主要由6部分组成。**序号从小到大，越来越底层。**
   1. 系统App层
      - Android系统将包含一系列核心App，如电话拨号，联系人。
@@ -70,7 +70,7 @@
 
 - Gradle采用**领域对象模型**的概念来组织构建文件，在整个构建文件中涉及最核心的API
 - Project：代表项目，通常一份构建文件代表一个项目。Project包含大量属性和方法
-- TaskContainer：任务容器。每个Project都会维护一个TaskContainer类型的tasks属性。Project和TaskContainer由一一对应的关系
+- TaskContainer：任务容器。每个Project都会维护一个TaskContainer类型的tasks属性。Project和TaskContainer有一一对应的关系
 - Task：代表Gradle要执行的一个任务。Task允许指定它依赖的任务、该任务的类型，也可以通过configure（）方法配置任务。它还提供doFirst（）、doLast（）方法添加Action。
   - Action对象和Closure对象都可以代表Action。
   - Closure代表一个闭包，所以Action实际上就代表一个代码块
@@ -179,12 +179,12 @@
   //使用java插件
   apply plugin: 'java'
   //查看构建文件支持的所有任务
-  gradle tasks --all
+  gradle tasks -all
   ```
 
 #### java插件
 
-- 任务
+- task
 
   - assemble:装配整个项目
   - build：装配并测试该项目
@@ -408,7 +408,8 @@
 
 - Activity是Android应用中负责与用户交互的组件，使用setContentView(View)来显示指定组件
 - Activity是Window的容器，Activity包含一个getWindow()方法，该方法返回该Activity所包含的窗口
-  - ==问题==：有setWindow方法，设置Activity的可视化用户界面吗？如果没有，为什么要那样设计？（无网，有网之后查询）
+  - ==问题==：有setWindow方法，设置Activity的可视化用户界面吗？如果没有，为什么要那样设计？
+    - Activity没有setWindow方法
 - 如果需要多个用户界面，那么Android应用会包含多个activity，多个Activity组成Activity栈，当前活动的Activity位于栈顶
 
 ### View
@@ -446,7 +447,8 @@
   - update（Uri，ContentValues，String，String[]）
   - query（Uri，String[]，String，String[]，String）
 - 与之结合使用的是ContentResolver,应用程序使用ContentProvider暴露自己的数据，通过ContentResolver来访问数据
-  - ==问题==：多进程，共享数据，是如何保证事务的ACID和怎么进行同步的？（无网，有网之后查询）
+  - ==问题==：多进程，共享数据，是如何保证事务的ACID和怎么进行同步的？
+    - ContentProvider是个单例模式，所有的数据库操作都是用户通过ContentResolver发起请求的，统一由ContentProvider处理。
 
 ### Intent和IntentFilter
 
@@ -1112,8 +1114,8 @@
 - PopupMenu代表弹出式菜单，它会在指定组件上弹出PopupMenu,在默认情况下，PopupMenu会显示在该组件的下方或者上方。
 - 使用流程
   1. 调用PopupMenu(Context context, View anchor)构造器创建下拉菜单，anchor 代表要激发该弹出菜单的组件。
-  2. 调用MenuInflater的inflate(方法将菜单资源填充到PopupMenu中。
-  3. 调用PopupMenu的show(方法显示弹出式菜单。
+  2. 调用MenuInflater的inflate()方法将菜单资源填充到PopupMenu中。
+  3. 调用PopupMenu的show()方法显示弹出式菜单。
 
 ## 活动条ActionBar
 
@@ -1372,13 +1374,12 @@
   - 获取网络数据之后，新线程不允许直接更新UI组件。
     - 解决方案。
       - 使用Hanlder实现线程之间的通信。
-      - Activity.runOnUiThread(Runnable).
+      - Activity.runOnUiThread(Runnable)。
       - View.post(Runnable)。
       - View.postDelayed(Runnable, long)。
 
-- 作用：异步任务(AsyncTask)则可进一步简化这种操作。相对来说AsyncTask更轻量级- -些，适用于简单的异步处
-  理，不需要借助线程和Handler即可实现。
-
+- 作用：异步任务(AsyncTask)则可进一步简化这种操作。相对来说AsyncTask更轻量级一些，适用于简单的异步处理，不需要借助线程和Handler即可实现。
+  
 - Async Task<Params, Progress, Result>是一个抽象类，通常用于被继承，继承AsyncTask时需要泛型参数。
 
   - Params: 启动任务执行的输入参数的类型。
@@ -1404,7 +1405,7 @@
 
      - 必须在UI线程中创建AsyncTask的实例。
      - 必须在UI线程中调用AsyncTask的execute(方法。
-     - AsyncTask的onPreExecute( 、onPostExecute(Result result) 、doInBackground (Param...params)、onProgressUpdate(rogres... values)方法， 不应该由程序员代码调用，而是由Android系统负责调用。
+     - AsyncTask的onPreExecute( )、onPostExecute(Result result) 、doInBackground (Param...params)、onProgressUpdate(rogres... values)方法， 不应该由程序员代码调用，而是由Android系统负责调用。
      - 每个AsyncTask只能被执行一-次，多次调用将会引发异常。
 
 # Activity和Fragment
@@ -1641,12 +1642,12 @@
 ### 	FragmentManager与FragmentTransaction
 
 - FragmentManager的功能。
-  - 使用findFragmentById0或findFragmentByTag0方法来获取指定Fragment。
-  - 调用popBackStackO方法将Fragment从后台栈中弹出(模拟用户按下BACK按键)。
+  - 使用findFragmentById()或findFragmentByTag()方法来获取指定Fragment。
+  - 调用popBackStack()方法将Fragment从后台栈中弹出(模拟用户按下BACK按键)。
   - 调用addOnBackStackChangeListener()注册一个监听器，用于监听后台栈的变化。
 - FragmentTransaction功能
-  - 每个FragmentTransaction可以包含多个对Fragment 的修改，比如包含调用了多个add()、remove()、和replace(操作，最后调用commit()方法提交事务即可。
-  - 在调用commit分()之前，开发者也可调用addToBackStackO将事务添加到Back栈，该栈由Activity负责管理，这样允许用户按BACK按键返回到前一个Fragment状态。
+  - 每个FragmentTransaction可以包含多个对Fragment 的修改，比如包含调用了多个add()、remove()、和replace()操作，最后调用commit()方法提交事务即可。
+  - 在调用commit()之前，开发者也可调用addToBackStackO将事务添加到Back栈，该栈由Activity负责管理，这样允许用户按BACK按键返回到前一个Fragment状态。
 
 ### 生命周期
 
@@ -1904,7 +1905,7 @@
 
 ### 数组
 
-- Android采用位于/res/values目录下的arrays.xml文件来定义数组资源，定义数组时XML资源文件的根元素也是<resorc.../>,该元素内可包含如下三种子元素。
+- Android采用位于/res/values目录下的arrays.xml文件来定义数组资源，定义数组时XML资源文件的根元素也是<resources.../>,该元素内可包含如下三种子元素。
   - <array....>子元素: 定义普通类型的数组，例如Drawable数组。
   - <string-array...>子元素: 定义字符串数组。
   - <integer-array..> 子元素:定义整型数组。
@@ -2108,13 +2109,13 @@
     | getDir(String name, int mode)                          | 在应用程序的数据文件夹下获取或创建name对应的子目录。 |
     | File getFilesDir()                                     | 获取应用程序的数据文件夹的绝对路径。                 |
     | String[] fileList()                                    | 返回应用程序的数据文件夹下的全部文件。               |
-    | deleteFile(String)                                     | 删除应用程序的数据文件夹下的指定文件。               |
+    | deleteFile(String name)                                | 删除应用程序的数据文件夹下的指定文件。               |
 
     - mode:指定打开文件的模式，该模式的可选项为
       - MODE _PRIVATE:该文件只能被当前程序读写。
-      - MODE APPEND:以追加方式打开该文件，应用程序可以向该文件中追加内容。
-      - MODE WORLD READABLE:该文件的内容可以被其他程序读取。
-      - MODE WORLD WRITEABLE:该文件的内容可由其他程序读写。
+      - MODE_APPEND:以追加方式打开该文件，应用程序可以向该文件中追加内容。
+      - MODE_WORLD READABLE:该文件的内容可以被其他程序读取。
+      - MODE_WORLD WRITEABLE:该文件的内容可由其他程序读写。
 
 ### SD卡
 
@@ -2187,7 +2188,9 @@
 
 ### 操作数据库
 
-- SQLiteDatabase 的execSQL()方法可执行任意的SQL语句，包括带占位符的SQL语句。但该方法没有返回值.如果需要执行查询语句，则可调用SQLiteDatabase的rawQuery(String sql, StringD] selectionArgs)方法。
+- SQLiteDatabase 的execSQL()方法可执行任意的SQL语句，包括带占位符的SQL语句。但该方法**没有返回值**.
+
+  - 如果需要执行查询语句，则可调用SQLiteDatabase的rawQuery(String sql, StringD] selectionArgs)方法。
 
   - ```sqlite
     db.execSQL ("insert into news inf values (nul1，?,?)"，new String[] {title，content});
@@ -2222,7 +2225,7 @@
   | endTransaction()   | 结束事务。                                           |
   | inTransaction()    | 如果当前上下文处于事务中，则返回true;否则返回false。 |
 
-  - 当程序执行endTransaction0方法时将会结束事务，提交和回滚取决于SQLiteDatabase是否调用了setTransactionSuccesful()方法来设置事务标志，如果程序在事务执行中调用该方法设置了事务成功则提交事务;否则程序将会回滚事务。
+  - 当程序执行endTransaction()方法时将会结束事务，提交和回滚取决于SQLiteDatabase是否调用了setTransactionSuccesful()方法来设置事务标志，如果程序在事务执行中调用该方法设置了事务成功则提交事务;否则程序将会回滚事务。
 
 ## Gesture
 
@@ -2402,7 +2405,6 @@
     | ----------------------- | ----------------------------------- |
     | withAppendedld(uri, id) | 用于为路径加上ID部分。              |
     | parseId(uri)            | 用于从指定Uri中解析出所包含的ID值。 |
-    |                         |                                     |
 
 ## ContentResolver
 
@@ -2410,15 +2412,13 @@
 
 - ContentResolver方法
 
-  - 
-
   - | 方法                                                         | 说明                                                         |
     | ------------------------------------------------------------ | ------------------------------------------------------------ |
     | Uri insert(Uri uri, ContentValues values)                    | 根据该Uri对应的ContentProvider插入values对应的数据。         |
     | int delete(Uri uri, String selection, String[] selectionArgs) | 根据Uri对应的ContentProvider删除selection 条件所匹配的全部记录。 |
     | int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) | 根据Uri对应的ContentProvider修改selection条件所匹配的全部记录。 |
     | Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) | 根据Uri对应的ContentProvider查询出selection条件所匹配的全部记录，其中projection 就是一个列名列表，表明只选择出指定的数据列。 |
-
+  
 - 一般来说，ContentProvider 是单实例模式的，当多个应用程序通过ContentResolver 来操作ContentProvider提供的数据时, ContentResolver 调用的数据操作将会委托给同一个ContentProvider处理。
 
 ## 开发ContentProvider
@@ -2565,7 +2565,7 @@
   - 当所有请求处理完成后，IntentService 会自动停止，因此开发者无须调用stopSelf()方法来停止该Service。为Service的onBind()方法提供了默认实现，默认实现的onBind()方法返回null。
     为Service的onStartCommand0方法提供了默认实现，该实现会将请求Intent添加到队列中。
 
-### AIDL Service 
+### AIDL Service
 
 - AIDL :Android Interface Definition Language (AIDL)
 - 在Android系统中，各应用程序都运行在自己的进程中，进程之间一般无法直接进行数据交换。为了实现跨进程通信(Interprocess Communication,简称IPC)，Android 提供了AIDL Service。
@@ -2784,7 +2784,7 @@ ServerSocket方法
        | getInputStream()                   | 返回该URLConnection对应的输入流，用于获取URLConnection响应的内容。 |
        | getOutputStream()                  | 返回该URLConnection对应的输出流，用于向URLConnection发送请求参数。 |
 
-### 使用HTTP访问网络
+### 使用HttpURLConection访问网络
 
 - HttpURLConection继承自URLConnection，HttpURLConnection 在URLConnection的基础上做了进一步改进， 增加了一些用于操作HTTP资源的便捷方法。
 
@@ -2804,7 +2804,58 @@ ServerSocket方法
   4. 计算每条线程应该下载网络资源的哪个部分(从哪个字节开始，到哪个字节结束)。
   5. 依次创建、启动多条线程来下载网络资源的指定部分。
 
-### 使用OkHttp
+### OkHttp
 
 - 为了更好地处理向Web站点请求，包括处理Session、Cookie等细节问题，可以使用OkHttp用于发送HTTP请求，接收HTTP响应。
   - Android开发中的网络框架Retrofit 就是基于OkHttp 做的封装，Retrofit封装之后更符合RESTful风格，但Retrofit也丢失了部分灵活性。
+
+- 使用OkHttp流程
+
+  1. 创建OkHttpClient对象，如果只是发送简单的请求，则使用默认构造器创建即可;如果需要更有效地设置OkHttpClient,则应通过OkHttpClient. Builder对象。
+
+  2. 通过Request. Builder构建Request对象。Request 代表一次请求， 所有和请求有关的信息都通过Request.Builder进行设置。Request.Builder对象方法
+
+     - | 方法                                    | 说明                                                         |
+       | --------------------------------------- | ------------------------------------------------------------ |
+       | url(String url)                         | 设置请求的URL。该方法有三个重载版本，该方法的参数可以是String、URL、HttpUrl。 |
+       | addHeader(String name, String value)    | 设置请求头。                                                 |
+       | removeHeader(String name)               | 删除请求头。                                                 |
+       | cacheControl(CacheControl cacheControl) | 设置Cache-Control请求头，用于控制缓存。                      |
+       | method(String method, RequestBody body) | 设置请求方法和请求参数。其中RequestBody代表请求参数。        |
+       | get()                                   | method(method, body)方法的简化版本，用来发送GET请求。默认就是发送GET请求的，所以这个方法通常无须执行。 |
+       | delete/post/put/patch(RequestBody body) | 这几个方法都是method(method, body)方法的简化版本，分别代表发送DELETE、POST、PUT、PATCH请求，这些请求对于RESTful服务很常用。 |
+
+  3. 调用OkHttpClient的newCall（）方法，以Request对象为参数创建Call对象。
+
+  4. 如果要发送同步请求，则直接调用Call对象的execute()方法即可:如果要发送异步请求，则调用Call对象的enqueue()方法，在调用该方法时要传入一个Callback回调对象，该回调对象将会负责处理服务器响应成功和响应出错的情况。
+
+### WebView
+
+- WebView组件本身就是一个浏览器实现，WebView 基于Chromium内核实现，直接支持WebRTC、WebAudio 和WebGL等。WebView 也允许执行JavaScript。
+
+- Chromium也包括对Web组件规范的原生支持，如自定义元素、阴影DOM、HTML导入和模板等，这意味着开发者可以直接在WebView中使用聚合(Polymer) 和Material设计。
+
+- 混合开发方式: Android + HTML 5混合开发。对于一些偏重展示、广告，尤其是需要经常更新的页面内容，用WebView嵌入一个HTML5页面是比较常用的做法，这样AndroidApp不需要更新，运营商只要更新服务器端的网页，WebView中显示的内容就会改变。而且不需要受制于应用商店的审核。
+
+- WebView方法
+
+  - | 方法                                                         | 说明                           |
+    | ------------------------------------------------------------ | ------------------------------ |
+    | goBack()                                                     | 后退。                         |
+    | goForward()                                                  | 前进。                         |
+    | loadUrl(String url)                                          | 加载指定URL对应的网页。        |
+    | boolean zoomIn()                                             | 放大网页。                     |
+    | boolean zoomOut()                                            | 缩小网页。                     |
+    | loadData(String data, String mime Type, String encoding)     | 用于加载并显示data(HTML)代码。 |
+    | loadDataWithBaseURL(String baseUrl, String data, String mimeType,String encoding, String historyUrl) | 用于加载并显示data(HTML)代码。 |
+
+    - data:指定需要加载的HTML代码。
+      
+
+#### WebView中的JavaScript调用Android方法
+
+- 使用流程
+  1. 调用WebView的getSettings获得WebSettings对象。
+  2. 调用WebSettings的setJavaScriptEnabled(true)启用JavaScript调用功能。
+  3. 调用WebView的addJavascriptInterface(Object object, String name)方法将object 对象暴露给JavaScript脚本。
+  4. 在JavaScript脚本中通过刚才暴露的name对象调用Android方法。
