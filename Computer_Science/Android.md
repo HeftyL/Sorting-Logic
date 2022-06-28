@@ -2579,7 +2579,7 @@
   - AIDL定义接口的源代码必须以.aidl结尾。
   - 在AIDL接口中用到的数据类型，除基本类型、String、 List、 Map、CharSequence之外，其他类型全都需要导包，即使它们在同一个包中也需要导包。
 - 开发人员定义的AIDL接口只是定义了进程之间的通信接口，Service 端、客户端都需要使用Android SDK安装目录下的build-tools子目录下的aidl.exe工具为该接口提供实现。如果开发人员使用Android Studio工具进行开发，那么Android Studio工具会自动为该AIDL接口生成实现。
-- 使用：定义一个Service实现类了,该Service的onBind（）方法所返回的IBinder对象应该是ADT所生成的类的子类实例。
+- 使用：定义一个Service实现类,该Service的onBind（）方法所返回的IBinder对象应该是ADT所生成的类的子类实例。
   - 在绑定本地Service的情况下，该对象会直接传给客户端的ServiceConnection对象的onServiceConnected()方法的第二个参数
   - 在绑定远程Service的情况下，只将该对象的代理传给客户端的ServiceConnection对象的onServiceConnected()方法的第二个参数
 
