@@ -339,7 +339,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 - Call和CallsManager对象是Listener回调消息的交换中心，CallsManagerListener对象接收到CallsManager mListeners 消息回调，判断当前Call的
   属性和状态，将实现通话日志、通知栏信息同步、电源管理、耳机交互等通话扩展功能。
 
-## Telecom代码结构
+## Telecom包结构
 
 - ![image-20220629102315902](Android Telephone.assets/image-20220629102315902.png)
 
@@ -387,7 +387,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ## Telecom交互模型
 
-### frameworks/base/telecomm代码结构
+### frameworks/base/telecomm包结构
 
 - ![image-20220629110309836](Android Telephone.assets/image-20220629110309836.png)
 
@@ -579,7 +579,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ## 加载过程分析
 
-### TeleService代码结构
+### TeleService包结构
 
 - ![image-20220629162035207](Android Telephone.assets/image-20220629162035207.png)
   - TeleService系统应用的编译文件Android.mk依赖telephony-common.jar包,即Telephony业务模型的实现。
@@ -850,7 +850,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
   - CallTracker抽象类有两个子类: GsmCdmaCallTracker 和ImsPhoneCalTracker类，分别在CS域(Circuit Switch,电路交换)域和PS ( Packet Switch,分组交换)域完成通话能力管理和控制的处理逻辑。
     
 
-### 代码结构解析
+### 类结构解析
 
 - 关键属性
   - mCi:为RILJ对象，类型为CommandInterface，GsmCdmaCallTracker 对象与GsmCdmaPhone对象一样，通过mCi对象具备与RIL的交互能力。
