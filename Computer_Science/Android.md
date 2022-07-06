@@ -24,14 +24,14 @@
   3. 原生C/C++库
      - Android包含一套被不同组件所使用的C/C++库的集合。一般来说，Android应用开发者不能直接调用这套C/C++库集，而是通过它上面的JavaAPI框架调用这些库
      - SQLlite：供所有应用程序使用的功能强大的轻量级关系数据库
-     - WebKit
-     - OpenMAX
-     - Libc
-     - Media Framework
-     - SGL
-     - OpenGL ES
+     - WebKit:一个全新的Web浏览器引擎，该引擎为Android浏览器提供支持，也为WebView提供支持，WebView完全可以嵌入开发者自己的应用程序中。
+     - OpenMAX (开放媒体加速层) :其目的在于使用统一的接口， 加速处理大量多媒体资料。其中最上层为OpenMAX AL (App Layer)，该层代表App和多媒体中间层的标准接口，使得App在多媒体接口上具有良好的可移植性。
+     - Libc (系统C库) :一个从BSD系统派生的标准C系统库，并且专门为嵌入式Linux设备调整过。
+     - Media Framework (媒体框架) :基于PacketVideo的OpenCORE,这套媒体库支持播放和录制许多流行的音频和视频格式，以及查看静态图片。它主要包括MPEG4、H.264、MP3、AAC、AMR、JPG、PNG等多媒体格式。
+     - SGL:底层的2D图形引擎。
+     - OpenGL ES:基于OpenGL ES API实现的3D系统，这套3D库既可使用硬件3D加速(如果硬件系统支持的话)，也可使用高度优化的软件3D加速。
   4. Android运行时
-     - 由Android核心库和ART（Android runtime）组成
+     - 由Android核心库和ART（Android runtime）组成。其中核心库提供了Java 语言核心库所能使用的绝大部分功能:而ART则负责运行Android应用程序。
   5. 硬件抽象层（HAL）
      - 主要提供了对linux内核的封装，向上提供蓝牙、摄像头等设备的编程接口，向下隐藏底层的实现细节。
   6. Linux内核

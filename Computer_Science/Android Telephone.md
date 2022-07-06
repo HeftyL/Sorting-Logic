@@ -1214,11 +1214,19 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
   - ServiceState实体类主要从Voice Call语音通话业务和Data Call移动数据业务两个方面，保存运营商网络服务状态以及运营商的基本信息。
 
-  
 
-  
+### 关键方法
 
-  
+- ServiceState类实现了Parcelable接口，使用Parcel序列化方式，关键方法主要体现在以下三个方面。
+  ●get/set 方法
+  ●rilRadioT echnologyToString方法获取手机网络类型对应关系
+  ●toString 方法
+
+
+
+
+
+
 
 
 
