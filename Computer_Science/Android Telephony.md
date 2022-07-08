@@ -1367,3 +1367,8 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
   - ITelephonyRegistry系统服务的运行机制主要是两次跨进程接口调用
     1. GsmCdmaPhone对象调用ITelephonyRegistry 系统服务的ntifyXXX, 消息源头是com.android.phone进程中的GsmCdmaPhone对象;
     2. 通过已经注册监听的mRecords列表通过IPhoneStatel istener发起Callback回调，消息的处理终点在监听PhoneState变化的应用进程中。
+
+### 小区信息
+
+- 设置小区信息更新频率
+- 展示小区信息
