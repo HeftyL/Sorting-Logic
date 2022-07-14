@@ -25,7 +25,7 @@
   - 系统运行库层
     - 系统运行库层包含了Android Runtime,其核心为Dalvik虚拟机。每一个Andraid应用程序都运行在Dalvik虚拟机之上，且每一个应用程序都有自己独立运行的进程空间; Dalvik 虚拟机只执行DEX可执行文件。DEX(Dalvik Executable)格式是专为Dalvik 设计的一种压缩格式，适合内存和处理器速度有限的系统。要生成DEX格式文件，首先通过Java程序编译生成class文件，然后通过Android提供的dx工具将class文件格式转换成DEX格式。
       - 特征
-        - 每一个Android应用运行在-个Dalvik虚拟机实例中，而每一个虚拟机实例都是一个独立的进程空间。
+        - 每一个Android应用运行在一个Dalvik虚拟机实例中，而每一个虚拟机实例都是一个独立的进程空间。
         - 虚拟机的线程机制、内存分配和管理、Mutex (进程同步)等的实现都依赖底层Linux操作系统。
         - 所有Android应用的线程都对应一个Linux线程，因而虚拟机可以更多地使用Linux操作系统的线程调度和管理机制。
       - Dalvik虚拟机并不是按照Java虚拟机的规范来实现的，两者并不兼容;它们之间最大的不同在于Java虚拟机运行的是Java字节码，而Dalvik虚拟机运行的是其专有的文件格式DEX ( Dalvik Executable )文件。
@@ -101,7 +101,7 @@
 - Handler允许发送并处理Message消息，Message对象通过主线程的MessageQueue消息队列相关联的Message和Runnable对象进行存取。每个Handler实例对Message消息发送和接收与对应主线程和主线程的消息队列有关。当创建一个新Handler时，Handler就属于当前主线程，主线程的MessageQueue消息队列也同步创建，即Handler会绑定到创建该Handler主线程/消息队列中。然后，Handler就可以通过主线程的消息队列发送和接收Message消息对象了。
 - 特性
   - Android里没有全局Message Queue消息队列，每个Activity主线程都有一个独立的Message Queue消息队列，消息队列采用先进先出原 则。不同APK应用不能通过Handler进行Message通信，同一个APK应用中可通过Handler对象传递而进行Message通信。
-  - 个Handler实例都会绑定到创建它的线程中（一般位于主线程，即Activity线程），但Handler实例均可在主线程或子线程中创建。
+  - 每个Handler实例都会绑定到创建它的线程中（一般位于主线程，即Activity线程），但Handler实例均可在主线程或子线程中创建。
   - Handler发送消息使用Message Queue消息队列，每个Message发送到消息队列里面，遵循先进先出原则；发送消息采用异步方式不 
     会阻塞线程，而接收线程采用同步方式会阻塞线程，所以当Handler处理完一个Message对象后才会接着去取下一个消息进行处理。
 - 作用
@@ -121,30 +121,52 @@
   - Call（通话）
   - ServiceState（服务状态） 
   - DataConnection（数据连接） 
-  - **S**hort **M**essage **S**ervice（SMS,短信）
+  - **S**hort **M**essage **S**ervice（SMS,短信）/Mutimedia Message Service（MMS，彩信）
 
 ### 拨号流程分析
 
 #### 打开Nexus 6P手机的拨号盘
 
+- ![image-20220714173120721](Android Telephony.assets/image-20220714173120721.png)
+
 1. 首先使用adb devices 命令查看和确认手机与计算机连接是否成功，然后使用adb logcat命令查看Nexus 6P手机的运行日志，最后操作手机，点击Home界面最下面一排最左边带有电话图标的应用按钮，打开拨号界面。
-2. ActivityManagerService将启动com.android.dialer包下的DialtactsActivity。system_ server, 即ActivityManagerService所在的系统进程; 通过`adb`
+2. ActivityManagerService将启动com.android.dialer包下的DialtactsActivity。system_server, 即ActivityManagerService所在的系统进程; 通过`adb`
    `shell ps -ef`查看进程信息命令可以确认相关的进程信息
 
 #### DialtactsActivity
 
+- ==Dialer==：DialtactsActivity.java文件的详细路径是packages/apps/Dialer/java/com/android/dialer/app/DialtactsActivity.java。查看对应的Android.mk，文件，此代码库将编译出Dialer. apk Android应用程序，以后统一称其 为Dialer应用，其运行的进程名是com.android.dialer。
 - 可在Android Studio连续两次按下右边的Shift 按键, 打开Search Everywhere对话框，输入DialtactsActivity,在输入过程中有逐个英文字母匹配的过程,输入完成后便可完整匹配DialtactsActivity.java文件。
 
 1. 快捷键Ctrl+F12快速打开当前类属性和方法列表浮动菜单
 2. 在Android Studio快速匹配过程中，可使用* (匹配多个字符)进行模糊匹配，并且输入的字符不区分大小写。
 3. DialpadFragment提供用户拨号的交互界面
-4. CalllntentBuilder创建拨号请求的intent对象
-5. TelecomManager继续传递拨号请求intent对象
+4. 创建拨号请求 intent 对象：CallntentBuilder.build方法构造Action为Intent.ACTION_ CALL的intent 对象，并添加Extra附加信息，如isVideoCall、phoneAccountHandle、 createTime 等。
+5. 发送 intent 拨号请求消息：DialerUtils .startActivityWithErrorToast方法，根据intent的action 将有两个分支处理逻辑，分别执行placeCallOrMakeToast(context, intent)和context.startActivity(intent)。placeCallOrMakeToast方法将继续执行拨号请求，最终将调用TelecomManager类的placeCall方法。
+   - TelecomManager.java程序在framework/base路径下，将编译出framework.jar包，是程序的静态关系
+   - 一个进程只有一 个TelecomManager对象。对于整个Android系统来说，支持多个进程
+
+6. TelecomManager 获取ITelecomService服务并调用其placeCall 方法继续传递intent发出通话呼叫请求，将涉及第一次跨进程的服务调用。
+   - Dialer 应用的com.android.dialer进程提供用户拨号界面并响应用户的拨号请求，把拨号请求包装成action为Intent.ACTION_ CALL的intent对象。通过调用ITelecomService服务提供的placeCall接口，将拨号请求intent 对象发送给了Telecom应用( system_ server 进程)，完成了第一次跨进程的服务调用，传递的是包括拨号请求相关信息的intent对象。
+
 
 #### lTelecomService接收拨号请求服务
 
-- lTelecomService的实现类TelecomServicelmpl的placeCall 方法，响应Dialer 应用发起的跨进程服务接口调用。将发出一个定向广播，由Telecom应用中的PrimaryCallReceiver 对象接收。
-- PrimaryCallReceiver的sendNewOutgoingCallIntent 方法，其调用过程是: sendNewOutgoingCallIntent→NewOutgoingCallntentBroadcaster.processIntent-→mCallsManager.placeOutgoingCall.这两个关键的处理逻辑最终是调用了CallsManager 对象的两个不同方法。
+##### lTelecomService
+
+- ITelecomService**接口定义**: frameworks/base/telecomm/java/com/android/internal/telecom/ITelecomService.aidl,同样在framework/base下，它定义了placeCall、addNewIncomingCall、 endCall和getCallState等接口。
+- ITelecomService的**接口实现**：TelecomServicelmpl.java,其代码文件的详细路径是:packages/services/Telecomm/src/com/android/server/telecom/TelecomServicelmpl.java
+- ==Telecom== ：packages/services/Telecomm是拨号流程涉及的第二个代码库，查看对应的Android.mk文件，此代码库将编译出Telecom.apk Android应用程序，称为Telecom 应用。此服务的运行进程指定为system,即此服务将运行在system_server 系统进程空间，而它的唯一action是android.telecom.ITelecomService。
+  - Context.TELECOM_SERVICE 系统服务名“ telecom”与服务定义的Action : android.telecom.ITelecomService相对应
+
+
+##### 拨号请求服务
+
+1. lTelecomService的实现类TelecomServicelmpl的placeCall 方法，响应Dialer 应用发起的跨进程服务接口调用。
+   - 首先通过mUserCallIntentProcessorFactory创建UserallIntentProcessor对象，并执行其processIntent方法，然后通过判断intent的action来调用processOutgoingCalIntent方法，继续调用sendBroadcastToReceiver方法。
+2. 将发出一个定向广播，由Telecom应用中的PrimaryCallReceiver 对象接收。
+   - 同一个应用中使用广播来传递消息将同步方法调用转换成异步处理。ITelecomService 的服务方法placeCall快速返回给了Dialer 应用的调用，而Telecom应用中接收到广播后继续处理对应的拨号请求intent对象。
+3. PrimaryCallReceiver对象的onReceive的sendNewOutgoingCallIntent 方法，最终调用了CallsManager 对象的两个不同方法。
   - startOutgoingCall()：startOutgoingCall()将开始拨号前的准备工作
   - placeOutgoingCall():placeOutgoingCall将继续传递拨号请求，实现将拨号请求发送给BP Modem处理。
 
@@ -184,18 +206,31 @@
 #### IConnectionService服务的响应过程
 
 - 根据AndroidManifest.xml中对android.telecom.ConnectionService 服务的定义，其服务的Java类为com.android.services.telephony.TelephonyConnectionService, 继承自android.telecom. ConnectionService抽象类。在frameworks/base工程下，代码文件为frameworks/base/telecomm/java/android/telecom/ConnectionService.java
+
 - frameworks/base/telecomm/java/com/android/internal/telecom/lConnectionService.aidl文件作为IConnectionService服务的接口定义，主要定义了addConnectionServiceAdapter、createConnection、answer、hold 等接口。通过这些接口的名字，可以知道此服务主要提供了Call 状态管理的接口供
   Telecom应用调用，比如接听电话、保持呼叫、挂断电话等。
   1. onBind():TelephonyConnectionService继承于ConnectionService 类，并未重写父类的onBind 方法。onBind逻辑简单，返回了IConnectionService.Stub 类型的mBinder对象。
+  
   2. addConnectionServiceAdapter() 设置Adapter：使用Handler的异步消息处理机制，将服务调用的同步方式转为异步方式处理, addConnect ionServiceAdapter服务接口将立即返回
+  
   3. createConnection() 继续发送拨号请求：ConnectionService服务的接口createConnection 的响应逻辑仍然是通过mHandler将同步调用转为异步处理。mHandler发出MSG_ CREATE_ CONNECTION 消息,并在handleMessage中响应此方法，再调用父类的createConnection方法,createConnection方法利用onCreateXXXConnection 创建Connection 对象和通过mAdapter传递过来的Binder对象进行handleCreateConnectionComplete接口回调。
      1. Connection对象的创建过程，TelephonyConnectionService 重写了父类ConnectionService的onCreateOutgoing
         Connection方法，会判断是否是紧急电话，而且Connection连接失败将不是TelephonyConnection，从而不能打电话，如果成功会执行placeoutgoingConnection（）方法，placeoutgoingConnection方法中，如果phone不为空执行phone.dial()方法
+        
      2. phone是com.android.interal.telephony.GsmCdmaPhone类型对象，其代码为frameworks/opt/telephony/src/java/com/android/internal/telephony/GsmCdmaPhone.java。phone的dial 方法的调用过程：diallnternal-→mCT.dial的调用过程，mCT即GsmCdmaCalITracker，dial方法中会使用mCi.dial方法，mCi即RIL对象，其Java代码是frameworks/optelephony/src/java/com/android/internal/telephony/RlL.java，这里将发出RIL的拨号请求。跟踪拨号流程已经到了HAL (硬件抽象层)，在这一层不同的芯片厂家将完成不同的实现，比如高通平台将RIL请求转为QMI消息与Modem交互，MTK平台则采用AT命令的方式与Modem交互。
-        - Qualcomm messaging Interface(QMI):QMI是高通提供的一种多处理器进程间通信的功能接口，用于AP和BP侧的交互，通俗说法就是让终端设备TE（可以是手机，PDA，计算机）对高通BP侧的AMSS系统进行操作，如调用函数，读取数据，设置其中的NV项等。
-        - 全球移动通讯系统（G lobal S ystem for M obile Communications），即GSM，又称泛欧数位式行动电话系统，是当前应用最为广泛的移动电话标准。全球超过200个国家和地区超过10亿人正在使用GSM电话。GSM标准的广泛使用使得在移动电话运营商之间签署“漫游协定”后用户的国际漫游变得很平常。GSM相较它以前的标准最大的不同是他的信令和语音信道都是数位的，因此GSM被看作是第二代（2G）移动电话系统。GSM标准当前由3GPP组织负责制定和维护。
+        - Qualcomm messaging Interface(QMI):QMI是高通提供的一种多处理器进程间通信的功能接口，用于AP和BP侧的交互，通俗说法就是让终端设备TE（可以是手机，PDA，计算机）对高通BP侧的AMSS系统进行操作，如调用函数，读取数据，设置其中的NV项等。、
+        
+        - AT：Hayes 命令集（也称为AT 命令集）是一种特定的命令语言，最初由Dennis Hayes 于 1981 年 为Hayes Smartmodem 300波特 调制解调器开发。命令集由一系列短文本字符串组成，这些短文本字符串可以组合起来产生诸如拨号、挂断和更改连接参数等操作的命令。绝大多数拨号调制解调器以多种变体形式使用 Hayes 命令集。
+        
+        - 全球移动通讯系统（Global System for Mobile Communications），即GSM，又称泛欧数位式行动电话系统，是当前应用最为广泛的移动电话标准。全球超过200个国家和地区超过10亿人正在使用GSM电话。GSM标准的广泛使用使得在移动电话运营商之间签署“漫游协定”后用户的国际漫游变得很平常。GSM相较它以前的标准最大的不同是他的信令和语音信道都是数位的，因此GSM被看作是第二代（2G）移动电话系统。GSM标准当前由3GPP组织负责制定和维护。
+        
         - 第三代移动通信技术，简称3G（英语：3rd-Generation），规范名称IMT-2000（International Mobile Telecommunications-2000），是指支持高速数据传输的蜂窝网络移动电话技术。3G服务能够同时发送声音（通话）及信息（电子邮件、即时通信等）。3G的代表特征是提供高速数据业务，速率一般在几百kbps以上，自从4G出来后3G逐渐淘汰。
+        
         - 第四代移动通信技术（英语：The fourth generation of mobile phone mobile communication technology standards，缩写为4G），是3G之后的延伸。 IMT-Advanced的4G标准:高级长期演进技术（又译作长期演进技术升级版，英语：LTE-Advanced，简称LTE-A，在中国大陆称4G+）是长期演进技术（LTE）的提升版本，理论上网速度比3G快十倍以上，也是4G规范的国际高速无线通信标准。
+        
+        - 第五代移动通信技术（英语：5th generation mobile networks或5th generation wireless systems，简称 5G）是最新一代移动通信技术，为 4G（LTE-A、WiMAX-A、LTE）系统后的演进。
+        
+          
 
 #### TelecomAdapter接收消息回调
 
@@ -1853,7 +1888,18 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 # Radio Interface Layer
 
-- 
+- ![image-20220714154914268](Android Telephony.assets/image-20220714154914268.png)
+  - RIL主要分RILJ和RILC两部分。RILJ 运行在com.android.phone进程空间的Telephony Framework框架层，RILC运行在User Libraries系统运行库层中的HAL子层。
+
+  - rild、libril 和第三方RIL实现都运行在rild 进程中，通过rild.rc配置文件由Linux init 进程进行加载和管理。
+
+  - RILJ与RIL C通过IRadio、lRadioIndication 和lRadioResponse服务接口调用，完成Solicited和UnSolicited消息交互。
+
+  - 第三方RIL库文件与Modem交互，完成Modem的操作控制和查询请求，以及接收Modem主动上报的消息。
+
+  - 在RILConstants.java和ril.h中定义的RIL Solicited和UnSolicited消息是一致的，分别是RIL_REQUEST_XXX和RIL_UNSOL_XXX。
+
+  - RILJ对象mRequestList列表中的RILRequest 对象与libril 中s_pendingRequests链表中的RequestInfo具有相同的处理逻辑，都是完成Solicited Request和Solicited Response消息处理。
 
 - Radio Interface Layer (无线通信接口层，RIL) 运行在Android硬件抽象层(HAL)之上
 
@@ -2002,10 +2048,125 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ## rild
 
-- rild.rc
+- ![image-20220714095816044](Android Telephony.assets/image-20220714095816044.png)
+  1. 调用libril中的RIL_startEventLoop 函数;
+  2. 调用第三方库中的RIL_ Init 函数，传入参数是指向RIL_Env结构体的s_riEnv指针，返回指向第三方库中RIL_RadioFunctions 结构体的s_callbacks 指针;
+  3. 调用libril中的RIL_RadioFunctions函数，传入调用RIL_Init 函数返回的指向第三方库中RIL_RadioFunctions结构体的s_callbacks 指针。
+- rild.rc主要逻辑
   - init 进程将运行rild 可执行文件，加载ril-daemon service。
   - ril-daemon service进程使用radio用户。
-- rild.c
-  - RIL_startEventLoop
-  - 获取RIL_RadioFunctions
-  - 注册 RIL_RadioFunctions
+- rild.c主要逻辑
+  - RIL_startEventLoop()
+    - rild.c文件中的main方法将调用RIL_startEventLoop函数
+    - rild进程中调用的RIL_startEventLoop 函数是libril中的实现
+  - 获取RIL_RadioFunctions()
+    - ril ibPath:main函数传入的参数信息中，rilLibPath 是获取Android 系统的Properties : [rild.libpath]:[/vendorlib64/ibril-qc-qmi-1.so]。
+    - dlopen:以RTLD_ NOW方式打开动态链接库文件libril-qc-qmi-1.so。
+    - dlsym:在libril-qc-qmi-1.so库文件中获取RIL_Init 函数地址并保存rllnit函数指针变量。
+    - rillnit函数调用:调用libril-qc-qmi-1.so动态链接库中的RIL_Init 函数，传入指向RIL_ Env结构体的指针，返回指向RIL_RadioFunctions 类型的指针。
+      - 动态链接库获取了libril 的RIL_ onRequestComplete、RIL_ onUnsolicitedResponse 等四个函数指针，是RIL请求之后回调的函数。
+      - libril获取对应动态链接库文件中的onRequest、currentState 等函数指针，是继续发起RIL请求的响应函数。
+  - 注册RIL_RadioFunctions()
+    - RIL _register(funcs),其参数是获取动态链接库文件中RIL_RadioFunctions 结构体的地址，即指向RIL RadioFunctions 的指针。
+
+## libril
+
+- rild进程在加载过程中，会调用rild.c代码中的main函数，而main函数中将调用三个libril 中的函数
+- RIL_startEventLoop()
+- RIL_register()
+- rilc_thread_pool():rild最后调用rilc_thread_pool 完成rild进程加载，ril service.cpp中提供了对应的函数.在rild进程中完成IRadio和lOemHook两个HIDL接口服务的启动。
+
+### RIL_startEventLoop()
+
+- 创建基于eventloop函数调用的子线程。会使用到pthread。
+
+  - Linux 系统下的多线程遵循POSIX线程接口，称为pthread。编写Linux平台下的多线程程序时，需要引入头文件pthread.h。
+
+  - 可移植作业系统接口（英语：Portable Operating System Interface，缩写为POSIX）是IEEE为要在各种UNIX操作系统上运行软件，而定义API的一系列互相关联的标准的总称
+
+- eventLoop函数
+
+  1. 修改s_ started 启动状态的取值为1,并发出状态修改通知,由RIL_ startEventL oop函数接收。
+  2. 创建并激活s_ wakeupfd_ event 的事件处理,此事件的发送和接收实现的方式基于pipe管道
+     - 通信: filedes[0]和filedes[1]。
+     - ril_event双向链表中此时仅有一一个节点，那就是S_wakeupfd_event, 此节点的fd文件描述符为s_fdWakeupRead, RIL 事件的回调函数为: processWakeupCallback。
+  3. 调用ril_ event_loop 函数，循环接收和处理ril_ event 事件。
+     - rilevent_loop函数的处理逻辑的核心是for()循环，只要循环中的处理逻辑不发生变化，ril_event_loop函数调用是不会返回的。
+       
+
+- s_wakeupfd_event 事件处理
+  - 创建 管道获取其输入和输出文件描述符s_fdWakeupRead、s_fdWakeupWrite。
+  - 使用S_fdWakeupRead和processWakeupCallback创建s_wakeupfd_event 事件。
+  - 增加并激活s_wakeupfd_event 事件。
+
+-  ril_ event_loop()函数
+  - 启动子线程，调用ril_event_loop函数，进入for循环监听ril_event事件。
+  - 完成s_wakeupfd_event 事件的节点初始化和激活。
+
+### RIL_register()
+
+- 首先验证callbacks参数,是否为空和版本号等,然后是拷贝参数，即保存指向RIL_RadioFunctions结构体的指针。因此，libril 中就可以调用第三方动态链接库文件提供的RIL请求相关函数，保障第三方厂家代码的安全和保密。
+- radio::registerService() 调用
+  - 定义了SIM卡的支持数：4张
+  - Radiolmpl 对象：Radiolmpl类在ril_service.cpp中定义，继承自IRadio类。Radiolmpl类实现了IRadio.hal定义的接口。RILJ对象发出的IRadio接口调用将在Radiolmpl服务对象中响应，即rild进程响应RILJ发出的lRadio接口调用。
+- registerAsService：为HIDL服务注册接口
+  - serviceNames服务名：s_vendorFunctions和s_commands
+
+## RILC
+
+- 运行机制
+  - Solicited消息处理机制
+  - UnSolicited消息处理机制
+- ![image-20220714154508643](Android Telephony.assets/image-20220714154508643.png)
+  - phone 进程与rild 进程交互，采用HIDL接口服务调用。com.android.phone进程中提供lRadioResponse服务和IRadiolndication 服务，rild 进程提供lRadio服务。
+  - RIL_ register 调用建立了libril 与等三方ril互相持有对方的函数指针;在rild进程中，使用函数指针发起进程内的函数调用。
+  - 在第三方ril动态链接库中，实现了将RIL请求转换为与BP的交互机制，不同厂家实现的机制不同; 高通平台，使用了QMI ( Qualcomm Message Interface )来完成AP与BP的通信。MTK使用AT
+
+### Solicited消息处理机制
+
+- IRadio服务接收Solicited Request消息，而IRadio服务的实现是在Radiolmpl类中，Radiolmpl类提供的接口处理机制基本一致。
+- 发起语音通话拨号业务
+  1. RILJ中的对应关系延伸到了libril中,而RIL_REQUEST_DIAL等RIL请求类型的定义在hardware/rilinclude/telephony/ril.h头文件中，与RILConstants.java文件中的定义是一致的。
+  2. addRequestToList()：传入RIL请求唯一编号(RILJ 中生成)和RIL请求类型，创建并保存Requestlnfo。
+     - pRI→pCI = &(s_ commands[request])匹配的回调函数：request取值为: RIL_REQUEST_DIAL，pRI→pCI→requestNumber为RIL_REQUEST_DIAL，RI→pCl→responseFunction是radio::dialResponse函数。
+       - p：Pointer
+       - RI：RequestInfo
+       - CI：CommandInfo
+  3. CALL ONREQUEST：CALL_ONREQUEST将调用第三方动态链接库中的onRequest函数。S_vendorFunctions是第三方动态链接库中RIL_Init 函数返回的RIL_RadioFunctions 结构体指针,而onRequest是指向第三方动态链接库中onRequest函数的指针。
+  4. reference-ril.c文件中onRequest()
+     - reference-ril.c文件中onRequest 参考实现的处理逻辑主要是根据传入的参数request,即RIL请求类型和请求数据创建command AT指令，并发送AT指令给BP处理;然后通过RIL_onRequestComplete，发起libril 中的OnRequestComplete函数调用，返回RIL请求的结果。
+       - onRequest()请求参数RIL_Token, OnRequestComplete 发起回调的参数同样使用了RIL_Token,它们的调用是成对出现的，使用RIL_Token可匹配到对应的调用。
+  5. OnRequestComplete函数调用
+     - 调用checkAndDequeueRequestInfolfAck() 函数找到RIL请求对应的RequestInfo结构体，然后通过pRI→pCI→responseFunction发起XXXResponse函数调用。
+  6. dialResponse()
+     - 通过radioService[slotld]→mRadioResponse→dialResponse调用com.android.phone 进程中的lRadioResponse服务的dialResponse接口。
+
+### Unsolicited消息
+
+- 由于UnSolicited消息是HAL层主动上报的，BP产生的通信状态变化的消息将发送给AP，第三方ril库首先接收到，再发送给libril.libril 中的RIL_onUnsolicitedResponse函数将响应UnSolicited消息请求的调用。
+- Call 状态变化
+  1. 调用 s_unsolResponses[unsolResponselndex].responseFunction
+     - unsolResponselndex=unsolResponse-RIL_UNSOL_RESPONSE_BASE减去了1000这个基数。
+     - s_unsolResponses初始化和ril_unsol_commands.h的消息进行了对应。在ril_unsol_commands.h头文件中，固化了UnSolicited 消息类型与调用函数的对应关系:UnSolicited消息RIL_UNSOL_RESPONSE_XXX类型和调用函数XXXInd的关系。
+     - radio:callStateChangedInd函数
+       - radioService[slotld]→mRadioIndication→ callStateChanged调用，将调用com.android.phone进程中IRadiolndication服务的callStateChanged接口。
+
+# Telephony系统服务
+
+- Telephony模块中会提供一些System Service系统服务，供其他应用与Telephony模块进行交互。
+- Android Telephony通过AIDL对外（第三方应用）提供系统服务， 第三方应用通过这些服务可查询Telephony主要的信息或状态，并且能够向Telephony注册观察者，监听Telephony相关的状态变化。
+
+## PhoneInterfaceManager
+
+- PhoneInterfaceManager类实现了ITelephony.Stub抽象类，该抽象类在Android编译过程中通过AIDL接口定义文件ITelephony.aidl的内容
+  - Telephony相关的控制操作，如dial、endCall、setRadio、enableApnType、disableApn-Type等接口定义；
+  - Telephony相关的查询接口，如isOffhook、isRadioOn、 getCallState、getDataState和getNetworkType等接口的定义；
+  - 通话界面的显示接口，如showCallScreen和showCallScreenWithDialpad。
+
+## TelephonyRegistry
+
+- TelephonyRegistry负责登记、注册 Telephony相关状态的监听，提供了注册Telephony状态变化相关的Observer观察者对象的接口，某个应用成功完成Observer注册后，Telephony的状态一旦发生变化，Telephony-Registry便会发出通知给注册的Observer观察者。
+
+## TelephonyManager
+
+- TelephonyManager本身会注册成为系统服务供第三方应用使用，但提供的接口实现逻辑全部通过获取PhoneInterfaceManager和TelephonyRegistry服务对象实现具体的逻辑处理。
