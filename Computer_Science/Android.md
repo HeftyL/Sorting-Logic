@@ -2570,7 +2570,7 @@
 - AIDL :Android Interface Definition Language (AIDL)
 - 在Android系统中，各应用程序都运行在自己的进程中，进程之间一般无法直接进行数据交换。为了实现跨进程通信(Interprocess Communication,简称IPC)，Android 提供了AIDL Service。
 - Android的远程Service调用与Java的RMI基本相似，都是先定义一个远程调用接口，然后为该接口提供一个实现类即可。但Android并不是直接返回Service对象给客户端Service 只是将它的代理对象(IBinder对象)通过onBind()方法返回给客户端。因此，Android 的AIDL远程接口的实现类就是那个IBinder实现类。
-  与绑定本地Service不同的是，本地Service的onBind()方法会直接把IBinder对象本身传给客户端的ServiceConnection的onServiceConnected方法的第二个参数;而远程Service的onBind()方法只是将IBinder对象的代理传给客户端的ServiceConnection的onServiceConnected方法的第二个参数。
+- 与绑定本地Service不同的是，本地Service的onBind()方法会直接把IBinder对象本身传给客户端的ServiceConnection的onServiceConnected方法的第二个参数;而远程Service的onBind()方法只是将IBinder对象的代理传给客户端的ServiceConnection的onServiceConnected方法的第二个参数。
 
 #### 创建AIDL
 

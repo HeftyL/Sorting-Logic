@@ -170,45 +170,61 @@
   - startOutgoingCall()：startOutgoingCall()将开始拨号前的准备工作
   - placeOutgoingCall():placeOutgoingCall将继续传递拨号请求，实现将拨号请求发送给BP Modem处理。
 
-#### CallsManager的startOutgoingCall()
+#### CallsManager拨号流程处理
 
-- CallsManager.startOutgoingCall:主要逻辑是创建、更新和保存Call 对象
-  - 如果不是以前保存在mCalls列表的Call对象，调用addCall (call) 方法保存并触发增加Call对象的通知，CallsManager对象将保存多个Call 对象到mCalls 集合中，Call对象则设置Listener 对象为CallsManager,对象之间相互引用。而CallsManager对象通过mListeners发出onCallAdded消息
-    回调。
-    - 在onCallAdded()方法中实现绑定服务。首先，创建InCallServiceBindingConnection对象，创建该对象的同时将同步创建一个mServiceConnection对象，此对象为匿名的ServiceConnection类型，重写了onServiceConnected和onServiceDisconnected方法;接着，创建action为InCallService.SERVICE_ INTERFACE的intent对象，并更新了PhoneAccount和Call的一些关键信息;然后，调用Android 系统的bindServiceAsUser 方法绑定服务;最后是绑定服务成功以后的onConnected系统回调，将发起对InCallController.this.onConnected的调用
-      - InCallController.this.onConnected()将之前保存的Call对象通过inCallService发送出去
-    - Telecom应用中完成了第一次绑定服务和对应服务的接口调用。绑定的SERVICE INTERFACE定义为“android.telecom.InCallService"，InCallController 通过绑定服务的方式，开启拨号流程中的第二次跨进程访问，从Telecom应用的system_ server 进程再次回到Dialer应用的com.android.dialer进程。
+- startOutgoingCal方法将通过绑定服务和调用其服务接口，启动和更新Dialer应用中的 InCallActivity，展示出通话界面
+  - Dialer应用提供用户拨号操作界面，用户输入电话号码发起拨号请求，到Telecom应用接收拨号请求，完成第一次跨进程传递的android.telecom.parcelableCallserver.telecom.Call对象，然后通过此对象信息创建可跨进程传递android.telecom.parcelableCall对象，完成第二次跨进程服务接口调用;回到Dialer应用的com.android.dialer进程中的IlnCallService服务响应，通过接收到的 parcelableCall对象信息创建本地的 android.telecom.Call对象，最后根据此对象更新和显示InCallActivity通话界面相关信息。
 
-#### IInCallService服务的响应过程
+##### startOutgoingCall()
+
+1. CallsManager.startOutgoingCall:主要逻辑是创建、更新和保存Call 对象。Call对象的名字非常特殊，其代码是:packages/services/Telecomm/srclcomlandroidlserver/telecomICall.java，由Telecom应用中的com.android.server.telecom.call类定义。
+  1. CallsManager.addCall
+    1. 创建Call对象，如果不是以前保存在mCalls列表的Call对象，调用addCall (call) 方法保存并触发增加Call对象的通知，CallsManager对象将保存多个Call 对象到mCalls 集合中，Call对象则设置Listener 对象为CallsManager,对象之间相互引用。而CallsManager对象通过mListeners发出onCallAdded消息回调。
+2. 有九个Listener对象，在拨号流程中重点关注mlnCallController 这个注册的CallsManagerlistene对象，即com.android.server.telecom.InCallController。
+  1. ![image-20220714231256642](Android Telephony.assets/image-20220714231256642.png)
+  2. ![image-20220714232107093](Android Telephony.assets/image-20220714232107093.png)
+  3. 在onCallAdded()方法中实现绑定服务。首先，创建InCallServiceBindingConnection对象，创建该对象的同时将同步创建一个mServiceConnection对象，此对象为匿名的ServiceConnection类型，重写了onServiceConnected和onServiceDisconnected方法;接着，创建action为InCallService.SERVICE_ INTERFACE的intent对象，并更新了PhoneAccount和Call的一些关键信息;然后，调用Android 系统的bindServiceAsUser 方法绑定服务;最后是绑定服务成功以后的onConnected系统回调，将发起对InCallController.this.onConnected的调用
+    - action InCallService.SERVICE_ INTERFACE定义为“android.telecom.InCallService"，InCallController 通过绑定服务的方式，开启拨号流程中的第二次跨进程访问，从Telecom应用的system_ server 进程再次回到Dialer应用的com.android.dialer进程。Telecom应用中完成了第一次绑定服务和对应服务的接口调用。
+    - InCallController.this.onConnected()首先绑定服务，接着调用服务的setInCallAdapter、 addCall 和onCallXXChanged接口将之前保存的Call对象通过inCallService发送出去
+
+###### IInCallService服务的响应过程
 
 - InCallServicelmpl类继承于InCallService类，类代码文件在packages/apps/Dialer工程下，而InCallService类对应的代码文件则在framework 下，其服务接口的定义文件为: frameworks/base/telecomm/java/com/android/intermal/telecom/InCallService.aidl,主要定义了addCall setInCallAdapter、updateCall等接口方法。
 - InCallController在拨号流程中，首先绑定服务，接着调用服务的setInCallAdapter、 addCall 和onCallXXChanged接口。
-  - onBind服务被绑定的响应方法
+  1. onBind服务被绑定的响应方法
+    - ![image-20220714233635994](Android Telephony.assets/image-20220714233635994.png)
     - onBind()的返回Intent是InCallServiceBinder，InCallServiceBinder实现了IInCallService.aidl的接口，这些接口通过发送Handler消息，将服务接收到的服务请求转化为异步处理方式
-  - setInCallAdapter设置Adapter
+  2. setInCallAdapter设置Adapter
+    - ![image-20220714234149348](Android Telephony.assets/image-20220714234149348.png)
     - setInCallAdapter接口的响应逻辑，主要是创建Phone对象和设置Phone对象的Listener属性。
-  - addCall增加主动拨号Outgoing Call
+      - Phone即frameworks/base/telecomm/java/android/telecom/Phone.java
+      - 步骤12和步骤13，创建 Phone对象和增加Listener 为InCallService类的.mPhoneListener对象，也是拨号流程Dialer应用中的第一个Listener。
+      - 在创建 Phone对象之通过lInCallAdapterBinder对象创建了InCallAdapter。InCallAdapter接口定义文件 frameworks/base/telecomm/java/com/android/internal/telecom/InCallAdapter.aidl ，提供了answerCall、rejectCall、mute、setAudioRoute、 playDtmfTone 等控制通话的接口，因此通过Binder对象可跨进程访问Telecom应用，即system server进程的系统服务相关接口。
+  3. addCall增加主动拨号Outgoing Call
+    - ​	![image-20220715000511453](Android Telephony.assets/image-20220715000511453.png)
     - 在Telecom应用中，首先会创建Call对象，Dialer应用中也会创建Call对象，但这两个Call对象的定义是不同的。
     - Call对象的创建与转换。从Telecom应用中创建com.android.server.telecom.Call,并通过此对象创建跨进程传递android.telecom.parcelableCall对象(支持序列化和反序列化，因此可以跨进程传递此对象)，而Dialer应用中是接收到parcelableCall对象后，通过此对象相关信息创建android.telecom.Call对象。
     - 调用fireCallAdded(call)方法，使用多个监听器完成通话界面的展示和更新
 
-#### CallsManager的placeOutgoingCall()
+##### placeOutgoingCall()
 
-- CallsManager 分别调用startOutgoingCall 和placeOutgoingCall。startOutgoingCall 方法将通过绑定服务和调用其服务接口，启动和更新Dialer应用中的InCallActivity, 展示出通话界面;但拨号请求并未发送到BP Modem处理。
-- placeOutgoingCall关键调用过程： sendNewOutgoingCalIntent->NewOutgoing->CallntentBroadcaster. processIntent→mCallsManager.placeOutgoingCall->call.startCreateConnection→CreateConnectionProcessor.process→attemptNextPhoneAccount
-  - 在CreateConnectionProcessor类中的定义是private ConnectionServiceWrapper mService服务,ConnectionServiceWrapper的createConnection 方法是拨号流程在Telecom应用中将发起第二次绑定服务的跨进程服务访问，绑定服务的服务对象为: SERVICE_INTERFACE，即“android.telecom.ConnectionService"
+- ![image-20220715001611786](Android Telephony.assets/image-20220715001611786.png)
+  - 在CreateConnectionProcessor类中的定义是private ConnectionServiceWrapper mService服务,ConnectionServiceWrapper的createConnection 方法
     - 流程
-      - bind Service:创建intent的Action有一个比较隐含的设置， 在ConnectionServiceWrapper类的构造方法中调用了super构造方法，从而设置了绑定服务的对象为ConnectionService.SERVICE _INTERFACE。
-      - addConnectionServiceAdapter:将传递实现IConnectionServiceAdapter. aidI接口Stub的跨进程访问binder对象。
-      - createConnection:通过Call对象拨号请求相关信息创建ConnectionRequest对象，传递给packages/services/Telephony中对应的服务。
+      - ==TeleService==：拨号流程在Telecom应用中将发起第二次绑定服务的跨进程服务访问，绑定的服务对象在packages/services/Telephony代码库中，这是我们涉及的第三个代码库。查看对应的 Android.mk文件，此代码库将编译出TeleService.apk Android 应用程序，称其为TeleService应用。
+      - addConnectionServiceAdapter方法将通过mServicelnterface调用addConnectionServiceAdapter接口增加IConnectionServiceAdapter，为成功绑定TeleService服务后的第一次跨进程调用。
+        - IConnectionServiceAdapter接口的定义文件是:frameworks/base/telecommljavalcomlandroid/internal/telecom/lConnectionServiceAdapter.aidl,主要定义了setActive、setRinging、setDialing.setConnectionCapabilities等接口方法。通过接口名，当前绑定的服务“android.telecom.ConnectionService”将通过此Adapter接口调用去更新Telecom中的通话状态。
+      - createConnection:通过Call对象拨号请求相关信息创建ConnectionRequest对象，传递packages/services/Telephony中对应的服务。
     - 拨号流程中，Telecom应用第一次跨进程服务调用，将与Call对象相关的拨号请求信息传递给了Dialer应用，去加载和展现通话界面;那么第二次跨进程服务调用，Call 拨号请求相关信息转换成了ConnectionRequest对象并传递给了TeleService 应用。TeleService 将接收到的ConnectionRequest请求相关信息传递给BP Modem来发起电话拨号请求。
 
 #### IConnectionService服务的响应过程
 
 - 根据AndroidManifest.xml中对android.telecom.ConnectionService 服务的定义，其服务的Java类为com.android.services.telephony.TelephonyConnectionService, 继承自android.telecom. ConnectionService抽象类。在frameworks/base工程下，代码文件为frameworks/base/telecomm/java/android/telecom/ConnectionService.java
 
-- frameworks/base/telecomm/java/com/android/internal/telecom/lConnectionService.aidl文件作为IConnectionService服务的接口定义，主要定义了addConnectionServiceAdapter、createConnection、answer、hold 等接口。通过这些接口的名字，可以知道此服务主要提供了Call 状态管理的接口供
-  Telecom应用调用，比如接听电话、保持呼叫、挂断电话等。
+- frameworks/base/telecomm/java/com/android/internal/telecom/lConnectionService.aidl文件作为IConnectionService服务的接口定义，主要定义了addConnectionServiceAdapter、createConnection、answer、hold 等接口。通过这些接口的名字，可以知道此服务主要提供了Call 状态管理的接口供Telecom应用调用，比如接听电话、保持呼叫、挂断电话等。
+  
+- ![image-20220715004728116](Android Telephony.assets/image-20220715004728116.png)
+  
   1. onBind():TelephonyConnectionService继承于ConnectionService 类，并未重写父类的onBind 方法。onBind逻辑简单，返回了IConnectionService.Stub 类型的mBinder对象。
   
   2. addConnectionServiceAdapter() 设置Adapter：使用Handler的异步消息处理机制，将服务调用的同步方式转为异步方式处理, addConnect ionServiceAdapter服务接口将立即返回
@@ -216,21 +232,25 @@
   3. createConnection() 继续发送拨号请求：ConnectionService服务的接口createConnection 的响应逻辑仍然是通过mHandler将同步调用转为异步处理。mHandler发出MSG_ CREATE_ CONNECTION 消息,并在handleMessage中响应此方法，再调用父类的createConnection方法,createConnection方法利用onCreateXXXConnection 创建Connection 对象和通过mAdapter传递过来的Binder对象进行handleCreateConnectionComplete接口回调。
      1. Connection对象的创建过程，TelephonyConnectionService 重写了父类ConnectionService的onCreateOutgoing
         Connection方法，会判断是否是紧急电话，而且Connection连接失败将不是TelephonyConnection，从而不能打电话，如果成功会执行placeoutgoingConnection（）方法，placeoutgoingConnection方法中，如果phone不为空执行phone.dial()方法
-        
+     
      2. phone是com.android.interal.telephony.GsmCdmaPhone类型对象，其代码为frameworks/opt/telephony/src/java/com/android/internal/telephony/GsmCdmaPhone.java。phone的dial 方法的调用过程：diallnternal-→mCT.dial的调用过程，mCT即GsmCdmaCalITracker，dial方法中会使用mCi.dial方法，mCi即RIL对象，其Java代码是frameworks/optelephony/src/java/com/android/internal/telephony/RlL.java，这里将发出RIL的拨号请求。跟踪拨号流程已经到了HAL (硬件抽象层)，在这一层不同的芯片厂家将完成不同的实现，比如高通平台将RIL请求转为QMI消息与Modem交互，MTK平台则采用AT命令的方式与Modem交互。
+     
+        - ==Telephony==:frameworks/opt/telephony是涉及的第四个代码库，查看对应的Android.mk文件，此代码库将编译出 telephony-common.jar，我们以后统一称其为Telephony
+     
         - Qualcomm messaging Interface(QMI):QMI是高通提供的一种多处理器进程间通信的功能接口，用于AP和BP侧的交互，通俗说法就是让终端设备TE（可以是手机，PDA，计算机）对高通BP侧的AMSS系统进行操作，如调用函数，读取数据，设置其中的NV项等。、
-        
+     
         - AT：Hayes 命令集（也称为AT 命令集）是一种特定的命令语言，最初由Dennis Hayes 于 1981 年 为Hayes Smartmodem 300波特 调制解调器开发。命令集由一系列短文本字符串组成，这些短文本字符串可以组合起来产生诸如拨号、挂断和更改连接参数等操作的命令。绝大多数拨号调制解调器以多种变体形式使用 Hayes 命令集。
-        
+     
         - 全球移动通讯系统（Global System for Mobile Communications），即GSM，又称泛欧数位式行动电话系统，是当前应用最为广泛的移动电话标准。全球超过200个国家和地区超过10亿人正在使用GSM电话。GSM标准的广泛使用使得在移动电话运营商之间签署“漫游协定”后用户的国际漫游变得很平常。GSM相较它以前的标准最大的不同是他的信令和语音信道都是数位的，因此GSM被看作是第二代（2G）移动电话系统。GSM标准当前由3GPP组织负责制定和维护。
-        
+     
         - 第三代移动通信技术，简称3G（英语：3rd-Generation），规范名称IMT-2000（International Mobile Telecommunications-2000），是指支持高速数据传输的蜂窝网络移动电话技术。3G服务能够同时发送声音（通话）及信息（电子邮件、即时通信等）。3G的代表特征是提供高速数据业务，速率一般在几百kbps以上，自从4G出来后3G逐渐淘汰。
-        
+     
         - 第四代移动通信技术（英语：The fourth generation of mobile phone mobile communication technology standards，缩写为4G），是3G之后的延伸。 IMT-Advanced的4G标准:高级长期演进技术（又译作长期演进技术升级版，英语：LTE-Advanced，简称LTE-A，在中国大陆称4G+）是长期演进技术（LTE）的提升版本，理论上网速度比3G快十倍以上，也是4G规范的国际高速无线通信标准。
-        
+     
         - 第五代移动通信技术（英语：5th generation mobile networks或5th generation wireless systems，简称 5G）是最新一代移动通信技术，为 4G（LTE-A、WiMAX-A、LTE）系统后的演进。
-        
-          
+     
+           
+     
 
 #### TelecomAdapter接收消息回调
 
