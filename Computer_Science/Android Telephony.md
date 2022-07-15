@@ -123,7 +123,38 @@
   - DataConnection（数据连接） 
   - **S**hort **M**essage **S**ervice（SMS,短信）/Mutimedia Message Service（MMS，彩信）
 
+  
+
+- | 代码库                       | Android.mk核心配置                                           | 说明                                                         |
+  | ---------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+  | packages/apps/Dialer         | LOCAL_PACKAGE_NAME:=Dialer<br /> include $(BUILD_PACKAGE)    | 编译出 Dialer.apk应用                                        |
+  | packages/services/ Telecomm  | LOCAL_JAVA_LIBRARIES := telephony-common LOCAL_PACKAGE_NAME:=Telecom <br />LOCAL_CERTIFICATE:= <br />platform $(BUILD_PACKAGE) | 编译出Telecom.apk应用，并使 用平台签名                       |
+  | packages/services/ Telephony | LOCAL_JAVA_LIBRARIES:= telephony-common <br />LOCAL_PACKAGE_NAME:= TeleService <br />LOCAL_CERTIFICATE:= platform<br />$(BUILD_PACKAGE) | 编译出TeleService.apk应用，并 使用平台签名orqsloT.E pivs2slsTBmoostsl |
+  | frameworks/base/telecomm     |                                                              | 编译出framework.jar                                          |
+  | frameworks/opt/telephony     | LOCAL_MODULE:= telephony-common <br />include $(BUILD_JAVA_LIBRARY) | 编译出telephony-common.jar                                   |
+
+- 
+
+- | 代码库                      | 名称        | 进程                            |
+  | --------------------------- | ----------- | ------------------------------- |
+  | packageslapps/Dialer        | Dialer      | com.android.dialer              |
+  | packages/services/Telecomm  | Telecom     | system_server                   |
+  | packages/services/Telephony | TeleService | com.android.phone               |
+  | frameworks/base/telecomm    | framework   |                                 |
+  | frameworks/opt/telephony    | Telephony   | system_server&com.android.phone |
+
 ### 拨号流程分析
+
+- 拨号入口 DialpadFragment
+  - Dialer应用中的拨号流程将发起第一次的跨进程服务接口调用，即TelecomManager的placeCall方法调用。
+- 第一次跨进程访问
+  - 拨号流程中的第一次跨进程访问，将从Dialer应用访问到Telecom应用中的ITelecomService服务接口
+
+- Telecom 应用第一次绑定服务
+  - Telecom应用中InCallController 对象的bindToServices方法将绑定Dialer应用中的lInCallService服务，并调用该服务提供的setInCallAdapter和addCall等方法，Dialer应用中将展示和更新InCallActivity进行通话界面的显示。
+
+- Telecom应用第二次绑定服务
+  - Telecom应用中ConnectionServiceWrapper对象的createConnection方法将绑定TeleService应用中的IConnectionService服务，并调用该服务提供的addConnectionServiceAdapter和createConnection等方法，TeleService应用将通过RIL对象发出拨号的RIL请求。
 
 #### 打开Nexus 6P手机的拨号盘
 
@@ -254,6 +285,8 @@
 
 #### TelecomAdapter接收消息回调
 
+- ![image-20220715093659603](Android Telephony.assets/image-20220715093659603.png)
+
 1. ConnectionServiceWrapper.Adapter 将接收TeleService应用的接口回调，将通过this调用ConnectionServiceWrapper对象的handleCreateConnectionComplete 方法，接着是mPendingResponses属性对象的handleCreateConnectionSuccess 方法调用，即CreateConnectionProcessor 对象，最后是mCallResponse.handleCreateConnectionSuccess对象，即Call对象的handleCreateConnectionSuccess方法响应TeleService应用的接口回调,会调用Listener的onSuccessfulOutgoingCall进行拨号流程处理
 2. Call 类中有Listener 的接口定义，同时也定义了ListenerBase抽象类，它实现了Listener 接口。ListenerBase抽象类实现了Listener 接口的所有方法，并且这些方法都是空实现，没有具体逻辑。ListenerBase 抽象类有三个子类，分别是:CallsManager,InCallController 匿名内部类对象mCallListener,IncomingCallNotifier匿名内部类对象mCallListener。这三个类中，仅有CallsManager重写了父类ListenerBase的onSuccessfulOutgoingCall方法
 3. Adapter的接口回调是将当前呼出的电话状态进行更新，更新为dialing,即正在拨号的状态，最终会调用IInCallService的接口去更新通话界面。
@@ -261,6 +294,8 @@
 ### 接听流程分析
 
 - 可以理解为与主动拨号流程正好相反的过程，手机BP Modem侧接收到网络端的来电请求，消息从Modem发给RIL，RIL 再发给TeleService 应用,然后再传递给Telecom应用，最终Dialer 应用接收到来电请求，进行来电响铃(可选震动)和展示来电界面，通知手机用户有新的来电了。
+- ![image-20220715100433067](Android Telephony.assets/image-20220715100433067.png)
+- ![image-20220715100926935](Android Telephony.assets/image-20220715100926935.png)
 - 流程
   1. Modem从网络端接收到来电，由RIL发出Call状态产生了变化的RIL_UNSOL_RESPONSE_CALL_STATE_CHANGED消息通知， RIL.java发出mCallStateRegistrants.notifyRegistrants通知， CallTracker.java进行响应。
   2. GsmCallTracker.java进入handleMessage，响应EVENT_CALL_STATE_CHANGE，交给父类的pollCallsWhenSafe方法 查询当前Call List，首先创建EVENT_POLL_CALLS_RESULT类型的Handler消息，并向RIL发起getCurrentCalls当前Call List请求。
@@ -270,13 +305,13 @@
   6. CallNotifier进入handleMessage响应PHONE_NEW_RINGING_CONNECTION消息，交给 onNewRingingConnection方法处理来电消息，根据来电的电话号码完成联系人查询、来电响铃和显示来电界面，进入Phone应用层。
   7. InCallScreen启动Activity，进入onCreate或onNewIntent方法，显示来电界面。
 
-
 #### 模拟接受来电
 
 1. RIL.java接收到Call状态变化消息后,CallTracker发起查询Call List操作,然后RIL执行AT+CLCC命令查询Modem数据,返回Call List数据给RIL.java。
-2. 进入RIL.java查找UNSOL_ RESPONSE_ CALL_ STATE_ CHANGED消息的处理逻辑,responseToString()方法进行该消息的处理。在此方法中根据底层上报的
+2. 进入RIL.java查找UNSOL_RESPONSE_CALL_STATE_CHANGED消息的处理逻辑,responseToString()方法进行该消息的处理。在此方法中根据底层上报的
    response类型有两处针对switch ( response )逻辑处理,前面的逻辑是对数据进行收集和整理,而后面的逻辑是完成对应response的逻辑处理和消息通知。
-3. 查询Call List操作不是由RIL.java接收到Call状态变化消息后直接发起的。RIL.java处理RIL_UNSOL_RESPONSE_CALL_STATE_CHANGED消息 的逻辑中只有mCallStateRegistrants对外发出消息通知，mCallStateRegistrants为RegistrantList类型
+3. 查询Call List操作不是由RIL.java接收到Call状态变化消息后直接发起的。RIL.java处理RIL_UNSOL_RESPONSE_CALL_STATE_CHANGED消息的逻辑中只有mCallStateRegistrants对外发出消息通知，mCallStateRegistrants为RegistrantList类型
+   - ![image-20220715095244380](Android Telephony.assets/image-20220715095244380.png)
    - RegistrantList消息处理机制包括两个重要的Java类：RegistrantList.java和Registrant.java。RegistrantList中使用的观察者模式为：RegistrantList为通知者， Registrant为观察者，RegistrantList通知者支持对通知者的增加（add/addUnique）、删除（remove），并且能够发出通知（notifyRegistrants）；而Registrant作为观察者，响应通知者发出的notifyRegistrants通知，并由其internalNotifyRegistrants方法响应通知者发出的通知。
      - notifyRegistrants方法调用后，找到对应的进行响应的Registrant 对象流程
        1. 查找RegistrantList对象注册观察者Registrant对象的方法， 在Android源代码中一般为registerForXXX方法，在此方法中调用RegistrantList对象的add/addUnique等注册观察者Registrant对象的方 法。
@@ -284,6 +319,7 @@
        3. 通过步骤的形参，找到的即是对象发出通知
      - mCallStateRegistrants.notifyRegistrants发出通知后，有两处可响应此通知，即GsmCallTracker和CdmaCallTracker两个类的handleMessage方法。在默认的Android虚拟设备上，仅有GsmCallTracker的handleMessage方法可响应。
        - 码分多址（英语：Code Division Multiple Access，即：CDMA）或分码多重进接、码分复存，是一种多址接入的无线通信技术。CDMA最早用于军用通信，但时至今日，已广泛应用到全球不同的民用通信中。在CDMA移动通信中，将语音频号转换为数字信号，给每组数据语音分组增加一个地址，进行扰码处理，然后将它发射到空中。CDMA最大的优点就是相同的带宽下可以容纳更多的呼叫，而且它还可以随语音传送数据信息。
+
 
 #### GsmCallTracker响应RIL的Call状态变化通知
 
@@ -333,6 +369,8 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 ### 通话状态更新消息上报流程
 
 - 拨号成功后，对方接听了此路通话，那么通话界面将更新当前通话为通话中的状态，并开始通话计时，可以理解为Modem->RIL→TeleService→Telecom->Dialer, 一层一层上报通话状态为“通话中”的消息处理和发送过程
+  - ![image-20220715105504878](Android Telephony.assets/image-20220715105504878.png)
+
 - 三个应用的Call信息传递
   1. TeleService应用首先接收到通话状态更新的消息，通过Telecom的Adapter服务设置不同的通话状态; 
   2. 接着Telecom应用更新Call状态;
@@ -350,6 +388,8 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 ### 控制通话消息下发流程
 
 - 在通话界面若想更改当前通话状态，比如挂断/接听当前接收来电，挂断/保持当前通话等操作，可以理解为是控制通话消息下发的过程，从Dialer- >Telecom- >TeleService→RIL→Modem,通话控制消息一层一层的下发，最终交给Modem处理具体的通话控制。
+  - ![image-20220715110250604](Android Telephony.assets/image-20220715110250604.png)
+
 - 三个应用的控制消息传递
   1. Dialer应用展示的通话界面或来电界面均有控制通话状态请求的界面控件，通过滑动或是点击相
      关的控件，将触发通话状态控制，调用android.telecom.Call对象的hold方法;
@@ -369,7 +409,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 - 系统的分层
   - Dialer 应用是普通的Android App应用，其运行进程的用户信息和进程信息，也能说明此问题; 
-  - Telecom 应用运行在system_ server 进程上，其进程用户名为system系统用户，说明它是运行在Android Framework框架层;
+  - Telecom 应用运行在system_ server 进程上，android:process=" sys tem ",LOCAL_CERTIFICATE =,其进程用户名为system系统用户，说明它是运行在Android Framework框架层;
   - TeleService应用运行的进程名是com.android.phone，用户名是radio,承载着Telephony Call协议栈，它运行在Android Framework框架层;
   - RIL，它运行在HAL (硬件抽象层)。
 - 交互方式
@@ -421,6 +461,8 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ### ITelecomService的onBind过程
 
+- ![image-20220715112749896](Android Telephony.assets/image-20220715112749896.png)
+
 - ![image-20220629104653079](Android Telephone.assets/image-20220629104653079.png)
 
 - AndroidManifest.xml应用配置文件中对android.telecom.ITelecomService服务的配置，可以找到com.android.server.telecom.components. TelecomService类，它就是Telecom应用的加载入口。此服务将在SystemServer系统启动过程中被加载。
@@ -445,6 +487,8 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 ### frameworks/base/telecomm包结构
 
 - ![image-20220629110309836](Android Telephone.assets/image-20220629110309836.png)
+  - InCallService和ConnectionService等Java程序放在frameworks/base/telecomm中的原因：涉及一个非常有用的设计模式——模板方法。 也就是在Android Framework中定义模板，在具体的应用实现类中重写模板的方法。
+
 
 ### 绑定 IInCallService 机制
 
