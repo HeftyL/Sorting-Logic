@@ -1788,7 +1788,7 @@
 ### Flag属性
 
 - Intent的Flag属性用于为该Intent添加一些额外的控制旗标，Intent 可调用addFlags()方法来添加控制旗标。
-  - 例如：FLAG_ ACTIVITY CLEAR_ _TOP: 该Flag相当于加载模式中的singleTask,通过这种Flag启动的Activity将会把要启动的Activity之上的Activity 全部弹出Activity 栈。
+  - 例如：FLAG_ ACTIVITY CLEAR_TOP: 该Flag相当于加载模式中的singleTask,通过这种Flag启动的Activity将会把要启动的Activity之上的Activity 全部弹出Activity 栈。
 
 # 应用资源
 
