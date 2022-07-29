@@ -412,7 +412,7 @@
 
 ### Framework
 
-1. SmsManager的sendTextMessage()
+1. SmsManager的sendTextMessage()中
 
    - SmsManager位于frameworks/base/telephony/java/android/telephony/java/android/telephony/SmsManager.java
 
@@ -426,7 +426,7 @@
              String text, PendingIntent sentIntent, PendingIntent deliveryIntent,
              boolean persistMessage) {
          try {
-             //UiccSmsController实现了ISms.Stub
+             //SmsController继承了ISmsImplBase，而ISmsImplBase继承了ISms.Stub
              ISms iccISms = getISmsServiceOrThrow();
              iccISms.sendTextForSubscriber(getSubscriptionId(), ActivityThread.currentPackageName(),
                      destinationAddress,
@@ -438,28 +438,323 @@
      }
      ```
 
-2. UiccSmsController的sendTextForSubscriber()
+2. SmsController的sendTextForSubscriber()中
 
    - 跨进程调用，从Messaging进程到phone进程
 
    - ISms.aidl位于frameworks/base/telephony/java/com/android/internal/telephony/ISms.aidl
 
-   - UiccSmsController位于frameworks/opt/telephony/java/com/android/internal/telephony/UiccSmsController.java
+   - UiccSmsController位于frameworks/opt/telephony/java/com/android/internal/telephony/SmsController.java
 
    - ```java
-     public void sendTextForSubscriber(int subId, String callingPackage, String destAddr,
-             String scAddr, String text, PendingIntent sentIntent, PendingIntent deliveryIntent,
-             boolean persistMessageForNonDefaultSmsApp) {
-         IccSmsInterfaceManager iccSmsIntMgr = getIccSmsInterfaceManager(subId);
-         if (iccSmsIntMgr != null) {
-             iccSmsIntMgr.sendText(callingPackage, destAddr, scAddr, text, sentIntent,
-                     deliveryIntent, persistMessageForNonDefaultSmsApp);
-         } else {
-             Rlog.e(LOG_TAG,"sendTextForSubscriber iccSmsIntMgr is null for" +
-                           " Subscription: " + subId);
-             sendErrorInPendingIntent(sentIntent, SmsManager.RESULT_ERROR_GENERIC_FAILURE);
-         }
+     public void sendTextForSubscriber(int subId, String callingPackage,String callingAttributionTag, String destAddr, String scAddr, String text,PendingIntent sentIntent, PendingIntent deliveryIntent,boolean persistMessageForNonDefaultSmsApp, long messageId) {
+           if (callingPackage == null) {
+               callingPackage = getCallingPackage();
+           }
+           if (!getSmsPermissions(subId).checkCallingCanSendText(persistMessageForNonDefaultSmsApp,
+                   callingPackage, callingAttributionTag, "Sending SMS message")) {
+               sendErrorInPendingIntent(sentIntent, SmsManager.RESULT_ERROR_GENERIC_FAILURE);
+               return;
+           }
+           long token = Binder.clearCallingIdentity();
+           //获得发送者的信息
+           SubscriptionInfo info;
+           try {
+               info = getSubscriptionInfo(subId);
+           } finally {
+               Binder.restoreCallingIdentity(token);
+           }
+           if (isBluetoothSubscription(info)) {
+               sendBluetoothText(info, destAddr, text, sentIntent, deliveryIntent);
+           } else {
+               //关键步骤
+               sendIccText(subId, callingPackage, destAddr, scAddr, text, sentIntent, deliveryIntent,
+                       persistMessageForNonDefaultSmsApp, messageId);
+           }
+     }
+     private void sendIccText(int subId, String callingPackage, String destAddr,
+                   String scAddr, String text, PendingIntent sentIntent, PendingIntent deliveryIntent,
+                   boolean persistMessageForNonDefaultSmsApp, long messageId) {
+           Rlog.d(LOG_TAG, "sendTextForSubscriber iccSmsIntMgr"+ " Subscription: " + subId + " id: " + messageId);
+           IccSmsInterfaceManager iccSmsIntMgr = getIccSmsInterfaceManager(subId);
+           if (iccSmsIntMgr != null) {
+               //关键步骤
+               iccSmsIntMgr.sendText(callingPackage, destAddr, scAddr, text, sentIntent,
+                       deliveryIntent, persistMessageForNonDefaultSmsApp, messageId);
+           } else {
+               Rlog.e(LOG_TAG, "sendTextForSubscriber iccSmsIntMgr is null for"
+                       + " Subscription: " + subId + " id: " + messageId);
+               sendErrorInPendingIntent(sentIntent, SmsManager.RESULT_ERROR_GENERIC_FAILURE);
+           }
      }
      ```
 
-     
+3. 在IccSmsInterfaceManager的sendText()中
+
+  - IccSmsInterfaceManager to provide an inter-process communication to access Sms in Icc
+
+  - Uicc:The universal integrated circuit card (UICC) is the smart card (integrated circuit card) used in mobile terminals in GSM and UMTS networks. The UICC ensures the integrity and security of all kinds of personal data, and it typically holds a few hundred kilobytes. The UICC's primary component is a SIM card.
+
+    - UMTS：Universal Mobile Telecommunications System，a 3g technology
+
+  - ```java
+    public void sendText(String callingPackage, String destAddr, String scAddr,String text, PendingIntent sentIntent, PendingIntent deliveryIntent,boolean persistMessageForNonDefaultSmsApp) {
+        //A permissions check
+        //This method checks only if the calling package has the permission to send the sms.
+        mPhone.getContext().enforceCallingPermission(Manifest.permission.SEND_SMS,"Sending SMS message");
+        //关键步骤
+        sendTextInternal(callingPackage, destAddr, scAddr, text, sentIntent, deliveryIntent,
+            persistMessageForNonDefaultSmsApp);
+    }
+    
+    //Send a text based SMS
+    public SmsDispatchersController mDispatchersController;
+    private void sendTextInternal(String callingPackage, String destAddr, String scAddr,String text, PendingIntent sentIntent, PendingIntent deliveryIntent,boolean persistMessageForNonDefaultSmsApp, int priority, boolean expectMore,
+    int validityPeriod, boolean isForVvm, long messageId) {
+          if (Rlog.isLoggable("SMS", Log.VERBOSE)) {
+              log("sendText: destAddr=" + destAddr + " scAddr=" + scAddr
+                      + " text='" + text + "' sentIntent=" + sentIntent + " deliveryIntent="
+                      + deliveryIntent + " priority=" + priority + " expectMore=" + expectMore
+                      + " validityPeriod=" + validityPeriod + " isForVVM=" + isForVvm
+                      + " " + SmsController.formatCrossStackMessageId(messageId));
+          }
+          notifyIfOutgoingEmergencySms(destAddr);
+          destAddr = filterDestAddress(destAddr);
+          //关键步骤
+          mDispatchersController.sendText(destAddr, scAddr, text, sentIntent, deliveryIntent,
+                  null/*messageUri*/, callingPackage, persistMessageForNonDefaultSmsApp,
+                  priority, expectMore, validityPeriod, isForVvm, messageId);
+        }
+    ```
+
+4. 在SmsDispatchersController的sendText（）方法中
+
+  - ```java
+    //在SmsDispatchersController的构造方法中mCdmaDispatcher = new CdmaSMSDispatcher(phone, this);
+    //在SmsDispatchersController的构造方法中mGsmDispatcher = new GsmSMSDispatcher(phone, this, mGsmInboundSmsHandler);
+    private SMSDispatcher mCdmaDispatcher;mCdmaDispatcher = new GsmSMSDispatcher()
+    private SMSDispatcher mGsmDispatcher;//在SmsDispatchersController的构造方法中mGsmDispatcher = new GsmSMSDispatcher()
+    private ImsSmsDispatcher mImsSmsDispatcher;
+    
+    public void sendText(String destAddr, String scAddr, String text, PendingIntent sentIntent,
+            PendingIntent deliveryIntent, Uri messageUri, String callingPkg, boolean persistMessage,
+            int priority, boolean expectMore, int validityPeriod, boolean isForVvm,
+            long messageId) {
+        //根据不同的情况将sms分发掉
+        if (mImsSmsDispatcher.isAvailable() || mImsSmsDispatcher.isEmergencySmsSupport(destAddr)) {
+            mImsSmsDispatcher.sendText(destAddr, scAddr, text, sentIntent, deliveryIntent,
+                    messageUri, callingPkg, persistMessage, priority, false /z*expectMore*/,
+                    validityPeriod, isForVvm, messageId);
+        } else {
+            if (isCdmaMo()) {
+                mCdmaDispatcher.sendText(destAddr, scAddr, text, sentIntent, deliveryIntent,messageUri, callingPkg, 		                     persistMessage, priority, expectMore,validityPeriod, isForVvm, messageId);
+            } else {
+                mGsmDispatcher.sendText(destAddr, scAddr, text, sentIntent, deliveryIntent,
+                        messageUri, callingPkg, persistMessage, priority, expectMore,
+                        validityPeriod, isForVvm, messageId);
+            }
+        }
+     }
+    ```
+
+5. 在SMSDispatcher的sendText（）中
+
+  - ```java
+      public void sendText(String destAddr, String scAddr, String text,
+                           PendingIntent sentIntent, PendingIntent deliveryIntent, Uri messageUri,
+                           String callingPkg, boolean persistMessage, int priority,
+                           boolean expectMore, int validityPeriod, boolean isForVvm,
+                           long messageId) {
+          Rlog.d(TAG, "sendText id: " + messageId);
+          //根据获得的信息生成对应的pdu
+          SmsMessageBase.SubmitPduBase pdu = getSubmitPdu(
+                  scAddr, destAddr, text, (deliveryIntent != null), null, priority, validityPeriod);
+          if (pdu != null) {
+              //根据获得的信息生成对应的SmsTracker
+              HashMap map = getSmsTrackerMap(destAddr, scAddr, text, pdu);
+              SmsTracker tracker = getSmsTracker(callingPkg, map, sentIntent, deliveryIntent,
+                      getFormat(), messageUri, expectMore, text, true /*isText*/,
+                      persistMessage, priority, validityPeriod, isForVvm, messageId);
+    
+              if (!sendSmsByCarrierApp(false /* isDataSms */, tracker)) {
+                  sendSubmitPdu(tracker);
+              }
+          } else {
+              Rlog.e(TAG, "SmsDispatcher.sendText(): getSubmitPdu() returned null" + " id: "
+                      + messageId);
+              triggerSentIntentForFailure(sentIntent);
+          }
+      }
+    
+      /** Send a single SMS PDU. */
+      @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.R, trackingBug = 170729553)
+      private void sendSubmitPdu(SmsTracker tracker) {
+          sendSubmitPdu(new SmsTracker[] {tracker});
+      }
+    
+      /** Send a multi-part SMS PDU. Usually just calls sendRawPdu(). */
+      private void sendSubmitPdu(SmsTracker[] trackers) {
+          if (shouldBlockSmsForEcbm()) {
+              Rlog.d(TAG, "Block SMS in Emergency Callback mode");
+              handleSmsTrackersFailure(trackers, SmsManager.RESULT_SMS_BLOCKED_DURING_EMERGENCY,
+                      NO_ERROR_CODE);
+          } else {
+              sendRawPdu(trackers);
+          }
+      }
+    
+      //Send a single or a multi-part SMS
+      public void sendRawPdu(SmsTracker[] trackers) {
+          //差错验证，获取包信息
+          ...
+          // checkDestination() returns true if the destination is not a premium short code or the
+          // sending app is approved to send to short codes. Otherwise, a message is sent to our
+          // handler with the SmsTracker to request user confirmation before sending.
+          if (checkDestination(trackers)) {
+              // check for excessive outgoing SMS usage by this app
+              if (!mSmsDispatchersController
+                      .getUsageMonitor()
+                      .check(appInfo.packageName, trackers.length)) {
+                  sendMessage(obtainMessage(EVENT_SEND_LIMIT_REACHED_CONFIRMATION, trackers));
+                  return;
+              }
+    
+              for (SmsTracker tracker : trackers) {
+                  //判断授权开关是否开启
+                  if (mSmsDispatchersController.getUsageMonitor().isSmsAuthorizationEnabled()) {
+                      final SmsAuthorizationCallback callback = new SmsAuthorizationCallback() {
+                          @Override
+                          public void onAuthorizationResult(final boolean accepted) {
+                              if (accepted) {
+                                  sendSms(tracker);
+                              } else {
+                                  tracker.onFailed(mContext, SmsManager.RESULT_ERROR_GENERIC_FAILURE,
+                                          SmsUsageMonitor.ERROR_CODE_BLOCKED);
+                              }
+                          }
+                      };
+                     mSmsDispatchersController.getUsageMonitor().authorizeOutgoingSms(tracker.mAppInfo,
+                              tracker.mDestAddress,tracker.mFullMessageText, callback, this);
+                  } else {
+                      //没开启直接发送
+                      //实际调用的是GsmSMSDispatcher的sendSms（）方法，
+                      sendSms(tracker);
+                  }
+              }
+          }
+    		//如果是打给紧急号码，启用异步的紧急服务。
+          if (mTelephonyManager.isEmergencyNumber(trackers[0].mDestAddress)) {
+              new AsyncEmergencyContactNotifier(mContext).execute();
+          }
+      }
+    ```
+
+6. 在GsmSMSDispatcher的sendSms()中
+
+  - ```java
+    protected void sendSms(SmsTracker tracker) {
+        int ss = mPhone.getServiceState().getState();
+    
+        Rlog.d(TAG, "sendSms: "
+                + " isIms()=" + isIms()
+                + " mRetryCount=" + tracker.mRetryCount
+                + " mImsRetry=" + tracker.mImsRetry
+                + " mMessageRef=" + tracker.mMessageRef
+                + " mUsesImsServiceForIms=" + tracker.mUsesImsServiceForIms
+                + " SS=" + ss
+                + " " + SmsController.formatCrossStackMessageId(tracker.mMessageId));
+    
+        // if sms over IMS is not supported on data and voice is not available...
+        if (!isIms() && ss != ServiceState.STATE_IN_SERVICE) {
+        //In 5G case only Data Rat is reported.
+            if(mPhone.getServiceState().getRilDataRadioTechnology()
+                    != ServiceState.RIL_RADIO_TECHNOLOGY_NR) {
+                tracker.onFailed(mContext, getNotInServiceError(ss), NO_ERROR_CODE);
+                return;
+            }
+        }
+    	//当发送完成，执行EVENT_SEND_SMS_COMPLETE消息回调
+        Message reply = obtainMessage(EVENT_SEND_SMS_COMPLETE, tracker);
+        HashMap<String, Object> map = tracker.getData();
+        byte pdu[] = (byte[]) map.get("pdu");
+        byte smsc[] = (byte[]) map.get("smsc");
+        if (tracker.mRetryCount > 0) {
+            // per TS 23.040 Section 9.2.3.6:  If TP-MTI SMS-SUBMIT (0x01) type
+            //   TP-RD (bit 2) is 1 for retry
+            //   and TP-MR is set to previously failed sms TP-MR
+            if (((0x01 & pdu[0]) == 0x01)) {
+                pdu[0] |= 0x04; // TP-RD
+                pdu[1] = (byte) tracker.mMessageRef; // TP-MR
+            }
+        }
+    
+        // sms over gsm is used:
+        //   if sms over IMS is not supported AND
+        //   this is not a retry case after sms over IMS failed
+        //     indicated by mImsRetry > 0 OR
+        //   this tracker uses ImsSmsDispatcher to handle SMS over IMS. This dispatcher has received
+        //     this message because the ImsSmsDispatcher has indicated that the message needs to
+        //     fall back to sending over CS.
+        if (0 == tracker.mImsRetry && !isIms() || tracker.mUsesImsServiceForIms) {
+            if (tracker.mRetryCount == 0 && tracker.mExpectMore) {
+                mCi.sendSMSExpectMore(IccUtils.bytesToHexString(smsc),
+                        IccUtils.bytesToHexString(pdu), reply);
+            } else {
+                mCi.sendSMS(IccUtils.bytesToHexString(smsc),
+                        IccUtils.bytesToHexString(pdu), reply);
+            }
+        } else {
+            mCi.sendImsGsmSms(IccUtils.bytesToHexString(smsc),
+                    IccUtils.bytesToHexString(pdu), tracker.mImsRetry,
+                    tracker.mMessageRef, reply);
+            // increment it here, so in case of SMS_FAIL_RETRY over IMS
+            // next retry will be sent using IMS request again.
+            tracker.mImsRetry++;
+        }
+    }
+    ```
+
+7. RIL的sendSMS()
+
+   - ```java
+      public void sendSMS(String smscPdu, String pdu, Message result) {
+          获得radio代理
+          IRadio radioProxy = getRadioProxy(result);
+          if (radioProxy != null) {
+              //注册消息
+              RILRequest rr = obtainRequest(RIL_REQUEST_SEND_SMS, result,
+                      mRILDefaultWorkSource);
+      
+              // Do not log function args for privacy
+              if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+      
+              GsmSmsMessage msg = constructGsmSendSmsRilRequest(smscPdu, pdu);
+              if (mRadioVersion.greaterOrEqual(RADIO_HAL_VERSION_1_6)) {
+                  try {
+                      android.hardware.radio.V1_6.IRadio radioProxy16 =
+                              (android.hardware.radio.V1_6.IRadio) radioProxy;
+                      //通过rilc继续发送
+                      radioProxy16.sendSms_1_6(rr.mSerial, msg);
+                      mMetrics.writeRilSendSms(mPhoneId, rr.mSerial, SmsSession.Event.Tech.SMS_GSM,
+                              SmsSession.Event.Format.SMS_FORMAT_3GPP,
+                              getOutgoingSmsMessageId(result));
+                  } catch (RemoteException | RuntimeException e) {
+                      handleRadioProxyExceptionForRR(rr, "sendSMS", e);
+                  }
+              } else {
+                  try {
+                      radioProxy.sendSms(rr.mSerial, msg);
+                      mMetrics.writeRilSendSms(mPhoneId, rr.mSerial, SmsSession.Event.Tech.SMS_GSM,
+                              SmsSession.Event.Format.SMS_FORMAT_3GPP,
+                              getOutgoingSmsMessageId(result));
+                  } catch (RemoteException | RuntimeException e) {
+                      handleRadioProxyExceptionForRR(rr, "sendSMS", e);
+                  }
+              }
+          }
+      }
+      ```
+
+### RIL
+
+- 根据不同的radio版本发送sms，绑定RIL_REQUEST_SEND_SMS消息回调

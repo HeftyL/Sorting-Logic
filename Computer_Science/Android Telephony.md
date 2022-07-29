@@ -125,13 +125,13 @@
 
   
 
-- | 代码库                       | Android.mk核心配置                                           | 说明                                                         |
-  | ---------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-  | packages/apps/Dialer         | LOCAL_PACKAGE_NAME:=Dialer<br /> include $(BUILD_PACKAGE)    | 编译出 Dialer.apk应用                                        |
-  | packages/services/ Telecomm  | LOCAL_JAVA_LIBRARIES := telephony-common LOCAL_PACKAGE_NAME:=Telecom <br />LOCAL_CERTIFICATE:= <br />platform $(BUILD_PACKAGE) | 编译出Telecom.apk应用，并使 用平台签名                       |
-  | packages/services/ Telephony | LOCAL_JAVA_LIBRARIES:= telephony-common <br />LOCAL_PACKAGE_NAME:= TeleService <br />LOCAL_CERTIFICATE:= platform<br />$(BUILD_PACKAGE) | 编译出TeleService.apk应用，并 使用平台签名orqsloT.E pivs2slsTBmoostsl |
-  | frameworks/base/telecomm     |                                                              | 编译出framework.jar                                          |
-  | frameworks/opt/telephony     | LOCAL_MODULE:= telephony-common <br />include $(BUILD_JAVA_LIBRARY) | 编译出telephony-common.jar                                   |
+- | 代码库                       | Android.mk核心配置                                           | 说明                                      |
+  | ---------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+  | packages/apps/Dialer         | LOCAL_PACKAGE_NAME:=Dialer<br /> include $(BUILD_PACKAGE)    | 编译出 Dialer.apk应用                     |
+  | packages/services/ Telecomm  | LOCAL_JAVA_LIBRARIES := telephony-common LOCAL_PACKAGE_NAME:=Telecom <br />LOCAL_CERTIFICATE:= <br />platform $(BUILD_PACKAGE) | 编译出Telecom.apk应用，并使 用平台签名    |
+  | packages/services/ Telephony | LOCAL_JAVA_LIBRARIES:= telephony-common <br />LOCAL_PACKAGE_NAME:= TeleService <br />LOCAL_CERTIFICATE:= platform<br />$(BUILD_PACKAGE) | 编译出TeleService.apk应用，并使用平台签名 |
+  | frameworks/base/telecomm     |                                                              | 编译出framework.jar                       |
+  | frameworks/opt/telephony     | LOCAL_MODULE:= telephony-common <br />include $(BUILD_JAVA_LIBRARY) | 编译出telephony-common.jar                |
 
 - 
 
