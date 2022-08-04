@@ -1275,7 +1275,7 @@
 - Wireless Emergency Alerts ( WEA，以前称为商业移动警报系统( Commercial Mobile Alert System ，CMAS )，在此之前称为个人本地化警报网络( Personal Localized Alerting Network ，PLAN)是美国的一个警报网络，旨在将紧急警报传播到移动设备，例如手机和寻呼机。机构能够使用综合公共警报和警告系统通过 WEA 和其他公共系统传播和协调紧急警报和警告信息。
 - 背景
   - 法案：*Warning, Alert, and Response Network (WARN) Act* 
-- CMAS 将允许联邦机构接受和汇总来自美国总统、国家气象局(NWS) 和紧急行动中心的警报，并将警报发送给参与的无线提供商，后者将通过小区广播方式将警报分发给兼容设备
+- CMAS 将允许联邦机构接受和汇总来自美国总统、国家气象局(NWS) 和紧急行动中心的警报，并将警报发送给参与的无线提供商，无线提供商将通过小区广播方式将警报分发给兼容设备
 - 类型
   - 美国总统或联邦紧急事务管理局(FEMA)行政长官发出的警报，Channel ID：4370
   - 涉及生命安全迫在眉睫威胁的警报
@@ -1907,4 +1907,192 @@
       }
       ```
 
-      
+
+# PLMN和SPN
+
+- PLMN(Public Land Mobile Network):当前SIM所驻留的网络
+
+- SPN(Service Provider Name)：当前发行SIM卡的运营商的名称
+
+## PLMN流程
+
+1. TeleService 系统应用加载Telephony业务模型的过程中，同步完成 ServiceStateTracker 对象的创建，同时注册网络变化相关的Registration。
+
+   - ServiceStateTracker 位于frameworks/opt/telephony/src/java/com/android/internal/telephony/ServiceStateTracker.java
+
+     - ```java
+       //ServiceStateTracker类体
+       protected final TransportManager mTransportManager;
+       protected final SparseArray<NetworkRegistrationManager> mRegStateManagers = new SparseArray<>();
+       mTransportManager = mPhone.getTransportManager();
+           for (int transportType : mTransportManager.getAvailableTransports()) {
+               mRegStateManagers.append(transportType, new NetworkRegistrationManager(
+                       transportType, phone));
+               mRegStateManagers.get(transportType).registerForNetworkRegistrationInfoChanged(
+                       this, EVENT_NETWORK_STATE_CHANGED, null);
+           }
+       ```
+
+2. 当网络发生变化时ServiceStateTracker响应EVENT_NETWORK_STATE_CHANGED消息
+
+   - ```java
+     public void handleMessage(Message msg) {
+         AsyncResult ar;
+         int[] ints;
+         Message message;
+     
+         if (VDBG) log("received event " + msg.what);
+         switch (msg.what) {
+             case EVENT_NETWORK_STATE_CHANGED:
+                 pollStateInternal(true);
+                 break;
+         }
+     }
+     
+     protected void pollStateInternal(boolean modemTriggered) {
+     // MTK-END
+         mPollingContext = new int[1];
+         mPollingContext[0] = 0;
+     
+         log("pollState: modemTriggered=" + modemTriggered);
+     
+         switch (mCi.getRadioState()) {
+             case TelephonyManager.RADIO_POWER_UNAVAILABLE:
+                 mNewSS.setStateOutOfService();
+                 setSignalStrengthDefaultValues();
+                 mLastNitzData = null;
+                 mNitzState.handleNetworkUnavailable();
+                 pollStateDone();
+                 break;
+     
+             case TelephonyManager.RADIO_POWER_OFF:
+                 mNewSS.setStateOff();
+                 setSignalStrengthDefaultValues();
+                 mLastNitzData = null;
+                 mNitzState.handleNetworkUnavailable();
+                 // don't poll when device is shutting down or the poll was not modemTrigged
+                 // (they sent us new radio data) and current network is not IWLAN
+                 if (mDeviceShuttingDown ||
+                         (!modemTriggered && ServiceState.RIL_RADIO_TECHNOLOGY_IWLAN
+                         != mSS.getRilDataRadioTechnology())) {
+                     pollStateDone();
+                     break;
+                 }
+     
+             default:
+                 // Issue all poll-related commands at once then count down the responses, which
+                 // are allowed to arrive out-of-order
+                 mPollingContext[0]++;
+                 //获取PLMN信息
+                 mCi.getOperator(obtainMessage(EVENT_POLL_STATE_OPERATOR, mPollingContext));
+                 break;
+         }
+     }
+     ```
+
+   - modem侧获取PLMN优先级
+
+     1. Eons(Enhanced Operator Name String)，也就是从SIM的EF_OPL和EF_PNN分区来读取Plmn Name
+        - EF:Elementary File
+     2. CPHS ONS(Common PCN Handset Specification Operator Name String)，该字串也是保存在SIM文件系统中
+     3. NITZ Operator Name
+     4. 配置文件读取
+     5. MCCMNC数字作为Plmn Name
+
+3. 接收到RIL的返回数据时，ServiceStateTracker响应EVENT_POLL_STATE_OPERATOR消息
+
+   - ```java
+     public void handleMessage(Message msg) {
+         AsyncResult ar;
+         int[] ints;
+         Message message;
+     
+         if (VDBG) log("received event " + msg.what);
+         switch (msg.what) {
+             case EVENT_POLL_STATE_OPERATOR:
+                     ar = (AsyncResult) msg.obj;
+                     handlePollStateResult(msg.what, ar);
+                     break;
+         }
+     }
+     
+     protected void handlePollStateResult(int what, AsyncResult ar) {
+         // Ignore stale requests from last poll
+         if (ar.userObj != mPollingContext) return;
+     
+         if (ar.exception != null) {
+            ...
+         } else try {
+             handlePollStateResultMessage(what, ar);
+         }
+     }
+     protected void handlePollStateResultMessage(int what, AsyncResult ar) {
+         int ints[];
+         switch (what) {
+             case EVENT_POLL_STATE_OPERATOR: {
+                 if (mPhone.isPhoneTypeGsm()) {
+                     String opNames[] = (String[]) ar.result;
+     
+                     if (opNames != null && opNames.length >= 3) {
+                         //protected ServiceState mNewSS;
+                         mNewSS.setOperatorAlphaLongRaw(opNames[0]);
+                         mNewSS.setOperatorAlphaShortRaw(opNames[1]);
+                         // FIXME: Giving brandOverride higher precedence, is this desired?
+                         String brandOverride = getOperatorBrandOverride();
+                         mCdnr.updateEfForBrandOverride(brandOverride);
+                         if (brandOverride != null) {
+                             log("EVENT_POLL_STATE_OPERATOR: use brandOverride=" + brandOverride);
+                             mNewSS.setOperatorName(brandOverride, brandOverride, opNames[2]);
+                         } else {
+                             mNewSS.setOperatorName(opNames[0], opNames[1], opNames[2]);
+                         }
+                     }
+                 } 
+                 break;
+             }
+         }
+     }
+     
+     protected String getOperatorBrandOverride() {
+     // MTK-END
+         UiccCard card = mPhone.getUiccCard();
+         if (card == null) return null;
+         UiccProfile profile = card.getUiccProfile();
+         if (profile == null) return null;
+         return profile.getOperatorBrandOverride();
+     }
+     ```
+
+4. ServiceState的setOperatorName()
+
+   - ```java
+     public void setOperatorName(String longName, String shortName, String numeric) {
+         mOperatorAlphaLong = longName;
+         mOperatorAlphaShort = shortName;
+         mOperatorNumeric = numeric;
+     }
+     ```
+
+5. ServiceState提供了三个对应的getXXX()方法获取PLMN
+
+   - ```java
+     //Get current registered operator name in long alphanumeric format.
+     //In GSM/UMTS, long format can be up to 16 characters long.
+     //In CDMA, returns the ERI text, if set. Otherwise, returns the ONS.
+     public String getOperatorAlphaLong() {
+         return mOperatorAlphaLong;
+     }
+     
+     //Get current registered operator numeric id.
+     //In GSM/UMTS, numeric format is 3 digit country code plus 2 or 3 digit
+     //network code.
+     public String getOperatorNumeric() {
+         return mOperatorNumeric;
+     }
+     ```
+
+## SPN流程
+
+### 从SIM卡读取
+
+### 从配置文件读取
