@@ -137,7 +137,7 @@
 
 - | 代码库                      | 名称        | 进程                            |
   | --------------------------- | ----------- | ------------------------------- |
-  | packageslapps/Dialer        | Dialer      | com.android.dialer              |
+  | packages/apps/Dialer        | Dialer      | com.android.dialer              |
   | packages/services/Telecomm  | Telecom     | system_server                   |
   | packages/services/Telephony | TeleService | com.android.phone               |
   | frameworks/base/telecomm    | framework   |                                 |
@@ -156,7 +156,7 @@
 - Telecom应用第二次绑定服务
   - Telecom应用中ConnectionServiceWrapper对象的createConnection方法将绑定TeleService应用中的IConnectionService服务，并调用该服务提供的addConnectionServiceAdapter和createConnection等方法，TeleService应用将通过RIL对象发出拨号的RIL请求。
 
-#### 打开Nexus 6P手机的拨号盘
+#### Nexus 6P手机的拨号
 
 - ![image-20220714173120721](Android Telephony.assets/image-20220714173120721.png)
 

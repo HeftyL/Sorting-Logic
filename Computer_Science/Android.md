@@ -287,7 +287,7 @@
      - system-images:存放不同Android平台针对不同CPU架构提供的系统镜像。这些系统镜像用于启动、运行 Android模拟器。
      - tools:存放大量的Android开发、调试工具。
 
-### 第一个Android应用
+### Android应用创建流程
 
 - Android应用程序建立在应用程序框架之上，所以Android编程就是面向应用程序框架 API编程——这种开发方式与编写普通的 Java或Kotlin应用程序并没有太大的区别，只是Android新增了一些API而已。
 - 步骤
@@ -540,7 +540,7 @@
 
 ### 自定义View
 
-- View组件只是一-个矩形的空白区域，View组件没有任何内容。对于Android应用的其他UI组件来说，它们都继承了View组件，然后在View组件提供的空白区域绘制外观。
+- View组件只是一个矩形的空白区域，View组件没有任何内容。对于Android应用的其他UI组件来说，它们都继承了View组件，然后在View组件提供的空白区域绘制外观。
 
 - 基于Android UI组件的实现原理，开发者完全可以开发出项目定制的组件一一当 Android系统提供的UI组件不足以满足项目需要时，开发者可以通过继承View来派生自定义组件。
 
