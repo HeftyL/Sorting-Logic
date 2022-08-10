@@ -826,7 +826,7 @@
         4. 该参数应该是一个String[]类型的参数，该参数决定提取`Map<String, ?>`对象中哪些key对应的value来生成列表项。
         5. 该参数应该是一个int[]类型的参数，该参数决定填充哪些组件。
       - ==问题==：提供的列表项的value怎么和组件相对应？
-        - 猜测按两个数组对应的下标进行匹配（待验证）
+        - String[]和int[]数组通过下标进行对应。String[]size小于int[]时直接报错，int[]size小于String[]时，String[]不会进行替换
     - **SimpleCursorAdapter**: 与SimpleAdapter基本相似，只是用于包装Cursor提供的数据。
     - **BaseAdapter**: 通常用于被扩展。扩展BaseAdapter可以对各列表项进行最大限度的定制。
 
@@ -873,7 +873,7 @@
 - RecyclerView需要使用改进的RecyclerView.Adapter,改进后RecyclerView.Adapter 只要实现三个方法。
   - onCreateViewHolder(ViewGroup viewGroup, int i):该方法用于创建列表项组件。使用该方法所创建的组件会被自动缓存。
   - onBindViewHolder(ViewHolder viewHolder, int i):该方法负责为列表项组件绑定数据，每次组件重新显示出来时都会重新执行该方法。
-  - gettemCount():该方法的返回值决定包含多少个列表项。
+  - getItemCount():该方法的返回值决定包含多少个列表项。
 
 ## ProgressBar及其子类
 
@@ -975,6 +975,18 @@
 ## 通知Channel
 
 - Notification是显示在手机状态栏的通知。Notification 所代表的是一种具有全局效果的通知，程序一般通过NotificationManager服务来发送Notification。
+
+- **建造者模式**（Builder Pattern）
+
+  - 使用多个简单的对象一步一步构建成一个复杂的对象。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。一个 Builder 类会一步一步构造最终的对象。该 Builder 类是独立于其他对象的。
+
+  - 意图：将一个复杂的构建与其表示相分离，使得同样的构建过程可以创建不同的表示。
+
+  - 主要解决：主要解决在软件系统中，有时候面临着"一个复杂对象"的创建工作，其通常由各个部分的子对象用一定的算法构成；由于需求的变化，这个复杂对象的各个部分经常面临着剧烈的变化，但是将它们组合在一起的算法却相对稳定。
+
+  - 何时使用：一些基本部件不会变，而其组合经常变化的时候。
+
+  - 如何解决：将变与不变分离开。
 
 - Notification.Builder 类，可以轻松地创建Notification对象。常用方法：
 
