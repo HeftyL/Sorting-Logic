@@ -243,60 +243,179 @@
    - 在sendMessageInternal（）中设置短信的内容和接收者，检查短信格式，根据结果执行相对应的操作
 
      - ```java
+       //packages/apps/Messaging/src/com/android/messaging/ui/conversation/ComposeMessageView.java
        //ConversationFragment实现了IComposeMessageViewHost
        private IComposeMessageViewHost mHost;
        private void sendMessageInternal(final boolean checkMessageSize) {
-             LogUtil.i(LogUtil.BUGLE_TAG, "UI initiated message sending in conversation " +
-                     mBinding.getData().getConversationId());
-             // Check the host for pre-conditions about any action.
-             if (mHost.isReadyForAction()) {
-                 mInputManager.showHideSimSelector(false /* show */, true /* animate */);
-                 //mBinding.getData()获得DraftMessageData对象，设置短信的内容
-                 final String messageToSend = mComposeEditText.getText().toString();
-                 mBinding.getData().setMessageText(messageToSend);
-                 //设置短信的接收者
-                 final String subject = mComposeSubjectText.getText().toString();
-                 mBinding.getData().setMessageSubject(subject);
-                 // Asynchronously check the draft against various requirements before sending.
-                 mBinding.getData().checkDraftForAction(checkMessageSize,
-                         mHost.getConversationSelfSubId(), new CheckDraftTaskCallback() {
-                     @Override
-                     public void onDraftChecked(DraftMessageData data, int result) {
-                         mBinding.ensureBound(data);
-                         switch (result) {
-                             case CheckDraftForSendTask.RESULT_PASSED:
-                                 // Continue sending after check succeeded.
-                                 //检查通过，将DraftMessageData对象变为MessageData对象
-                                 final MessageData message = mBinding.getData().prepareMessageForSending(mBinding);
-                                 if (message != null && message.hasContent()) {
-                                     playSentSound();
-                                     //使用ConversationFragment类的sendMessage()方法开始发送Message。
-                                     mHost.sendMessage(message);
-                                     hideSubjectEditor();
-                                     if (AccessibilityUtil.isTouchExplorationEnabled(getContext())) {
-                                         AccessibilityUtil.announceForAccessibilityCompat(
-                                                 ComposeMessageView.this, null,
-                                                 R.string.sending_message);
-                                     }
+           LogUtil.i(LogUtil.BUGLE_TAG, "UI initiated message sending in conversation " +
+                 mBinding.getData().getConversationId());
+           // Check the host for pre-conditions about any action.
+           if (mHost.isReadyForAction()) {
+             mInputManager.showHideSimSelector(false /* show */, true /* animate */);
+             //mBinding.getData()获得DraftMessageData对象，设置短信的内容
+             final String messageToSend = mComposeEditText.getText().toString();
+             mBinding.getData().setMessageText(messageToSend);
+             //设置短信的接收者
+             final String subject = mComposeSubjectText.getText().toString();
+             mBinding.getData().setMessageSubject(subject);
+             // Asynchronously check the draft against various requirements before sending.
+             mBinding.getData().checkDraftForAction(checkMessageSize,
+                     mHost.getConversationSelfSubId(), new CheckDraftTaskCallback() {
+                 @Override
+                 public void onDraftChecked(DraftMessageData data, int result) {
+                     mBinding.ensureBound(data);
+                     switch (result) {
+                         case CheckDraftForSendTask.RESULT_PASSED:
+                             // Continue sending after check succeeded.
+                             //检查通过，将DraftMessageData对象变为MessageData对象
+                             final MessageData message = mBinding.getData().prepareMessageForSending(mBinding);
+                             if (message != null && message.hasContent()) {
+                                 playSentSound();
+                                 //使用ConversationFragment类的sendMessage()方法开始发送Message。
+                                 mHost.sendMessage(message);
+                                 hideSubjectEditor();
+                                 if (AccessibilityUtil.isTouchExplorationEnabled(getContext())) {
+                                     AccessibilityUtil.announceForAccessibilityCompat(
+                                             ComposeMessageView.this, null,
+                                             R.string.sending_message);
                                  }
-                                 break;
-                         }
+                             }
+                             break;
                      }
-                 }, mBinding);
-             } 
-         }  
+                 }
+             }, mBinding);
+           } 
+       }  
        ```
-
+       
        - ```java
-         /*首先创建DraftMessageData类的内部类对象CheckDraftForSendTask,它继承了SafeAsync Task;接着调用此对象的executeOnThreadPool方法触发重写父类的三个方法调用onPreExecute、dolnBackgroundTimed 和onPostExecute,这几个方法的处理逻辑是发送短信的前置条件判断，最终通过mCallback.onDraftChecked调用将判断结果发送给CheckDraftTaskCallback对象。*/
+         /*首先创建DraftMessageData类的内部类对象CheckDraftForSendTask,它继承了SafeAsyncTask;接着调用此对象的executeOnThreadPool()方法触发重写父类的三个方法调用onPreExecute、dolnBackgroundTimed 和onPostExecute,这几个方法的处理逻辑是发送短信的前置条件判断，最终通过mCallback.onDraftChecked调用将判断结果发送给CheckDraftTaskCallback对象。*/
+         
+         //packages/apps/Messaging/src/com/android/messaging/datamodel/data/DraftMessageData.java
          public void checkDraftForAction(final boolean checkMessageSize, final int selfSubId,final CheckDraftTaskCallback callback, final Binding<DraftMessageData> binding) {
               new CheckDraftForSendTask(checkMessageSize, selfSubId, callback, binding).executeOnThreadPool((Void) null);
          }
+         
+         public class CheckDraftForSendTask extends SafeAsyncTask<Void, Void, Integer> {
+             public static final int RESULT_PASSED = 0;
+             public static final int RESULT_HAS_PENDING_ATTACHMENTS = 1;
+             public static final int RESULT_NO_SELF_PHONE_NUMBER_IN_GROUP_MMS = 2;
+             public static final int RESULT_MESSAGE_OVER_LIMIT = 3;
+             public static final int RESULT_VIDEO_ATTACHMENT_LIMIT_EXCEEDED = 4;
+             public static final int RESULT_SIM_NOT_READY = 5;
+             private final boolean mCheckMessageSize;
+             private final int mSelfSubId;
+             private final CheckDraftTaskCallback mCallback;
+             private final String mBindingId;
+             private final List<MessagePartData> mAttachmentsCopy;
+             private int mPreExecuteResult = RESULT_PASSED;
+         
+             public CheckDraftForSendTask(final boolean checkMessageSize, final int selfSubId,
+                     final CheckDraftTaskCallback callback, final Binding<DraftMessageData> binding) {
+                 mCheckMessageSize = checkMessageSize;
+                 mSelfSubId = selfSubId;
+                 mCallback = callback;
+                 mBindingId = binding.getBindingId();
+                 // Obtain an immutable copy of the attachment list so we can operate on it in the
+                 // background thread.
+                 mAttachmentsCopy = new ArrayList<MessagePartData>(mAttachments);
+         
+                 mCheckDraftForSendTask = this;
+             }
+         
+             @Override
+             protected void onPreExecute() {
+                 // Perform checking work that can happen on the main thread.
+                 if (hasPendingAttachments()) {
+                     mPreExecuteResult = RESULT_HAS_PENDING_ATTACHMENTS;
+                     return;
+                 }
+                 if (getIsGroupMmsConversation()) {
+                     try {
+                         if (TextUtils.isEmpty(PhoneUtils.get(mSelfSubId).getSelfRawNumber(true))) {
+                             mPreExecuteResult = RESULT_NO_SELF_PHONE_NUMBER_IN_GROUP_MMS;
+                             return;
+                         }
+                     } catch (IllegalStateException e) {
+                         // This happens when there is no active subscription, e.g. on Nova
+                         // when the phone switches carrier.
+                         mPreExecuteResult = RESULT_SIM_NOT_READY;
+                         return;
+                     }
+                 }
+                 if (getVideoAttachmentCount() > MmsUtils.MAX_VIDEO_ATTACHMENT_COUNT) {
+                     mPreExecuteResult = RESULT_VIDEO_ATTACHMENT_LIMIT_EXCEEDED;
+                     return;
+                 }
+             }
+         
+             @Override
+             protected Integer doInBackgroundTimed(Void... params) {
+                 if (mPreExecuteResult != RESULT_PASSED) {
+                     return mPreExecuteResult;
+                 }
+         
+                 if (mCheckMessageSize && getIsMessageOverLimit()) {
+                     return RESULT_MESSAGE_OVER_LIMIT;
+                 }
+                 return RESULT_PASSED;
+             }
+         
+             @Override
+             protected void onPostExecute(Integer result) {
+                 mCheckDraftForSendTask = null;
+                 // Only call back if we are bound to the original binding.
+                 if (isBound(mBindingId) && !isCancelled()) {
+                     mCallback.onDraftChecked(DraftMessageData.this, result);
+                 } else {
+                     if (!isBound(mBindingId)) {
+                         LogUtil.w(LogUtil.BUGLE_TAG, "Message can't be sent: draft not bound");
+                     }
+                     if (isCancelled()) {
+                         LogUtil.w(LogUtil.BUGLE_TAG, "Message can't be sent: draft is cancelled");
+                     }
+                 }
+             }
+         
+             @Override
+             protected void onCancelled() {
+                 mCheckDraftForSendTask = null;
+             }
+         
+             /**
+              * 1. Check if the draft message contains too many attachments to send
+              * 2. Computes the minimum size that this message could be compressed/downsampled/encoded
+              * before sending and check if it meets the carrier max size for sending.
+              * @see MessagePartData#getMinimumSizeInBytesForSending()
+              */
+             @DoesNotRunOnMainThread
+             private boolean getIsMessageOverLimit() {
+                 Assert.isNotMainThread();
+                 if (mAttachmentsCopy.size() > getAttachmentLimit()) {
+                     return true;
+                 }
+         
+                 // Aggregate the size from all the attachments.
+                 long totalSize = 0;
+                 for (final MessagePartData attachment : mAttachmentsCopy) {
+                     totalSize += attachment.getMinimumSizeInBytesForSending();
+                 }
+                 return totalSize > MmsConfig.get(mSelfSubId).getMaxMessageSize();
+             }
+         }
          ```
 
-8. 在ConversationFragment类的sendMessage()中，调用ConversationData的sendMessage()方法
+8. 在ConversationFragment类的sendMessage()中，调用ConversationData的sendMessage()方法.将普通的文本和多媒体关联到一起
 
    - ```java
+     //packages/apps/Messaging/src/com/android/messaging/ui/conversation/ConversationFragment.java
+     
+     // This binding keeps track of our associated ConversationData instance
+     // A binding should have the lifetime of the owning component,
+     //  don't recreate, unbind and bind if you need new data
+     @VisibleForTesting
+     final Binding<ConversationData> mBinding = BindingBase.createBinding(this);
+     
      public void sendMessage(final MessageData message) {
          if (isReadyForAction()) {
              if (ensureKnownRecipients()) {
@@ -308,11 +427,56 @@
              } 
          } 
      }
+     
+     //packages/apps/Messaging/src/com/android/messaging/datamodel/data/MessageData.java
+     /**
+      * Takes all captions from attachments and adds them as a prefix to the first text part or
+      * appends a text part
+      */
+     //packages/apps/Messaging/src/com/android/messaging/datamodel/data/MessageData.java
+     public final void consolidateText() {
+         final String separator = System.getProperty("line.separator");
+         final StringBuilder captionText = new StringBuilder();
+         //Represents a single message part. Messages consist of one or more parts which may contain either text or media.   
+         MessagePartData firstTextPart = null;
+         int firstTextPartIndex = -1;
+         for (int i = 0; i < mParts.size(); i++) {
+             final MessagePartData part = mParts.get(i);
+             if (firstTextPart == null && !part.isAttachment()) {
+                 firstTextPart = part;
+                 firstTextPartIndex = i;
+             }
+             if (part.isAttachment() && !TextUtils.isEmpty(part.getText())) {
+                 if (captionText.length() > 0) {
+                     captionText.append(separator);
+                 }
+                 captionText.append(part.getText());
+             }
+         }
+     
+         if (captionText.length() == 0) {
+             // Nothing to consolidate
+             return;
+         }
+     
+         if (firstTextPart == null) {
+             addPart(MessagePartData.createTextMessagePart(captionText.toString()));
+         } else {
+             final String partText = firstTextPart.getText();
+             if (partText.length() > 0) {
+                 captionText.append(separator);
+                 captionText.append(partText);
+             }
+             mParts.set(firstTextPartIndex,
+                     MessagePartData.createTextMessagePart(captionText.toString()));
+         }
+     }
      ```
 
-9. 在ConversationData的sendMessage()中判断并根据用户的api和sub执行对应的insertNewMessage()方法。
+9. 在ConversationData的sendMessage()中判断并根据用户的api和sub执行对应的insertNewMessage()方法，将Message存入数据库。
 
   - ```java
+    //packages/apps/Messaging/src/com/android/messaging/datamodel/data/ConversationData.java
     public void sendMessage(final BindingBase<ConversationData> binding,final MessageData message) {
         //boolean isAtLeastL_MR1()：True if the version of Android that we're running on is at least L MR1(API level 22)    
         if (!OsUtil.isAtLeastL_MR1() || message.getSelfId() == null) {
@@ -338,38 +502,447 @@
 
   - ```java
     //Insert message (no listener)
+    //packages/apps/Messaging/src/com/android/messaging/datamodel/action/InsertNewMessageAction.java
     public static void insertNewMessage(final MessageData message) {
         final InsertNewMessageAction action = new InsertNewMessageAction(message);
         action.start();
     }
-    
-    //根据Action 的处理机制，将以后台异步方式调用InsertNewMessageAction对象的executeAction().使用了Android的IntentService运行机制
-    protected Object executeAction() {
-        //...先将Message插入到数据库	
-        ...
-        ProcessPendingMessagesAction.scheduleProcessPendingMessagesAction(false, this);
-        return message;
-    }
     ```
 
-11. 在ProcessPendingMessagesAction的scheduleProcessPendingMessagesAction()中
+    - ```java
+      //ActionServicelmpl继承自JobIntentService,使用enqueueWork()将任务入队，在onHandleWork()中处理任务
+      start方法调用过程：Action.start() -> DataModel.startActionService() ->ActionService.startAction() -> ActionServicelmpl.startAction() -> ActionServicelmpl.startServiceWithIntent（）->ActionServicelmpl.enqueueWork（） ->ActionServicelmpl.onHandleWork（）
+      
+      //packages/apps/Messaging/src/com/android/messaging/datamodel/action/ActionServiceImpl.java
+       /**
+       * Start action by sending intent to the service
+       * @param action - action to start
+       */
+      protected static void startAction(final Action action) {
+          final Intent intent = makeIntent(OP_START_ACTION);
+          final Bundle actionBundle = new Bundle();
+          actionBundle.putParcelable(BUNDLE_ACTION, action);
+          intent.putExtra(EXTRA_ACTION_BUNDLE, actionBundle);
+          action.markStart();
+          startServiceWithIntent(intent);
+      }
+       /**
+       * Queue intent to the ActionService.
+       */
+      private static void startServiceWithIntent(final Intent intent) {
+          final Context context = Factory.get().getApplicationContext();
+          final int opcode = intent.getIntExtra(EXTRA_OP_CODE, 0);
+          intent.setClass(context, ActionServiceImpl.class);
+          enqueueWork(context, intent);
+      }
+      
+      public static void enqueueWork(Context context, Intent work) {
+          enqueueWork(context, ActionServiceImpl.class, JOB_ID, work);
+      }
+      
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      protected void onHandleWork(final Intent intent) {
+          if (intent == null) {
+              // Shouldn't happen but sometimes does following another crash.
+              LogUtil.w(TAG, "ActionService.onHandleIntent: Called with null intent");
+              return;
+          }
+          final int opcode = intent.getIntExtra(EXTRA_OP_CODE, 0);
+      
+          Action action;
+          final Bundle actionBundle = intent.getBundleExtra(EXTRA_ACTION_BUNDLE);
+          actionBundle.setClassLoader(getClassLoader());
+          switch(opcode) {
+              case OP_START_ACTION: {
+                  action = (Action) actionBundle.getParcelable(BUNDLE_ACTION);
+                  executeAction(action);
+                  break;
+              }
+      
+              case OP_RECEIVE_BACKGROUND_RESPONSE: {
+                  action = (Action) actionBundle.getParcelable(BUNDLE_ACTION);
+                  final Bundle response = intent.getBundleExtra(EXTRA_WORKER_RESPONSE);
+                  processBackgroundResponse(action, response);
+                  break;
+              }
+      
+              case OP_RECEIVE_BACKGROUND_FAILURE: {
+                  action = (Action) actionBundle.getParcelable(BUNDLE_ACTION);
+                  processBackgroundFailure(action);
+                  break;
+              }
+      
+              default:
+                  throw new RuntimeException("Unrecognized opcode in ActionServiceImpl");
+          }
+      
+          action.sendBackgroundActions(mBackgroundWorker);
+      }
+      ```
+
+11. 根据Action 的处理机制，将以后台异步方式调用InsertNewMessageAction对象的executeAction().使用了JobIntentService运行机制
 
    - ```java
-     public static void scheduleProcessPendingMessagesAction(final boolean failed,final Action processingAction) {
-         LogUtil.i(TAG, "ProcessPendingMessagesAction: Scheduling pending messages"+(failed ? "(message failed)" : ""));
+     //packages/apps/Messaging/src/com/android/messaging/datamodel/action/InsertNewMessageAction.java
+     /**
+      * Add message to database in pending state and queue actual sending
+      */
+     @Override
+     protected Object executeAction() {
+         MessageData message = actionParameters.getParcelable(KEY_MESSAGE);
+         if (message == null) {
+             LogUtil.i(TAG, "InsertNewMessageAction: Creating MessageData with provided data");
+             message = createMessage();
+             if (message == null) {
+                 LogUtil.w(TAG, "InsertNewMessageAction: Could not create MessageData");
+                 return null;
+             }
+         }
+         
+         final DatabaseWrapper db = DataModel.get().getDatabase();
+         final String conversationId = message.getConversationId();
+     	
+         //获取ParticipantData:A class that encapsulates all of the data for a specific participant in a conversation.
+         final ParticipantData self = getSelf(db, conversationId, message);
+         if (self == null) {
+             return null;
+         }
+         message.bindSelfId(self.getId());
+         // If the user taps the Send button before the conversation draft is created/loaded by
+         // ReadDraftDataAction (maybe the action service thread was busy), the MessageData may not
+         // have the participant id set. It should be equal to the self id, so we'll use that.
+         if (message.getParticipantId() == null) {
+             message.bindParticipantId(self.getId());
+         }
+     
+         final long timestamp = System.currentTimeMillis();
+         final ArrayList<String> recipients =
+                 BugleDatabaseOperations.getRecipientsForConversation(db, conversationId);
+         if (recipients.size() < 1) {
+             LogUtil.w(TAG, "InsertNewMessageAction: message recipients is empty");
+             return null;
+         }
+         final int subId = self.getSubId();
+         LogUtil.i(TAG, "InsertNewMessageAction: inserting new message for subId " + subId);
+         actionParameters.putInt(KEY_SUB_ID, subId);
+     
+         // TODO: Work out whether to send with SMS or MMS (taking into account recipients)?
+         final boolean isSms = (message.getProtocol() == MessageData.PROTOCOL_SMS);
+         if (isSms) {
+             String sendingConversationId = conversationId;
+             if (recipients.size() > 1) {
+                 // Broadcast SMS - put message in "fake conversation" before farming out to real 1:1
+                 final long laterTimestamp = timestamp + 1;
+                 // Send a single message
+                 insertBroadcastSmsMessage(conversationId, message, subId,
+                         laterTimestamp, recipients);
+     
+                 sendingConversationId = null;
+             }
+     
+             for (final String recipient : recipients) {
+                 // Start actual sending
+                 insertSendingSmsMessage(message, subId, recipient,
+                         timestamp, sendingConversationId);
+             }
+     
+             // Can now clear draft from conversation (deleting attachments if necessary)
+             BugleDatabaseOperations.updateDraftMessageData(db, conversationId,
+                     null /* message */, BugleDatabaseOperations.UPDATE_MODE_CLEAR_DRAFT);
+         } else {
+             final long timestampRoundedToSecond = 1000 * ((timestamp + 500) / 1000);
+             // Write place holder message directly referencing parts from the draft
+             final MessageData messageToSend = insertSendingMmsMessage(conversationId,
+                     message, timestampRoundedToSecond);
+     
+             // Can now clear draft from conversation (preserving attachments which are now
+             // referenced by messageToSend)
+             BugleDatabaseOperations.updateDraftMessageData(db, conversationId,
+                     messageToSend, BugleDatabaseOperations.UPDATE_MODE_CLEAR_DRAFT);
+         }
+         //MessagingContentProvider:A centralized provider for Uris exposed by Bugle.
+         MessagingContentProvider.notifyConversationListChanged();
+         ProcessPendingMessagesAction.scheduleProcessPendingMessagesAction(false, this);
+     
+         return message;
+     }
+     ```
+
+     - ```java
+       //packages/apps/Messaging/src/com/android/messaging/datamodel/action/InsertNewMessageAction.java
+       数据库的获取
+       final DatabaseWrapper db = DataModel.get().getDatabase();
+       //packages/apps/Messaging/src/com/android/messaging/datamodel/DataModel.java
+       //packages/apps/Messaging/src/com/android/messaging/datamodel/DataModelImpl.java
+       //DataModelImpl继承了DataModel，实现了getDatabase()抽象方法
+       private final DatabaseHelper mDatabaseHelper;
+       
+       @Override
+       @DoesNotRunOnMainThread
+       public DatabaseWrapper getDatabase() {
+           // We prevent the main UI thread from accessing the database since we have to allow
+           // public access to this class to enable sub-packages to access data.
+           Assert.isNotMainThread();
+           return mDatabaseHelper.getDatabase();
+       }
+       //DataModelImpl初始化的时候获得了mDatabaseHelper
+       public DataModelImpl(final Context context) {
+           super();
+           mContext = context;
+           mActionService = new ActionService();
+           mDataModelWorker = new BackgroundWorker();
+           mDatabaseHelper = DatabaseHelper.getInstance(context);
+           mSyncManager = new SyncManager();
+       }
+       //packages/apps/Messaging/src/com/android/messaging/datamodel/DatabaseHelper.java
+       public static final String DATABASE_NAME = "bugle_db";
+       /**
+        * Get a (singleton) instance of {@link DatabaseHelper}, creating one if there isn't one yet.
+        * This is the only public method for getting a new instance of the class.
+        * @param context Should be the application context (or something that will live for the
+        * lifetime of the application).
+        * @return The current (or a new) DatabaseHelper instance.
+        */
+       public static DatabaseHelper getInstance(final Context context) {
+           synchronized (sLock) {
+               if (sHelperInstance == null) {
+                   sHelperInstance = new DatabaseHelper(context);
+               }
+               return sHelperInstance;
+           }
+       }
+       /**
+        * Private constructor, used from {@link #getInstance()}.
+        * @param context Should be the application context (or something that will live for the
+        * lifetime of the application).
+        */
+       private DatabaseHelper(final Context context) {
+           super(context, DATABASE_NAME, null, getDatabaseVersion(context), null);
+           mApplicationContext = context;
+       }
+       DATABASE_NAME字段是bugle_db，位于/data/data/com.google.android.apps.messaging/databases/bugle_db
+       ///data/data/com.android.providers.telephony/databases/mmssms.db
+       ```
+       
+     - ```java
+       //packages/apps/Messaging/src/com/android/messaging/datamodel/action/InsertNewMessageAction.java
+       private ParticipantData getSelf(
+               final DatabaseWrapper db, final String conversationId, final MessageData message) {
+           ParticipantData self;
+           // Check if we are asked to bind to a non-default subId. This is directly passed in from
+           // the UI thread so that the sub id may be locked as soon as the user clicks on the Send
+           // button.
+           final int requestedSubId = actionParameters.getInt(
+                   KEY_SUB_ID, ParticipantData.DEFAULT_SELF_SUB_ID);
+           if (requestedSubId != ParticipantData.DEFAULT_SELF_SUB_ID) {
+               //从数据库获取或者创建ParticipantData
+               self = BugleDatabaseOperations.getOrCreateSelf(db, requestedSubId);
+           } else {
+               String selfId = message.getSelfId();
+               if (selfId == null) {
+                   // The conversation draft provides no self id hint, meaning that 1) conversation
+                   // self id was not loaded AND 2) the user didn't pick a SIM from the SIM selector.
+                   // In this case, use the conversation's self id.
+                   final ConversationListItemData conversation =
+                           ConversationListItemData.getExistingConversation(db, conversationId);
+                   if (conversation != null) {
+                       selfId = conversation.getSelfId();
+                   } else {
+                       LogUtil.w(LogUtil.BUGLE_DATAMODEL_TAG, "Conversation " + conversationId +
+                               "already deleted before sending draft message " +
+                               message.getMessageId() + ". Aborting InsertNewMessageAction.");
+                       return null;
+                   }
+               }
+       
+               // We do not use SubscriptionManager.DEFAULT_SUB_ID for sending a message, so we need
+               // to bind the message to the system default subscription if it's unbound.
+               final ParticipantData unboundSelf = BugleDatabaseOperations.getExistingParticipant(
+                       db, selfId);
+               if (unboundSelf.getSubId() == ParticipantData.DEFAULT_SELF_SUB_ID
+                       && OsUtil.isAtLeastL_MR1()) {
+                   final int defaultSubId = PhoneUtils.getDefault().getDefaultSmsSubscriptionId();
+                   self = BugleDatabaseOperations.getOrCreateSelf(db, defaultSubId);
+               } else {
+                   self = unboundSelf;
+               }
+           }
+           return self;
+       }
+       ```
+     
+     - ```java
+       @DoesNotRunOnMainThread
+       public static ParticipantData getOrCreateSelf(final DatabaseWrapper dbWrapper,
+               final int subId) {
+           Assert.isNotMainThread();
+           ParticipantData participant = null;
+           dbWrapper.beginTransaction();
+           try {
+               final ParticipantData shell = ParticipantData.getSelfParticipant(subId);
+               final String participantId = getOrCreateParticipantInTransaction(dbWrapper, shell);
+               participant = getExistingParticipant(dbWrapper, participantId);
+               dbWrapper.setTransactionSuccessful();
+           } finally {
+               dbWrapper.endTransaction();
+           }
+           return participant;
+       }
+       ```
+     
+     - ```java
+       @DoesNotRunOnMainThread
+       public static String getOrCreateParticipantInTransaction(final DatabaseWrapper dbWrapper,
+               final ParticipantData participant) {
+           Assert.isNotMainThread();
+           Assert.isTrue(dbWrapper.getDatabase().inTransaction());
+           int subId = ParticipantData.OTHER_THAN_SELF_SUB_ID;
+           String participantId = null;
+           String canonicalRecipient = null;
+           if (participant.isSelf()) {
+               subId = participant.getSubId();
+               canonicalRecipient = getCanonicalRecipientFromSubId(subId);
+           } else {
+               canonicalRecipient = participant.getNormalizedDestination();
+           }
+           Assert.notNull(canonicalRecipient);
+           participantId = getParticipantId(dbWrapper, subId, canonicalRecipient);
+       
+           if (participantId != null) {
+               return participantId;
+           }
+       
+           if (!participant.isContactIdResolved()) {
+               // Refresh participant's name and avatar with matching contact in CP2.
+               ParticipantRefresh.refreshParticipant(dbWrapper, participant);
+           }
+       
+           // Insert the participant into the participants table
+           final ContentValues values = participant.toContentValues();
+           final long participantRow = dbWrapper.insert(DatabaseHelper.PARTICIPANTS_TABLE, null,
+                   values);
+           participantId = Long.toString(participantRow);
+           Assert.notNull(canonicalRecipient);
+       
+           synchronized (sNormalizedPhoneNumberToParticipantIdCache) {
+               // Now that we've inserted it, add it to our cache
+               sNormalizedPhoneNumberToParticipantIdCache.put(canonicalRecipient, participantId);
+           }
+       
+           return participantId;
+       }
+       ```
+     
+     - ```java
+       /**
+        * Insert SMS messaging into our database and telephony db.
+        */
+       private MessageData insertSendingSmsMessage(final MessageData content, final int subId,
+               final String recipient, final long timestamp, final String sendingConversationId) {
+           sLastSentMessageTimestamp = timestamp;
+       
+           final Context context = Factory.get().getApplicationContext();
+       
+           // Inform sync that message is being added at timestamp
+           final SyncManager syncManager = DataModel.get().getSyncManager();
+           syncManager.onNewMessageInserted(timestamp);
+       
+           final DatabaseWrapper db = DataModel.get().getDatabase();
+       
+           // Send a single message
+           long threadId;
+           String conversationId;
+           if (sendingConversationId == null) {
+               // For 1:1 message generated sending broadcast need to look up threadId+conversationId
+               threadId = MmsUtils.getOrCreateSmsThreadId(context, recipient);
+               conversationId = BugleDatabaseOperations.getOrCreateConversationFromRecipient(
+                       db, threadId, false /* sender blocked */,
+                       ParticipantData.getFromRawPhoneBySimLocale(recipient, subId));
+           } else {
+               // Otherwise just look up threadId
+               threadId = BugleDatabaseOperations.getThreadId(db, sendingConversationId);
+               conversationId = sendingConversationId;
+           }
+       
+           final String messageText = content.getMessageText();
+       
+           // Insert message into telephony database sms message table
+           final Uri messageUri = MmsUtils.insertSmsMessage(context,
+                   Telephony.Sms.CONTENT_URI,
+                   subId,
+                   recipient,
+                   messageText,
+                   timestamp,
+                   Telephony.Sms.STATUS_NONE,
+                   Telephony.Sms.MESSAGE_TYPE_SENT, threadId);
+       
+           MessageData message = null;
+           if (messageUri != null && !TextUtils.isEmpty(messageUri.toString())) {
+               db.beginTransaction();
+               try {
+                   message = MessageData.createDraftSmsMessage(conversationId,
+                           content.getSelfId(), messageText);
+                   message.updateSendingMessage(conversationId, messageUri, timestamp);
+       
+                   BugleDatabaseOperations.insertNewMessageInTransaction(db, message);
+       
+                   // Do not update the conversation summary to reflect autogenerated 1:1 messages
+                   if (sendingConversationId != null) {
+                       BugleDatabaseOperations.updateConversationMetadataInTransaction(db,
+                               conversationId, message.getMessageId(), timestamp,
+                               false /* senderBlocked */, false /* shouldAutoSwitchSelfId */);
+                   }
+                   db.setTransactionSuccessful();
+               } finally {
+                   db.endTransaction();
+               }
+       
+               if (LogUtil.isLoggable(TAG, LogUtil.DEBUG)) {
+                   LogUtil.d(TAG, "InsertNewMessageAction: Inserted SMS message "
+                           + message.getMessageId() + " (uri = " + message.getSmsMessageUri()
+                           + ", timestamp = " + message.getReceivedTimeStamp() + ")");
+               }
+               MessagingContentProvider.notifyMessagesChanged(conversationId);
+               MessagingContentProvider.notifyPartsChanged();
+           } else {
+               LogUtil.e(TAG, "InsertNewMessageAction: No uri for SMS inserted into telephony DB");
+           }
+       
+           return message;
+       }
+       ```
+     
+       
+
+12. 在ProcessPendingMessagesAction的scheduleProcessPendingMessagesAction()中
+
+   - ProcessPendingMessagesAction:Action used to lookup any messages in the pending send/download state and either fail them or retry their action based on subscriptions. This action only initiates one retry at a time for both sending/downloading. Further retries should be triggered by successful sending/downloading of a message, network status change or exponential backoff timer.
+
+   - ```java
+     //packages/apps/Messaging/src/com/android/messaging/datamodel/action/ProcessPendingMessagesAction.java
+     public static void scheduleProcessPendingMessagesAction(final boolean failed,
+             final Action processingAction) {
+         final int subId = processingAction.actionParameters
+                 .getInt(KEY_SUB_ID, ParticipantData.DEFAULT_SELF_SUB_ID);
+         LogUtil.i(TAG, "ProcessPendingMessagesAction: Scheduling pending messages"
+                 + (failed ? "(message failed)" : "") + " for subId " + subId);
          // Can safely clear any pending alarms or connectivity events as either an action
          // is currently running or we will run now or register if pending actions possible.
-         unregister();
+         unregister(subId);
      
          final boolean isDefaultSmsApp = PhoneUtils.getDefault().isDefaultSmsApp();
          boolean scheduleAlarm = false;
          // If message succeeded and if Bugle is default SMS app just carry on with next message
          if (!failed && isDefaultSmsApp) {
              // Clear retry attempt count as something just succeeded
-             setRetry(0);
+             setRetry(0, subId);
      
-             // Lookup and queue next message for immediate processing by background worker
-             //  iff there are no pending messages this will do nothing and return true.
+             // Lookup and queue next message for each sending/downloading for immediate processing
+             // by background worker. If there are no pending messages, this will do nothing and
+             // return true.
              final ProcessPendingMessagesAction action = new ProcessPendingMessagesAction();
              if (action.queueActions(processingAction)) {
                  if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
@@ -386,51 +959,105 @@
              scheduleAlarm = true;
              LogUtil.w(TAG, "ProcessPendingMessagesAction: Action failed to queue; retrying");
          }
+         if (getHavePendingMessages(subId) || scheduleAlarm) {
+             // Still have a pending message that needs to be queued for processing
+             final ConnectivityListener listener = new ConnectivityListener() {
+                 @Override
+                 public void onPhoneStateChanged(final int serviceState) {
+                     if (serviceState == ServiceState.STATE_IN_SERVICE) {
+                         LogUtil.i(TAG, "ProcessPendingMessagesAction: Now connected for subId "
+                                 + subId + ", starting action");
+     
+                         // Clear any pending alarms or connectivity events but leave attempt count
+                         // alone
+                         unregister(subId);
+     
+                         // Start action
+                         final ProcessPendingMessagesAction action =
+                                 new ProcessPendingMessagesAction();
+                         action.actionParameters.putInt(KEY_SUB_ID, subId);
+                         action.start();
+                     }
+                 }
+             };
+             // Read and increment attempt number from shared prefs
+             final int retryAttempt = getNextRetry(subId);
+             register(listener, retryAttempt, subId);
+         } else {
+             // No more pending messages (presumably the message that failed has expired) or it
+             // may be possible that a send and a download are already in process.
+             // Clear retry attempt count.
+             // TODO Might be premature if send and download in process...
+             // but worst case means we try to send a bit more often.
+             setRetry(0, subId);
+             LogUtil.i(TAG, "ProcessPendingMessagesAction: No more pending messages");
+         }
      }
      ```
 
    - ```java
+     //packages/apps/Messaging/src/com/android/messaging/datamodel/action/ProcessPendingMessagesAction.java
      /**
-     Queue any pending actions
-     return true if action queued (or no actions to queue) else false
-     */
+      * Queue any pending actions
+      *
+      * @param actionState
+      * @return true if action queued (or no actions to queue) else false
+      */
      private boolean queueActions(final Action processingAction) {
-           final DatabaseWrapper db = DataModel.get().getDatabase();
-           final long now = System.currentTimeMillis();
-           boolean succeeded = true;
-           final int subId = processingAction.actionParameters.getInt(KEY_SUB_ID, ParticipantData.DEFAULT_SELF_SUB_ID);
+         final DatabaseWrapper db = DataModel.get().getDatabase();
+         final long now = System.currentTimeMillis();
+         boolean succeeded = true;
+         final int subId = processingAction.actionParameters
+                 .getInt(KEY_SUB_ID, ParticipantData.DEFAULT_SELF_SUB_ID);
      
-           LogUtil.i(TAG, "ProcessPendingMessagesAction: Start queueing for subId " + subId);
+         LogUtil.i(TAG, "ProcessPendingMessagesAction: Start queueing for subId " + subId);
      
-           final String selfId = ParticipantData.getParticipantId(db, subId);
-           if (selfId == null) {
-               // This could be happened before refreshing participant.
-               LogUtil.w(TAG, "ProcessPendingMessagesAction: selfId is null");
-               return false;
-           }
-           // Will queue no more than one message to send plus one message to download
-           // This keeps outgoing messages "in order" but allow downloads to happen even if sending
-           // gets blocked until messages time out. Manual resend bumps messages to head of queue.
-           final String toSendMessageId = findNextMessageToSend(db, now, selfId);
-           final String toDownloadMessageId = findNextMessageToDownload(db, now, selfId);
-           if (toSendMessageId != null) {
-               LogUtil.i(TAG, "ProcessPendingMessagesAction: Queueing message " + toSendMessageId
-                       + " for sending");
-               // This could queue nothing
-               if (!SendMessageAction.queueForSendInBackground(toSendMessageId, processingAction)) {
-                   LogUtil.w(TAG, "ProcessPendingMessagesAction: Failed to queue message "
+         final String selfId = ParticipantData.getParticipantId(db, subId);
+         if (selfId == null) {
+             // This could be happened before refreshing participant.
+             LogUtil.w(TAG, "ProcessPendingMessagesAction: selfId is null");
+             return false;
+         }
+     
+         // Will queue no more than one message to send plus one message to download
+         // This keeps outgoing messages "in order" but allow downloads to happen even if sending
+         // gets blocked until messages time out. Manual resend bumps messages to head of queue.
+         final String toSendMessageId = findNextMessageToSend(db, now, selfId);
+         final String toDownloadMessageId = findNextMessageToDownload(db, now, selfId);
+         if (toSendMessageId != null) {
+             LogUtil.i(TAG, "ProcessPendingMessagesAction: Queueing message " + toSendMessageId
+                     + " for sending");
+             // This could queue nothing
+             if (!SendMessageAction.queueForSendInBackground(toSendMessageId, processingAction)) {
+                 LogUtil.w(TAG, "ProcessPendingMessagesAction: Failed to queue message "
                          + toSendMessageId + " for sending");
-                   succeeded = false;
-               }
-           }
+                 succeeded = false;
+             }
+         }
+         if (toDownloadMessageId != null) {
+             LogUtil.i(TAG, "ProcessPendingMessagesAction: Queueing message " + toDownloadMessageId
+                     + " for download");
+             // This could queue nothing
+             if (!DownloadMmsAction.queueMmsForDownloadInBackground(toDownloadMessageId,
+                     processingAction)) {
+                 LogUtil.w(TAG, "ProcessPendingMessagesAction: Failed to queue message "
+                         + toDownloadMessageId + " for download");
+                 succeeded = false;
+             }
+         }
+         if (toSendMessageId == null && toDownloadMessageId == null) {
+             LogUtil.i(TAG, "ProcessPendingMessagesAction: No messages to send or download");
+         }
+         return succeeded;
      }
      ```
 
-12. 在SendMessageAction的queueForSendInBackground()中
+13. 在SendMessageAction的queueForSendInBackground()中
 
    - Action used to send an outgoing message. It writes MMS messages to the telephony db.InsertNewMessageAction writes SMS messages to the telephony db). It also initiates the actual sending. It will all be used for re-sending a failed message.
 
    - ```java
+     //packages/apps/Messaging/src/com/android/messaging/datamodel/action/SendMessageAction.java
      //Queue sending of existing message (can only be called during execute of action)
      static boolean queueForSendInBackground(final String messageId,final Action processingAction) {
          final SendMessageAction action = new SendMessageAction();
@@ -496,7 +1123,7 @@
      }
      ```
 
-13. 在MmsUtils的sendSmsMessage()中
+14. 在MmsUtils的sendSmsMessage()中
 
    - MmsUtils：Utils for sending sms/mms messages.
 
@@ -522,7 +1149,7 @@
          }
      ```
 
-14. 在SmsSender的sendMessage()中
+15. 在SmsSender的sendMessage()中
 
    - SmsSender：Class that sends chat message via SMS
 
