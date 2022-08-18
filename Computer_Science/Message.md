@@ -837,6 +837,7 @@
        ```
      
      - ```java
+       //packages/apps/Messaging/src/com/android/messaging/datamodel/action/InsertNewMessageAction.java
        /**
         * Insert SMS messaging into our database and telephony db.
         */
@@ -914,7 +915,7 @@
            return message;
        }
        ```
-     
+       
        
 
 12. 在ProcessPendingMessagesAction的scheduleProcessPendingMessagesAction()中
@@ -1063,38 +1064,125 @@
          final SendMessageAction action = new SendMessageAction();
          return action.queueAction(messageId, processingAction);
      }
-     
-     //Read message from database and queue actual sending
+     ```
+
+   - ```java
+     //packages/apps/Messaging/src/com/android/messaging/datamodel/action/SendMessageAction.java
+     /**
+      * Read message from database and queue actual sending
+      */
      private boolean queueAction(final String messageId, final Action processingAction) {
-         //从数据库中读取Message，如果数据库没有就不用发送了
-         ...
-         //根据读取到的协议是不是sms的
-         final boolean isSms = (message.getProtocol() == MessageData.PROTOCOL_SMS);
-         if (isSms) {
-             //获得服务中心
-             //BugleDatabaseOperations:manages updating our local database
-             final String smsc = BugleDatabaseOperations.getSmsServiceCenterForConversation(db, conversationId);
-             actionParameters.putString(KEY_SMS_SERVICE_CENTER, smsc);
+         actionParameters.putString(KEY_MESSAGE_ID, messageId);
+         final DatabaseWrapper db = DataModel.get().getDatabase();
      
-             if (recipients.size() == 1) {
-                 final String recipient = recipients.get(0);
+         final MessageData message = BugleDatabaseOperations.readMessage(db, messageId);
+         // Check message can be resent
+         if (message != null && message.canSendMessage()) {
+             final boolean isSms = message.getIsSms();
+             long timestamp = System.currentTimeMillis();
+             if (!isSms) {
+                 // MMS expects timestamp rounded to nearest second
+                 timestamp = 1000 * ((timestamp + 500) / 1000);
+             }
      
-                 actionParameters.putString(KEY_RECIPIENT, recipient);
-                 // Queue actual sending for SMS
-                 //Queues up background actions for background processing after the current action has completed its processing
-                 //将当前的发送短信的业务添加到队列中，轮到这条短信时会调用SendMessageAction 对象的doBackgroundWork()在后台执行耗时的异步任务
+             final ParticipantData self = BugleDatabaseOperations.getExistingParticipant(
+                     db, message.getSelfId());
+             final Uri messageUri = message.getSmsMessageUri();
+             final String conversationId = message.getConversationId();
+     
+             // Update message status
+             if (message.getYetToSend()) {
+                 if (message.getReceivedTimeStamp() == message.getRetryStartTimestamp()) {
+                     // Initial sending of message
+                     message.markMessageSending(timestamp);
+                 } else {
+                     // Manual resend of message
+                     message.markMessageManualResend(timestamp);
+                 }
+             } else {
+                 // Automatic resend of message
+                 message.markMessageResending(timestamp);
+             }
+             if (!updateMessageAndStatus(isSms, message, null /* messageUri */, false /*notify*/)) {
+                 // If message is missing in the telephony database we don't need to send it
+                 return false;
+             }
+     
+             final ArrayList<String> recipients =
+                     BugleDatabaseOperations.getRecipientsForConversation(db, conversationId);
+     
+             // Update action state with parameters needed for background sending
+             actionParameters.putParcelable(KEY_MESSAGE_URI, messageUri);
+             actionParameters.putParcelable(KEY_MESSAGE, message);
+             actionParameters.putStringArrayList(KEY_RECIPIENTS, recipients);
+             actionParameters.putInt(KEY_SUB_ID, self.getSubId());
+             actionParameters.putString(KEY_SUB_PHONE_NUMBER, self.getNormalizedDestination());
+     
+             if (isSms) {
+                 //获得服务中心
+                 //BugleDatabaseOperations:manages updating our local database
+                 final String smsc = BugleDatabaseOperations.getSmsServiceCenterForConversation(
+                         db, conversationId);
+                 actionParameters.putString(KEY_SMS_SERVICE_CENTER, smsc);
+     
+                 if (recipients.size() == 1) {
+                     final String recipient = recipients.get(0);
+     
+                     actionParameters.putString(KEY_RECIPIENT, recipient);
+                     // Queue actual sending for SMS
+                     processingAction.requestBackgroundWork(this);
+     
+                     if (LogUtil.isLoggable(TAG, LogUtil.DEBUG)) {
+                         LogUtil.d(TAG, "SendMessageAction: Queued SMS message " + messageId
+                                 + " for sending");
+                     }
+                     return true;
+                 } else {
+                     LogUtil.wtf(TAG, "Trying to resend a broadcast SMS - not allowed");
+                 }
+             } else {
+                 // Queue actual sending for MMS
                  processingAction.requestBackgroundWork(this);
      
                  if (LogUtil.isLoggable(TAG, LogUtil.DEBUG)) {
-                     LogUtil.d(TAG, "SendMessageAction: Queued SMS message " + messageId
+                     LogUtil.d(TAG, "SendMessageAction: Queued MMS message " + messageId
                              + " for sending");
                  }
                  return true;
              }
          }
-     }
      
-     //Do work in a long running background worker thread.requestBackgroundWork() needs to be called for this method to be called
+         return false;
+     }
+     ```
+
+   - ```java
+     //packages/apps/Messaging/src/com/android/messaging/datamodel/action/Action.java    
+      /**
+      * Queues up background actions for background processing after the current action has
+      * completed its processing ({@link #executeAction}, {@link processBackgroundCompletion}
+      * or {@link #processBackgroundFailure}) on the Action thread.
+      * @param backgroundAction
+      */
+     protected void requestBackgroundWork(final Action backgroundAction) {
+         mBackgroundActions.add(backgroundAction);
+     }
+     ```
+
+   - ```java
+     //action机制，通过doBackgroundWork()处理requestBackgroundWork()的work，SendMessageAction重写了doBackgroundWork()方法
+     //packages/apps/Messaging/src/com/android/messaging/datamodel/action/SendMessageAction.java
+     /**
+      * Do work in a long running background worker thread.
+      * {@link #requestBackgroundWork} needs to be called for this method to
+      * be called. {@link #processBackgroundFailure} will be called on the Action service thread
+      * if this method throws {@link DataModelException}.
+      * @return response that is to be passed to {@link #processBackgroundResponse}
+      */
+     /**
+      * Send message on background worker thread
+      */
+     @Override
      protected Bundle doBackgroundWork() {
          final MessageData message = actionParameters.getParcelable(KEY_MESSAGE);
          final String messageId = actionParameters.getString(KEY_MESSAGE_ID);
@@ -1119,53 +1207,230 @@
      
              status = MmsUtils.sendSmsMessage(recipient, messageText, messageUri, subId,
                      smsServiceCenter, deliveryReportRequired);
+         } else {
+             final Context context = Factory.get().getApplicationContext();
+             final ArrayList<String> recipients =
+                     actionParameters.getStringArrayList(KEY_RECIPIENTS);
+             if (messageUri == null) {
+                 final long timestamp = message.getReceivedTimeStamp();
+     
+                 // Inform sync that message has been added at local received timestamp
+                 final SyncManager syncManager = DataModel.get().getSyncManager();
+                 syncManager.onNewMessageInserted(timestamp);
+     
+                 // For MMS messages first need to write to telephony (resizing images if needed)
+                 updatedMessageUri = MmsUtils.insertSendingMmsMessage(context, recipients,
+                         message, subId, subPhoneNumber, timestamp);
+                 if (updatedMessageUri != null) {
+                     messageUri = updatedMessageUri;
+                     // To prevent Sync seeing inconsistent state must write to DB on this thread
+                     updateMessageUri(messageId, updatedMessageUri);
+     
+                     if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
+                         LogUtil.v(TAG, "SendMessageAction: Updated message " + messageId
+                                 + " with new uri " + messageUri);
+                     }
+                  }
+             }
+             if (messageUri != null) {
+                 // Actually send the MMS
+                 final Bundle extras = new Bundle();
+                 extras.putString(EXTRA_MESSAGE_ID, messageId);
+                 extras.putParcelable(EXTRA_UPDATED_MESSAGE_URI, updatedMessageUri);
+                 final MmsUtils.StatusPlusUri result = MmsUtils.sendMmsMessage(context, subId,
+                         messageUri, extras);
+                 if (result == MmsUtils.STATUS_PENDING) {
+                     // Async send, so no status yet
+                     LogUtil.d(TAG, "SendMessageAction: Sending MMS message " + messageId
+                             + " asynchronously; waiting for callback to finish processing");
+                     return null;
+                 }
+                 status = result.status;
+                 rawStatus = result.rawStatus;
+                 resultCode = result.resultCode;
+             } else {
+                 status = MmsUtils.MMS_REQUEST_MANUAL_RETRY;
+             }
          }
+         // When we fast-fail before calling the MMS lib APIs (e.g. airplane mode,
+         // sending message is deleted).
+         ProcessSentMessageAction.processMessageSentFastFailed(messageId, messageUri,
+                 updatedMessageUri, subId, isSms, status, rawStatus, resultCode);
+         return null;
+     }
+     
+     /**
+      * Process the success response from the background worker. Runs on action service thread.
+      * @param response the response returned by {@link #doBackgroundWork}
+      * @return result to be passed in to {@link ActionCompletedListener#onActionSucceeded}
+      */
+     @Override
+     protected Object processBackgroundResponse(final Bundle response) {
+         // Nothing to do here, post-send tasks handled by ProcessSentMessageAction
+         return null;
+     }
+     
+     /**
+      * Update message status to reflect success or failure
+      */
+     /**
+      * Called in case of failures when sending background actions. Runs on action service thread
+      * @return result to be passed in to {@link ActionCompletedListener#onActionFailed}
+      */
+     @Override
+     protected Object processBackgroundFailure() {
+         final String messageId = actionParameters.getString(KEY_MESSAGE_ID);
+         final MessageData message = actionParameters.getParcelable(KEY_MESSAGE);
+         final boolean isSms = message.getProtocol() == MessageData.PROTOCOL_SMS;
+         final int subId = actionParameters.getInt(KEY_SUB_ID, ParticipantData.DEFAULT_SELF_SUB_ID);
+         final int resultCode = actionParameters.getInt(ProcessSentMessageAction.KEY_RESULT_CODE);
+         final int httpStatusCode =
+                 actionParameters.getInt(ProcessSentMessageAction.KEY_HTTP_STATUS_CODE);
+     
+         ProcessSentMessageAction.processResult(messageId, null /* updatedMessageUri */,
+                 MmsUtils.MMS_REQUEST_MANUAL_RETRY, MessageData.RAW_TELEPHONY_STATUS_UNDEFINED,
+                 isSms, this, subId, resultCode, httpStatusCode);
+     
+         return null;
      }
      ```
+
+     
 
 14. 在MmsUtils的sendSmsMessage()中
 
    - MmsUtils：Utils for sending sms/mms messages.
 
    - ```java
-     public static int sendSmsMessage(final String recipient, final String messageText,final Uri requestUri, final int subId,
-                 final String smsServiceCenter, final boolean requireDeliveryReport) {
-             final Context context = Factory.get().getApplicationContext();
-             int status = MMS_REQUEST_MANUAL_RETRY;
-             try {
-                 // Send a single message
-                 final SendResult result = SmsSender.sendMessage(
-                         context,
-                         subId,
-                         recipient,
-                         messageText,
-                         smsServiceCenter,
-                         requireDeliveryReport,
-                         requestUri);
-             } catch (final Exception e) {
-                 LogUtil.e(TAG, "MmsUtils: failed to send SMS " + e, e);
-             }
-             return status;
+     //packages/apps/Messaging/src/com/android/messaging/sms/MmsUtils.java
+     public static int sendSmsMessage(final String recipient, final String messageText,
+             final Uri requestUri, final int subId,
+             final String smsServiceCenter, final boolean requireDeliveryReport) {
+         if (!isSmsDataAvailable(subId)) {
+             LogUtil.w(TAG, "MmsUtils: can't send SMS without radio");
+             return MMS_REQUEST_MANUAL_RETRY;
          }
+         final Context context = Factory.get().getApplicationContext();
+         int status = MMS_REQUEST_MANUAL_RETRY;
+         try {
+             // Send a single message
+             final SendResult result = SmsSender.sendMessage(
+                     context,
+                     subId,
+                     recipient,
+                     messageText,
+                     smsServiceCenter,
+                     requireDeliveryReport,
+                     requestUri);
+             if (!result.hasPending()) {
+                 // not timed out, check failures
+                 final int failureLevel = result.getHighestFailureLevel();
+                 switch (failureLevel) {
+                     case SendResult.FAILURE_LEVEL_NONE:
+                         status = MMS_REQUEST_SUCCEEDED;
+                         break;
+                     case SendResult.FAILURE_LEVEL_TEMPORARY:
+                         status = MMS_REQUEST_AUTO_RETRY;
+                         LogUtil.e(TAG, "MmsUtils: SMS temporary failure");
+                         break;
+                     case SendResult.FAILURE_LEVEL_PERMANENT:
+                         LogUtil.e(TAG, "MmsUtils: SMS permanent failure");
+                         break;
+                 }
+             } else {
+                 // Timed out
+                 LogUtil.e(TAG, "MmsUtils: sending SMS timed out");
+             }
+         } catch (final Exception e) {
+             LogUtil.e(TAG, "MmsUtils: failed to send SMS " + e, e);
+         }
+         return status;
+     }
      ```
 
 15. 在SmsSender的sendMessage()中
 
-   - SmsSender：Class that sends chat message via SMS
+   - SmsSender
 
+     - Class that sends chat message via SMS
+   
+     - The interface emulates a blocking sending similar to making an HTTP request. It calls the SmsManager to send a (potentially multipart) message and waits on the sent status on each part. The waiting has a timeout so it won't wait forever. Once the sent status of all parts received, the call returns.A successful sending requires success status for all parts. Otherwise, we pick the highest level of failure as the error for the whole message, which is used to determine if we need to retry the sending.
+   
    - ```java
-     public static SendResult sendMessage(final Context context,  final int subId, String dest,String message, final String serviceCenter, final boolean requireDeliveryReport,final Uri messageUri) throws SmsException {
+     //packages/apps/Messaging/src/com/android/messaging/sms/SmsSender.java
+     // This should be called from a RequestWriter queue thread
+     public static SendResult sendMessage(final Context context, final int subId, String dest,
+             String message, final String serviceCenter, final boolean requireDeliveryReport,
+             final Uri messageUri) throws SmsException {
+         if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
+             LogUtil.v(TAG, "SmsSender: sending message. " +
+                     "dest=" + dest + " message=" + message +
+                     " serviceCenter=" + serviceCenter +
+                     " requireDeliveryReport=" + requireDeliveryReport +
+                     " requestId=" + messageUri);
+         }
+         if (TextUtils.isEmpty(message)) {
+             throw new SmsException("SmsSender: empty text message");
+         }
+         // Get the real dest and message for email or alias if dest is email or alias
+         // Or sanitize the dest if dest is a number
+         if (!TextUtils.isEmpty(MmsConfig.get(subId).getEmailGateway()) &&
+                 (MmsSmsUtils.isEmailAddress(dest) || MmsSmsUtils.isAlias(dest, subId))) {
+             // The original destination (email address) goes with the message
+             message = dest + " " + message;
+             // the new address is the email gateway #
+             dest = MmsConfig.get(subId).getEmailGateway();
+         } else {
+             // remove spaces and dashes from destination number
+             // (e.g. "801 555 1212" -> "8015551212")
+             // (e.g. "+8211-123-4567" -> "+82111234567")
+             dest = PhoneNumberUtils.stripSeparators(dest);
+         }
+         if (TextUtils.isEmpty(dest)) {
+             throw new SmsException("SmsSender: empty destination address");
+         }
          // Divide the input message by SMS length limit
          final SmsManager smsManager = PhoneUtils.get(subId).getSmsManager();
+         //divideMessage():Divide a message text into several fragments, none bigger than the maximum SMS message size.
          final ArrayList<String> messages = smsManager.divideMessage(message);
          if (messages == null || messages.size() < 1) {
              throw new SmsException("SmsSender: fails to divide message");
          }
          // Prepare the send result, which collects the send status for each part
          final SendResult pendingResult = new SendResult(messages.size());
+         /*    private static ConcurrentHashMap<Uri, SendResult> sPendingMessageMap =
+                 new ConcurrentHashMap<Uri, SendResult>();
+     	//A map for pending sms messages. The key is the random request UUID*/
          sPendingMessageMap.put(messageUri, pendingResult);
          // Actually send the sms
-         sendInternal(context, subId, dest, messages, serviceCenter, requireDeliveryReport, messageUri);
+         sendInternal(
+                 context, subId, dest, messages, serviceCenter, requireDeliveryReport, messageUri);
+         // Wait for pending intent to come back
+         synchronized (pendingResult) {
+             final long smsSendTimeoutInMillis = BugleGservices.get().getLong(
+                     BugleGservicesKeys.SMS_SEND_TIMEOUT_IN_MILLIS,
+                     BugleGservicesKeys.SMS_SEND_TIMEOUT_IN_MILLIS_DEFAULT);
+             final long beginTime = SystemClock.elapsedRealtime();
+             long waitTime = smsSendTimeoutInMillis;
+             // We could possibly be woken up while still pending
+             // so make sure we wait the full timeout period unless
+             // we have the send results of all parts.
+             while (pendingResult.hasPending() && waitTime > 0) {
+                 try {
+                     pendingResult.wait(waitTime);
+                 } catch (final InterruptedException e) {
+                     LogUtil.e(TAG, "SmsSender: sending wait interrupted");
+                 }
+                 waitTime = smsSendTimeoutInMillis - (SystemClock.elapsedRealtime() - beginTime);
+             }
+         }
+         // Either we timed out or have all the results (success or failure)
+         sPendingMessageMap.remove(messageUri);
+         if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
+             LogUtil.v(TAG, "SmsSender: sending completed. " +
+                     "dest=" + dest + " message=" + message + " result=" + pendingResult);
+         }
+         return pendingResult;
      }
      
      // Actually sending the message using SmsManager
@@ -1180,7 +1445,7 @@
              final int partId = (messageCount <= 1 ? 0 : i + 1);
              if (requireDeliveryReport && (i == (messageCount - 1))) {
                  // only care about the delivery status of the last part
-                 //如果是最后一个部分使用deliveryIntents，MESSAGE_DELIVERED_ACTION
+                 //MESSAGE_SENT_ACTION = "com.android.messaging.receiver.SendStatusReceiver.MESSAGE_SENT";    	
                  deliveryIntents.add(PendingIntent.getBroadcast(
                          context,
                          partId,
@@ -1190,7 +1455,8 @@
              } else {
                  deliveryIntents.add(null);
              }
-             //如果不是最后一个部分，使用sentIntents，MESSAGE_SENT_ACTION
+             //发送的状态，每个部分都要发送广播
+             //MESSAGE_DELIVERED_ACTION ="com.android.messaging.receiver.SendStatusReceiver.MESSAGE_DELIVERED";
              sentIntents.add(PendingIntent.getBroadcast(
                      context,
                      partId,
@@ -1229,25 +1495,73 @@
    - SmsManager位于frameworks/base/telephony/java/android/telephony/java/android/telephony/SmsManager.java
 
    - ```java
+     //frameworks/base/telephony/java/android/telephony/SmsManager.java
      //Send a text based SMS
      public void sendTextMessage(String destinationAddress, String scAddress, String text,PendingIntent sentIntent, PendingIntent deliveryIntent) {
          sendTextMessageInternal(destinationAddress, scAddress, text, sentIntent, deliveryIntent,
                  true /* persistMessage*/);
      }
+     ```
+
+   - ```java
      private void sendTextMessageInternal(String destinationAddress, String scAddress,
              String text, PendingIntent sentIntent, PendingIntent deliveryIntent,
-             boolean persistMessage) {
-         try {
-             //SmsController继承了ISmsImplBase，而ISmsImplBase继承了ISms.Stub
-             ISms iccISms = getISmsServiceOrThrow();
-             iccISms.sendTextForSubscriber(getSubscriptionId(), ActivityThread.currentPackageName(),
-                     destinationAddress,
-                     scAddress, text, sentIntent, deliveryIntent,
-                     persistMessage);
-         } catch (RemoteException ex) {
-             // ignore it
+             boolean persistMessage, String packageName, String attributionTag, long messageId) {
+         if (TextUtils.isEmpty(destinationAddress)) {
+             throw new IllegalArgumentException("Invalid destinationAddress");
+         }
+     
+         if (TextUtils.isEmpty(text)) {
+             throw new IllegalArgumentException("Invalid message body");
+         }
+     
+         // We will only show the SMS disambiguation dialog in the case that the message is being
+         // persisted. This is for two reasons:
+         // 1) Messages that are not persisted are sent by carrier/OEM apps for a specific
+         //    subscription and require special permissions. These messages are usually not sent by
+         //    the device user and should not have an SMS disambiguation dialog associated with them
+         //    because the device user did not trigger them.
+         // 2) The SMS disambiguation dialog ONLY checks to make sure that the user has the SEND_SMS
+         //    permission. If we call resolveSubscriptionForOperation from a carrier/OEM app that has
+         //    the correct MODIFY_PHONE_STATE or carrier permissions, but no SEND_SMS, it will throw
+         //    an incorrect SecurityException.
+         if (persistMessage) {
+             resolveSubscriptionForOperation(new SubscriptionResolverResult() {
+                 @Override
+                 public void onSuccess(int subId) {
+                     ISms iSms = getISmsServiceOrThrow();
+                     try {
+                         iSms.sendTextForSubscriber(subId, packageName, attributionTag,
+                                 destinationAddress, scAddress, text, sentIntent, deliveryIntent,
+                                 persistMessage, messageId);
+                     } catch (RemoteException e) {
+                         Log.e(TAG, "sendTextMessageInternal: Couldn't send SMS, exception - "
+                                 + e.getMessage() + " " + formatCrossStackMessageId(messageId));
+                         notifySmsError(sentIntent, RESULT_REMOTE_EXCEPTION);
+                     }
+                 }
+     
+                 @Override
+                 public void onFailure() {
+                     notifySmsError(sentIntent, RESULT_NO_DEFAULT_SMS_APP);
+                 }
+             });
+         } else {
+             // Not persisting the message, used by sendTextMessageWithoutPersisting() and is not
+             // visible to the user.
+             ISms iSms = getISmsServiceOrThrow();
+             try {
+                 iSms.sendTextForSubscriber(getSubscriptionId(), packageName, attributionTag,
+                         destinationAddress, scAddress, text, sentIntent, deliveryIntent,
+                         persistMessage, messageId);
+             } catch (RemoteException e) {
+                 Log.e(TAG, "sendTextMessageInternal (no persist): Couldn't send SMS, exception - "
+                         + e.getMessage() + " " + formatCrossStackMessageId(messageId));
+                 notifySmsError(sentIntent, RESULT_REMOTE_EXCEPTION);
+             }
          }
      }
+     
      ```
 
 2. SmsController的sendTextForSubscriber()中
@@ -1256,9 +1570,12 @@
 
    - ISms.aidl位于frameworks/base/telephony/java/com/android/internal/telephony/ISms.aidl
 
-   - UiccSmsController位于frameworks/opt/telephony/java/com/android/internal/telephony/SmsController.java
+   -  ISmsImplBase 继承了 ISms.Stub， SmsController 继承了 ISmsImplBase
+
+   - SmsController 位于frameworks/opt/telephony/src/java/com/android/internal/telephony/SmsController.java
 
    - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/SmsController.java
      public void sendTextForSubscriber(int subId, String callingPackage,String callingAttributionTag, String destAddr, String scAddr, String text,PendingIntent sentIntent, PendingIntent deliveryIntent,boolean persistMessageForNonDefaultSmsApp, long messageId) {
            if (callingPackage == null) {
                callingPackage = getCallingPackage();
@@ -1269,7 +1586,6 @@
                return;
            }
            long token = Binder.clearCallingIdentity();
-           //获得发送者的信息
            SubscriptionInfo info;
            try {
                info = getSubscriptionInfo(subId);
@@ -1279,7 +1595,6 @@
            if (isBluetoothSubscription(info)) {
                sendBluetoothText(info, destAddr, text, sentIntent, deliveryIntent);
            } else {
-               //关键步骤
                sendIccText(subId, callingPackage, destAddr, scAddr, text, sentIntent, deliveryIntent,
                        persistMessageForNonDefaultSmsApp, messageId);
            }
@@ -1288,9 +1603,9 @@
                    String scAddr, String text, PendingIntent sentIntent, PendingIntent deliveryIntent,
                    boolean persistMessageForNonDefaultSmsApp, long messageId) {
            Rlog.d(LOG_TAG, "sendTextForSubscriber iccSmsIntMgr"+ " Subscription: " + subId + " id: " + messageId);
+           //Get sms interface manager object based on subscription.
            IccSmsInterfaceManager iccSmsIntMgr = getIccSmsInterfaceManager(subId);
            if (iccSmsIntMgr != null) {
-               //关键步骤
                iccSmsIntMgr.sendText(callingPackage, destAddr, scAddr, text, sentIntent,
                        deliveryIntent, persistMessageForNonDefaultSmsApp, messageId);
            } else {
@@ -1310,11 +1625,11 @@
     - UMTS：Universal Mobile Telecommunications System，a 3g technology
 
   - ```java
+    //frameworks/opt/telephony/src/java/com/android/internal/telephony/IccSmsInterfaceManager.java
     public void sendText(String callingPackage, String destAddr, String scAddr,String text, PendingIntent sentIntent, PendingIntent deliveryIntent,boolean persistMessageForNonDefaultSmsApp) {
         //A permissions check
         //This method checks only if the calling package has the permission to send the sms.
         mPhone.getContext().enforceCallingPermission(Manifest.permission.SEND_SMS,"Sending SMS message");
-        //关键步骤
         sendTextInternal(callingPackage, destAddr, scAddr, text, sentIntent, deliveryIntent,
             persistMessageForNonDefaultSmsApp);
     }
@@ -1332,7 +1647,6 @@
           }
           notifyIfOutgoingEmergencySms(destAddr);
           destAddr = filterDestAddress(destAddr);
-          //关键步骤
           mDispatchersController.sendText(destAddr, scAddr, text, sentIntent, deliveryIntent,
                   null/*messageUri*/, callingPackage, persistMessageForNonDefaultSmsApp,
                   priority, expectMore, validityPeriod, isForVvm, messageId);
@@ -1342,9 +1656,10 @@
 4. 在SmsDispatchersController的sendText（）方法中
 
   - ```java
+    //frameworks/opt/telephony/src/java/com/android/internal/telephony/SmsDispatchersController.java
     //在SmsDispatchersController的构造方法中mCdmaDispatcher = new CdmaSMSDispatcher(phone, this);
     //在SmsDispatchersController的构造方法中mGsmDispatcher = new GsmSMSDispatcher(phone, this, mGsmInboundSmsHandler);
-    private SMSDispatcher mCdmaDispatcher;mCdmaDispatcher = new GsmSMSDispatcher()
+    private SMSDispatcher mCdmaDispatcher;
     private SMSDispatcher mGsmDispatcher;//在SmsDispatchersController的构造方法中mGsmDispatcher = new GsmSMSDispatcher()
     private ImsSmsDispatcher mImsSmsDispatcher;
     
@@ -1352,7 +1667,7 @@
             PendingIntent deliveryIntent, Uri messageUri, String callingPkg, boolean persistMessage,
             int priority, boolean expectMore, int validityPeriod, boolean isForVvm,
             long messageId) {
-        //根据不同的情况将sms分发掉
+        //使用不同的网络分发sms
         if (mImsSmsDispatcher.isAvailable() || mImsSmsDispatcher.isEmergencySmsSupport(destAddr)) {
             mImsSmsDispatcher.sendText(destAddr, scAddr, text, sentIntent, deliveryIntent,
                     messageUri, callingPkg, persistMessage, priority, false /z*expectMore*/,
@@ -1372,53 +1687,139 @@
 5. 在SMSDispatcher的sendText（）中
 
   - ```java
-      public void sendText(String destAddr, String scAddr, String text,
-                           PendingIntent sentIntent, PendingIntent deliveryIntent, Uri messageUri,
-                           String callingPkg, boolean persistMessage, int priority,
-                           boolean expectMore, int validityPeriod, boolean isForVvm,
-                           long messageId) {
-          Rlog.d(TAG, "sendText id: " + messageId);
-          //根据获得的信息生成对应的pdu
-          SmsMessageBase.SubmitPduBase pdu = getSubmitPdu(
-                  scAddr, destAddr, text, (deliveryIntent != null), null, priority, validityPeriod);
-          if (pdu != null) {
-              //根据获得的信息生成对应的SmsTracker
-              HashMap map = getSmsTrackerMap(destAddr, scAddr, text, pdu);
-              SmsTracker tracker = getSmsTracker(callingPkg, map, sentIntent, deliveryIntent,
-                      getFormat(), messageUri, expectMore, text, true /*isText*/,
-                      persistMessage, priority, validityPeriod, isForVvm, messageId);
-      
-              if (!sendSmsByCarrierApp(false /* isDataSms */, tracker)) {
-                  sendSubmitPdu(tracker);
-              }
-          } else {
-              Rlog.e(TAG, "SmsDispatcher.sendText(): getSubmitPdu() returned null" + " id: "
-                      + messageId);
-              triggerSentIntentForFailure(sentIntent);
-          }
-      }
-      
-      /** Send a single SMS PDU. */
-      @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.R, trackingBug = 170729553)
-      private void sendSubmitPdu(SmsTracker tracker) {
-          sendSubmitPdu(new SmsTracker[] {tracker});
-      }
-      
-      /** Send a multi-part SMS PDU. Usually just calls sendRawPdu(). */
-      private void sendSubmitPdu(SmsTracker[] trackers) {
-          if (shouldBlockSmsForEcbm()) {
-              Rlog.d(TAG, "Block SMS in Emergency Callback mode");
-              handleSmsTrackersFailure(trackers, SmsManager.RESULT_SMS_BLOCKED_DURING_EMERGENCY,
-                      NO_ERROR_CODE);
-          } else {
-              sendRawPdu(trackers);
-          }
-      }
-      
-      //Send a single or a multi-part SMS
+    //frameworks/opt/telephony/src/java/com/android/internal/telephony/SMSDispatcher.java
+    public void sendText(String destAddr, String scAddr, String text,
+                         PendingIntent sentIntent, PendingIntent deliveryIntent, Uri messageUri,
+                         String callingPkg, boolean persistMessage, int priority,
+                         boolean expectMore, int validityPeriod, boolean isForVvm,
+                         long messageId) {
+        Rlog.d(TAG, "sendText id: " + messageId);
+        //根据获得的信息生成对应的pdu
+        SmsMessageBase.SubmitPduBase pdu = getSubmitPdu(
+                scAddr, destAddr, text, (deliveryIntent != null), null, priority, validityPeriod);
+        if (pdu != null) {
+            //根据获得的信息生成对应的SmsTracker
+            HashMap map = getSmsTrackerMap(destAddr, scAddr, text, pdu);
+            //Keeps track of an SMS that has been sent to the RIL, until it has successfully been sent, or we're done trying.
+            SmsTracker tracker = getSmsTracker(callingPkg, map, sentIntent, deliveryIntent,
+                    getFormat(), messageUri, expectMore, text, true /*isText*/,
+                    persistMessage, priority, validityPeriod, isForVvm, messageId);
+    
+            if (!sendSmsByCarrierApp(false /* isDataSms */, tracker)) {
+                sendSubmitPdu(tracker);
+            }
+        } else {
+            Rlog.e(TAG, "SmsDispatcher.sendText(): getSubmitPdu() returned null" + " id: "
+                    + messageId);
+            triggerSentIntentForFailure(sentIntent);
+        }
+    }
+    
+    /** Send a single SMS PDU. */
+    @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.R, trackingBug = 170729553)
+    private void sendSubmitPdu(SmsTracker tracker) {
+        sendSubmitPdu(new SmsTracker[] {tracker});
+    }
+    
+    /** Send a multi-part SMS PDU. Usually just calls sendRawPdu(). */
+    private void sendSubmitPdu(SmsTracker[] trackers) {
+        //return true if MO SMS should be blocked for Emergency Callback Mode.
+        if (shouldBlockSmsForEcbm()) {
+            Rlog.d(TAG, "Block SMS in Emergency Callback mode");
+            handleSmsTrackersFailure(trackers, SmsManager.RESULT_SMS_BLOCKED_DURING_EMERGENCY,
+                    NO_ERROR_CODE);
+        } else {
+            sendRawPdu(trackers);
+        }
+    }
+    
+    //Send a single or a multi-part SMS
+    public void sendRawPdu(SmsTracker[] trackers) {
+        //差错验证，获取包信息
+        ...
+        // checkDestination() returns true if the destination is not a premium short code or the
+        // sending app is approved to send to short codes. Otherwise, a message is sent to our
+        // handler with the SmsTracker to request user confirmation before sending.
+        if (checkDestination(trackers)) {
+            // check for excessive outgoing SMS usage by this app
+            if (!mSmsDispatchersController
+                    .getUsageMonitor()
+                    .check(appInfo.packageName, trackers.length)) {
+                sendMessage(obtainMessage(EVENT_SEND_LIMIT_REACHED_CONFIRMATION, trackers));
+                return;
+            }
+    
+            for (SmsTracker tracker : trackers) {
+                //判断授权开关是否开启
+                if (mSmsDispatchersController.getUsageMonitor().isSmsAuthorizationEnabled()) {
+                    final SmsAuthorizationCallback callback = new SmsAuthorizationCallback() {
+                        @Override
+                        public void onAuthorizationResult(final boolean accepted) {
+                            if (accepted) {
+                                sendSms(tracker);
+                            } else {
+                                tracker.onFailed(mContext, SmsManager.RESULT_ERROR_GENERIC_FAILURE,
+                                        SmsUsageMonitor.ERROR_CODE_BLOCKED);
+                            }
+                        }
+                    };
+                   mSmsDispatchersController.getUsageMonitor().authorizeOutgoingSms(tracker.mAppInfo,
+                            tracker.mDestAddress,tracker.mFullMessageText, callback, this);
+                } else {
+                    //没开启直接发送
+                    //实际调用的是GsmSMSDispatcher的sendSms（）方法，
+                    sendSms(tracker);
+                }
+            }
+        }
+    		//如果是打给紧急号码，启用异步的紧急服务。
+        if (mTelephonyManager.isEmergencyNumber(trackers[0].mDestAddress)) {
+            new AsyncEmergencyContactNotifier(mContext).execute();
+        }
+    }
+    ```
+
+  - ```java
+      //frameworks/opt/telephony/src/java/com/android/internal/telephony/SMSDispatcher.java
+      @VisibleForTesting
       public void sendRawPdu(SmsTracker[] trackers) {
-          //差错验证，获取包信息
-          ...
+          @SmsManager.Result int error = SmsManager.RESULT_ERROR_NONE;
+          PackageInfo appInfo = null;
+          if (mSmsSendDisabled) {
+              Rlog.e(TAG, "Device does not support sending sms.");
+              error = SmsManager.RESULT_ERROR_NO_SERVICE;
+          } else {
+              for (SmsTracker tracker : trackers) {
+                  if (tracker.getData().get(MAP_KEY_PDU) == null) {
+                      Rlog.e(TAG, "Empty PDU");
+                      error = SmsManager.RESULT_ERROR_NULL_PDU;
+                      break;
+                  }
+              }
+      
+              if (error == SmsManager.RESULT_ERROR_NONE) {
+                  UserHandle userHandle = UserHandle.of(trackers[0].mUserId);
+                  PackageManager pm = mContext.createContextAsUser(userHandle, 0).getPackageManager();
+      
+                  try {
+                      // Get package info via packagemanager
+                      appInfo =
+                              pm.getPackageInfo(
+                                      trackers[0].getAppPackageName(),
+                                      PackageManager.GET_SIGNATURES);
+                  } catch (PackageManager.NameNotFoundException e) {
+                      Rlog.e(TAG, "Can't get calling app package info: refusing to send SMS"
+                              + " id: " + getMultiTrackermessageId(trackers));
+                      error = SmsManager.RESULT_ERROR_GENERIC_FAILURE;
+                  }
+              }
+          }
+      
+          if (error != SmsManager.RESULT_ERROR_NONE) {
+              handleSmsTrackersFailure(trackers, error, NO_ERROR_CODE);
+              return;
+          }
+      
           // checkDestination() returns true if the destination is not a premium short code or the
           // sending app is approved to send to short codes. Otherwise, a message is sent to our
           // handler with the SmsTracker to request user confirmation before sending.
@@ -1432,38 +1833,22 @@
               }
       
               for (SmsTracker tracker : trackers) {
-                  //判断授权开关是否开启
-                  if (mSmsDispatchersController.getUsageMonitor().isSmsAuthorizationEnabled()) {
-                      final SmsAuthorizationCallback callback = new SmsAuthorizationCallback() {
-                          @Override
-                          public void onAuthorizationResult(final boolean accepted) {
-                              if (accepted) {
-                                  sendSms(tracker);
-                              } else {
-                                  tracker.onFailed(mContext, SmsManager.RESULT_ERROR_GENERIC_FAILURE,
-                                          SmsUsageMonitor.ERROR_CODE_BLOCKED);
-                              }
-                          }
-                      };
-                     mSmsDispatchersController.getUsageMonitor().authorizeOutgoingSms(tracker.mAppInfo,
-                              tracker.mDestAddress,tracker.mFullMessageText, callback, this);
-                  } else {
-                      //没开启直接发送
-                      //实际调用的是GsmSMSDispatcher的sendSms（）方法，
-                      sendSms(tracker);
-                  }
+                  sendSms(tracker);
               }
           }
-      		//如果是打给紧急号码，启用异步的紧急服务。
+      
           if (mTelephonyManager.isEmergencyNumber(trackers[0].mDestAddress)) {
               new AsyncEmergencyContactNotifier(mContext).execute();
           }
       }
-    ```
+      ```
 
 6. 在GsmSMSDispatcher的sendSms()中
 
   - ```java
+    //frameworks/opt/telephony/src/java/com/android/internal/telephony/gsm/GsmSMSDispatcher.java
+    //在SmsDispatchersController的构造方法中mCdmaDispatcher = new CdmaSMSDispatcher(phone, this);
+    //在SmsDispatchersController的构造方法中mGsmDispatcher = new GsmSMSDispatcher(phone, this, mGsmInboundSmsHandler);
     protected void sendSms(SmsTracker tracker) {
         int ss = mPhone.getServiceState().getState();
     
@@ -1530,7 +1915,7 @@
 
    - ```java
       public void sendSMS(String smscPdu, String pdu, Message result) {
-          获得radio代理
+          //获得radio代理
           IRadio radioProxy = getRadioProxy(result);
           if (radioProxy != null) {
               //注册消息
@@ -1567,16 +1952,350 @@
       }
       ```
 
-### RIL
+      - ```java
+        RILRequest的消息获取
+        //frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
+        private RILRequest obtainRequest(int request, Message result, WorkSource workSource) {
+            RILRequest rr = RILRequest.obtain(request, result, workSource);
+            addRequest(rr);
+            return rr;
+        }
+        //frameworks/opt/telephony/src/java/com/android/internal/telephony/RILRequest.java
+        /**
+         * Retrieves a new RILRequest instance from the pool and sets the clientId
+         *
+         * @param request RIL_REQUEST_*
+         * @param result sent when operation completes
+         * @param workSource WorkSource to track the client
+         * @return a RILRequest instance from the pool.
+         */
+        // @VisibleForTesting
+        public static RILRequest obtain(int request, Message result, WorkSource workSource) {
+            RILRequest rr = obtain(request, result);
+        
+            if (workSource != null) {
+                rr.mWorkSource = workSource;
+                //Generate a String client ID from the WorkSource.
+                rr.mClientId = rr.getWorkSourceClientId();
+            } else {
+                Rlog.e(LOG_TAG, "null workSource " + request);
+            }
+        
+            return rr;
+        }
+        //frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
+        SparseArray<RILRequest> mRequestList = new SparseArray<>();
+        private void addRequest(RILRequest rr) {
+            acquireWakeLock(rr, FOR_WAKELOCK);
+            synchronized (mRequestList) {
+                rr.mStartTimeMs = SystemClock.elapsedRealtime();
+                mRequestList.append(rr.mSerial, rr);
+            }
+        }
+        ```
 
-- 根据不同的radio版本发送sms，绑定RIL_REQUEST_SEND_SMS消息回调
+8.  IRadio的sendSms_1_6()
+
+   ```java
+   //hardware/interfaces/radio/1.6/IRadio.hal
+   向modem发起请求，在IRadioResponse.sendSmsResponse_1_6()方法中响应modem的返回的结果
+   /**
+    * Send an SMS message
+    *
+    * @param serial Serial number of request.
+    * @param message GsmSmsMessage as defined in types.hal
+    *
+    * Response function is IRadioResponse.sendSmsResponse_1_6()
+    *
+    * Note this API is the same as the 1.0
+    *
+    * Based on the return error, caller decides to resend if sending sms
+    * fails. RadioError:SMS_SEND_FAIL_RETRY means retry (i.e. error cause is 332)
+    * and RadioError:GENERIC_FAILURE means no retry (i.e. error cause is 500)
+    */
+   oneway sendSms_1_6(int32_t serial, GsmSmsMessage message);
+   ```
+
+   - 普通版本的RIL_REQUEST_SEND_SMS消息处理
+
+      - ```c++
+         在ril_commands.h中定义了所有solicited类型，分别为solicited Request和solicited Response。
+         //hardware/ril/libril/ril_commands.h
+         {RIL_REQUEST_SEND_SMS, radio::sendSmsResponse},
+         
+         //hardware/ril/libril/ril_service.cpp
+         //sp<IRadioResponse> mRadioResponse;
+         int radio::sendSmsResponse(int slotId,
+                                   int responseType, int serial, RIL_Errno e, void *response,
+                                   size_t responseLen) {
+         #if VDBG
+             RLOGD("sendSmsResponse: serial %d", serial);
+         #endif
+         
+             if (radioService[slotId]->mRadioResponse != NULL) {
+                 RadioResponseInfo responseInfo = {};
+                 SendSmsResult result = makeSendSmsResult(responseInfo, serial, responseType, e, response,
+                         responseLen);
+         
+                 Return<void> retStatus = radioService[slotId]->mRadioResponse->sendSmsResponse(responseInfo,
+                         result);
+                 radioService[slotId]->checkReturnStatus(retStatus);
+             } else {
+                 RLOGE("sendSmsResponse: radioService[%d]->mRadioResponse == NULL", slotId);
+             }
+         
+             return 0;
+         }
+         ```
+
+9. RadioResponse的sendSmsResponse_1_6()方法
+
+   - ```java
+      //frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioResponse.java
+      /**
+       * @param responseInfo Response info struct containing response type, serial no. and error which
+       *                     is defined in 1.6/types.hal
+       * @param sms Response to sms sent as defined by SendSmsResult in types.hal
+       */
+      public void sendSmsResponse_1_6(android.hardware.radio.V1_6.RadioResponseInfo responseInfo,
+              SendSmsResult sms) {
+          responseSms_1_6(responseInfo, sms);
+      }
+      
+      private void responseSms_1_6(android.hardware.radio.V1_6.RadioResponseInfo responseInfo,
+              SendSmsResult sms) {
+          RILRequest rr = mRil.processResponse_1_6(responseInfo);
+      
+          if (rr != null) {
+              long messageId = RIL.getOutgoingSmsMessageId(rr.mResult);
+              SmsResponse ret = new SmsResponse(sms.messageRef, sms.ackPDU, sms.errorCode, messageId);
+              if (responseInfo.error == RadioError.NONE) {
+                  sendMessageResponse(rr.mResult, ret);
+              }
+              mRil.processResponseDone_1_6(rr, responseInfo, ret);
+          }
+      }
+      ```
+
+      - ```java
+        //frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
+        /**
+         * This is a helper function for V1_6.RadioResponseInfo to be called when a RadioResponse
+         * callback is called. It takes care of acks, wakelocks, and finds and returns RILRequest
+         * corresponding to the response if one is found.
+         * @param responseInfo RadioResponseInfo received in response callback
+         * @return RILRequest corresponding to the response
+         */
+        @VisibleForTesting
+        public RILRequest processResponse_1_6(
+                android.hardware.radio.V1_6.RadioResponseInfo responseInfo) {
+            return processResponseInternal(RADIO_SERVICE, responseInfo.serial, responseInfo.error,
+                    responseInfo.type);
+        }
+        private RILRequest processResponseInternal(int service, int serial, int error, int type) {
+            RILRequest rr;
+        
+            if (type == RadioResponseType.SOLICITED_ACK) {
+                synchronized (mRequestList) {
+                    rr = mRequestList.get(serial);
+                }
+                if (rr == null) {
+                    Rlog.w(RILJ_LOG_TAG, "Unexpected solicited ack response! sn: " + serial);
+                } else {
+                    decrementWakeLock(rr);
+                    if (mRadioBugDetector != null) {
+                        mRadioBugDetector.detectRadioBug(rr.mRequest, error);
+                    }
+                    if (RILJ_LOGD) {
+                        riljLog(rr.serialString() + " Ack from " + serviceToString(service)
+                                + " < " + RILUtils.requestToString(rr.mRequest));
+                    }
+                }
+                return rr;
+            }
+        
+            rr = findAndRemoveRequestFromList(serial);
+            if (rr == null) {
+                Rlog.e(RILJ_LOG_TAG, "processResponse: Unexpected response! serial: " + serial
+                        + " ,error: " + error);
+                return null;
+            }
+        
+            // Time logging for RIL command and storing it in TelephonyHistogram.
+            addToRilHistogram(rr);
+            if (mRadioBugDetector != null) {
+                mRadioBugDetector.detectRadioBug(rr.mRequest, error);
+            }
+            if (type == RadioResponseType.SOLICITED_ACK_EXP) {
+                sendAck(service);
+                if (RILJ_LOGD) {
+                    riljLog("Response received from " + serviceToString(service) + " for "
+                            + rr.serialString() + " " + RILUtils.requestToString(rr.mRequest)
+                            + " Sending ack to ril.cpp");
+                }
+            } else {
+                // ack sent for SOLICITED_ACK_EXP above; nothing to do for SOLICITED response
+            }
+        
+            // Here and below fake RIL_UNSOL_RESPONSE_SIM_STATUS_CHANGED, see b/7255789.
+            // This is needed otherwise we don't automatically transition to the main lock
+            // screen when the pin or puk is entered incorrectly.
+            switch (rr.mRequest) {
+                case RIL_REQUEST_ENTER_SIM_PUK:
+                case RIL_REQUEST_ENTER_SIM_PUK2:
+                    if (mIccStatusChangedRegistrants != null) {
+                        if (RILJ_LOGD) {
+                            riljLog("ON enter sim puk fakeSimStatusChanged: reg count="
+                                    + mIccStatusChangedRegistrants.size());
+                        }
+                        mIccStatusChangedRegistrants.notifyRegistrants();
+                    }
+                    break;
+                case RIL_REQUEST_SHUTDOWN:
+                    setRadioState(TelephonyManager.RADIO_POWER_UNAVAILABLE,
+                            false /* forceNotifyRegistrants */);
+                    break;
+            }
+        
+            if (error != RadioError.NONE) {
+                switch (rr.mRequest) {
+                    case RIL_REQUEST_ENTER_SIM_PIN:
+                    case RIL_REQUEST_ENTER_SIM_PIN2:
+                    case RIL_REQUEST_CHANGE_SIM_PIN:
+                    case RIL_REQUEST_CHANGE_SIM_PIN2:
+                    case RIL_REQUEST_SET_FACILITY_LOCK:
+                        if (mIccStatusChangedRegistrants != null) {
+                            if (RILJ_LOGD) {
+                                riljLog("ON some errors fakeSimStatusChanged: reg count="
+                                        + mIccStatusChangedRegistrants.size());
+                            }
+                            mIccStatusChangedRegistrants.notifyRegistrants();
+                        }
+                        break;
+        
+                }
+            } else {
+                switch (rr.mRequest) {
+                    case RIL_REQUEST_HANGUP_FOREGROUND_RESUME_BACKGROUND:
+                    if (mTestingEmergencyCall.getAndSet(false)) {
+                        if (mEmergencyCallbackModeRegistrant != null) {
+                            riljLog("testing emergency call, notify ECM Registrants");
+                            mEmergencyCallbackModeRegistrant.notifyRegistrant();
+                        }
+                    }
+                }
+            }
+            return rr;
+        }
+        ```
+
+      - ```java
+        Message是RILRequest的mresult对象，在GsmSMSDispatcher生成了Message，发送EVENT_SEND_SMS_COMPLETE消息，在父类SMSDispatcher响应
+        //frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioResponse.java
+        /**
+         * Helper function to send response msg
+         * @param msg Response message to be sent
+         * @param ret Return object to be included in the response message
+         */
+        static void sendMessageResponse(Message msg, Object ret) {
+            if (msg != null) {
+                AsyncResult.forMessage(msg, ret, null);
+                msg.sendToTarget();
+            }
+        }
+        
+        //frameworks/base/core/java/android/os/AsyncResult.java
+        /** Saves and sets m.obj */
+        @UnsupportedAppUsage
+        public static AsyncResult forMessage(Message m, Object r, Throwable ex)
+        {
+            AsyncResult ret;
+        
+            ret = new AsyncResult (m.obj, r, ex);
+        
+            m.obj = ret; 
+        
+            return ret;
+        }
+        
+        //frameworks/base/core/java/android/os/Message.java
+        /**
+         * Sends this Message to the Handler specified by {@link #getTarget}.
+         * Throws a null pointer exception if this field has not been set.
+         */
+        public void sendToTarget() {
+            target.sendMessage(this);
+        }
+        ```
+
+10. SMSDispatcher的handleMessage处理EVENT_SEND_SMS_COMPLETE消息
+
+   ```java
+   //frameworks/opt/telephony/src/java/com/android/internal/telephony/SMSDispatcher.java
+   /**
+    * Handles events coming from the phone stack. Overridden from handler.
+    *
+    * @param msg the message to handle
+    */
+   @Override
+   public void handleMessage(Message msg) {
+       switch (msg.what) {
+       case EVENT_SEND_SMS_COMPLETE:
+           // An outbound SMS has been successfully transferred, or failed.
+           handleSendComplete((AsyncResult) msg.obj);
+           break;
+   	...
+       default:
+           Rlog.e(TAG, "handleMessage() ignoring message of unexpected type " + msg.what);
+       }
+   }
+   ```
 
 ## 接收流程
 
 1. 接收到UNSOL_RESPONSE_NEW_SMS消息
 
    - hardware/ril/libril/ril_unsol_commands.h定义了接收的消息类型对应的处理方法
+
+     - ```c++
+       //hardware/ril/libril/ril_unsol_commands.h
+       {RIL_UNSOL_RESPONSE_NEW_SMS, radio::newSmsInd, WAKE_PARTIAL},
+       ```
    - 具体的处理在hardware/ril/libril/ril_service.cpp中，通过IRadioIndication.newSms()处理
+
+     - ```c++
+       //hardware/ril/libril/ril_service.cpp
+       //sp<IRadioIndication> mRadioIndication;
+       int radio::newSmsInd(int slotId, int indicationType,
+                            int token, RIL_Errno e, void *response, size_t responseLen) {
+           if (radioService[slotId] != NULL && radioService[slotId]->mRadioIndication != NULL) {
+               if (response == NULL || responseLen == 0) {
+                   RLOGE("newSmsInd: invalid response");
+                   return 0;
+               }
+       
+               uint8_t *bytes = convertHexStringToBytes(response, responseLen);
+               if (bytes == NULL) {
+                   RLOGE("newSmsInd: convertHexStringToBytes failed");
+                   return 0;
+               }
+       
+               hidl_vec<uint8_t> pdu;
+               pdu.setToExternal(bytes, responseLen/2);
+       #if VDBG
+               RLOGD("newSmsInd");
+       #endif
+               Return<void> retStatus = radioService[slotId]->mRadioIndication->newSms(
+                       convertIntToRadioIndicationType(indicationType), pdu);
+               radioService[slotId]->checkReturnStatus(retStatus);
+               free(bytes);
+           } else {
+               RLOGE("newSmsInd: radioService[%d]->mRadioIndication == NULL", slotId);
+           }
+       
+           return 0;
+       }
+       ```
 
 2. IRadioIndication.newSms()跨进程调用
 
@@ -1587,6 +2306,7 @@
    - newSms():Indicates when new SMS is received.
 
    - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioIndication.java
      public void newSms(int indicationType, ArrayList<Byte> pdu) {
          mRil.processIndication(indicationType);
      	//将ArrayList<Byte>转换为byte[]
