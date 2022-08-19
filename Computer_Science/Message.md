@@ -2313,6 +2313,9 @@
          byte[] pduArray = RIL.arrayListToPrimitiveArray(pdu);
          if (RIL.RILJ_LOGD) mRil.unsljLog(RIL_UNSOL_RESPONSE_NEW_SMS);
      
+         //SmsMessageBase:Base class declaring the specific methods and members for SmsMessage.
+         //SmsMessage:A Short Message Service message.
+         //createFromPdu（）：Create an SmsMessage from a raw PDU.
          SmsMessageBase smsb = com.android.internal.telephony.gsm.SmsMessage.createFromPdu(pduArray);
          if (mRil.mGsmSmsRegistrant != null) {
              //protected Registrant mGsmSmsRegistrant;
@@ -2320,33 +2323,50 @@
                      new AsyncResult(null, smsb == null ? null : new SmsMessage(smsb), null));
          }
      }
-     
-     //mGsmSmsRegistrant的注册
-         //在GsmInboundSmsHandler的构造方法中调用了ril的setOnNewGSmSms()
-         protected GsmInboundSmsHandler(Context context, SmsStorageMonitor storageMonitor,
-                 Phone phone) {
-             super("GsmInboundSmsHandler", context, storageMonitor, phone);
-         // MTK-END
-             phone.mCi.setOnNewGsmSms(getHandler(), EVENT_NEW_SMS, null);
-             mDataDownloadHandler = new UsimDataDownloadHandler(phone.mCi, phone.getPhoneId());
-             mCellBroadcastServiceManager.enable();
-     
-             if (TEST_MODE) {
-                 if (sTestBroadcastReceiver == null) {
-                     sTestBroadcastReceiver = new GsmCbTestBroadcastReceiver();
-                     IntentFilter filter = new IntentFilter();
-                     filter.addAction(TEST_ACTION);
-                     context.registerReceiver(sTestBroadcastReceiver, filter);
-                 }
-             }
-         }
-     
-         //ril是CommandsInterface，BaseCommands实现了CommandsInterface接口
-         //BaseCommands.setOnNewGsmSms（）
-         public void setOnNewGsmSms(Handler h, int what, Object obj) {
-             mGsmSmsRegistrant = new Registrant (h, what, obj);
-         }
      ```
+     
+     - mGsmSmsRegistrant的注册
+     
+     - ```java
+       在BaseCommands中初始化
+       //frameworks/opt/telephony/src/java/com/android/internal/telephony/BaseCommands.java
+       @Override
+       public void setOnNewGsmSms(Handler h, int what, Object obj) {
+           mGsmSmsRegistrant = new Registrant (h, what, obj);
+       }
+       
+       在GsmInboundSmsHandler中调用 setOnNewGsmSms() ,GsmInboundSmsHandler随着phone一起启动。
+       //frameworks/opt/telephony/src/java/com/android/internal/telephony/gsm/GsmInboundSmsHandler.java
+       /**
+        * Create a new GSM inbound SMS handler.
+        */
+       private GsmInboundSmsHandler(Context context, SmsStorageMonitor storageMonitor,
+               Phone phone) {
+           super("GsmInboundSmsHandler", context, storageMonitor, phone);
+           phone.mCi.setOnNewGsmSms(getHandler(), EVENT_NEW_SMS, null);
+           mDataDownloadHandler = new UsimDataDownloadHandler(phone.mCi, phone.getPhoneId());
+           mCellBroadcastServiceManager.enable();
+       
+           if (TEST_MODE) {
+               if (sTestBroadcastReceiver == null) {
+                   sTestBroadcastReceiver = new GsmCbTestBroadcastReceiver();
+                   IntentFilter filter = new IntentFilter();
+                   filter.addAction(TEST_ACTION);
+                   context.registerReceiver(sTestBroadcastReceiver, filter,
+                           Context.RECEIVER_EXPORTED);
+               }
+           }
+       }
+       
+       //frameworks/libs/modules-utils/java/com/android/internal/util/StateMachine.java
+       private SmHandler mSmHandler;
+       /**
+        * @return Handler, maybe null if state machine has quit.
+        */
+       public final Handler getHandler() {
+           return mSmHandler;
+       }
+       ```
 
 3. Registrant的notifyRegistrant()方法
 
@@ -2384,7 +2404,9 @@
    - GsmInboundSmsHandler位于frameworks/opt/telephony/src/java/com/android/internal/telephony/gsm/GsmInboundSmsHandler.java
 
    - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
      //InboundSmsHandler的内部类DeliveringState的processMessage()响应EVENT_NEW_SMS消息
+     @Override
      public boolean processMessage(Message msg) {
          if (DBG) log("DeliveringState.processMessage: processing " + getWhatToString(msg.what));
          switch (msg.what) {
@@ -2393,9 +2415,61 @@
                  handleNewSms((AsyncResult) msg.obj);
                  sendMessage(EVENT_RETURN_TO_IDLE);
                  return HANDLED;
+     
+             case EVENT_INJECT_SMS:
+                 // handle new injected SMS
+                 handleInjectSms((AsyncResult) msg.obj, msg.arg1 == 1 /* isOverIms */);
+                 sendMessage(EVENT_RETURN_TO_IDLE);
+                 return HANDLED;
+     
+             case EVENT_BROADCAST_SMS:
+                 // if any broadcasts were sent, transition to waiting state
+                 InboundSmsTracker inboundSmsTracker = (InboundSmsTracker) msg.obj;
+                 if (processMessagePart(inboundSmsTracker)) {
+                     sendMessage(obtainMessage(EVENT_UPDATE_TRACKER, msg.obj));
+                     transitionTo(mWaitingState);
+                 } else {
+                     // if event is sent from SmsBroadcastUndelivered.broadcastSms(), and
+                     // processMessagePart() returns false, the state machine will be stuck in
+                     // DeliveringState until next message is received. Send message to
+                     // transition to idle to avoid that so that wakelock can be released
+                     log("DeliveringState.processMessage: EVENT_BROADCAST_SMS: No broadcast "
+                             + "sent. Return to IdleState");
+                     sendMessage(EVENT_RETURN_TO_IDLE);
+                 }
+                 return HANDLED;
+     
+             case EVENT_RETURN_TO_IDLE:
+                 // return to idle after processing all other messages
+                 transitionTo(mIdleState);
+                 return HANDLED;
+     
+             case EVENT_RELEASE_WAKELOCK:
+                 mWakeLock.release();    // decrement wakelock from previous entry to Idle
+                 if (!mWakeLock.isHeld()) {
+                     // wakelock should still be held until 3 seconds after we enter Idle
+                     loge("mWakeLock released while delivering/broadcasting!");
+                 }
+                 return HANDLED;
+     
+             case EVENT_UPDATE_TRACKER:
+                 logd("process tracker message in DeliveringState " + msg.arg1);
+                 return HANDLED;
+     
+             // we shouldn't get this message type in this state, log error and halt.
+             case EVENT_BROADCAST_COMPLETE:
+             case EVENT_START_ACCEPTING_SMS:
+             default:
+                 logeWithLocalLog("Unhandled msg in delivering state, msg.what = "
+                         + getWhatToString(msg.what));
+                 // let DefaultState handle these unexpected message types
+                 return NOT_HANDLED;
          }
      }
-     
+     ```
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
      private void handleNewSms(AsyncResult ar) {
          if (ar.exception != null) {
              loge("Exception processing incoming SMS: " + ar.exception);
@@ -2418,8 +2492,48 @@
              notifyAndAcknowledgeLastIncomingSms(handled, result, null);
          }
      }
-     
+     ```
+
+5. InboundSmsHandler的dispatchMessage()方法
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
+     /**
+      * Process an SMS message from the RIL, calling subclass methods to handle 3GPP and
+      * 3GPP2-specific message types.
+      *
+      * @param smsb the SmsMessageBase object from the RIL
+      * @param smsSource the source of the SMS message
+      * @return a result code from {@link android.provider.Telephony.Sms.Intents},
+      *  or {@link Activity#RESULT_OK} for delayed acknowledgment to SMSC
+      */
      private int dispatchMessage(SmsMessageBase smsb, @SmsSource int smsSource) {
+         // If sms is null, there was a parsing error.
+         if (smsb == null) {
+             loge("dispatchSmsMessage: message is null");
+             return RESULT_SMS_NULL_MESSAGE;
+         }
+     
+         if (mSmsReceiveDisabled) {
+             // Device doesn't support receiving SMS,
+             log("Received short message on device which doesn't support "
+                     + "receiving SMS. Ignored.");
+             return Intents.RESULT_SMS_HANDLED;
+         }
+     
+         // onlyCore indicates if the device is in cryptkeeper
+         boolean onlyCore = false;
+         try {
+             onlyCore = IPackageManager.Stub.asInterface(ServiceManager.getService("package"))
+                     .isOnlyCoreApps();
+         } catch (RemoteException e) {
+         }
+         if (onlyCore) {
+             // Device is unable to receive SMS in encrypted state
+             log("Received a short message in encrypted state. Rejecting.");
+             return Intents.RESULT_SMS_RECEIVED_WHILE_ENCRYPTED;
+         }
+     
          int result = dispatchMessageRadioSpecific(smsb, smsSource);
      
          // In case of error, add to metrics. This is not required in case of success, as the
@@ -2432,25 +2546,90 @@
      }
      ```
 
-5. InboundSmsHandler的子类GsmInboundSmsHandler的dispatchMessageRadioSpecific()方法
+6. InboundSmsHandler的子类GsmInboundSmsHandler的dispatchMessageRadioSpecific()方法
 
    - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/gsm/GsmInboundSmsHandler.java
+     /**
+      * Handle type zero, SMS-PP data download, and 3GPP/CPHS MWI type SMS. Normal SMS messages
+      * are handled by {@link #dispatchNormalMessage} in parent class.
+      *
+      * @param smsb the SmsMessageBase object from the RIL
+      * @param smsSource the source of the SMS message
+      * @return a result code from {@link android.provider.Telephony.Sms.Intents},
+      * or {@link Activity#RESULT_OK} for delayed acknowledgment to SMSC
+      */
+     @Override
      protected int dispatchMessageRadioSpecific(SmsMessageBase smsb, @SmsSource int smsSource) {
          SmsMessage sms = (SmsMessage) smsb;
+     
+         if (sms.isTypeZero()) {
+             // Some carriers will send visual voicemail SMS as type zero.
+             int destPort = -1;
+             SmsHeader smsHeader = sms.getUserDataHeader();
+             if (smsHeader != null && smsHeader.portAddrs != null) {
+                 // The message was sent to a port.
+                 destPort = smsHeader.portAddrs.destPort;
+             }
+             VisualVoicemailSmsFilter
+                     .filter(mContext, new byte[][]{sms.getPdu()}, SmsConstants.FORMAT_3GPP,
+                             destPort, mPhone.getSubId());
+             // As per 3GPP TS 23.040 9.2.3.9, Type Zero messages should not be
+             // Displayed/Stored/Notified. They should only be acknowledged.
+             log("Received short message type 0, Don't display or store it. Send Ack");
+             addSmsTypeZeroToMetrics(smsSource);
+             return Intents.RESULT_SMS_HANDLED;
+         }
+     
+         // Send SMS-PP data download messages to UICC. See 3GPP TS 31.111 section 7.1.1.
+         if (sms.isUsimDataDownload()) {
+             UsimServiceTable ust = mPhone.getUsimServiceTable();
+             return mDataDownloadHandler.handleUsimDataDownload(ust, sms, smsSource);
+         }
+     
+         boolean handled = false;
+         if (sms.isMWISetMessage()) {
+             updateMessageWaitingIndicator(sms.getNumOfVoicemails());
+             handled = sms.isMwiDontStore();
+             if (DBG) log("Received voice mail indicator set SMS shouldStore=" + !handled);
+         } else if (sms.isMWIClearMessage()) {
+             updateMessageWaitingIndicator(0);
+             handled = sms.isMwiDontStore();
+             if (DBG) log("Received voice mail indicator clear SMS shouldStore=" + !handled);
+         }
+         if (handled) {
+             addVoicemailSmsToMetrics(smsSource);
+             return Intents.RESULT_SMS_HANDLED;
+         }
+     
+         if (!mStorageMonitor.isStorageAvailable() &&
+                 sms.getMessageClass() != SmsConstants.MessageClass.CLASS_0) {
+             // It's a storable message and there's no storage available.  Bail.
+             // (See TS 23.038 for a description of class 0 messages.)
+             return Intents.RESULT_SMS_OUT_OF_MEMORY;
+         }
+     
          return dispatchNormalMessage(smsb, smsSource);
      }
      ```
 
-6. InboundSmsHandler的内部类SmsBroadcastReceiver接收Intents.SMS_DELIVER_ACTION广播
+7. InboundSmsHandler的内部类SmsBroadcastReceiver接收Intents.SMS_DELIVER_ACTION广播
 
    - ```java
-     //InboundSmsHandler的dispatchNormalMessage()方法
-     /*Dispatch a normal incoming SMS. This is called from dispatchMessageRadioSpecific.
-     if no format-specific handling was required. Saves the PDU to the SMS provider raw table,creates an InboundSmsTracker, then sends it to the state machine as an EVENT_BROADCAST_SMS. Returns Intents#RESULT_SMS_HANDLED or an error value.
-     */
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
+     /**
+      * Dispatch a normal incoming SMS. This is called from {@link #dispatchMessageRadioSpecific}
+      * if no format-specific handling was required. Saves the PDU to the SMS provider raw table,
+      * creates an {@link InboundSmsTracker}, then sends it to the state machine as an
+      * {@link #EVENT_BROADCAST_SMS}. Returns {@link Intents#RESULT_SMS_HANDLED} or an error value.
+      *
+      * @param sms the message to dispatch
+      * @param smsSource the source of the SMS message
+      * @return {@link Intents#RESULT_SMS_HANDLED} if the message was accepted, or an error status
+      */
+     @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.R, trackingBug = 170729553)
      protected int dispatchNormalMessage(SmsMessageBase sms, @SmsSource int smsSource) {
          SmsHeader smsHeader = sms.getUserDataHeader();
-         /*InboundSmsTracker:Tracker for an incoming SMS message ready to broadcast to listeners.This is similar to com.android.internal.telephony.SMSDispatcher.SmsTracker used for outgoing messages.*/
          InboundSmsTracker tracker;
      
          if ((smsHeader == null) || (smsHeader.concatRef == null)) {
@@ -2487,7 +2666,8 @@
      
          // de-duping is done only for text messages
          // destPort = -1 indicates text messages, otherwise it's a data sms
-         return addTrackerToRawTableAndSendMessage(tracker,tracker.getDestPort() == -1 /* de-dup if text message */);
+         return addTrackerToRawTableAndSendMessage(tracker,
+                 tracker.getDestPort() == -1 /* de-dup if text message */);
      }
      
      //Helper to add the tracker to the raw table and then send a message to broadcast it, if successful. Returns the SMS intent status to return to the SMSC.
@@ -2617,7 +2797,7 @@
      }
      ```
 
-7. InboundSmsHandler的SmsBroadcastReceiver接收Intents.SMS_DELIVER_ACTION广播
+8. InboundSmsHandler的SmsBroadcastReceiver接收Intents.SMS_DELIVER_ACTION广播
 
    - ```java
      public void onReceive(Context context, Intent intent) {
@@ -2646,7 +2826,7 @@
      }
      ```
 
-8. 在android/packages/apps/Messaging/AndroidManifest.xml中SmsReceiver接收Intents.SMS_RECEIVED_ACTION广播
+9. 在android/packages/apps/Messaging/AndroidManifest.xml中SmsReceiver接收Intents.SMS_RECEIVED_ACTION广播
 
    - ```xml-dtd
      <receiver android:name=".receiver.SmsReceiver"
@@ -2733,7 +2913,7 @@
      }
      ```
 
-9. ReceiveSmsMessageAction的executeAction()方法将新短信保存到数据库并通过Notification显示短信通知
+10. ReceiveSmsMessageAction的executeAction()方法将新短信保存到数据库并通过Notification显示短信通知
 
    - ```java
      protected Object executeAction() {
