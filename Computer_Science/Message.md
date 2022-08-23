@@ -12,11 +12,32 @@
   - SMS-DELIVER
   - SMS-DELIVER-REPORT
   - SMS-SUBMIT
+    - SCA：service center address
+    - MTI：message type indicator
+    - RD：rejected duplicates
+    - VPF：validity period format
+    - RP：reply path
+    - UDHI：user data header indicator
+    - SRR：status report request
+    - MR：message reference
+    - DA：destination address
+    - PID：protocol identifier
+    - DCS：data code schema
+    - VP：validity period
+    - UDL：user data length
+    - UD：user data
   - SMS-SUBMIT-REPORT
   - SMS-STATUS-REPORT
   - SMS-COMMAND
-
 - 短信发送流程：app->framework->ril->modem
+- IMS:IP多媒体子系统（IP Multimedia Subsystem，IMS）或IP多媒体核心网络子系统（IP Multimedia Core Network Subsystem, IMCNS）是一个基于互联网协议提供多媒体业务的体系架构。传统移动电话使用类电路交换网络提供语音通话服务，而非使用计算机分组交换通信方式的网络。虽然已有很多方式在智能手机上提供网络电话与其他互联网多媒体服务，但并未形成行业标准，IMS则为此提供了一个标准化体系架构。IMS的最初的版本（3GPP Rel-5）主要是给出了一种基于GPRS来实现互联网协议多媒体业务的方法。在这个版本的基础上，3GPP、3GPP2以及TISPAN进行了进一步的更新，以支持GPRS之外，诸如WLAN、CDMA2000和固定电话线等其他接入方式。
+  - 会话发起协议（Session Initiation Protocol，缩写SIP）:是一个由IETF MMUSIC工作组开发的协议，作为标准被提议用于创建，修改和终止包括视频，语音，即时通信，在线游戏和虚拟现实等多种多媒体元素在内的交互式用户会话。2000年11月，SIP被正式批准成为3GPP信号协议之一，并成为IMS体系结构的一个永久单元。SIP与H.323一样，是用于VoIP最主要的信令协议之一。
+  - 富通信解决方案（英语：Rich Communication Services，缩写：RCS）是由GSM协会发起的、旨在创建基于IP Multimedia Subsystem(IMS)基础上进一步丰富运营商通信服务的计划。
+    - 强化的电话簿(Enhanced Phonebook): 增加联系人信息例如在线状态(presence)与服务探索(service discovery)。
+    - 强化的消息(Enhanced Messaging): 增加多种的消息选择方案，例如聊天室、表情符号、位置分享与文件分享。
+    - 丰富化的通话(Enriched Calls): 在通话过程中增加多媒体内容分享，像是影音通话或是屏幕分享等。
+
+- 技术规范(TS，Technical Specification)和技术报告(TR，Technical Report)
 
 ## 发送流程
 
@@ -2613,7 +2634,7 @@
      }
      ```
 
-7. InboundSmsHandler的内部类SmsBroadcastReceiver接收Intents.SMS_DELIVER_ACTION广播
+7. 保存pdu到sms provider，发送EVENT_BROADCAST_SMS消息
 
    - ```java
      //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
@@ -2669,13 +2690,21 @@
          return addTrackerToRawTableAndSendMessage(tracker,
                  tracker.getDestPort() == -1 /* de-dup if text message */);
      }
-     
+     ```
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
      //Helper to add the tracker to the raw table and then send a message to broadcast it, if successful. Returns the SMS intent status to return to the SMSC.
      protected int addTrackerToRawTableAndSendMessage(InboundSmsTracker tracker, boolean deDup) {
          //记录数据库
          int result = addTrackerToRawTable(tracker, deDup);
          switch(result) {
              case Intents.RESULT_SMS_HANDLED:
+                  /**
+                  * Enqueue a message to this state machine.
+                  *
+                  * Message is ignored if state machine has quit.
+                  */
                  sendMessage(EVENT_BROADCAST_SMS, tracker);
                  return Intents.RESULT_SMS_HANDLED;
      
@@ -2686,7 +2715,10 @@
                  return result;
          }
      }
-     
+     ```
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
      //InboundSmsHandler的内部类DeliveringState的processMessage()响应EVENT_BROADCAST_SMS消息
      public boolean processMessage(Message msg) {
          if (DBG) log("DeliveringState.processMessage: processing " + getWhatToString(msg.what));
@@ -2710,19 +2742,214 @@
                  return HANDLED;
          }
      }
-     
-     /*Process the inbound SMS segment. If the message is complete, send it as an ordered broadcast to interested receivers and return true. If the message is a segment of an incomplete multi-part SMS, return false.*/
-     protected boolean processMessagePart(InboundSmsTracker tracker) {
-     // MTK-END
+     ```
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
+     /**
+      * Process the inbound SMS segment. If the message is complete, send it as an ordered
+      * broadcast to interested receivers and return true. If the message is a segment of an
+      * incomplete multi-part SMS, return false.
+      * @param tracker the tracker containing the message segment to process
+      * @return true if an ordered broadcast was sent; false if waiting for more message segments
+      */
+     @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.R, trackingBug = 170729553)
+     private boolean processMessagePart(InboundSmsTracker tracker) {
          int messageCount = tracker.getMessageCount();
          byte[][] pdus;
          long[] timestamps;
          int destPort = tracker.getDestPort();
          boolean block = false;
          String address = tracker.getAddress();
-         //根据messageCount执行相对应的single或multipart处理逻辑
-         ...
+     
+         // Do not process when the message count is invalid.
+         if (messageCount <= 0) {
+             loge("processMessagePart: returning false due to invalid message count "
+                     + messageCount, tracker.getMessageId());
+             return false;
+         }
+     
+         if (messageCount == 1) {
+             // single-part message
+             pdus = new byte[][]{tracker.getPdu()};
+             timestamps = new long[]{tracker.getTimestamp()};
+             block = BlockChecker.isBlocked(mContext, tracker.getDisplayAddress(), null);
+         } else {
+             // multi-part message
+             Cursor cursor = null;
+             try {
+                 // used by several query selection arguments
+                 String refNumber = Integer.toString(tracker.getReferenceNumber());
+                 String count = Integer.toString(tracker.getMessageCount());
+     
+                 // query for all segments and broadcast message if we have all the parts
+                 String[] whereArgs = {address, refNumber, count};
+                 cursor = mResolver.query(sRawUri, PDU_SEQUENCE_PORT_PROJECTION,
+                         tracker.getQueryForSegments(), whereArgs, null);
+     
+                 int cursorCount = cursor.getCount();
+                 if (cursorCount < messageCount) {
+                     // Wait for the other message parts to arrive. It's also possible for the last
+                     // segment to arrive before processing the EVENT_BROADCAST_SMS for one of the
+                     // earlier segments. In that case, the broadcast will be sent as soon as all
+                     // segments are in the table, and any later EVENT_BROADCAST_SMS messages will
+                     // get a row count of 0 and return.
+                     log("processMessagePart: returning false. Only " + cursorCount + " of "
+                             + messageCount + " segments " + " have arrived. refNumber: "
+                             + refNumber, tracker.getMessageId());
+                     return false;
+                 }
+     
+                 // All the parts are in place, deal with them
+                 pdus = new byte[messageCount][];
+                 timestamps = new long[messageCount];
+                 while (cursor.moveToNext()) {
+                     // subtract offset to convert sequence to 0-based array index
+                     int index = cursor.getInt(PDU_SEQUENCE_PORT_PROJECTION_INDEX_MAPPING
+                             .get(SEQUENCE_COLUMN)) - tracker.getIndexOffset();
+     
+                     // The invalid PDUs can be received and stored in the raw table. The range
+                     // check ensures the process not crash even if the seqNumber in the
+                     // UserDataHeader is invalid.
+                     if (index >= pdus.length || index < 0) {
+                         loge(String.format(
+                                 "processMessagePart: invalid seqNumber = %d, messageCount = %d",
+                                 index + tracker.getIndexOffset(),
+                                 messageCount),
+                                 tracker.getMessageId());
+                         continue;
+                     }
+     
+                     pdus[index] = HexDump.hexStringToByteArray(cursor.getString(
+                             PDU_SEQUENCE_PORT_PROJECTION_INDEX_MAPPING.get(PDU_COLUMN)));
+     
+                     // Read the destination port from the first segment (needed for CDMA WAP PDU).
+                     // It's not a bad idea to prefer the port from the first segment in other cases.
+                     if (index == 0 && !cursor.isNull(PDU_SEQUENCE_PORT_PROJECTION_INDEX_MAPPING
+                             .get(DESTINATION_PORT_COLUMN))) {
+                         int port = cursor.getInt(PDU_SEQUENCE_PORT_PROJECTION_INDEX_MAPPING
+                                 .get(DESTINATION_PORT_COLUMN));
+                         // strip format flags and convert to real port number, or -1
+                         port = InboundSmsTracker.getRealDestPort(port);
+                         if (port != -1) {
+                             destPort = port;
+                         }
+                     }
+     
+                     timestamps[index] = cursor.getLong(
+                             PDU_SEQUENCE_PORT_PROJECTION_INDEX_MAPPING.get(DATE_COLUMN));
+     
+                     // check if display address should be blocked or not
+                     if (!block) {
+                         // Depending on the nature of the gateway, the display origination address
+                         // is either derived from the content of the SMS TP-OA field, or the TP-OA
+                         // field contains a generic gateway address and the from address is added
+                         // at the beginning in the message body. In that case only the first SMS
+                         // (part of Multi-SMS) comes with the display originating address which
+                         // could be used for block checking purpose.
+                         block = BlockChecker.isBlocked(mContext,
+                                 cursor.getString(PDU_SEQUENCE_PORT_PROJECTION_INDEX_MAPPING
+                                         .get(DISPLAY_ADDRESS_COLUMN)), null);
+                     }
+                 }
+                 log("processMessagePart: all " + messageCount + " segments "
+                         + " received. refNumber: " + refNumber, tracker.getMessageId());
+             } catch (SQLException e) {
+                 loge("processMessagePart: Can't access multipart SMS database, "
+                         + SmsController.formatCrossStackMessageId(tracker.getMessageId()), e);
+                 return false;
+             } finally {
+                 if (cursor != null) {
+                     cursor.close();
+                 }
+             }
+         }
+         final boolean isWapPush = (destPort == SmsHeader.PORT_WAP_PUSH);
+         String format = tracker.getFormat();
+     
+         // Do not process null pdu(s). Check for that and return false in that case.
+         List<byte[]> pduList = Arrays.asList(pdus);
+         if (pduList.size() == 0 || pduList.contains(null)) {
+             String errorMsg = "processMessagePart: returning false due to "
+                     + (pduList.size() == 0 ? "pduList.size() == 0" : "pduList.contains(null)");
+             logeWithLocalLog(errorMsg, tracker.getMessageId());
+             mPhone.getSmsStats().onIncomingSmsError(
+                     is3gpp2(), tracker.getSource(), RESULT_SMS_NULL_PDU);
+             return false;
+         }
+     
+         ByteArrayOutputStream output = new ByteArrayOutputStream();
+         if (isWapPush) {
+             for (byte[] pdu : pdus) {
+                 // 3GPP needs to extract the User Data from the PDU; 3GPP2 has already done this
+                 if (format == SmsConstants.FORMAT_3GPP) {
+                     SmsMessage msg = SmsMessage.createFromPdu(pdu, SmsConstants.FORMAT_3GPP);
+                     if (msg != null) {
+                         pdu = msg.getUserData();
+                     } else {
+                         loge("processMessagePart: SmsMessage.createFromPdu returned null",
+                                 tracker.getMessageId());
+                         mMetrics.writeIncomingWapPush(mPhone.getPhoneId(), tracker.getSource(),
+                                 SmsConstants.FORMAT_3GPP, timestamps, false,
+                                 tracker.getMessageId());
+                         mPhone.getSmsStats().onIncomingSmsWapPush(tracker.getSource(),
+                                 messageCount, RESULT_SMS_NULL_MESSAGE, tracker.getMessageId());
+                         return false;
+                     }
+                 }
+                 output.write(pdu, 0, pdu.length);
+             }
+         }
+     
+         //设置广播接收器
          SmsBroadcastReceiver resultReceiver = tracker.getSmsBroadcastReceiver(this);
+     
+         if (!mUserManager.isUserUnlocked()) {
+             log("processMessagePart: !isUserUnlocked; calling processMessagePartWithUserLocked. "
+                     + "Port: " + destPort, tracker.getMessageId());
+             return processMessagePartWithUserLocked(
+                     tracker,
+                     (isWapPush ? new byte[][] {output.toByteArray()} : pdus),
+                     destPort,
+                     resultReceiver,
+                     block);
+         }
+     
+         if (isWapPush) {
+             int result = mWapPush.dispatchWapPdu(output.toByteArray(), resultReceiver,
+                     this, address, tracker.getSubId(), tracker.getMessageId());
+             if (DBG) {
+                 log("processMessagePart: dispatchWapPdu() returned " + result,
+                         tracker.getMessageId());
+             }
+             // Add result of WAP-PUSH into metrics. RESULT_SMS_HANDLED indicates that the WAP-PUSH
+             // needs to be ignored, so treating it as a success case.
+             boolean wapPushResult =
+                     result == Activity.RESULT_OK || result == Intents.RESULT_SMS_HANDLED;
+             mMetrics.writeIncomingWapPush(mPhone.getPhoneId(), tracker.getSource(),
+                     format, timestamps, wapPushResult, tracker.getMessageId());
+             mPhone.getSmsStats().onIncomingSmsWapPush(tracker.getSource(), messageCount,
+                     result, tracker.getMessageId());
+             // result is Activity.RESULT_OK if an ordered broadcast was sent
+             if (result == Activity.RESULT_OK) {
+                 return true;
+             } else {
+                 deleteFromRawTable(tracker.getDeleteWhere(), tracker.getDeleteWhereArgs(),
+                         MARK_DELETED);
+                 loge("processMessagePart: returning false as the ordered broadcast for WAP push "
+                         + "was not sent", tracker.getMessageId());
+                 return false;
+             }
+         }
+         
+         // All parts of SMS are received. Update metrics for incoming SMS.
+         // The metrics are generated before SMS filters are invoked.
+         // For messages composed by multiple parts, the metrics are generated considering the
+         // characteristics of the last one.
+         mMetrics.writeIncomingSmsSession(mPhone.getPhoneId(), tracker.getSource(),
+                 format, timestamps, block, tracker.getMessageId());
+         mPhone.getSmsStats().onIncomingSmsSuccess(is3gpp2(), tracker.getSource(),
+                 messageCount, block, tracker.getMessageId());
      
          // Always invoke SMS filters, even if the number ends up being blocked, to prevent
          // surprising bugs due to blocking numbers that happen to be used for visual voicemail SMS
@@ -2747,11 +2974,23 @@
      
          return true;
      }
-     
-     // Creates and dispatches the intent to the default SMS app, appropriate port or via the AppSmsManager
-     protected void dispatchSmsDeliveryIntent(byte[][] pdus, String format, int destPort,
+     ```
+
+     - WAP push message:WAP Push是一种 SMS 类型，用于以已知、简单和容易的方式访问 WAP 站点或页面，而无需在我们的手机浏览器中输入页面的地址（URL）。它的工作方式与旋律、音调等下载系统类似。通过短信。用户发送一条 SMS 并收到另一条带有欢迎消息和 URL 的回复。接受 SMS 时，浏览器会打开并将我们定向到我们请求的 WAP 地址。与在我们的电子邮件中收到包含网址的消息并单击它时非常相似。
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
+     /**
+      * Creates and dispatches the intent to the default SMS app, appropriate port or via the {@link
+      * AppSmsManager}.
+      *
+      * @param pdus message pdus
+      * @param format the message format, typically "3gpp" or "3gpp2"
+      * @param destPort the destination port
+      * @param resultReceiver the receiver handling the delivery result
+      */
+     private void dispatchSmsDeliveryIntent(byte[][] pdus, String format, int destPort,
              SmsBroadcastReceiver resultReceiver, boolean isClass0, int subId, long messageId) {
-     // MTK-END
          Intent intent = new Intent();
          intent.putExtra("pdus", pdus);
          intent.putExtra("format", format);
@@ -2760,7 +2999,6 @@
          }
      
          if (destPort == -1) {
-             //设置action类型
              intent.setAction(Intents.SMS_DELIVER_ACTION);
              // Direct the intent to only the default SMS app. If we can't find a default SMS app
              // then sent it to all broadcast receivers.
@@ -2790,9 +3028,106 @@
          }
      
          Bundle options = handleSmsWhitelisting(intent.getComponent(), isClass0);
-         //调用sendOrderedBroadcastAsUser发出Intents.SMS_DELIVER_ACTION广播。
          dispatchIntent(intent, android.Manifest.permission.RECEIVE_SMS,
                  AppOpsManager.OPSTR_RECEIVE_SMS, options, resultReceiver, UserHandle.SYSTEM, subId);
+     }
+     ```
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
+     /**
+      * Dispatch the intent with the specified permission, appOp, and result receiver, using
+      * this state machine's handler thread to run the result receiver.
+      *
+      * @param intent the intent to broadcast
+      * @param permission receivers are required to have this permission
+      * @param appOp app op that is being performed when dispatching to a receiver
+      * @param user user to deliver the intent to
+      */
+     @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.R, trackingBug = 170729553)
+     public void dispatchIntent(Intent intent, String permission, String appOp,
+             Bundle opts, SmsBroadcastReceiver resultReceiver, UserHandle user, int subId) {
+         intent.addFlags(Intent.FLAG_RECEIVER_NO_ABORT);
+         final String action = intent.getAction();
+         if (Intents.SMS_DELIVER_ACTION.equals(action)
+                 || Intents.SMS_RECEIVED_ACTION.equals(action)
+                 || Intents.WAP_PUSH_DELIVER_ACTION.equals(action)
+                 || Intents.WAP_PUSH_RECEIVED_ACTION.equals(action)) {
+             // Some intents need to be delivered with high priority:
+             // SMS_DELIVER, SMS_RECEIVED, WAP_PUSH_DELIVER, WAP_PUSH_RECEIVED
+             // In some situations, like after boot up or system under load, normal
+             // intent delivery could take a long time.
+             // This flag should only be set for intents for visible, timely operations
+             // which is true for the intents above.
+             intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+         }
+         SubscriptionManager.putPhoneIdAndSubIdExtra(intent, mPhone.getPhoneId());
+     
+         // override the subId value in the intent with the values from tracker as they can be
+         // different, specifically if the message is coming from SmsBroadcastUndelivered
+         if (SubscriptionManager.isValidSubscriptionId(subId)) {
+             SubscriptionManager.putSubscriptionIdExtra(intent, subId);
+         }
+     
+         if (user.equals(UserHandle.ALL)) {
+             // Get a list of currently started users.
+             int[] users = null;
+             final List<UserHandle> userHandles = mUserManager.getUserHandles(false);
+             final List<UserHandle> runningUserHandles = new ArrayList();
+             for (UserHandle handle : userHandles) {
+                 if (mUserManager.isUserRunning(handle)) {
+                     runningUserHandles.add(handle);
+                 } else {
+                     if (handle.equals(UserHandle.SYSTEM)) {
+                         logeWithLocalLog("dispatchIntent: SYSTEM user is not running",
+                                 resultReceiver.mInboundSmsTracker.getMessageId());
+                     }
+                 }
+             }
+             if (runningUserHandles.isEmpty()) {
+                 users = new int[] {user.getIdentifier()};
+             } else {
+                 users = new int[runningUserHandles.size()];
+                 for (int i = 0; i < runningUserHandles.size(); i++) {
+                     users[i] = runningUserHandles.get(i).getIdentifier();
+                 }
+             }
+             // Deliver the broadcast only to those running users that are permitted
+             // by user policy.
+             for (int i = users.length - 1; i >= 0; i--) {
+                 UserHandle targetUser = UserHandle.of(users[i]);
+                 if (users[i] != UserHandle.SYSTEM.getIdentifier()) {
+                     // Is the user not allowed to use SMS?
+                     if (hasUserRestriction(UserManager.DISALLOW_SMS, targetUser)) {
+                         continue;
+                     }
+                     // Skip unknown users and managed profiles as well
+                     if (mUserManager.isManagedProfile(users[i])) {
+                         continue;
+                     }
+                 }
+                 // Only pass in the resultReceiver when the user SYSTEM is processed.
+                 try {
+                     if (users[i] == UserHandle.SYSTEM.getIdentifier()) {
+                         resultReceiver.setWaitingForIntent(intent);
+                     }
+                     mContext.createPackageContextAsUser(mContext.getPackageName(), 0, targetUser)
+                             .sendOrderedBroadcast(intent, Activity.RESULT_OK, permission, appOp,
+                                     users[i] == UserHandle.SYSTEM.getIdentifier()
+                                             ? resultReceiver : null, getHandler(),
+                                     null /* initialData */, null /* initialExtras */, opts);
+                 } catch (PackageManager.NameNotFoundException ignored) {
+                 }
+             }
+         } else {
+             try {
+                 resultReceiver.setWaitingForIntent(intent);
+                 mContext.createPackageContextAsUser(mContext.getPackageName(), 0, user)
+                         .sendOrderedBroadcast(intent, Activity.RESULT_OK, permission, appOp,
+                                 resultReceiver, getHandler(), null /* initialData */,
+                                 null /* initialExtras */, opts);
+             } catch (PackageManager.NameNotFoundException ignored) {
+             }
          }
      }
      ```
@@ -2800,16 +3135,46 @@
 8. InboundSmsHandler的SmsBroadcastReceiver接收Intents.SMS_DELIVER_ACTION广播
 
    - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
+     //InboundSmsHandler的内部类SmsBroadcastReceiver的onReceive()
+     @Override
      public void onReceive(Context context, Intent intent) {
-                 handleAction(intent, true);
+         if (intent == null) {
+             logeWithLocalLog("onReceive: received null intent, faking " + mWaitingForIntent,
+                     mInboundSmsTracker.getMessageId());
+             return;
+         }
+         handleAction(intent, true);
      }
-     private synchronized void handleAction(Intent intent, boolean onReceive) {
+     ```
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/InboundSmsHandler.java
+     //InboundSmsHandler的内部类SmsBroadcastReceiver的handleAction()
+     private synchronized void handleAction(@NonNull Intent intent, boolean onReceive) {
          String action = intent.getAction();
+         if (mWaitingForIntent == null || !mWaitingForIntent.getAction().equals(action)) {
+             logeWithLocalLog("handleAction: Received " + action + " when expecting "
+                     + mWaitingForIntent == null ? "none" : mWaitingForIntent.getAction(),
+                     mInboundSmsTracker.getMessageId());
+             return;
+         }
+     
+         if (onReceive) {
+             int durationMillis = (int) (System.currentTimeMillis() - mBroadcastTimeMillis);
+             if (durationMillis >= 5000) {
+                 loge("Slow ordered broadcast completion time for " + action + ": "
+                         + durationMillis + " ms");
+             } else if (DBG) {
+                 log("Ordered broadcast completed for " + action + " in: "
+                         + durationMillis + " ms");
+             }
+         }
+     
          int subId = intent.getIntExtra(SubscriptionManager.EXTRA_SUBSCRIPTION_INDEX,
                  SubscriptionManager.INVALID_SUBSCRIPTION_ID);
          if (action.equals(Intents.SMS_DELIVER_ACTION)) {
              // Now dispatch the notification only intent
-             //将Intents.SMS_DELIVER_ACTION转换为Intents.SMS_RECEIVED_ACTION
              intent.setAction(Intents.SMS_RECEIVED_ACTION);
              // Allow registered broadcast receivers to get this intent even
              // when they are in the background.
@@ -2818,17 +3183,89 @@
              Bundle options = handleSmsWhitelisting(null, false /* bgActivityStartAllowed */);
      
              setWaitingForIntent(intent);
-             //继续调用dispatchIntent发出第二次广播
              dispatchIntent(intent, android.Manifest.permission.RECEIVE_SMS,
                      AppOpsManager.OPSTR_RECEIVE_SMS,
                      options, this, UserHandle.ALL, subId);
+         } else if (action.equals(Intents.WAP_PUSH_DELIVER_ACTION)) {
+             // Now dispatch the notification only intent
+             intent.setAction(Intents.WAP_PUSH_RECEIVED_ACTION);
+             intent.setComponent(null);
+             // Only the primary user will receive notification of incoming mms.
+             // That app will do the actual downloading of the mms.
+             long duration = mPowerWhitelistManager.whitelistAppTemporarilyForEvent(
+                     mContext.getPackageName(),
+                     PowerWhitelistManager.EVENT_MMS,
+                     REASON_EVENT_MMS,
+                     "mms-broadcast");
+             BroadcastOptions bopts = BroadcastOptions.makeBasic();
+             bopts.setTemporaryAppAllowlist(duration,
+                     TEMPORARY_ALLOWLIST_TYPE_FOREGROUND_SERVICE_ALLOWED,
+                     REASON_EVENT_MMS,
+                     "");
+             Bundle options = bopts.toBundle();
+     
+             String mimeType = intent.getType();
+     
+             setWaitingForIntent(intent);
+             dispatchIntent(intent, WapPushOverSms.getPermissionForType(mimeType),
+                     WapPushOverSms.getAppOpsStringPermissionForIntent(mimeType), options, this,
+                     UserHandle.SYSTEM, subId);
+         } else {
+             // Now that the intents have been deleted we can clean up the PDU data.
+             if (!Intents.DATA_SMS_RECEIVED_ACTION.equals(action)
+                     && !Intents.SMS_RECEIVED_ACTION.equals(action)
+                     && !Intents.WAP_PUSH_RECEIVED_ACTION.equals(action)) {
+                 loge("unexpected BroadcastReceiver action: " + action);
+             }
+     
+             if (onReceive) {
+                 int rc = getResultCode();
+                 if ((rc != Activity.RESULT_OK) && (rc != Intents.RESULT_SMS_HANDLED)) {
+                     loge("a broadcast receiver set the result code to " + rc
+                             + ", deleting from raw table anyway!");
+                 } else if (DBG) {
+                     log("successful broadcast, deleting from raw table.");
+                 }
+             }
+     
+             deleteFromRawTable(mDeleteWhere, mDeleteWhereArgs, MARK_DELETED);
+             mWaitingForIntent = null;
+             removeMessages(EVENT_RECEIVER_TIMEOUT);
+             sendMessage(EVENT_BROADCAST_COMPLETE);
+         }
+     }   
+     ```
+
+9. 在android/packages/apps/Messaging/AndroidManifest.xml中SmsDeliverReceiver接收Intents.SMS_DELIVER_ACTION广播
+
+   - ```xml-dtd
+      <!--packages/apps/Messaging/AndroidManifest.xml -->
+      <receiver android:name=".receiver.SmsDeliverReceiver"
+                android:exported="true"
+                android:permission="android.permission.BROADCAST_SMS">
+          <intent-filter>
+              <action android:name="android.provider.Telephony.SMS_DELIVER" />
+          </intent-filter>
+      </receiver>
+      ```
+
+   - ```java
+     //packages/apps/Messaging/src/com/android/messaging/receiver/SmsDeliverReceiver.java
+     /**
+      * Class that receives incoming SMS messages on KLP+ Devices.
+      */
+     public final class SmsDeliverReceiver extends BroadcastReceiver {
+         @Override
+         public void onReceive(final Context context, final Intent intent) {
+             SmsReceiver.deliverSmsIntent(context, intent);
          }
      }
      ```
 
-9. 在android/packages/apps/Messaging/AndroidManifest.xml中SmsReceiver接收Intents.SMS_RECEIVED_ACTION广播
+10. 在android/packages/apps/Messaging/AndroidManifest.xml中SmsReceiver接收Intents.SMS_RECEIVED_ACTION广播
 
    - ```xml-dtd
+     <!--packages/apps/Messaging/AndroidManifest.xml -->
      <receiver android:name=".receiver.SmsReceiver"
                android:enabled="false"
                android:exported="true"
@@ -2845,6 +3282,7 @@
    - SmsReceiver位于packages/apps/Messaging/src/com/android/messaging/receiver/SmsReceiver.java
 
    - ```java
+     //packages/apps/Messaging/src/com/android/messaging/receiver/SmsReceiver.java
      public void onReceive(final Context context, final Intent intent) {
          LogUtil.v(TAG, "SmsReceiver.onReceive " + intent);
          // On KLP+ we only take delivery of SMS messages in SmsDeliverReceiver.
@@ -2860,9 +3298,15 @@
              }
          }
      }
+     ```
+
+11. 在SmsReceiver的deliverSmsIntent()
+
+   - ```java
+     private static final String EXTRA_ERROR_CODE = "errorCode";
+     private static final String EXTRA_SUB_ID = "subscription";
      
      public static void deliverSmsIntent(final Context context, final Intent intent) {
-         //首先在intent 对象中获取pdu 和format 两个信息，最后调用SmsMessage.createFromPdu(pdu, format)创建SmsMessage对象。
          final android.telephony.SmsMessage[] messages = getMessagesFromIntent(intent);
      
          // Check messages for validity
@@ -2882,7 +3326,9 @@
              DebugUtils.dumpSms(messages[0].getTimestampMillis(), messages, format);
          }
      }
-     
+     ```
+
+   - ```java
      public static void deliverSmsMessages(final Context context, final int subId,
              final int errorCode, final android.telephony.SmsMessage[] messages) {
          final ContentValues messageValues =
@@ -2913,9 +3359,44 @@
      }
      ```
 
-10. ReceiveSmsMessageAction的executeAction()方法将新短信保存到数据库并通过Notification显示短信通知
+   - ```java
+      //packages/apps/Messaging/src/com/android/messaging/sms/MmsUtils.java
+      /**
+      * Parse values from a received sms message
+      *
+      * @param context
+      * @param msgs The received sms message content
+      * @param error The received sms error
+      * @return Parsed values from the message
+      */
+     public static ContentValues parseReceivedSmsMessage(
+             final Context context, final SmsMessage[] msgs, final int error) {
+         final SmsMessage sms = msgs[0];
+         final ContentValues values = new ContentValues();
+     
+         values.put(Sms.ADDRESS, sms.getDisplayOriginatingAddress());
+         values.put(Sms.BODY, buildMessageBodyFromPdus(msgs));
+         if (MmsUtils.hasSmsDateSentColumn()) {
+             // TODO:: The boxing here seems unnecessary.
+             values.put(Sms.DATE_SENT, Long.valueOf(sms.getTimestampMillis()));
+         }
+         values.put(Sms.PROTOCOL, sms.getProtocolIdentifier());
+         if (sms.getPseudoSubject().length() > 0) {
+             values.put(Sms.SUBJECT, sms.getPseudoSubject());
+         }
+         values.put(Sms.REPLY_PATH_PRESENT, sms.isReplyPathPresent() ? 1 : 0);
+         values.put(Sms.SERVICE_CENTER, sms.getServiceCenterAddress());
+         // Error code
+         values.put(Sms.ERROR_CODE, error);
+     
+         return values;
+     }
+     ```
+
+12. ReceiveSmsMessageAction的executeAction()方法将新短信保存到数据库并通过Notification显示短信通知
 
    - ```java
+     @Override
      protected Object executeAction() {
          final Context context = Factory.get().getApplicationContext();
          final ContentValues messageValues = actionParameters.getParcelable(KEY_MESSAGE_VALUES);
@@ -2923,8 +3404,67 @@
      
          // Get the SIM subscription ID
          Integer subId = messageValues.getAsInteger(Sms.SUBSCRIPTION_ID);
+         if (subId == null) {
+             subId = ParticipantData.DEFAULT_SELF_SUB_ID;
+         }
+         // Make sure we have a sender address
+         String address = messageValues.getAsString(Sms.ADDRESS);
+         if (TextUtils.isEmpty(address)) {
+             LogUtil.w(TAG, "Received an SMS without an address; using unknown sender.");
+             address = ParticipantData.getUnknownSenderDestination();
+             messageValues.put(Sms.ADDRESS, address);
+         }
+         final ParticipantData rawSender = ParticipantData.getFromRawPhoneBySimLocale(
+                 address, subId);
+     
+         // TODO: Should use local timestamp for this?
+         final long received = messageValues.getAsLong(Sms.DATE);
+         // Inform sync that message has been added at local received timestamp
+         final SyncManager syncManager = DataModel.get().getSyncManager();
+         syncManager.onNewMessageInserted(received);
+     
+         // Make sure we've got a thread id
+         final long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(context, address);
+         messageValues.put(Sms.THREAD_ID, threadId);
+         final boolean blocked = BugleDatabaseOperations.isBlockedDestination(
+                 db, rawSender.getNormalizedDestination());
+         final String conversationId = BugleDatabaseOperations.
+                 getOrCreateConversationFromRecipient(db, threadId, blocked, rawSender);
+     
+         final boolean messageInFocusedConversation =
+                 DataModel.get().isFocusedConversation(conversationId);
+         final boolean messageInObservableConversation =
+                 DataModel.get().isNewMessageObservable(conversationId);
+     
+         MessageData message = null;
+         // Only the primary user gets to insert the message into the telephony db and into bugle's
+         // db. The secondary user goes through this path, but skips doing the actual insert. It
+         // goes through this path because it needs to compute messageInFocusedConversation in order
+         // to calculate whether to skip the notification and play a soft sound if the user is
          // already in the conversation.
          if (!OsUtil.isSecondaryUser()) {
+             final boolean read = messageValues.getAsBoolean(Sms.Inbox.READ)
+                     || messageInFocusedConversation;
+             // If you have read it you have seen it
+             final boolean seen = read || messageInObservableConversation || blocked;
+             messageValues.put(Sms.Inbox.READ, read ? Integer.valueOf(1) : Integer.valueOf(0));
+     
+             // incoming messages are marked as seen in the telephony db
+             messageValues.put(Sms.Inbox.SEEN, 1);
+     
+             // Insert into telephony
+             final Uri messageUri = context.getContentResolver().insert(Sms.Inbox.CONTENT_URI,
+                     messageValues);
+     
+             if (messageUri != null) {
+                 if (LogUtil.isLoggable(TAG, LogUtil.DEBUG)) {
+                     LogUtil.d(TAG, "ReceiveSmsMessageAction: Inserted SMS message into telephony, "
+                             + "uri = " + messageUri);
+                 }
+             } else {
+                 LogUtil.e(TAG, "ReceiveSmsMessageAction: Failed to insert SMS into telephony!");
+             }
+     
              final String text = messageValues.getAsString(Sms.BODY);
              final String subject = messageValues.getAsString(Sms.SUBJECT);
              final long sent = messageValues.getAsLong(Sms.DATE_SENT);
@@ -2936,7 +3476,6 @@
              if (pathPresent != null && pathPresent == 1 && !TextUtils.isEmpty(smsServiceCenter)) {
                  conversationServiceCenter = smsServiceCenter;
              }
-            
              db.beginTransaction();
              try {
                  final String participantId =
@@ -2946,13 +3485,13 @@
      
                  message = MessageData.createReceivedSmsMessage(messageUri, conversationId,
                          participantId, selfId, text, subject, sent, received, seen, read);
-     			 //将新短信存入数据库
+     
                  BugleDatabaseOperations.insertNewMessageInTransaction(db, message);
-     			//更新短信会话消息
+     
                  BugleDatabaseOperations.updateConversationMetadataInTransaction(db, conversationId,
                          message.getMessageId(), message.getReceivedTimeStamp(), blocked,
                          conversationServiceCenter, true /* shouldAutoSwitchSelfId */);
-                 SyncManager.immediateSync();//TINNO ADD FOR UDCFAA-1295 BY HONGGJIANG.XIAO 20200611
+     
                  final ParticipantData sender = ParticipantData.getFromId(db, participantId);
                  BugleActionToasts.onMessageReceived(conversationId, sender, message);
                  db.setTransactionSuccessful();
@@ -3004,6 +3543,24 @@
   - State Local/Test : 4398
   - State Local/Test Spanish : 4399
   - WEA Handset Action Message(WHAM) : 4400
+- WEA Versions and Supported Capabilities 
+  - WEA 1.0 
+    - Supports 90-character WEA text 
+    - Three alert classes (National, AMBER, Imminent Threat) 
+    -  Geo-fencing based upon best approximation to a polygon or circle contained within a WEA 
+
+  - WEA 2.0 
+    - Supports 90- and 360-characters 
+    - Supports optional Spanish language 
+    - In addition to three classes listed above, allows for Public Safety and WEA Test categories 
+
+  - WEA 3.0 
+    - Supports Device Based Geo-Fencing (DBGF), an application running on the handset that allows the device to know if it is within a polygon/circle, or at least 0.10 mile outside, in order to display the alert, warning or notification to the user. 
+    - Note: At this time the effect on DBGF is not fully known if location services are disabled on the device. 
+
+- WHAM 消息：WHAM(WEA Handset Action Message) 该消息的目的是对之前接收的在区域外不显示的WEA消息进行二次处理。
+  - 当接收的WEA消息(比如4370)被判断在区域外时, 会被临时存储下来, 不显示给用户. 在需要时, 比如进入新的小区等(网络来进行控制), 服务器端会再次下发一条WHAM消息, Channel ID 为4400, 携带message id + serialNumber, 来触发手机对本地保存的区域外的未显示的消息重新执行DBGF流程, 看看是否在区域内了, 如果此时已经在区域内了, 就显示出来, 如果依然在区域外, 还是不显示. 
+
 - NV配置：Non Volatile
 
 ## 接收流程
@@ -3012,11 +3569,18 @@
 
    - 位于hardware/ril/libril/ril_unsol_commands.h
 
+   - ```c
+     //hardware/ril/libril/ril_unsol_commands.h
+     {RIL_UNSOL_RESPONSE_NEW_BROADCAST_SMS, radio::newBroadcastSmsInd, WAKE_PARTIAL},
+     ```
+
+     
+
    - 具体的处理在hardware/ril/libril/ril_service.cpp中，通过IRadioIndication.newBroadcastSms()处理
 
    - ```c++
-     {RIL_UNSOL_RESPONSE_NEW_BROADCAST_SMS, radio::newBroadcastSmsInd, WAKE_PARTIAL}
-     
+     //hardware/ril/libril/ril_service.cpp
+     //sp<IRadioIndication> mRadioIndication;
      int radio::newBroadcastSmsInd(int slotId,
                                    int indicationType, int token, RIL_Errno e, void *response,
                                    size_t responseLen) {
@@ -3050,6 +3614,7 @@
    - IRadioIndication.hidl的实现在frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioIndication.java
 
    - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioIndication.java
      public void newBroadcastSms(int indicationType, ArrayList<Byte> data) {
          mRil.processIndication(indicationType);
      	
@@ -3072,11 +3637,12 @@
    - CellBroadcastServiceManager：Manages a single binding to the CellBroadcastService from the platform. In mSIM cases callers should have one CellBroadcastServiceManager per phone, and the CellBroadcastServiceManager will handle the single binding.
 
    - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/CellBroadcastServiceManager.java
      /*Enable the CB module. The CellBroadcastService will be bound to and CB messages from the RIL will be forwarded to the module*/
      public void enable() {
          initCellBroadcastServiceModule();
      }
-     
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/CellBroadcastServiceManager.java
      private void initCellBroadcastServiceModule() {
          mEnabled = true;
          if (sServiceConnection == null) {
@@ -3131,6 +3697,7 @@
          }
      }
      
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/BaseCommands.java
      //ril是CommandsInterface，BaseCommands实现了CommandsInterface接口
      //BaseCommands.setOnNewGsmBroadcastSms（）
      public void setOnNewGsmBroadcastSms(Handler h, int what, Object obj) {
@@ -3184,6 +3751,7 @@
    - ICellBroadcastServiceWrapper的handleGsmCellBroadcastSms()
 
      - ```java
+       //frameworks/base/telephony/java/android/telephony/CellBroadcastService.java
        /**
         * Handle a GSM cell broadcast SMS.
         *
@@ -3235,6 +3803,7 @@
      - WaitingState：Waiting state waits for the result receiver to be called for the current cell broadcast.In this state, any new cell broadcasts are deferred until we return to Idle state.
 
    - ```java
+     //packages/modules/CellBroadcastService/src/com/android/cellbroadcastservice/WakeLockStateMachine.java
      //IdleState的processMessage()方法
      public boolean processMessage(Message msg) {
          switch (msg.what) {
@@ -3264,6 +3833,7 @@
 9. GsmCellBroadcastHandler的handleSmsMessage()
 
    - ```java
+     //packages/modules/CellBroadcastService/src/com/android/cellbroadcastservice/GsmCellBroadcastHandler.java
      protected boolean handleSmsMessage(Message message) {
      	if (message.obj instanceof SmsCbMessage) {
              //GsmCellBroadcastHandler的父类为CellBroadcastHandler
@@ -3274,154 +3844,169 @@
 
 10. CellBroadcastHandler的handleSmsMessage
 
-    - ```java
-      protected boolean handleSmsMessage(Message message) {
-          if (message.obj instanceof SmsCbMessage) {
-              if (!isDuplicate((SmsCbMessage) message.obj)) {
-                  handleBroadcastSms((SmsCbMessage) message.obj);
-                  return true;
-              } else {
-                  CellBroadcastStatsLog.write(CellBroadcastStatsLog.CB_MESSAGE_FILTERED,
-                          CellBroadcastStatsLog.CELL_BROADCAST_MESSAGE_FILTERED__TYPE__CDMA,
-                          CellBroadcastStatsLog.CELL_BROADCAST_MESSAGE_FILTERED__FILTER__DUPLICATE_MESSAGE);
-              }
-              return false;
-          } else {
-              final String errorMessage =
-                      "handleSmsMessage got object of type: " + message.obj.getClass().getName();
-              loge(errorMessage);
-              CellBroadcastStatsLog.write(CellBroadcastStatsLog.CB_MESSAGE_ERROR,
-                      CELL_BROADCAST_MESSAGE_ERROR__TYPE__UNEXPECTED_CDMA_MESSAGE_TYPE_FROM_FWK,
-                      errorMessage);
-              return false;
-          }
-      }
-      
-      //Dispatch a Cell Broadcast message to listeners.
-      protected void handleBroadcastSms(SmsCbMessage message) {
-          int slotIndex = message.getSlotIndex();
-      
-          // TODO: Database inserting can be time consuming, therefore this should be changed to
-          // asynchronous.
-          ContentValues cv = message.getContentValues();
-          Uri uri = mContext.getContentResolver().insert(CellBroadcasts.CONTENT_URI, cv);
-          //需要Geo_Fencing
-          if (message.needGeoFencingCheck()) {
-              int maximumWaitingTime = getMaxLocationWaitingTime(message);
-              if (DBG) {
-                  log("Requesting location for geo-fencing. serialNumber = "
-                          + message.getSerialNumber() + ", maximumWaitingTime = "
-                          + maximumWaitingTime);
-              }
-      
-              CbSendMessageCalculator calculator =
-                      mCbSendMessageCalculatorFactory.createNew(mContext, message.getGeometries());
-              requestLocationUpdate(new LocationUpdateCallback() {
-                  @Override
-                  public void onLocationUpdate(@NonNull LatLng location,
-                          float accuracy) {
-                      if (VDBG) {
-                          logd("onLocationUpdate: location=" + location
-                                  + ", acc=" + accuracy + ". "  + getMessageString(message));
-                      }
-                      performGeoFencing(message, uri, calculator, location, slotIndex,
-                              accuracy);
-                      if (!isMessageInAmbiguousState(calculator)) {
-                          cancelLocationRequest();
-                      }
-                  }
-      
-                  @Override
-                  public void onLocationUnavailable() {
-                      CellBroadcastHandler.this.onLocationUnavailable(
-                              calculator, message, uri, slotIndex);
-                  }
-              }, maximumWaitingTime);
-          } else {
-              if (DBG) {
-                  log("Broadcast the message directly because no geo-fencing required, "
-                          + " needGeoFencing = " + message.needGeoFencingCheck() + ". "
-                          + getMessageString(message));
-              }
-              broadcastMessage(message, uri, slotIndex);
-          }
-      }
-      ```
-
-    - ```java
-      //Broadcast the code message to the applications.
-      protected void broadcastMessage(@NonNull SmsCbMessage message, @Nullable Uri messageUri,
-              int slotIndex) {
-          String msg;
-          Intent intent;
-          if (VDBG) {
-              logd("broadcastMessage: " + getMessageString(message));
-          }
-          
-          if (message.isEmergencyMessage()) {
-              msg = "Dispatching emergency SMS CB, SmsCbMessage is: " + message;
-              log(msg);
-              mLocalLog.log(msg);
-              //ACTION_SMS_EMERGENCY_CB_RECEIVED
-              intent = new Intent(Telephony.Sms.Intents.ACTION_SMS_EMERGENCY_CB_RECEIVED);
-              //Emergency alerts need to be delivered with high priority
-              intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-      
-              intent.putExtra(EXTRA_MESSAGE, message);
-              putPhoneIdAndSubIdExtra(mContext, intent, slotIndex);
-      
-              if (IS_DEBUGGABLE) {
-                  // Send additional broadcast intent to the specified package. This is only for sl4a
-                  // automation tests.
-                  String[] testPkgs = mContext.getResources().getStringArray(
-                          R.array.test_cell_broadcast_receiver_packages);
-                  if (testPkgs != null) {
-                      Intent additionalIntent = new Intent(intent);
-                      for (String pkg : testPkgs) {
-                          additionalIntent.setPackage(pkg);
-                          mContext.createContextAsUser(UserHandle.ALL, 0).sendOrderedBroadcast(
-                                  intent, null, (Bundle) null, null, getHandler(),
-                                  Activity.RESULT_OK, null, null);
-      
-                      }
-                  }
-              }
-      
-              List<String> pkgs = new ArrayList<>();
-              pkgs.add(getDefaultCBRPackageName(mContext, intent));
-              pkgs.addAll(Arrays.asList(mContext.getResources().getStringArray(
-                      R.array.additional_cell_broadcast_receiver_packages)));
-              if (pkgs != null) {
-                  mReceiverCount.addAndGet(pkgs.size());
-                  for (String pkg : pkgs) {
-                      // Explicitly send the intent to all the configured cell broadcast receivers.
-                      intent.setPackage(pkg);
-                      mContext.createContextAsUser(UserHandle.ALL, 0).sendOrderedBroadcast(
-                              intent, null, (Bundle) null, mOrderedBroadcastReceiver, getHandler(),
-                              Activity.RESULT_OK, null, null);
-                  }
-              }
-          } else {
-              msg = "Dispatching SMS CB, SmsCbMessage is: " + message;
-              log(msg);
-              mLocalLog.log(msg);
-              // Send implicit intent since there are various 3rd party carrier apps listen to
-              // this intent.
-      
-              mReceiverCount.incrementAndGet();
-              CellBroadcastIntents.sendSmsCbReceivedBroadcast(
-                      mContext, UserHandle.ALL, message, mOrderedBroadcastReceiver, getHandler(),
-                      Activity.RESULT_OK, slotIndex);
-          }
-      
-          if (messageUri != null) {
-              ContentValues cv = new ContentValues();
-              cv.put(CellBroadcasts.MESSAGE_BROADCASTED, 1);
-              mContext.getContentResolver().update(CellBroadcasts.CONTENT_URI, cv,
-                      CellBroadcasts._ID + "=?", new String[] {messageUri.getLastPathSegment()});
-          }
-      }
-      ```
+   - ```java
+     //packages/modules/CellBroadcastService/src/com/android/cellbroadcastservice/CellBroadcastHandler.java
+     /**
+      * Handle Cell Broadcast messages from {@code CdmaInboundSmsHandler}.
+      * 3GPP-format Cell Broadcast messages sent from radio are handled in the subclass.
+      *
+      * @param message the message to process
+      * @return true if need to wait for geo-fencing or an ordered broadcast was sent.
+      */
+     @Override
+     protected boolean handleSmsMessage(Message message) {
+         if (message.obj instanceof SmsCbMessage) {
+             if (!isDuplicate((SmsCbMessage) message.obj)) {
+                 handleBroadcastSms((SmsCbMessage) message.obj);
+                 return true;
+             } else {
+                 CellBroadcastStatsLog.write(CellBroadcastStatsLog.CB_MESSAGE_FILTERED,
+                         CellBroadcastStatsLog.CELL_BROADCAST_MESSAGE_FILTERED__TYPE__CDMA,
+                         CellBroadcastStatsLog.CELL_BROADCAST_MESSAGE_FILTERED__FILTER__DUPLICATE_MESSAGE);
+             }
+             return false;
+         } else {
+             final String errorMessage =
+                     "handleSmsMessage got object of type: " + message.obj.getClass().getName();
+             loge(errorMessage);
+             CellBroadcastStatsLog.write(CellBroadcastStatsLog.CB_MESSAGE_ERROR,
+                     CELL_BROADCAST_MESSAGE_ERROR__TYPE__UNEXPECTED_CDMA_MESSAGE_TYPE_FROM_FWK,
+                     errorMessage);
+             return false;
+         }
+     }
+     
+     //packages/modules/CellBroadcastService/src/com/android/cellbroadcastservice/CellBroadcastHandler.java
+     //Dispatch a Cell Broadcast message to listeners.
+     protected void handleBroadcastSms(SmsCbMessage message) {
+         int slotIndex = message.getSlotIndex();
+     
+         // TODO: Database inserting can be time consuming, therefore this should be changed to
+         // asynchronous.
+         ContentValues cv = message.getContentValues();
+         Uri uri = mContext.getContentResolver().insert(CellBroadcasts.CONTENT_URI, cv);
+         //需要Geo_Fencing
+         if (message.needGeoFencingCheck()) {
+             int maximumWaitingTime = getMaxLocationWaitingTime(message);
+             if (DBG) {
+                 log("Requesting location for geo-fencing. serialNumber = "
+                         + message.getSerialNumber() + ", maximumWaitingTime = "
+                         + maximumWaitingTime);
+             }
+     
+             CbSendMessageCalculator calculator =
+                     mCbSendMessageCalculatorFactory.createNew(mContext, message.getGeometries());
+             requestLocationUpdate(new LocationUpdateCallback() {
+                 @Override
+                 public void onLocationUpdate(@NonNull LatLng location,
+                         float accuracy) {
+                     if (VDBG) {
+                         logd("onLocationUpdate: location=" + location
+                                 + ", acc=" + accuracy + ". "  + getMessageString(message));
+                     }
+                     performGeoFencing(message, uri, calculator, location, slotIndex,
+                             accuracy);
+                     if (!isMessageInAmbiguousState(calculator)) {
+                         cancelLocationRequest();
+                     }
+                 }
+     
+                 @Override
+                 public void onLocationUnavailable() {
+                     CellBroadcastHandler.this.onLocationUnavailable(
+                             calculator, message, uri, slotIndex);
+                 }
+             }, maximumWaitingTime);
+         } else {
+             if (DBG) {
+                 log("Broadcast the message directly because no geo-fencing required, "
+                         + " needGeoFencing = " + message.needGeoFencingCheck() + ". "
+                         + getMessageString(message));
+             }
+             broadcastMessage(message, uri, slotIndex);
+         }
+     }
+     ```
+     
+   - ```java
+     //packages/modules/CellBroadcastService/src/com/android/cellbroadcastservice/CellBroadcastHandler.java
+     /**
+      * Broadcast the {@code message} to the applications.
+      * @param message a message need to broadcast
+      * @param messageUri message's uri
+      */
+     protected void broadcastMessage(@NonNull SmsCbMessage message, @Nullable Uri messageUri,
+             int slotIndex) {
+         String msg;
+         Intent intent;
+         if (VDBG) {
+             logd("broadcastMessage: " + getMessageString(message));
+         }
+         
+         if (message.isEmergencyMessage()) {
+             msg = "Dispatching emergency SMS CB, SmsCbMessage is: " + message;
+             log(msg);
+             mLocalLog.log(msg);
+             //ACTION_SMS_EMERGENCY_CB_RECEIVED
+             intent = new Intent(Telephony.Sms.Intents.ACTION_SMS_EMERGENCY_CB_RECEIVED);
+             //Emergency alerts need to be delivered with high priority
+             intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+     
+             intent.putExtra(EXTRA_MESSAGE, message);
+             putPhoneIdAndSubIdExtra(mContext, intent, slotIndex);
+     
+             if (IS_DEBUGGABLE) {
+                 // Send additional broadcast intent to the specified package. This is only for sl4a
+                 // automation tests.
+                 String[] testPkgs = mContext.getResources().getStringArray(
+                         R.array.test_cell_broadcast_receiver_packages);
+                 if (testPkgs != null) {
+                     Intent additionalIntent = new Intent(intent);
+                     for (String pkg : testPkgs) {
+                         additionalIntent.setPackage(pkg);
+                         mContext.createContextAsUser(UserHandle.ALL, 0).sendOrderedBroadcast(
+                                 intent, null, (Bundle) null, null, getHandler(),
+                                 Activity.RESULT_OK, null, null);
+     
+                     }
+                 }
+             }
+     
+             List<String> pkgs = new ArrayList<>();
+             pkgs.add(getDefaultCBRPackageName(mContext, intent));
+             pkgs.addAll(Arrays.asList(mContext.getResources().getStringArray(
+                     R.array.additional_cell_broadcast_receiver_packages)));
+             if (pkgs != null) {
+                 mReceiverCount.addAndGet(pkgs.size());
+                 for (String pkg : pkgs) {
+                     // Explicitly send the intent to all the configured cell broadcast receivers.
+                     intent.setPackage(pkg);
+                     mContext.createContextAsUser(UserHandle.ALL, 0).sendOrderedBroadcast(
+                             intent, null, (Bundle) null, mOrderedBroadcastReceiver, getHandler(),
+                             Activity.RESULT_OK, null, null);
+                 }
+             }
+         } else {
+             msg = "Dispatching SMS CB, SmsCbMessage is: " + message;
+             log(msg);
+             mLocalLog.log(msg);
+             // Send implicit intent since there are various 3rd party carrier apps listen to
+             // this intent.
+     
+             mReceiverCount.incrementAndGet();
+             CellBroadcastIntents.sendSmsCbReceivedBroadcast(
+                     mContext, UserHandle.ALL, message, mOrderedBroadcastReceiver, getHandler(),
+                     Activity.RESULT_OK, slotIndex);
+         }
+     
+         if (messageUri != null) {
+             ContentValues cv = new ContentValues();
+             cv.put(CellBroadcasts.MESSAGE_BROADCASTED, 1);
+             mContext.getContentResolver().update(CellBroadcasts.CONTENT_URI, cv,
+                     CellBroadcasts._ID + "=?", new String[] {messageUri.getLastPathSegment()});
+         }
+     }
+     ```
 
 11. CellBroadcastReceiver接受广播
 
@@ -3453,6 +4038,7 @@
     - onReceive()
 
       - ```java
+        //packages/apps/CellBroadcastReceiver/src/com/android/cellbroadcastreceiver/CellBroadcastReceiver.java
         public void onReceive(Context context, Intent intent) {
             if (DBG) log("onReceive " + intent);
         
@@ -3471,6 +4057,7 @@
 12. CellBroadcastAlertService的onStartCommand()
 
     - ```java
+      //packages/apps/CellBroadcastReceiver/src/com/android/cellbroadcastreceiver/CellBroadcastAlertService.java
       public int onStartCommand(Intent intent, int flags, int startId) {
           mContext = getApplicationContext();
           String action = intent.getAction();
@@ -3495,6 +4082,7 @@
 13. CellBroadcastAlertService的handleCellBroadcastIntent()
 
     - ```java
+      //packages/apps/CellBroadcastReceiver/src/com/android/cellbroadcastreceiver/CellBroadcastAlertService.java
       private void handleCellBroadcastIntent(Intent intent) {
           Bundle extras = intent.getExtras();
           if (extras == null) {
@@ -3567,7 +4155,7 @@
 14. SHOW_NEW_ALERT_ACTION的处理逻辑是CellBroadcastAlertService的showNewAlert()根据
 
     - ```java
-      
+      //packages/apps/CellBroadcastReceiver/src/com/android/cellbroadcastreceiver/CellBroadcastAlertService.java
       private void showNewAlert(Intent intent) {
           Bundle extras = intent.getExtras();
           if (extras == null) {
