@@ -4207,12 +4207,32 @@
       }
       ```
 
-
 # PLMN和SPN
 
 - PLMN(Public Land Mobile Network):当前SIM所驻留的网络
-
 - SPN(Service Provider Name)：当前发行SIM卡的运营商的名称
+
+## modem侧获取PLMN优先级
+
+1. Eons(Enhanced Operator Name String)，也就是从SIM的EF_OPL和EF_PNN分区来读取Plmn Name
+   - EF:Elementary File
+   - EF_OPL中存放的是LAC和EF_PNN中的Record Identifier
+   - EF_PNN中存放的是Network Name，也就是具体的Plmn Name
+   - 如果注册上的网络是HPLMN，那么EF_OPL返回的Record Identifier就是1。
+   - 如果不是HPLMN的话，就根据LAC在EF_OPL中寻找对应的Record Identifier，然后根据OPL 的Record Identifier，在PNN中找对应的Network Name。
+     - Record Identifier是基于1的，而EF_PNN的记录是基于0的。也就是说， Record Identifier是1，那匹配的是EF_PNN中的第0条记录。
+2. CPHS ONS(Common PCN Handset Specification Operator Name String)，该字串也是保存在SIM文件系统中
+   - PCN:Personal Communication Network
+   - 该取值要求当前手机注册到HPLMN网络，此时Modem将会先读取SIM中的CPHS ONS的长格式文件(6F14)，如果存在，则将其作为Plmn上报，否则的话读取短格式文件(6F18)，如果存在，则将其作为Plmn上报。
+3. NITZ Operator Name
+   - NITZ:Network Identity and Time Zone
+   - 该名称是由当前注册的网络下发给手机的，如果该值存在，就会将该值作为Plmn 那么上报给 
+     AP。
+4. 配置文件读取
+   - 平台自身会提供从手机内存中根据当前注册的MCC MNC读取相应的Plmn Name，一般都是一个类似于apns-conf.xml的文件，在开机的时候被加载，这个方法在每个平台中也会不同。
+5. MCC、MNC数字作为Plmn Name
+   - 如果连ROM都没有找到当前Plmn对应的Name，那么就会把当前注册的Plmn所对应的MCC、 
+     MNC数字作为当前的Plmn Name
 
 ## PLMN流程
 
@@ -4221,36 +4241,16 @@
    - ServiceStateTracker 位于frameworks/opt/telephony/src/java/com/android/internal/telephony/ServiceStateTracker.java
 
    - ```java
-     //ServiceStateTracker类体
-     protected final TransportManager mTransportManager;
-     protected final SparseArray<NetworkRegistrationManager> mRegStateManagers = new SparseArray<>();
-     mTransportManager = mPhone.getTransportManager();
-         for (int transportType : mTransportManager.getAvailableTransports()) {
-             mRegStateManagers.append(transportType, new NetworkRegistrationManager(
-                     transportType, phone));
-             mRegStateManagers.get(transportType).registerForNetworkRegistrationInfoChanged(
-                     this, EVENT_NETWORK_STATE_CHANGED, null);
-         }
-     ```
-
-2. 当网络发生变化时ServiceStateTracker响应EVENT_NETWORK_STATE_CHANGED消息
-
-   - ```java
-     public void handleMessage(Message msg) {
-         AsyncResult ar;
-         int[] ints;
-         Message message;
-     
-         if (VDBG) log("received event " + msg.what);
-         switch (msg.what) {
-             case EVENT_NETWORK_STATE_CHANGED:
-                 pollStateInternal(true);
-                 break;
-         }
-     }
-     
-     protected void pollStateInternal(boolean modemTriggered) {
-     // MTK-END
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/ServiceStateTracker.java
+     /**
+      * A complete "service state" from our perspective is
+      * composed of a handful of separate requests to the radio.
+      *
+      * We make all of these requests at once, but then abandon them
+      * and start over again if the radio notifies us that some
+      * event has changed
+      */
+     private void pollStateInternal(boolean modemTriggered) {
          mPollingContext = new int[1];
          mPollingContext[0] = 0;
      
@@ -4283,27 +4283,174 @@
                  // Issue all poll-related commands at once then count down the responses, which
                  // are allowed to arrive out-of-order
                  mPollingContext[0]++;
-                 //获取PLMN信息
                  mCi.getOperator(obtainMessage(EVENT_POLL_STATE_OPERATOR, mPollingContext));
+     
+                 mPollingContext[0]++;
+                 mRegStateManagers.get(AccessNetworkConstants.TRANSPORT_TYPE_WWAN)
+                         .requestNetworkRegistrationInfo(NetworkRegistrationInfo.DOMAIN_PS,
+                                 obtainMessage(EVENT_POLL_STATE_PS_CELLULAR_REGISTRATION,
+                                         mPollingContext));
+     
+                 mPollingContext[0]++;
+                 mRegStateManagers.get(AccessNetworkConstants.TRANSPORT_TYPE_WWAN)
+                         .requestNetworkRegistrationInfo(NetworkRegistrationInfo.DOMAIN_CS,
+                         obtainMessage(EVENT_POLL_STATE_CS_CELLULAR_REGISTRATION, mPollingContext));
+     
+                 if (mRegStateManagers.get(AccessNetworkConstants.TRANSPORT_TYPE_WLAN) != null) {
+                     mPollingContext[0]++;
+                     mRegStateManagers.get(AccessNetworkConstants.TRANSPORT_TYPE_WLAN)
+                             .requestNetworkRegistrationInfo(NetworkRegistrationInfo.DOMAIN_PS,
+                                     obtainMessage(EVENT_POLL_STATE_PS_IWLAN_REGISTRATION,
+                                             mPollingContext));
+                 }
+     
+                 if (mPhone.isPhoneTypeGsm()) {
+                     mPollingContext[0]++;
+                     mCi.getNetworkSelectionMode(obtainMessage(
+                             EVENT_POLL_STATE_NETWORK_SELECTION_MODE, mPollingContext));
+                 }
                  break;
          }
      }
      ```
 
-   - modem侧获取PLMN优先级
-
-     1. Eons(Enhanced Operator Name String)，也就是从SIM的EF_OPL和EF_PNN分区来读取Plmn Name
-        - EF:Elementary File
-     2. CPHS ONS(Common PCN Handset Specification Operator Name String)，该字串也是保存在SIM文件系统中
-        - PCN:Personal Communication Network
-     3. NITZ Operator Name
-        - NITZ:Network Identity and Time Zone
-     4. 配置文件读取
-     5. MCC、MNC数字作为Plmn Name
-
-3. 接收到RIL的返回数据时，ServiceStateTracker响应EVENT_POLL_STATE_OPERATOR消息
+2. RIL类的getOperator()创建RILRequest向modem发起请求
 
    - ```java
+      //frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
+      /**
+       * response.obj.result is a String[3]
+       * response.obj.result[0] is long alpha or null if unregistered
+       * response.obj.result[1] is short alpha or null if unregistered
+       * response.obj.result[2] is numeric or null if unregistered
+       */
+      @Override
+      public void getOperator(Message result) {
+          RadioNetworkProxy networkProxy = getRadioServiceProxy(RadioNetworkProxy.class, result);
+          if (!networkProxy.isEmpty()) {
+              RILRequest rr = obtainRequest(RIL_REQUEST_OPERATOR, result, mRILDefaultWorkSource);
+      
+              if (RILJ_LOGD) {
+                  riljLog(rr.serialString() + "> " + RILUtils.requestToString(rr.mRequest));
+              }
+      
+              try {
+                  networkProxy.getOperator(rr.mSerial);
+              } catch (RemoteException | RuntimeException e) {
+                  handleRadioProxyExceptionForRR(NETWORK_SERVICE, "getOperator", e);
+              }
+          }
+      }
+      ```
+
+   - ```java
+      //hardware/ril/libril/ril_commands.h
+      {RIL_REQUEST_OPERATOR, radio::getOperatorResponse},
+      ```
+
+   - ```c++
+      //hardware/ril/libril/ril_service.cpp
+      int radio::getOperatorResponse(int slotId,
+                                    int responseType, int serial, RIL_Errno e, void *response,
+                                    size_t responseLen) {
+      #if VDBG
+          RLOGD("getOperatorResponse: serial %d", serial);
+      #endif
+      
+          if (radioService[slotId]->mRadioResponse != NULL) {
+              RadioResponseInfo responseInfo = {};
+              populateResponseInfo(responseInfo, serial, responseType, e);
+              hidl_string longName;
+              hidl_string shortName;
+              hidl_string numeric;
+              int numStrings = responseLen / sizeof(char *);
+              if (response == NULL || numStrings != 3) {
+                  RLOGE("getOperatorResponse Invalid response: NULL");
+                  if (e == RIL_E_SUCCESS) responseInfo.error = RadioError::INVALID_RESPONSE;
+      
+              } else {
+                  char **resp = (char **) response;
+                  longName = convertCharPtrToHidlString(resp[0]);
+                  shortName = convertCharPtrToHidlString(resp[1]);
+                  numeric = convertCharPtrToHidlString(resp[2]);
+              }
+              Return<void> retStatus = radioService[slotId]->mRadioResponse->getOperatorResponse(
+                      responseInfo, longName, shortName, numeric);
+              radioService[slotId]->checkReturnStatus(retStatus);
+          } else {
+              RLOGE("getOperatorResponse: radioService[%d]->mRadioResponse == NULL",
+                      slotId);
+          }
+      
+          return 0;
+      }
+      ```
+
+3. RadioResponse的getOperatorResponse()处理相对应的返回结果
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioResponse.java
+     /**
+      * @param responseInfo Response info struct containing response type, serial no. and error
+      * @param longName is long alpha ONS or EONS or empty string if unregistered
+      * @param shortName is short alpha ONS or EONS or empty string if unregistered
+      * @param numeric is 5 or 6 digit numeric code (MCC + MNC) or empty string if unregistered
+      */
+     public void getOperatorResponse(RadioResponseInfo responseInfo,
+             String longName, String shortName, String numeric) {
+         responseStrings(responseInfo, longName, shortName, numeric);
+     }
+     ```
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioResponse.java
+     private void responseStrings(RadioResponseInfo responseInfo, String ...str) {
+         ArrayList<String> strings = new ArrayList<>();
+         for (int i = 0; i < str.length; i++) {
+             strings.add(str[i]);
+         }
+         responseStringArrayList(mRil, responseInfo, strings);
+     }
+     ```
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioResponse.java
+     static void responseStringArrayList(RIL ril, RadioResponseInfo responseInfo,
+             ArrayList<String> strings) {
+         RILRequest rr = ril.processResponse(responseInfo);
+     
+         if (rr != null) {
+             String[] ret = new String[strings.size()];
+             for (int i = 0; i < strings.size(); i++) {
+                 ret[i] = strings.get(i);
+             }
+             if (responseInfo.error == RadioError.NONE) {
+                 sendMessageResponse(rr.mResult, ret);
+             }
+             ril.processResponseDone(rr, responseInfo, ret);
+         }
+     }
+     ```
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioResponse.java
+     /**
+      * Helper function to send response msg
+      * @param msg Response message to be sent
+      * @param ret Return object to be included in the response message
+      */
+     static void sendMessageResponse(Message msg, Object ret) {
+         if (msg != null) {
+             AsyncResult.forMessage(msg, ret, null);
+             msg.sendToTarget();
+         }
+     }
+     ```
+
+4. 接收到RIL的返回数据时，ServiceStateTracker响应EVENT_POLL_STATE_OPERATOR消息
+
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/ServiceStateTracker.java
      public void handleMessage(Message msg) {
          AsyncResult ar;
          int[] ints;
@@ -4315,17 +4462,6 @@
                      ar = (AsyncResult) msg.obj;
                      handlePollStateResult(msg.what, ar);
                      break;
-         }
-     }
-     
-     protected void handlePollStateResult(int what, AsyncResult ar) {
-         // Ignore stale requests from last poll
-         if (ar.userObj != mPollingContext) return;
-     
-         if (ar.exception != null) {
-            ...
-         } else try {
-             handlePollStateResultMessage(what, ar);
          }
      }
      protected void handlePollStateResultMessage(int what, AsyncResult ar) {
@@ -4365,7 +4501,230 @@
      }
      ```
 
-4. ServiceState的setOperatorName()
+   - ```java
+     //frameworks/opt/telephony/src/java/com/android/internal/telephony/ServiceStateTracker.java
+     protected void handlePollStateResult(int what, AsyncResult ar) {
+         // Ignore stale requests from last poll
+         if (ar.userObj != mPollingContext) return;
+     
+         if (ar.exception != null) {
+             CommandException.Error err = null;
+     
+             if (ar.exception instanceof IllegalStateException) {
+                 log("handlePollStateResult exception " + ar.exception);
+             }
+     
+             if (ar.exception instanceof CommandException) {
+                 err = ((CommandException)(ar.exception)).getCommandError();
+             }
+     
+             if (mCi.getRadioState() != TelephonyManager.RADIO_POWER_ON) {
+                 log("handlePollStateResult: Invalid response due to radio off or unavailable. "
+                         + "Set ServiceState to out of service.");
+                 pollStateInternal(false);
+                 return;
+             }
+     
+             if (err == CommandException.Error.RADIO_NOT_AVAILABLE) {
+                 loge("handlePollStateResult: RIL returned RADIO_NOT_AVAILABLE when radio is on.");
+                 cancelPollState();
+                 return;
+             }
+     
+             if (err != CommandException.Error.OP_NOT_ALLOWED_BEFORE_REG_NW) {
+                 loge("handlePollStateResult: RIL returned an error where it must succeed: "
+                         + ar.exception);
+             }
+         } else try {
+             handlePollStateResultMessage(what, ar);
+         } catch (RuntimeException ex) {
+             loge("Exception while polling service state. Probably malformed RIL response." + ex);
+         }
+     
+         mPollingContext[0]--;
+     
+         if (mPollingContext[0] == 0) {
+             mNewSS.setEmergencyOnly(mEmergencyOnly);
+             combinePsRegistrationStates(mNewSS);
+             updateOperatorNameForServiceState(mNewSS);
+             if (mPhone.isPhoneTypeGsm()) {
+                 updateRoamingState();
+             } else {
+                 boolean namMatch = false;
+                 if (!isSidsAllZeros() && isHomeSid(mNewSS.getCdmaSystemId())) {
+                     namMatch = true;
+                 }
+     
+                 // Setting SS Roaming (general)
+                 if (mIsSubscriptionFromRuim) {
+                     boolean isRoamingBetweenOperators = isRoamingBetweenOperators(
+                             mNewSS.getVoiceRoaming(), mNewSS);
+                     if (isRoamingBetweenOperators != mNewSS.getVoiceRoaming()) {
+                         log("isRoamingBetweenOperators=" + isRoamingBetweenOperators
+                                 + ". Override CDMA voice roaming to " + isRoamingBetweenOperators);
+                         mNewSS.setVoiceRoaming(isRoamingBetweenOperators);
+                     }
+                 }
+                 /**
+                  * For CDMA, voice and data should have the same roaming status.
+                  * If voice is not in service, use TSB58 roaming indicator to set
+                  * data roaming status. If TSB58 roaming indicator is not in the
+                  * carrier-specified list of ERIs for home system then set roaming.
+                  */
+                 final int dataRat = getRilDataRadioTechnologyForWwan(mNewSS);
+                 if (ServiceState.isCdma(dataRat)) {
+                     final boolean isVoiceInService =
+                             (mNewSS.getState() == ServiceState.STATE_IN_SERVICE);
+                     if (isVoiceInService) {
+                         boolean isVoiceRoaming = mNewSS.getVoiceRoaming();
+                         if (mNewSS.getDataRoaming() != isVoiceRoaming) {
+                             log("Data roaming != Voice roaming. Override data roaming to "
+                                     + isVoiceRoaming);
+                             mNewSS.setDataRoaming(isVoiceRoaming);
+                         }
+                     } else {
+                         /**
+                          * As per VoiceRegStateResult from radio types.hal the TSB58
+                          * Roaming Indicator shall be sent if device is registered
+                          * on a CDMA or EVDO system.
+                          */
+                         boolean isRoamIndForHomeSystem = isRoamIndForHomeSystem(mRoamingIndicator);
+                         if (mNewSS.getDataRoaming() == isRoamIndForHomeSystem) {
+                             log("isRoamIndForHomeSystem=" + isRoamIndForHomeSystem
+                                     + ", override data roaming to " + !isRoamIndForHomeSystem);
+                             mNewSS.setDataRoaming(!isRoamIndForHomeSystem);
+                         }
+                     }
+                 }
+     
+                 // Setting SS CdmaRoamingIndicator and CdmaDefaultRoamingIndicator
+                 mNewSS.setCdmaDefaultRoamingIndicator(mDefaultRoamingIndicator);
+                 mNewSS.setCdmaRoamingIndicator(mRoamingIndicator);
+                 boolean isPrlLoaded = true;
+                 if (TextUtils.isEmpty(mPrlVersion)) {
+                     isPrlLoaded = false;
+                 }
+                 if (!isPrlLoaded || (mNewSS.getRilVoiceRadioTechnology()
+                         == ServiceState.RIL_RADIO_TECHNOLOGY_UNKNOWN)) {
+                     log("Turn off roaming indicator if !isPrlLoaded or voice RAT is unknown");
+                     mNewSS.setCdmaRoamingIndicator(EriInfo.ROAMING_INDICATOR_OFF);
+                 } else if (!isSidsAllZeros()) {
+                     if (!namMatch && !mIsInPrl) {
+                         // Use default
+                         mNewSS.setCdmaRoamingIndicator(mDefaultRoamingIndicator);
+                     } else if (namMatch && !mIsInPrl) {
+                         // TODO: remove when we handle roaming on LTE/NR on CDMA+LTE phones
+                         if (ServiceState.isPsOnlyTech(mNewSS.getRilVoiceRadioTechnology())) {
+                             log("Turn off roaming indicator as voice is LTE or NR");
+                             mNewSS.setCdmaRoamingIndicator(EriInfo.ROAMING_INDICATOR_OFF);
+                         } else {
+                             mNewSS.setCdmaRoamingIndicator(EriInfo.ROAMING_INDICATOR_FLASH);
+                         }
+                     } else if (!namMatch && mIsInPrl) {
+                         // Use the one from PRL/ERI
+                         mNewSS.setCdmaRoamingIndicator(mRoamingIndicator);
+                     } else {
+                         // It means namMatch && mIsInPrl
+                         if ((mRoamingIndicator <= 2)) {
+                             mNewSS.setCdmaRoamingIndicator(EriInfo.ROAMING_INDICATOR_OFF);
+                         } else {
+                             // Use the one from PRL/ERI
+                             mNewSS.setCdmaRoamingIndicator(mRoamingIndicator);
+                         }
+                     }
+                 }
+     
+                 if (mEriManager != null) {
+                     int roamingIndicator = mNewSS.getCdmaRoamingIndicator();
+                     mNewSS.setCdmaEriIconIndex(mEriManager.getCdmaEriIconIndex(roamingIndicator,
+                             mDefaultRoamingIndicator));
+                     mNewSS.setCdmaEriIconMode(mEriManager.getCdmaEriIconMode(roamingIndicator,
+                             mDefaultRoamingIndicator));
+                 }
+     
+                 // NOTE: Some operator may require overriding mCdmaRoaming
+                 // (set by the modem), depending on the mRoamingIndicator.
+     
+                 if (DBG) {
+                     log("Set CDMA Roaming Indicator to: " + mNewSS.getCdmaRoamingIndicator()
+                             + ". voiceRoaming = " + mNewSS.getVoiceRoaming()
+                             + ". dataRoaming = " + mNewSS.getDataRoaming()
+                             + ", isPrlLoaded = " + isPrlLoaded
+                             + ". namMatch = " + namMatch + " , mIsInPrl = " + mIsInPrl
+                             + ", mRoamingIndicator = " + mRoamingIndicator
+                             + ", mDefaultRoamingIndicator= " + mDefaultRoamingIndicator);
+                 }
+             }
+             pollStateDone();
+         }
+     
+     }
+     ```
+
+5. ServiceStateTracker的handlePollStateResultMessage()中，将最新的plmn的long、short、numeric更新到ServiceState mNewSS中。
+
+   - ```java
+      //frameworks/opt/telephony/src/java/com/android/internal/telephony/ServiceStateTracker.java
+      protected void handlePollStateResultMessage(int what, AsyncResult ar) {
+          int ints[];
+          switch (what) {
+              case EVENT_POLL_STATE_OPERATOR: {
+              if (mPhone.isPhoneTypeGsm()) {
+                  String opNames[] = (String[]) ar.result;
+      
+                  if (opNames != null && opNames.length >= 3) {
+                      mNewSS.setOperatorAlphaLongRaw(opNames[0]);
+                      mNewSS.setOperatorAlphaShortRaw(opNames[1]);
+                      // FIXME: Giving brandOverride higher precedence, is this desired?
+                      String brandOverride = getOperatorBrandOverride();
+                      mCdnr.updateEfForBrandOverride(brandOverride);
+                      if (brandOverride != null) {
+                          log("EVENT_POLL_STATE_OPERATOR: use brandOverride=" + brandOverride);
+                          mNewSS.setOperatorName(brandOverride, brandOverride, opNames[2]);
+                      } else {
+                          mNewSS.setOperatorName(opNames[0], opNames[1], opNames[2]);
+                      }
+                  }
+              } else {
+                  String opNames[] = (String[])ar.result;
+      
+                  if (opNames != null && opNames.length >= 3) {
+                      // TODO: Do we care about overriding in this case.
+                      // If the NUMERIC field isn't valid use PROPERTY_CDMA_HOME_OPERATOR_NUMERIC
+                      if ((opNames[2] == null) || (opNames[2].length() < 5)
+                              || ("00000".equals(opNames[2]))) {
+                          opNames[2] = SystemProperties.get(
+                                  GsmCdmaPhone.PROPERTY_CDMA_HOME_OPERATOR_NUMERIC, "00000");
+                          if (DBG) {
+                              log("RIL_REQUEST_OPERATOR.response[2], the numeric, " +
+                                      " is bad. Using SystemProperties '" +
+                                      GsmCdmaPhone.PROPERTY_CDMA_HOME_OPERATOR_NUMERIC +
+                                      "'= " + opNames[2]);
+                          }
+                      }
+      
+                      if (!mIsSubscriptionFromRuim) {
+                          // NV device (as opposed to CSIM)
+                          mNewSS.setOperatorName(opNames[0], opNames[1], opNames[2]);
+                      } else {
+                          String brandOverride = getOperatorBrandOverride();
+                          mCdnr.updateEfForBrandOverride(brandOverride);
+                          if (brandOverride != null) {
+                              mNewSS.setOperatorName(brandOverride, brandOverride, opNames[2]);
+                          } else {
+                              mNewSS.setOperatorName(opNames[0], opNames[1], opNames[2]);
+                          }
+                      }
+                  } else {
+                      if (DBG) log("EVENT_POLL_STATE_OPERATOR_CDMA: error parsing opNames");
+                  }
+              }
+              break;
+          }      
+      }
+      ```
+
+6. ServiceState的setOperatorName()
 
    - ```java
      public void setOperatorName(String longName, String shortName, String numeric) {
@@ -4375,14 +4734,30 @@
      }
      ```
 
-5. ServiceState提供了三个对应的getXXX()方法获取PLMN
+7. ServiceState提供了三个对应的getXXX()方法获取PLMN
 
    - ```java
+     //frameworks/base/telephony/java/android/telephony/ServiceState.java
+     
      //Get current registered operator name in long alphanumeric format.
      //In GSM/UMTS, long format can be up to 16 characters long.
      //In CDMA, returns the ERI text, if set. Otherwise, returns the ONS.
      public String getOperatorAlphaLong() {
          return mOperatorAlphaLong;
+     }
+     
+     /**
+      * Get current registered operator name in short alphanumeric format.
+      *
+      * In GSM/UMTS, short format can be up to 8 characters long.
+      * @return short name of operator, null if unregistered or unknown
+      */
+     @RequiresPermission(anyOf = {
+             android.Manifest.permission.ACCESS_FINE_LOCATION,
+             android.Manifest.permission.ACCESS_COARSE_LOCATION
+     })
+     public String getOperatorAlphaShort() {
+         return mOperatorAlphaShort;
      }
      
      //Get current registered operator numeric id.
@@ -4447,3 +4822,57 @@
   |      Subject      | 主题                                     | 0x16 |
   |        To         | 接收者地址                               | 0x17 |
   |  Transaction-ld   | 传输ID(用于网络控制，识别不同的传输)     | 0x18 |
+
+# Setting
+
+## google message
+
+- **CarrierConfig**：配置文件位于packages/apps/CarrierConfig/assets/xxx.xml
+  - **key**对应着CarrierConfigManager.java的配置。
+  - **carrier_list.textpb**：配置文件的名字来源，文件名和carrier_list中一一对应。
+
+# JIRA Workflow
+
+## 配置类的问题
+
+1. 先确定项目的carriers，再确定jira的运营商。
+
+   - 例如：V790AE是tracfone的项目，jira的需求是TMO的。修改对应的配置就是tracfone-TMO的。为了防止测试使用TMO的实体卡，将TMO-US的也一并修改了。
+
+2. 下载对应项目的代码
+
+   - 编译选项为userdebug，相关命令在tinno wiki上查找
+     - 刷机根据对应的平台以及对应的手机型号有区别，不清楚需提前询问。
+
+   - 单编
+     1. source build/envsetup.sh
+     2. lunch （对应版本的选择在项目立项之初就已经确定，不清楚需提前询问）
+     3. 编译命令
+        - mmm：编译指定目录下的模块，不编译它所依赖的其它模块。
+        - mma：编译当前目录下的模块及其依赖项。
+        - mmma：编译指定路径下所有模块，并且包含依赖。
+     4. adb push `apk/jar的路径`
+
+3. 修改对应的CarrierConfig文件
+
+   - **CarrierConfig**：配置文件位于packages/apps/CarrierConfig/assets/xxx.xml
+     - **key**对应着**CarrierConfigManager**.java的配置。如果找不到对应的修改项，只能找google提交case。
+       - 如果谷歌给了解决方法就按照google的方法来
+     - **carrier_list.textpb**：配置文件的名字来源，文件名和carrier_list中一一对应。TelephonyManager.java的getSimCardOperatorName() 获取operator name。
+
+4. 编译刷机
+
+5. 验证
+
+6. 提交代码到gerrit
+
+   1. git add -A
+   2. git commit -m “<类型><jira号><tag，name>”
+   3. git push tinno HEAD:refs/for/`branch名字`
+
+   - git 其他命令
+     - git status
+     - git diff .
+     - git remote -v
+     - git checkout .
+
