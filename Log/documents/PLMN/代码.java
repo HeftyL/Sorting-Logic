@@ -43,7 +43,7 @@
             OplRecord oplRec = mOperatorList.get(i);
             if (isMatchingPlmnForEfOpl(oplRec.sPlmn, plmn) && ((oplRec.nMinLAC == 0 && oplRec.nMaxLAC == 0xfffe) || (oplRec.nMinLAC <= nLac && oplRec.nMaxLAC >= nLac))) {
                 //计算出当前LAC在OPL中的index
-                nPnnIndex = oplRec.nPnnIndex;
+                nPnnIndex = oplRec.nPnnIndex; 
                 break;
             }
         }
@@ -248,6 +248,7 @@
         (2)如果SPN的bit2=0，则需要同时显示SPN，如果SPN的bit2=1，则不需要同时显示SPN
     下面来看具体实现。
     @SIMRecords.java
+	//android/frameworks/opt/telephony/src/java/com/android/internal/telephony/cdnr/CarrierDisplayNameResolver.java
     public int getDisplayRule(String plmn) {
         int rule;
         boolean bSpnActive = false;

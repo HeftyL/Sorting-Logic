@@ -4876,3 +4876,16 @@
      - git remote -v
      - git checkout .
 
+# Log流程查看
+
+- log分类
+  - modem log
+  - AP(mobile) log
+    - radio log(framework)
+    - main log (app)
+  - Network log
+- 流程
+  1. modem log的发送流程，有没有发出去，如果没发出去，在哪里失败了。
+     1. 如果根本就没到modem，查看ap log，确定是在app层还是framework层失败
+  2. modem log的接收流程，有没有接收到，如果接收途中失败了，在哪里失败了。
+     1. 如果modem接收到了，但app没有显示，查看ap log，确定是在app层还是framework层失败
