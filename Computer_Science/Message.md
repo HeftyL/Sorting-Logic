@@ -1,14 +1,37 @@
 # SMS
 
 - 长度：140 byte之内
+
 - 业务
   - 小区广播短消息业务
+  
   - 点对点短消息业务
-    - SMS MO（Short Message Mobile Originated）:MS->SC
-    - SMS MT (Short Message Mobile Terminated):SC->MS
-    - MS：Mobile Station
-    - SC：Service Center
+    - | **缩写** | **全称**                              | **说明**                                                     |
+      | -------- | ------------------------------------- | ------------------------------------------------------------ |
+      | SMS MO   | Short Message Mobile Originated       | MS->SC。是 由 移动 终 端 (MT)发 起 的短 消 息 ,描 述 GSM 系 统 中 MT 通 过 短消 息 中 心 (SMC, Short Message Center)向一个短消息实体(SME, Short Message Entity)发送短消息的能力。SME 可以是 MT,也可以是固网用户, 联网 PC 等. |
+      | SMS MT   | Short Message Mobile Terminated       | SC->MS。SMSC向MS发送短信的业务;<br/>到达移动终端的短消息,描述GSM系统从SMC 向被呼移动终端转发短消息的能力。 |
+      | MS       | Mobile-Station                        | 移动站台 负责系统交换管理，控制来自或发往其他电话或数据系统的通信 |
+      | SME      | Short-Message-Entity                  | 短消息实体 负责接收和发送短消息。可以位于固话系统、移动基站或其他服务中心内 |
+      | SMSC     | Short Message Service Center          | 短消息服务中心 负责在移动基站和SME之间中继、存储或转发短消息 |
+      | DCS      | Data Coding Scheme                    | 数据编码方案                                                 |
+      | SCTS     | Service Center Time Stamp             | 服务中心的时间戳                                             |
+      | MSC      | Mobile-services Switching Centre      | exchange which performs switching functions for mobile stations located in a geographical area designated as the MSC area |
+      | SMS-GMSC | Gateway MSC For Short Message Service | function of an MSC capable of receiving a short message from an SC, interrogating an HLR for routing information and SMS info, and delivering the short message to the VMSC or the SGSN of the recipient MS |
+      | SMR      |                                       | Short Message Relay (entity)                                 |
+  
+- SM‑AL Short Message Application Layer
+  SM‑LL Short Message Lower Layers
+  SM‑RL Short Message Relay Layer
+  SM‑RP Short Message Relay Layer Protocol
+  SM‑RS Short Message Relay Service
+  SM‑TL Short Message Transfer Layer
+  SM‑TP Short Message Transfer Layer Protocol
+  SM‑TS Short Message Transfer Service 
+  SSN Sub‑System Number
+  TPDU Transfer protocol data unit
+  
 - 短信类型
+  
   - SMS-DELIVER
   - SMS-DELIVER-REPORT
   - SMS-SUBMIT
@@ -29,7 +52,9 @@
   - SMS-SUBMIT-REPORT
   - SMS-STATUS-REPORT
   - SMS-COMMAND
+  
 - 短信发送流程：app->framework->ril->modem
+
 - IMS:IP多媒体子系统（IP Multimedia Subsystem，IMS）或IP多媒体核心网络子系统（IP Multimedia Core Network Subsystem, IMCNS）是一个基于互联网协议提供多媒体业务的体系架构。传统移动电话使用类电路交换网络提供语音通话服务，而非使用计算机分组交换通信方式的网络。虽然已有很多方式在智能手机上提供网络电话与其他互联网多媒体服务，但并未形成行业标准，IMS则为此提供了一个标准化体系架构。IMS的最初的版本（3GPP Rel-5）主要是给出了一种基于GPRS来实现互联网协议多媒体业务的方法。在这个版本的基础上，3GPP、3GPP2以及TISPAN进行了进一步的更新，以支持GPRS之外，诸如WLAN、CDMA2000和固定电话线等其他接入方式。
   - 会话发起协议（Session Initiation Protocol，缩写SIP）:是一个由IETF MMUSIC工作组开发的协议，作为标准被提议用于创建，修改和终止包括视频，语音，即时通信，在线游戏和虚拟现实等多种多媒体元素在内的交互式用户会话。2000年11月，SIP被正式批准成为3GPP信号协议之一，并成为IMS体系结构的一个永久单元。SIP与H.323一样，是用于VoIP最主要的信令协议之一。
   - 富通信解决方案（英语：Rich Communication Services，缩写：RCS）是由GSM协会发起的、旨在创建基于IP Multimedia Subsystem(IMS)基础上进一步丰富运营商通信服务的计划。
@@ -37,7 +62,155 @@
     - 强化的消息(Enhanced Messaging): 增加多种的消息选择方案，例如聊天室、表情符号、位置分享与文件分享。
     - 丰富化的通话(Enriched Calls): 在通话过程中增加多媒体内容分享，像是影音通话或是屏幕分享等。
 
+## 协议
+
 - 技术规范(TS，Technical Specification)和技术报告(TR，Technical Report)
+- 3GPP
+  - 第三代合作伙伴计划( 3GPP ) 是许多标准组织的总称，这些标准组织为移动电信开发协议。
+    - GSM和相关的2G和2.5G标准，包括GPRS和EDGE
+    - UMTS和相关3G标准，包括HSPA和HSPA+
+    - LTE和相关4G标准，包括LTE Advanced和LTE Advanced Pro
+    - 5G NR和相关5G标准，包括5G-Advanced
+    - 以接入独立方式开发的演进IP 多媒体子系统(IMS)
+  - 成员
+    - 组织伙伴（OP，Organizational Partner）
+    - 市场代表伙伴（MRP，Market Representation Partners）
+    - 个体会员（也称独立会员，IM，Individual Members）
+  - 组织结构
+    - 项目合作组（PCG，Project Cooperation Group）：主要负责3GPP总的管理、时间计划、工作分配、事务协调等
+      - 技术规范组（TSG，Technology Standards Group）：TSG主要负责技术方面的工作。TSG可以根据工作需要，新建工作组。
+        - 工作组 (WG，Work Group)：就是真正负责干活的了，承担具体的任务。
+
+### MO pdu
+
+- | SCA  | PDUType | MR   | DA   | PID  | DCS  | VP    | UDL  | UD    |
+  | ---- | ------- | ---- | ---- | ---- | ---- | ----- | ---- | ----- |
+  | 1-12 | 1       | 1    | 2-12 | 1    | 1    | 0,1,7 | 1    | 0-140 |
+
+#### SCA
+
+- | 长度 | 1 Octet                                         | 0~1Octet | 0~10 Octets          |
+  | ---- | ----------------------------------------------- | -------- | -------------------- |
+  | 定义 | Len                                             | Type     | Addr                 |
+  | 说明 | SCA长度(不包括自身len，表示的是type+addr的长度) | SCA类型  | SCA地址              |
+  | 举例 | 08                                              | 91       | 68 31 08 20 05 05 FO |
+  
+  - Each address field of the SMTL consists of the following subfields: An AddressLength field of one octet, a TypeofAddress field of one octet, and one AddressValue field of variable length; 
+
+#### PDU Type
+
+- SMS-SUBMIT type
+
+  - Basic elements of the SMS-SUBMIT type:
+
+  - | Abbr.   | Reference                     | p1)  | P2)   | Description                                                  |
+    | ------- | ----------------------------- | ---- | ----- | ------------------------------------------------------------ |
+    | TP-MTI  | TP-Message-Type-Indicator     | M    | 2b    | Parameter describing the message type.                       |
+    | TP-RD   | TP-Reject-Duplicates          | M    | b     | Parameter indicating whether or not the SC shall accept an SMSSUBMIT for an SM still held in the SC which has the same TPMR and the same TPDA as a previously submitted SM from the same OA |
+    | TP-VPF  | TP-Validity-Period-Format     | M    | 2b    | Parameter indicating whether or not the TPVP field is present. |
+    | TP-RP   | TP-ReplyPath                  | M    | b     | Parameter indicating the request for Reply Path.             |
+    | TP-UDHI | TP-User-Data-Header-Indicator | O    | b     | Parameter indicating that the TPUD field contains a Header.  |
+    | TP-SRR  | TP-Status-Report-Request      | O    | b     | Parameter indicating if the MS is requesting a status report. |
+    |         |                               |      |       |                                                              |
+    | TP-MR   | TP-Message-Reference          | M    | I     | Parameter identifying the SMSSUBMIT.                         |
+    | TP-DA   | TP-Destination-Address        | M    | 2~12o | Address of the destination SME.                              |
+    | TP-PID  | TP-Protocol-Identifier        | M    | o     | Parameter identifying the above layer protocol, if any.      |
+    | TP-DCS  | TP-Data-Coding-Scheme         | M    | o     | Parameter identifying the coding scheme within the TPUserData. |
+    | TP-VP   | TP-Validity-Period            | O    | o/7o  | Parameter identifying the time from where the message is no longer valid. |
+    | TP-UDL  | TP-User-Data-Length           | M    | I     | Parameter indicating the length of the TPUserData field to follow. |
+    | TP-UD   | TP-User-Data                  | O    | 3)    |                                                              |
+
+    - 1)Provision;	Mandatory (M) or Optional (O).
+    - 2)Representation;	Integer (I), bit (b), 2 bits (2b), Octet (o), 7 octets (7o), 212 octets (212o).
+    - 3):Dependent on the TPDCS.
+    - NOTE:	Any unused bits shall be set to zero by the sending entity and shall be ignored by the receiving entity.
+
+  - | Bit No. | 7    | 6    | 5    | 4    | 3    | 2    | 1    | 0    |
+    | ------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+    |         | RP   | UDHI | SRR  | VPF  |      | RD   | MTI  |      |
+
+    - TP-RP:应答路径(Reply Path)
+      - 0-未设置;
+      - 1-设置
+    - TP-UDHI:用户数据头标识(User Data Header Indicator)
+      - 0- 用户数据(UD)部分不包含头信息
+      - 1- 用户数据(UD)开始部分包含用户头信息,长短信时会设置为
+      - 1,头信息占 UD 的 6 个字节,具体的字段解释请见下章节。
+    - TP-SRR:请求状态报告(Status Report Request)
+      - 0- 不需要报告
+      - 1- 需要报告
+    - TP-SRI:状态报告指示(Status Report Indication),此值仅被短消息中心(SMSC)设置
+      - 0- 状态报告将不会返回给短消息实体(SME)
+      - 1- 状态报告将返回给短消息实体(SME)
+    - TP-VPF:有效期格式(Validity Period Format)
+      - 00-VP 段没有提供(长度为 0)
+      - 01-保留
+      - 10-VP 段以整形形式提供(相对的)
+      - 11-VP 段以 8 位组的一半(semi-octet)形式提供(绝对的)
+    - TP-RD:拒绝复本(Reject Duplicate)
+      - 0- 通知短消息服务中心(SMSC)接受一个 SMS-SUBMIT,即使该消息是先前已提交过的,并还存在于 SMSC 中未发送出去。MS重复的条件是:消息参考(MR)、接收方地址(DA)及发送方地址(OA)相同
+      - 1- 通知 SMSC 拒绝一个重复的 SMS
+    - TP-MMS:有更多的信息需要发送时,此值被 SMSC 设置
+      - 0- 在 SMSC 中有更多的信息等待 MS
+      - 1- 在 SMSC 中没有更多的信息等待 MS
+    - TP-MTI:信息类型指示(Message Type Indicator)
+      - 00-SMS-DELIVER (SMSC - MS)
+      - 00-SMS- DELIVER REPORT (MS - SMSC)
+      - 01-SMS- SUBMIT(MS - SMSC)
+      - 01-SMS- SUBMIT REPORT (SMSC - MS)
+      - 10- SMS- STATUS REPORT (SMSC - MS)
+      - 10- SMS-COMMAND (MS - SMSC)
+      - 11-保留
+
+### SM‐RL服务
+
+- The Short Message Relay Layer (SM‑RL) provides a service to the Short Message Transfer Layer (SM‑TL). This 
+  service enables the SM‑TL to send Transfer Protocol Data Units (TPDUs) to its peer entity, receive TPDUs from 
+  its peer entity and receive reports about earlier requests for TPDUs to be transferred.
+
+- 分类
+
+  - RP‑MO‑DATA for transferring a TPDU from MS to SC
+  - RP‑MT‑DATA for transferring a TPDU from SC to MS
+  - RP‑ACK for acknowledging an RP‑MO‑DATA, an RP‑MT‑DATA or an RP‑SM‑MEMORY‑AVAILABLE
+  - RP‑ERROR for informing of an unsuccessful RP‑MO‑DATA or an RP‑MT‑DATA transfer attempt
+  - RP‑ALERT‑SC for alerting the SC that the MS has recovered operation (information sent from the HLR to the SC)RP‑SM‑MEMORY‑AVAILABLE for notifying the network that the MS has memory available to accept one or more short messages (information sent from the MS to the HLR)
+    - Home Location Register (HLR)：归属位置寄存器 (HLR) 是一个数据库，其中包含有关被授权使用全球移动通信系统 (GSM) 网络的用户的相关数据。存储在 HLR 中的一些信息包括每个订阅的国际移动用户标识 (IMSI) 和移动台国际用户目录号码 (MSISDN)。
+
+- Messages for short message and notification transfer on SM‐RL
+
+  - RP‐DATA：A phase 2 entity shall not reject a RP‑DATA message where both address elements have a length greater than 0.
+
+    - RP‐DATA (Network to Mobile Station).This message is sent in MSC ‑> MS direction. The message is used to relay the TPDUs
+
+    - RP‐DATA (Mobile Station to Network).This message is sent in MS ‑> MSC direction. The message is used to relay the TPDUs
+
+    - | Information element   | Reference         | Presence | Format | Length        |
+      | --------------------- | ----------------- | -------- | ------ | ------------- |
+      | RPMessage Type        | Subclause 8.2.2   | M        | V      | 3 bits        |
+      | RPMessage Reference   | Subclause 8.2.3   | M        | V      | 1 octet       |
+      | RPOriginator Address  | Subclause 8.2.5.1 | M        | LV     | 1-12 octets   |
+      | RPDestination Address | Subclause 8.2.5.2 | M        | LV     | 1 octet       |
+      | RPUser Data           | Subclause 8.2.5.3 | M        | LV     | <= 233 octets |
+
+  - RP-SMMA:This message is sent by the mobile station to relay a notification to the network that the mobile has memory available to receive one or more short messages. 
+
+  - RP-ACK:This message is sent between the MSC and the mobile station in both directions and used to relay the acknowledgement of a RPDATA or RPSMMA message reception. 
+
+    - | IEI  | Information element | Reference         | Presence | Format | Length        |
+      | ---- | ------------------- | ----------------- | -------- | ------ | ------------- |
+      |      | RPMessage Type      | Subclause 8.2.2   | M        | V      | 3 bits        |
+      |      | RPMessage Reference | Subclause 8.2.3   | M        | V      | 1 octet       |
+      | 41   | RP-User Data        | Subclause 8.2.5.3 | O        | TLV    | <= 234 octets |
+
+  - RP-ERROR:This message is sent between the MSC and the mobile station in both directions and used to relay an error cause from an erroneous short message or notification transfer attempt.
+
+    - | IEI  | Information element | Reference         | Presence | Format | Length        |
+      | ---- | ------------------- | ----------------- | -------- | ------ | ------------- |
+      |      | RPMessage Type      | Subclause 8.2.2   | M        | V      | 3 bits        |
+      |      | RPMessage Reference | Subclause 8.2.3   | M        | V      | 1 octet       |
+      |      | RPCause             | Subclause 8.2.5.4 | M        | LV     | 2 - 3 octets  |
+      | 41   | RPUser Data         | Subclause 8.2.5.3 | O        | TLV    | <= 234 octets |
 
 ## 发送流程
 
