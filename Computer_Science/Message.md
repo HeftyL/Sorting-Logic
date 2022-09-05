@@ -125,10 +125,15 @@
     - 3):Dependent on the TPDCS.
     - NOTE:	Any unused bits shall be set to zero by the sending entity and shall be ignored by the receiving entity.
 
+  - 
+    
   - | Bit No. | 7    | 6    | 5    | 4    | 3    | 2    | 1    | 0    |
     | ------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-    |         | RP   | UDHI | SRR  | VPF  |      | RD   | MTI  |      |
-
+    | 发送方  | RP   | UDHI | SRR  | VPF  | VPF  | RD   | MTI  | MTI  |
+    | 接收方  | RP   | UDHI | SRI  | \    | \    | MMS  | MTI  | MTI  |
+  
+  - 
+    
     - TP-RP:应答路径(Reply Path)
       - 0-未设置;
       - 1-设置
