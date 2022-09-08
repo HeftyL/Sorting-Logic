@@ -8,19 +8,36 @@
 ## Android9.x平台特性
 
 - ![Android 软件堆栈](Android.assets/android-stack_2x.png)
+
 - Android的底层建立在linux之上，主要由操作系统、中间件、用户界面和应用软件4层组成
   - 设计思路：采用一种被称为软件叠层(Software Stack)的方式进行构建。
   - 作用
     - 使得层与层之间互相分离，明确各层的分工
     - 保证了层与层的低耦合，当下层的层内或层下发生改变时，上层应用程序无需任何改变
   - 和网络以及java web的后端一样都使用了分层的思想去解决问题。
+  
 - Android系统主要由6部分组成。**序号从小到大，越来越底层。**
   1. 系统App层
      - Android系统将包含一系列核心App，如电话拨号，联系人。
      - 普通开发者开发的各种Android程序，都属于这一层
+     
   2. Java API框架层
      - 提供了大量API供开发者使用
+     
      - 调用原生C/C++库的服务。
+     
+     - | 名称                             | 功能描述                                                     |
+       | -------------------------------- | ------------------------------------------------------------ |
+       | Activity Manager(活动管理器)     | 管理各个应用程序生命周期以及通常的导航回退功能               |
+       | Location Manager(位置管理器)     | 提供地理位置以及定位功能服务                                 |
+       | Package Manager(包管理器)        | 管理所有安装在Android系统中的应用程序                        |
+       | Notification Manager(通知管理器) | 使得应用程序可以在状态栏中显示自定义的提示信息               |
+       | Resource Manager（资源管理器）   | 提供应用程序使用的各种非代码资源，如本地化字符串、图片、布局文件、颜色文件等 |
+       | Telephony Manager(电话管理器)    | 管理所有的移动设备功能                                       |
+       | Window Manager（窗口管理器）     | 管理所有开启的窗口程序                                       |
+       | Content Providers（内容提供器）  | 使得不同应用程序之间可以共享数据                             |
+       | View System（视图系统）          | 构建应用程序的基本组件                                       |
+     
   3. 原生C/C++库
      - Android包含一套被不同组件所使用的C/C++库的集合。一般来说，Android应用开发者不能直接调用这套C/C++库集，而是通过它上面的JavaAPI框架调用这些库
      - SQLlite：供所有应用程序使用的功能强大的轻量级关系数据库
@@ -30,10 +47,13 @@
      - Media Framework (媒体框架) :基于PacketVideo的OpenCORE,这套媒体库支持播放和录制许多流行的音频和视频格式，以及查看静态图片。它主要包括MPEG4、H.264、MP3、AAC、AMR、JPG、PNG等多媒体格式。
      - SGL:底层的2D图形引擎。
      - OpenGL ES:基于OpenGL ES API实现的3D系统，这套3D库既可使用硬件3D加速(如果硬件系统支持的话)，也可使用高度优化的软件3D加速。
+     
   4. Android运行时
      - 由Android核心库和ART（Android runtime）组成。其中核心库提供了Java 语言核心库所能使用的绝大部分功能:而ART则负责运行Android应用程序。
+     
   5. 硬件抽象层（HAL）
      - 主要提供了对linux内核的封装，向上提供蓝牙、摄像头等设备的编程接口，向下隐藏底层的实现细节。
+     
   6. Linux内核
      - 提供了安全性，内存管理、进程管理、网络协议栈和驱动模型等核心服务。
 
@@ -2871,3 +2891,7 @@ ServerSocket方法
   2. 调用WebSettings的setJavaScriptEnabled(true)启用JavaScript调用功能。
   3. 调用WebView的addJavascriptInterface(Object object, String name)方法将object 对象暴露给JavaScript脚本。
   4. 在JavaScript脚本中通过刚才暴露的name对象调用Android方法。
+
+# Android系统
+
+- 

@@ -4404,8 +4404,7 @@
    - 该取值要求当前手机注册到HPLMN网络，此时Modem将会先读取SIM中的CPHS ONS的长格式文件(6F14)，如果存在，则将其作为Plmn上报，否则的话读取短格式文件(6F18)，如果存在，则将其作为Plmn上报。
 3. NITZ Operator Name
    - NITZ:Network Identity and Time Zone
-   - 该名称是由当前注册的网络下发给手机的，如果该值存在，就会将该值作为Plmn 那么上报给 
-     AP。
+   - 该名称是由当前注册的网络下发给手机的，如果该值存在，就会将该值作为Plmn 那么上报给AP。
 4. 配置文件读取
    - 平台自身会提供从手机内存中根据当前注册的MCC MNC读取相应的Plmn Name，一般都是一个类似于apns-conf.xml的文件，在开机的时候被加载，这个方法在每个平台中也会不同。
 5. MCC、MNC数字作为Plmn Name
@@ -5067,3 +5066,14 @@
      1. 如果根本就没到modem，查看ap log，确定是在app层还是framework层失败
   2. modem log的接收流程，有没有接收到，如果接收途中失败了，在哪里失败了。
      1. 如果modem接收到了，但app没有显示，查看ap log，确定是在app层还是framework层失败
+
+# 刷机
+
+- mtk
+  - flash
+    - da
+    - all
+  - Modem meta backup
+- Qualcomm
+  - QFIL 
+  - qstn

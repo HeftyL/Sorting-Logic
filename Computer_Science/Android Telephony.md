@@ -79,11 +79,15 @@
 
   - **服务器**：用于管理客户端与守护程序之间的通信。服务器在开发机器上作为后台进程运行。
 
-- | 命令                        | 说明                |
-  | --------------------------- | ------------------- |
-  | adb logcat -vthreadtime     | 查看main日志的命令  |
-  | adb logcat -vtime -b radio  | 查看radio日志的命令 |
-  | adb logcat -vtime -b events | 查看event日志的命令 |
+- | 命令                        | 说明                                 |
+  | --------------------------- | ------------------------------------ |
+  | adb logcat -vthreadtime     | 查看main日志的命令                   |
+  | adb logcat -vtime -b radio  | 查看radio日志的命令                  |
+  | adb logcat -vtime -b events | 查看event日志的命令                  |
+  | adb pull 手机目录 电脑目录  | 拷贝手机的目录或文件到电脑的指定目录 |
+  | adb push 电脑目录 手机目录  | 拷贝电脑的目录或文件到手机的指定目录 |
+  | adb install xxx.apk         | 安装apk                              |
+  | adb root                    | 以root启动adb                        |
 
 # 通话流程
 
