@@ -5028,7 +5028,7 @@
         - mmm：编译指定目录下的模块，不编译它所依赖的其它模块。
         - mma：编译当前目录下的模块及其依赖项。
         - mmma：编译指定路径下所有模块，并且包含依赖。
-     4. adb push `apk/jar的路径`
+     4. adb install `apk/jar的路径`
 
 3. 修改对应的CarrierConfig文件
 
@@ -5069,11 +5069,62 @@
 
 # 刷机
 
-- mtk
-  - flash
-    - da
-    - all
-  - Modem meta backup
-- Qualcomm
-  - QFIL 
-  - qstn
+- Platform
+  - mtk
+    - flash
+      - download agent
+      - scatter 
+    - Modem meta backup
+  - Qualcomm
+    - QFIL 
+    - qstn
+- *89#：跳过刷机后的引导
+- `*#*#873733284#*#*`:进入调试模式
+  1. Log and Debugging
+  2. DebugLoggerUI
+
+# 版本控制
+
+## repo
+
+- Repo 是一个建立在 Git 之上的工具。Repo 帮助管理许多 Git 存储库，上传到修订控制系统，并使部分开发工作流程自动化。Repo 并不是要取代 Git，只是为了让使用 Git 更容易。repo 命令是一个可执行的 Python 脚本，您可以将其放在路径中的任何位置。
+
+- 使用 Repo 需遵循的格式
+
+  - ```java
+    repo command options
+    ```
+
+  - 可选元素显示在方括号 [ ] 中。
+
+- 帮助
+
+  - 所有命令的摘要
+
+    - ```
+      repo help
+      ```
+
+  - 某个命令的详细信息
+
+    - ```
+      repo help command
+      ```
+
+  - 仅查看可用选项的列表
+
+    - ```
+      repo command --help
+      ```
+
+- repo init
+  - `-u`：指定从中检索清单代码库的网址。常见清单位于 `https://android.googlesource.com/platform/manifest`。
+  - `-m`：选择代码库中的清单文件。如果未选择清单名称，则默认为 `default.xml`。
+  - `-b`：指定修订版本，即特定的 manifest-branch。
+
+- repo sync
+
+  - `-c`：只从服务端获取当前分支。
+  - `-f`：即使某个项目同步失败，也继续同步其他项目。
+  - `-j <num>`：设定并发数。默认 4 个并发。
+  - 可以查看.repo/manifest.xml 拉取一部分代码
