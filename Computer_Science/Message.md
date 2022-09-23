@@ -5082,6 +5082,26 @@
 - `*#*#873733284#*#*`:进入调试模式
   1. Log and Debugging
   2. DebugLoggerUI
+- remount
+  1. enter Settings->System->About phone
+  2. Press "Build number" several times to enable Developer options
+
+  3. Enter Settings->System->Developer options and turn on OEM unlocking
+
+  4. adb reboot bootloader
+
+  5. wait device reboot to bootloader ,then run the cmd "fastboot flashing unlock/sudo $(which fastboot) flashing unlock" —— 有时候这个步骤需要执行两次才可以生效
+
+  6. Press volume up key to continue and then run "fastboot reboot" —— 有时候这个步骤需要执行volume down key才能生效
+
+  7. Wait for the handset to boot up and run cmds below:
+    - adb root 
+    - adb disable-verity
+  8. run cmds below to reboot the device:
+    - adb reboot
+  9. Wait for the handset to boot up and run cmds below:
+     -  adb root
+     - adb remount
 
 # 版本控制
 

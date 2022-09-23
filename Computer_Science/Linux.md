@@ -38,6 +38,9 @@
   - 桥接模式，虚拟系统可以和外部系统通讯，但是容易造成IP冲突
   - NAT模式，网络地址转换模扰,虚拟系统可以和外部系统通讯，不造成IP冲突
   - 主机模式:独立的系统
+- vi command
+  - u：undo，ctrl+r ：redo
+
 
 ## linux目录结构
 
@@ -220,9 +223,41 @@
     - 系统读取文件时需要先找到inode，并分析inode所记录的权限与使用者是否符合，若符合才能够开始实际读取block的内容。
 - block：实际记录文件的内容，若文件太大时，会占用多个block。
 - 数据存放区域：inode table 与 data block 
--  metadata (中介数据) ：superblock、 block bitmap 与 inode bitmap 等区段
+- metadata (中介数据) ：superblock、 block bitmap 与 inode bitmap 等区段
 - mount point：每个 filesystem 都有独立的 inode / block / superblock 等信息，这个文件系统要能够链接到目录树才能被我们使用。 将文件系统与目录树结合的动作我们称为挂载。
   - 挂载点一定是目录，该目录为进入该文件系统的入口
+- Linux VFS (Virtual Filesystem Switch)
+  - Linux 的核心通过Virtual Filesystem Switch 的核心功能去读取 filesystem，管理文件系统
+
+- df ： disk free
+- du： disk usage
+- ln
+  - Hard Link：hard link 只是在某个目录下新增一笔档名链接到某 inode 号码的关连记录
+    - 作用：如果你将任何一个『档名』删除，其实 inode 与 block 都还是存在的！ 此时你可以透过另一个『档名』来读取到正确的文件数据
+    - 限制：不能跨 Filesystem；不能 link 目录。
+
+  - Symbolic Link： Symbolic link 就是在创建一个独立的文件，而这个文件会让数据的读取指向他 link 的那个文件的档名！由于只是利用文件来做为指向的动作， 所以，当来源档被删除之后，symbolic link 的文件会『开不了』
+    - 目录的 link 数量：一个『空目录』里面至少会存在 . 与 .. 这两个目录
+- 磁盘分区： fdisk
+  - 磁盘格式化：mkfs，make filesystem
+  - 注意
+    - 单一文件系统不应该被重复挂载在不同的挂载点(目录)中；
+    - 单一目录不应该重复挂载多个文件系统；
+    - 要作为挂载点的目录，理论上应该都是空目录才是。
+
+  - 挂载：mount
+    - 启动挂载 /etc/fstab 及 /etc/mtab
+      - 根目录 / 是必须挂载的﹐而且一定要先于其它 mount point 被挂载进来。
+      - 其它 mount point 必须为已创建的目录﹐可任意指定﹐但一定要遵守必须的系统目录架构原则
+      - 所有 mount point 在同一时间之内﹐只能挂载一次。
+      - 所有 partition 在同一时间之内﹐只能挂载一次。
+      - 如若进行卸除﹐您必须先将工作目录移到 mount point(及其子目录) 之外。
+    - 文件系统参数
+
+
+### 压缩和解压
+
+
 
 # 实际操作篇
 
@@ -327,10 +362,19 @@
 
   - 可执行文件路径的变量
 
-  - ```java
+  - ```shell
     [root@study ~]# PATH="${PATH}:/root" #将/root加入到可执行文件路径的变量中
     ```
 
+### shell
+
+- 历史：第一个流行的 shell 是由Steven Bourne 发展出来的，为了纪念他所以就称为Bourne shell ，或直接简称为sh ！而后来另一个广为流传的shell 是由柏克莱大学的Bill Joy 设计依附于BSD 版的Unix 系统中的shell ，这个shell 的语法有点类似 C 语言，所以才得名为C shell ，简称为csh ！由于在学术界Sun 主机势力相当的庞大，而Sun 主要是BSD 的分支之一，所以C shell 也是另一个很重要而且流传很广的shell 之一。
+
+- 设定别名
+
+  - ```shell
+    [root@study ~]# alias lm='ls -al'
+    ```
 
 ### 关机&重启
 
