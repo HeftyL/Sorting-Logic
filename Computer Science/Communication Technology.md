@@ -1434,6 +1434,83 @@
 - 虚拟现实（英语：virtual reality，缩写VR），简称为虚拟技术，也称虚拟环境，是利用电脑模拟产生一个三维空间的虚拟世界，提供使用者关于视觉等感官的模拟，让使用者感觉仿佛身历其境，可以即时、没有限制地观察三维空间内的事物。
 - 增强现实(Augmented Reality，AR)技术是一种将虚拟信息与真实世界巧妙融合的技术，广泛运用了多媒体、三维建模、实时跟踪及注册、智能交互、传感等多种技术手段，将计算机生成的文字、图像、三维模型、音乐、视频等虚拟信息模拟仿真后，应用到真实世界中，两种信息互为补充，从而实现对真实世界的“增强”。
 
+# 大话无线通信
+
+- ![image-20220928101126074](Communication Technology.assets/image-20220928101126074.png)
+  - BSS = ‘BTS’ （ Base Transceiver Station ， 基 站 收 发 信机）+ ‘BSC’（Base Station Controller，基站控制器）
+  - ‘HLR’（Home Location Register， 归属位置寄存器），存储了IMSI号、Ki号及其他详细信息
+  - ‘VLR’（Visitor Location Register，访问位置寄存器）
+    - 情况一旦有所变化，‘VLR’都会实时和‘HLR’联系，到HLR下属的AuC’（Authentication Center，鉴权中心）里进行认证。
+- 信令
+  - ![image-20220928101552929](Communication Technology.assets/image-20220928101552929.png)
+  - BTS->MS
+    - TCH（Traffic CHannel，业务信道）
+    - CCH（Control CHannel，控制信道）等几类
+    - BCH（Broadcast CHannel，广播信道）
+      - ‘BCCH’ （ Broadcast Control CHannel，广播控制信道）
+      - ‘FCCH’（Frequency Correction CHannel ， 频 率 校 正 信 道 ）
+      -  ‘SCH’ （ Synchronization CHannel ， 同 步 信 道 ） 。
+  - 编号
+    - Cell：‘CI’（Cell Identity，小区标识）
+    - BSC：‘LAC’（Location Area Code，位置区域码）
+    - BTS：‘BSIC’（Base Station Identity Code，基站标识码）
+
+## 通信系统
+
+- ![image-20220928144638892](Communication Technology.assets/image-20220928144638892.png)
+  - 信源编码是以提高通信有效性为目的的编码。信源编码的效率通常是通过压缩信源的冗余度来实现的。信源编码追求的是相同信息量的最少比特位。
+  - 信道编码是以提高信息传输的可靠性为目的的编码。通常通过增加信源的冗余度来实现。
+    - 在信源编码的基础上，另外安排了一些冗余的比特传给收端，让收端自行验证信息是不是都收对了，这些“冗余信息”就称为信道编码。
+      1. 检错重发法
+      2. 前向纠错法
+      3. 反馈校正法
+- DRX（Discontinuous Reception）技术
+  - 是一种在移动通信中用于节省移动设备电池电量的方法。
+  - 移动设备和网络协商数据传输发生的阶段。在其他时间，设备会关闭其接收器并进入低功耗状态。
+  - GSM按IMSI号把手机划分为不同的寻呼组，没有轮到寻呼自己这个组的时候，GSM手机处于睡眠状态（也就是待机状态），对于网络的寻呼消 
+    息直接忽略；当寻呼到本组时，GSM手机开始对PCH信道的消息进行解码，查看要找的究竟是不是自己。
+
+- 不连续发射（Discontinuous Transimission，DTX）
+  - 在没有信息传输的时候降低速率
+  - 通过话音激活检测（Voice Activity Detection，VAD）技术，由编码器来检测是否有声音发出。
+
+- 功率控制
+  - 手机在小区移动时，它的发射功率需要变化。当它离基站较近时，需要降低发射功率，以减少对其他用户的干扰；当它离基站较远时，就应该增大发射功率，以用于克服增加了的路径衰耗。
+
+
+## GSM系统组成
+
+- ![image-20220929133836870](Communication Technology.assets/image-20220929133836870.png)
+  - 一 套 完 整 的 蜂 窝 无 线 通 信 系 统 通 常 由 交 换 子 系 统 （ NSS ， Network Switched Subsystem ） 、 基 站 子 系 统 （ BSS ， Base Station 
+    Subsystem），移动台（MS，Mobile Station）以及操作维护中心（OMC，Operations & Maintenance Center）构成。
+    - NSS包括移动业务交换中心（MSC）、访问位置寄存器（VLR）、归属位置寄存器（HLR）、鉴权中心 （ AuC ） 和 移 动 设 备 识 别 寄 存 器 （ EIR ） ；
+    - BSS 包 括 基 站 控 制 器（ BSC ） 和 基 站 收 发 信 机 （ BTS ） 。 
+    - 交 换 子 系 统 和 其 他 网 络 如 PSTN（Public Switched Telephone Network，公用电话交换网）、 PLMN（Public Lands Mobile-communication Network，公用陆地移动通信网）之间一般都有接口。
+  - GSM系统的接口
+    - ![image-20220929161601316](Communication Technology.assets/image-20220929161601316.png)
+  - WCDMA的接口
+    - ![image-20220929165059709](Communication Technology.assets/image-20220929165059709.png)
+      - 无线网络控制器（RNC，Radio Network Controller）
+      - Uu：UMTS Air Interface，This is the radio interface between the UTRAN (UMTS Terrestrial Radio Access Network) and the UE (User Equipment) utilizing CDMA.
+  - ![image-20220929175359894](Communication Technology.assets/image-20220929175359894.png)
+- 手机部件
+  - 天线
+    - 一是将空中的电磁波转化为高频电流并将其输送到接收电路中。发射的时候则恰好相反，把高频电流转化为电磁波；
+    - 二是分离发射信号与接收信号，避免二者之间互相干扰
+
+  - LNA（Low Noise Amplifier，低噪声放大器）
+  - 射频滤波器：对特定接收频段以外的信号通通过滤掉
+  - 超外差电路：把高频电流信号降下来变成中频电流信号， 然后进行放大和选频的电路
+  - ![image-20220930094015088](Communication Technology.assets/image-20220930094015088.png)
+
+- BSC
+  - 链路
+    - MTL（Message Transition Link，消息传送链路）：MTL存在于MSC与BSC之间，采用C7信令系统，此链路在BSC-MSC、MSC-MS之间提供所有控制信息，包括：初始连接请求、通话过程中任何属性的变化、处理切换。
+    - RSL（Radio Signalling Link，无线信令链路）：RSL存在于BSC和BTS之间。RSL使用格式化的LAPD信令，一般都需要占用一个64kbit/s的时隙，也有占用一个16kbit/s的信道的。该链路主要是为BTS上的话务处理软件提供支持，允许BSC向BTS发送和接收控制信息。它也支持统计信息的收集和故障报告工作。
+      - 实现MS与BSC的业务管理消息的互通；
+      - 在BSC的控制下完成一部分无线资源管理功能。
+
+
 # LTE
 
 - LTE系统的处理机制及信令流程
@@ -1442,8 +1519,10 @@
     - 来源：gsm->wcdma->lte
     - 关机、待机、联机
 
-## 待机状态的处理机制
+## 待机状态
 
+- ![image-20220927164459908](Communication Technology.assets/image-20220927164459908.png)
+- ![image-20220927164524456](Communication Technology.assets/image-20220927164524456.png)
 - 待机状态的最大特点是终端的任务比较少，还没有建立与网络的业务连接，基本不占用网络的资源，也就是待机状态开销小、省资源。
 - 终端工作模式的差别
   - 关机后终端并没有完全断电，还有一部分模块以极低的功耗工作着。
@@ -1613,9 +1692,34 @@
     - LTE系统变为跟踪区Tracking Area，缩写是TA，TA继承自RA。
       - TA列表：可以理解为TA组，也就是1～16个相邻TA的组合。
         - 作用：在LTE系统中，LTE终端如果在TA列表的范围内移动，即使改变了TA，也不用进行位置更新。
-
 - 寻呼
   - Paging，用于网络侧呼叫终端，从而实现被叫。另外，无线网络还可以通知终端系统信息发生了改变，从而触发终端重新来接收系统信息。
   - 网络侧采用S-TMSI来寻呼终端，S-TMSI是LTE终端在核心网EPC中的临时标识。如果终端没有分配到S-TMSI，就只能用终端的 IMSI来寻呼终端了
     - 临时移动用户识别（Temporary Mobile Subscriber Identity，TMSI）。
     - S-TMSI：为了保证用户身份的机密性，在E-UTRAN系统中，MME会分配临时移动用户识别码S-TMSI访问移动用户。S-TMSI是GUTI的一种缩短格式，以保证能够对无线信令进行更有效的处理（如寻呼及服务请求）。S-TMSI由MMEC和M-TMSI组成，用于对用户进行寻呼。
+  - 寻呼区域：网络侧知道终端所在的TA列表，所以寻呼区就等于终端TA列表中的所有基站。如果终端没有响应寻呼，网络还可以进行第二次寻呼，这时网络可以扩大寻呼区，变成在MME下属的所有基站中寻呼。
+  - 消息发送方式：
+    - 在LTE系统中，寻呼信息由PDSCH信道来承载，与业务数据和其他信令一起分享PDSCH信道
+    - 寻呼帧：寻呼帧就是承载有寻呼消息的无线帧，6种密度，对应每个DRX周期无线帧中寻呼帧的比例，分别是1、1/2、1/4、1/8、1/16和1/32
+    - 寻呼时机（Paging Occasion，PO），就是寻呼帧中承载有寻呼信息的子帧。，按FDD和TDD两种双工方式，各定义了3种密度的寻呼时机的位置分布，一个无线帧中可以安排1、2或4个子帧来承载寻呼信息寻。呼时机的密度在规范TS36.304中称为Ns，取值为1、2或4。
+    - 寻呼信息的发送
+      - 子帧发送位置：与终端的UE_ID参数相关，而UE_ID等于终端的IMSI对1024取模的结果。
+      - 基站寻呼步骤
+        1. 得到终端的UE_ID。
+        2. 得到一个DRX周期中寻呼帧的数量N。
+        3. 根据UE_ID和N，采用散列的方法，确定终端寻呼信息所在无线帧的SFN。
+        4. 得到每个寻呼帧中寻呼信息占用的子帧数量Ns。
+        5. 根据双工方式、UE_ID、N和Ns，采用散列的方法，再确定终端寻呼信息所在的寻呼时机。
+
+## 联机状态
+
+- Connect mode，终端可以说就是为了联机状 态而生，有了联机状态终端才有存在价值。
+  - ![image-20220927170131152](Communication Technology.assets/image-20220927170131152.png)
+
+- 使命
+  - 建立业务连接；
+  - 建立安全的业务连接； 
+  - 保持业务连接的连续性； 
+  - 减少对其他设备的干扰。
+- 流程
+  - ![image-20220927171454329](Communication Technology.assets/image-20220927171454329.png)
