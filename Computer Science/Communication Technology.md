@@ -1441,15 +1441,32 @@
   - ‘HLR’（Home Location Register， 归属位置寄存器），存储了IMSI号、Ki号及其他详细信息
   - ‘VLR’（Visitor Location Register，访问位置寄存器）
     - 情况一旦有所变化，‘VLR’都会实时和‘HLR’联系，到HLR下属的AuC’（Authentication Center，鉴权中心）里进行认证。
+  
 - 信令
   - ![image-20220928101552929](Communication Technology.assets/image-20220928101552929.png)
-  - BTS->MS
+  
+  - BTS<->MS
     - TCH（Traffic CHannel，业务信道）
+    
+      - ![image-20221008164840169](Communication Technology.assets/image-20221008164840169.png)
+    
     - CCH（Control CHannel，控制信道）等几类
-    - BCH（Broadcast CHannel，广播信道）
+    
+      - ![image-20221008164424654](Communication Technology.assets/image-20221008164424654.png)
+      - SDCCH,独立专用控制信道（Stand-Alone Dedicated Control Channel）
+      - SACCH(Slow Associated Control Channel 慢速随路控制信道)
+      - FACCH（Fast Associated Control CHannel,快 速 随 路 控 制 信 道 ）
+    
       - ‘BCCH’ （ Broadcast Control CHannel，广播控制信道）
       - ‘FCCH’（Frequency Correction CHannel ， 频 率 校 正 信 道 ）
-      -  ‘SCH’ （ Synchronization CHannel ， 同 步 信 道 ） 。
+      - ‘SCH’ （ Synchronization CHannel ， 同 步 信 道 ） 。
+      - CCCH（  通 用 控 制 信 道 ， Common Control CHannel）
+        - 还未建立起连接的就称为通用，已经建立好连接的，单独占用一条信道的就称为专用。在RACH、AGCH、PCH之时，移动台尚未与网络建立起连接，尚未单独占用一条独立的信道用于通信，所以称为通用控制信道。
+      - RACH（随机接入信道，Random Access CHannel）:MS通过此信道申请分配一个独立专用控制信道（SDCCH），可作为对寻呼的响应或MS主叫／登记时的接入。RACH在上行BCCH载频的0号时隙上传送。
+      - AGCH（允许接入信道，Access Grant CHannel）:AGCH用于为MS分配一个独立专用控制信道（SDCCH），AGCH在下行BCCH载频的0号时隙上传送。
+      - PCH（寻呼信道，Paging CHannel）:PCH用于寻呼MS（可以通过IMSI、TMSI、IMEI来寻呼移动台），PCH在下行BCCH载频的0时隙上传送。
+      - CBCH（小区广播信道，Cell Broadcast CHannel）PCH消息是以位置区进行寻呼（其实也是广播）的，而CBCH消息是以小区来进行广播的.该信道用来传递需要广播到小区中所有移动台的信息。CBCH用专用控制信道（SDCCH）来发送信息，但是通常被看作是通用信道，因为小区内所有的移动台都能收到它发送的信息。
+    
   - 编号
     - Cell：‘CI’（Cell Identity，小区标识）
     - BSC：‘LAC’（Location Area Code，位置区域码）
@@ -1509,12 +1526,138 @@
     - RSL（Radio Signalling Link，无线信令链路）：RSL存在于BSC和BTS之间。RSL使用格式化的LAPD信令，一般都需要占用一个64kbit/s的时隙，也有占用一个16kbit/s的信道的。该链路主要是为BTS上的话务处理软件提供支持，允许BSC向BTS发送和接收控制信息。它也支持统计信息的收集和故障报告工作。
       - 实现MS与BSC的业务管理消息的互通；
       - 在BSC的控制下完成一部分无线资源管理功能。
+    - OML （ Operations and Maintenance Link ， 操 作 和 维 护 链 路 ）
+    - CBL（Cell Broadcast Link，小区广播链路）
+- 交换子系统
+  - 移动交换中心（MSC）
+    1. 完成话音的接续功能，主要工作就是我们前面所说的交换，包括被叫用户所在地查询与寻呼、信道的分配、话务量控制以及计费等功能；
+    2. 作为网络的核心，配合HLR/AUC和VLR完成移动用户位置登记、自动漫游、合法性检验等功能；
+    3. 配合BSC完成跨BSC的切换，以及通过信令来指示无线信道的建立和释放；
+    4. 提供面向系统其他功能实体和面向固定网（PSTN、ISDN等）的接口功能。
 
+  - 归属位置寄存器（HLR),GSM中的根DNS
+    - 静态数据，也称为用户参数，包括用户号码（MSISDN）、移动用户识别码IMSI号、Ki号、接入的优先等级、补充业务等；
+    - 动态数据，也称为用户的位置信息，用户会经常漫游到HLR所服务的区域之外，那么HLR需要登记由该区传来的位置信息。
+
+  - 访问位置寄存器（VLR）,GSM中的本地DNS
+    - HLR可以指向MS所在的VLR，VLR再指向MS所在的位置区，最后通过位置区寻呼找到该用户。
+    - VLR往往和MSC合并在一个设备实体中，因为每一次呼叫，这两者之间总有大量的信令流通。
+    - VLR是用来存储用户当前位置信息的数据库。当用户漫游到新的MSC控制区时，它必须向该地区的VLR申请登记。VLR要从该用户的HLR查询有关的参数，要为该用户分配一个新的漫游号码（MSRN），并通知其HLR修改该用户的位置信息，准备为其他用户呼叫此移动用户时提供路由信息。如果移动用户从一个VLR服务区移动到另一个VLR服务区，HLR在修改了该用户的位置信息后，还得通知原来的VLR删除此移动用户的位置信息。
+    - VLR是一个动态的数据库，它的数据随用户的变化而不断改变；VLR也相当于一个分布式的HLR。它也存储了两类信息：一是当前VLR下的用户参数，该参数是从HLR中获得的；二是当前交换区MS的位置区标识 （LAI）。
+
+  - 鉴权中心（AuC）,GSM系统的守护神
+    - AuC属于HLR的一个功能单元部分，专用于GSM系统的安全性管理。 它的作用是产生一个三参数组——RAND、SRES和Kc的功能实体。这几个参数用于确定移动用户的身份和对呼叫进行加密。
+    - AuC存储着鉴权信息，用来对用户进行鉴权，防止非法用户的接入；AuC还存储着密钥，用来对无线接口上的语音、数据、信令信号进行加密，保证用户的通信安全。
+    - 每个用户在运营商处进行开户登记的时候，就会被分配一个用户号码（MSISDN号）和用户识别码（IMSI号）。IMSI通过SIM卡写卡机写入SIM卡中，同时在写卡机中又产生了一个对应此IMSI的唯一的用户密钥Ki。IMSI号与Ki号在SIM卡和AuC中都有存储，便于核对。
+    - AuC的两大功能是鉴权和加密，AuC中有一个伪随机码发生器，用于产生一个不可预测的伪随机数（RAND）。RAND和Ki经A8算法（加密算法）产生一个Kc，经A3算法（鉴权算法）产生一个响应数（SRES）。 由RAND、SRES、Kc一起组成了一个用户的三参数组，AUC每次对一个用户产生7～10组三参数组，传送给HLR，HLR将其存储在该用户的用户资料库中。
+      - ![image-20221008114533333](Communication Technology.assets/image-20221008114533333.png)
+      - ![image-20221008114558018](Communication Technology.assets/image-20221008114558018.png)
+
+
+- 编号
+  - ![image-20221008142728999](Communication Technology.assets/image-20221008142728999.png)
+    - MSISDN（Mobile Station International ISDN Number）：指主叫用户为呼叫数字公用陆地蜂窝移动通信网中的用户所需拨的号码。
+      - 综合业务数字网（Integrated Services Digital Network，ISDN）是一个数字电话网络国际标准，是一种典型的电路交换网络系统（circuit-switching network）。
+    - CC（Country Code）＝国家码，即在国际长途电话通信网中要使用的标识号
+    - NDC（National Destination Code）＝国内目的地码，即网络接入号，也就是平时手机拨号的前3位。
+    - SN（Subcriber Number）＝用户号码，采用等长8位编号计划。
+  - ![image-20221008143436614](Communication Technology.assets/image-20221008143436614.png)
+    - MCC（Mobile Country Code）＝移动国家号码，由3位数字组成，唯一地识别移动用户所属的国家，我国为460。
+    - MNC（Mobile Network Code）＝移动网号，由2位数字组成，用于识别移动用户所归属的移动网。中国移动的GSM PLMN网为00，中国联通的GSM PLMN网为01。MSIN（Mobile Station Identity Number）＝移动用户识别码，采 
+    - 用等长10位数字构成，用于唯一地识别国内GSM移动通信网中的移动用户。
+  - 移动台漫游号码（MSRN，Mobile Station Roaming Number）
+    - MSRN的结构和MSISDN的完全一致，所不同的地方是这个号码是由用户漫游地的MSC/VLR临时分配的，不像MSISDN是在HLR中长久记录的。
+    - 被叫用户所归属的HLR知道该用户目前是处于哪一个MSC/VLR业务区，为了提供给入口MSC/VLR（GMSC）一个用于选路的临时号码，HLR 
+      请求被叫所在业务区的MSC/VLR为该被叫用户分配一个MSRN，并将此号码送至HLR，HLR收到后再发送给GMSC，GMSC根据此号码选路，将呼叫 
+      接至被叫用户目前正在访问的MSC/VLR交换局。路由一旦建立，此号码就可立即释放。
+  - 临时移动用户识别码（TMSI，Temporary Mobile Subscriber Identity）
+    - TMSI是为了对用户身份进行保密，而在无线通道上代替IMSI使用的临时移动用户标识，这样可以保护用户在空中的话务及信令通道的隐 
+      私，它的IMSI不会暴露给别人。它是由VLR分配给在其覆盖区内漫游的移动用户的标识码，和用户的IMSI号相对应，只在本地VLR内有效， 
+      TMSI可用作位置更新、切换、呼叫、寻呼等操作时的用户识别码，并可在每次鉴权成功之后被重新分配，该号只在本MSC内有效。
+  - 国际移动台设备识别码（IMEI，International Mobile Equipment Identity）
+    - 该识别码用于唯一地识别一个移动台设备，而与使用该手机的SIM卡用户无关。在用户不用SIM卡作紧急呼救时，IMEI可被用作用户标识号码，这也是唯一的IMEI用于呼叫的情况。
+    - IMEI＝TAC＋FAC＋SNR＋SP
+      - TAC＝型号批准码，由欧洲型号认证中心分配。
+      - FAC＝工厂装配码，由厂家编码，表示生产厂家及其装配地。 
+      - SNR＝序号码，由厂家分配，识别每个TAC和FAC中的某个设备的。 
+      - SP＝备用，备作将来使用。
+  - ![image-20221008154237285](Communication Technology.assets/image-20221008154237285.png)
+    - 位置区识别码（LAI）
+      - LAI代表MSC业务区的不同位置区（如图4.61所示），用于移动用户的位置更新
+        - LAI＝MCC＋MNC＋LAC
+        - LAC＝位置区号码，用于识别一个GSM网中的位置区，LAC的最大长度为16bit，在一个GSM PLMN中可定义65536个不同的位置区。
+    - 全球小区识别码（CGI）
+      - CGI用来识别一个位置区内的小区，一个位置区有若干个BTS，每个BTS一般有3个位置区。它是在位置区识别码，（LAI）后加上一个小区识别码（CI，Cell Identity）
+      - CGI＝MCC＋MNC＋LAC＋CI
+  - 基站识别码（BSIC）
+    - 它不是唯一的，它的位数很短，数量也很少。其主要目的是用于移动台识别相邻的、采用相同载频的、不同的基站收发信机（BTS）。
+    - BSIC＝NCC＋BCC
+      - NCC是网络色码，用于识别GSM移动网。 
+      - BCC是基站色码，用于识别基站。
+
+## 接口物理层设计
+
+### TDMA空中接口技术
+
+- GSM在无线路径上的传输单位是由GMSK调制的比特组成的脉冲串，称 为 “Burst”—— 突 发 脉 冲 
+- 突发脉冲在一个时间和频率的窗口上发送，这个窗口称为“time slot”——时隙
+  - ![image-20221008155337643](Communication Technology.assets/image-20221008155337643.png)
+- TDMA信道上一个时隙中的信息格式称为突发脉冲序列。
+  - 普通突发（NB，Normal Burst）脉冲序列
+  - 空闲突发（DB，Dummy Burst）脉冲序列
+  - 频率校正突发（FB， Frequency Correction Burst ） 脉 冲 序 列 
+  - 同 步 突 发 （ SB ，Synchronization Burst）脉冲序列
+  - 接入突发（AB，Access Burst）脉冲序列。
+- 普通突发脉冲序列
+  - 普通突发脉冲序列用于携带业务信道（TCH）及除RACH、SCH、FCCH控制信道上的信息。
+  - ![image-20221008160204767](Communication Technology.assets/image-20221008160204767.png)
+    - TB（Tail Bit）是尾比特的意思，TB的数值总是000，以帮助均衡器识别起始位和终止位。
+    - 普通突发脉冲序列有一个26bit的训练序列，这是一串特定的比特序列，共有8种。BTS在设置BSIC号的时候，相应的比特序列也就设置了。其作用是帮助均衡器产生和修正信道模型， 以消除时间色散
+    - GP（Guard Period）是保护间隔，共8.25bit，大约30ms，这是一段空白信息，防止有时隙交错时，有用的比特信息不会交错
+    - Encrypted bit是加密比特的意思，语音信号经过A5算法加密后就填充进了上述两段比特信息中
+    - F是借用标志的意思，打电话的时候，我们一直占用的是TCH，信令都没地方传了，如果出现了比较紧急的信令要传递，比如说切换信息，那就把两个F位“偷帧信号”置为1，说明此时突发脉冲序列已经被FACCH信令借用。如果只设置了一个比特，表示突发脉冲序列只有一半被盗用。其中，“0”表示是TCH，“1”表示是FACCH。
+- 频率校正突发脉冲序列
+  - 突发脉冲序列传送下行的FCCH，使MS能校正自己振荡器的频率并锁定到BTS的频率，它相当于一个特定频率的未调制的载波在FCCH上发送
+  - ![image-20221008160754363](Communication Technology.assets/image-20221008160754363.png)
+  - 频率校正突发脉冲序列也有前后各3bit的尾比特和8.25bit的保护比特，其作用和普通突发脉冲序列相同。142个固定比特全为0，这个信息很特殊，便于MS一眼识别并锁定载波频率
+- 同步突发脉冲序列
+  - 同步突发脉冲序列用于MS和BTS间的时间同步，这里含有一个长同步序列TDMA帧号（FN，Frame Number）以及基站识别码（BSIC）的相关信息。
+  - ![image-20221008161452573](Communication Technology.assets/image-20221008161452573.png)
+    - 与突发脉冲序列有所不同的是，它有长达64bit的同步序列。这个同步序列是固定的，也可以看作是训练序列，此时网络还未建立连接，需要更多的比特位用于信道均衡来确保信息传递的有效性。
+- 接入突发脉冲序列
+  - ![image-20221008162009925](Communication Technology.assets/image-20221008162009925.png)
+  - 接入突发脉冲序列用于MS的随机接入。这种突发脉冲序列设置了一个较长的保护间隔（GP），所以其有用信息比其他类型的脉冲序列短很多。因为MS试图接入到系统时还不知道发射定时，所以要增加保护带。MS发送该突发脉冲序列时，BTS并不知道MS的位置，所以来自MS的消息的定时也无法准确计算（接入突发脉冲序列仅为上行）。由于第一个突发脉冲序列中没有时间调整，MS接入与后一个串有一定的交错，基站可以根据交错码个数来计算TA值。
+- 空闲突发脉冲序列
+  - ![image-20221008162221054](Communication Technology.assets/image-20221008162221054.png)
+  - 在其他信道不发送突发脉冲序列时，基站收发信机须在小区配置中C0的下行信道的每个时隙发送一个突发脉冲。因为MS是要不断监视BCCH射频的功率的，以便于进行小区选择。如果BCCH载频的TCH时隙有时候不发送信号，就会影响周围的MS对该载频信号强度的评估，因为 
+    评估信号强度是根据采样点取平均值而得来的。所以如果有BCCH载频的时隙处于空闲状态，那就要发送空闲突发脉冲序列，不能让它闲着。
+- TDMA帧
+  - 在GSM的TDMA中，每个载频被定义为一个TDMA帧，每个帧包含8个时隙（TS0～TS7），需要定义TDMA帧号。TDMA帧号需要用来做MS与BTS的 
+    同步以及语音信号的加密，同步用在SCH上，加密是和Kc以及原始信号一起通过A5算法进行的。
+  - 有了TDMA帧号，MS也可以判断当前载频到底是BCCH载频还是TCH载频，它的0号时隙传递的到底是BCCH信号还是TCH信号。因为BCCH载频包含了SCH，SCH告知了BCCH的TDMA帧号，因此载频的性质是可以根据TDMA帧号来分辨的。
+  - 复帧，复帧是针对TDMA帧中的一个特定时隙来定义的
+    - ![image-20221008163037715](Communication Technology.assets/image-20221008163037715.png)
+    - 含26帧持续时间为120ms复帧结构
+      - 26帧的复帧包括26个TDMA帧，持续时间为120ms，一般用于TCH（以及跟随TCH的SACCH和FACCH），作为话音信道及其随路控制信道。
+      - 在26帧业务信道复帧中，帧12（帧从0号帧算起，所以是第13帧）被用作慢速随路控制信道（SACCH），用来在MS和BTS之间传送链路控制信息。小区给每个业务信道分配的时隙都是这种格式，也就是说，最开始是12个突发脉冲序列的业务信息，接下来是1个Burst的SACCH， 然后是12个Burst的业务信息和一个空闲的Burst。
+      - 当采用半速率时，26帧业务复帧中每个用来传业务的帧可以传两路 MS用户通话（空中接口中MS的数据速率是原来的一半）。尽管业务数 据速率减半了，但SACCH信息没有少，所以要把原来空闲的帧25也用作SACCH。图5.10就是一个典型的26帧复帧。
+    - 含51帧持续时间为235.8ms
+      - 51帧的复帧包括51个TDMA帧，持续时间为235.385ms。这种复帧用于携带BCH和CCCH，专用于控制信道。
+  - 超帧（Superframe）：51帧和26帧之间是没有公约数的，要设置一种帧可以容纳这两种帧，那么这个帧的容量就必须要达到51×26＝1326帧。这种 
+    帧称为超帧，1326个TDMA帧相当于6.12s的时间。
+  - 巨帧（Hyperframe）:一个巨帧包含了2048个超帧结构 。 巨 帧 结 构 含 26×51×2048 ＝ 2715648 个 TDMA 帧 ， 持 续 时 间 为3h28min53s760ms。每个TDMA帧由帧计数器（FN）来标记。这些TDMA帧按照顺序排列，依次从0到2715647，帧号在同步信道中传送。巨帧也与加密和跳频有关系，一个巨帧持续3个多小时，每当一个新的巨帧开始时，加密和跳频算法也重新开始。
+  - ![image-20221008163921953](Communication Technology.assets/image-20221008163921953.png)
+
+## 第三层协议以及七号信令
+
+- 无线资源管理（RRM， Radio Resource Management ） RRM的职能在于管理无线接口，包括信道的配置、传输的模式、上下行电平及通信质量的测量、切换的操作等内容，其目的在于建立一条点对点的链路，并负责这条链路的维护和控制；
+- 移 动 性 管 理 （ MM ， Mobility Management）:MM是建立在RRM之上用于处理移动性和安全保密性的功能组；
+- 接续管理（CM，Connection Management）:CM位于上述两组之上，用于完成点对点通信的建立和释放。
 
 # LTE
 
 - LTE系统的处理机制及信令流程
-  - 处理机制与信令流程这两块内容是透视LTE系统运行 、优化 LTE系 统 运 作 的 必 由 之 路
+  - 处理机制与信令流程这两块内容是透视LTE系统运行 、优化LTE系统运作的必由之路
   - LTE系统的处理机制与LTE终端的工作模式密切相关，而工作模式可以理解为终端的状态。
     - 来源：gsm->wcdma->lte
     - 关机、待机、联机

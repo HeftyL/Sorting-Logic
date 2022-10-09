@@ -5090,7 +5090,7 @@
 
   4. adb reboot bootloader
 
-  5. wait device reboot to bootloader ,then run the cmd "fastboot flashing unlock/sudo $(which fastboot) flashing unlock" —— 有时候这个步骤需要执行两次才可以生效
+  5. wait device reboot to bootloader ,then run the cmd "sudo $(which fastboot) flashing unlock" or “fastboot flashing unlock” —— 有时候这个步骤需要执行两次才可以生效
 
   6. Press volume up key to continue and then run "fastboot reboot" —— 有时候这个步骤需要执行volume down key才能生效
 
