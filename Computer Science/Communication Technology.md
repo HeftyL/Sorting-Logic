@@ -1441,32 +1441,27 @@
   - ‘HLR’（Home Location Register， 归属位置寄存器），存储了IMSI号、Ki号及其他详细信息
   - ‘VLR’（Visitor Location Register，访问位置寄存器）
     - 情况一旦有所变化，‘VLR’都会实时和‘HLR’联系，到HLR下属的AuC’（Authentication Center，鉴权中心）里进行认证。
-  
 - 信令
   - ![image-20220928101552929](Communication Technology.assets/image-20220928101552929.png)
-  
   - BTS<->MS
     - TCH（Traffic CHannel，业务信道）
     
       - ![image-20221008164840169](Communication Technology.assets/image-20221008164840169.png)
-    
     - CCH（Control CHannel，控制信道）等几类
     
       - ![image-20221008164424654](Communication Technology.assets/image-20221008164424654.png)
       - SDCCH,独立专用控制信道（Stand-Alone Dedicated Control Channel）
       - SACCH(Slow Associated Control Channel 慢速随路控制信道)
       - FACCH（Fast Associated Control CHannel,快 速 随 路 控 制 信 道 ）
-    
       - ‘BCCH’ （ Broadcast Control CHannel，广播控制信道）
       - ‘FCCH’（Frequency Correction CHannel ， 频 率 校 正 信 道 ）
-      - ‘SCH’ （ Synchronization CHannel ， 同 步 信 道 ） 。
+      - ‘SCH’ （ Synchronization CHannel ， 同 步 信 道 ） 
       - CCCH（  通 用 控 制 信 道 ， Common Control CHannel）
         - 还未建立起连接的就称为通用，已经建立好连接的，单独占用一条信道的就称为专用。在RACH、AGCH、PCH之时，移动台尚未与网络建立起连接，尚未单独占用一条独立的信道用于通信，所以称为通用控制信道。
       - RACH（随机接入信道，Random Access CHannel）:MS通过此信道申请分配一个独立专用控制信道（SDCCH），可作为对寻呼的响应或MS主叫／登记时的接入。RACH在上行BCCH载频的0号时隙上传送。
       - AGCH（允许接入信道，Access Grant CHannel）:AGCH用于为MS分配一个独立专用控制信道（SDCCH），AGCH在下行BCCH载频的0号时隙上传送。
       - PCH（寻呼信道，Paging CHannel）:PCH用于寻呼MS（可以通过IMSI、TMSI、IMEI来寻呼移动台），PCH在下行BCCH载频的0时隙上传送。
       - CBCH（小区广播信道，Cell Broadcast CHannel）PCH消息是以位置区进行寻呼（其实也是广播）的，而CBCH消息是以小区来进行广播的.该信道用来传递需要广播到小区中所有移动台的信息。CBCH用专用控制信道（SDCCH）来发送信息，但是通常被看作是通用信道，因为小区内所有的移动台都能收到它发送的信息。
-    
   - 编号
     - Cell：‘CI’（Cell Identity，小区标识）
     - BSC：‘LAC’（Location Area Code，位置区域码）
@@ -1651,8 +1646,19 @@
 ## 第三层协议以及七号信令
 
 - 无线资源管理（RRM， Radio Resource Management ） RRM的职能在于管理无线接口，包括信道的配置、传输的模式、上下行电平及通信质量的测量、切换的操作等内容，其目的在于建立一条点对点的链路，并负责这条链路的维护和控制；
+  1. 初始过程：随机接入和信道分配。
+  2. 寻呼过程的管理。
+  3. 传输模式与加密模式管理过程。
+  4. 切换判决与处理。
+  5. 呼叫重建。
+  6. RR连接释放。
+  7. 负载管理过程。
+  8. SACCH管理过程。
+  9. 广播消息（系统消息）
+
 - 移 动 性 管 理 （ MM ， Mobility Management）:MM是建立在RRM之上用于处理移动性和安全保密性的功能组；
-- 接续管理（CM，Connection Management）:CM位于上述两组之上，用于完成点对点通信的建立和释放。
+- 接续管理（CM，Connection Management）:CM位于上述两组之上，用于完成点对点通信的建立和释放。   
+- 
 
 # LTE
 
@@ -1685,6 +1691,7 @@
       - DRX周期：把两个相邻唤醒时刻的时间差定义为一个休眠周期
         - LTE的 技 术 规 范 TS36.331定 义 了 4种 DRX周 期 长 度 ， 分 别 是 32、 64、128或256个无线帧，对应320ms、640ms、1.28s或2.56s。
         - LTE系统为每个小区设置一种默认的DRX周期，还允许为终端设置独立的DRX周期。终端最终使用其中最短的一个DRX周期。
+        - 解决特定问题求解步骤的描述
 - 任务
   - PLMN选择；
     - User PLMN、Operator PLMN、forbidden PLMN、Interrogating PLMN、Home PLMN、Visited PLMN、Equivalent PLMN
