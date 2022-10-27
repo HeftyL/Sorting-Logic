@@ -195,7 +195,7 @@
 - ![image-20221016234859471](Grammar.assets/image-20221016234859471.png)
   - 表达逻辑关系
   - 英⽂介词不是难在数量，⽽是难在意义（senses or meanings）和⽤法（usages）。英⽂介词数量有限，⼤约100多个。
-  - 认知语⾔学认为，所有的英语介词最初都是为了表达两个实体之间的空间关系（spatial relations between two physical entities）。
+  - 认知语⾔学认为，所有的英语介词最初都是为了表达两个实体之间的空间关系（spatial relations between two physical entities）。不过，这两个实体的地位是不同的。
 
 # 长难句
 
