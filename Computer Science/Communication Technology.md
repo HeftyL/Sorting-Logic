@@ -1655,12 +1655,152 @@
   7. 负载管理过程。
   8. SACCH管理过程。
   9. 广播消息（系统消息）
-
 - 移 动 性 管 理 （ MM ， Mobility Management）:MM是建立在RRM之上用于处理移动性和安全保密性的功能组；
 - 接续管理（CM，Connection Management）:CM位于上述两组之上，用于完成点对点通信的建立和释放。   
-- 
+
+### 信令
+
+1. 分类
+   - 传送信令的通道：随路信令和共路信令
+   - 功能：线路信令、路由信令和管理信令
+   - 工作区域：用户线信令和局间信令
+2. 分析
+   1. 结构形式
+      - 未编码
+      - 已编码：起止式单频二进制信令、双频二进制编码信令及多频制信令
+   2. 传送方式
+      - 端到端方式：速度快，拨号后等待时间短。
+      - 逐段转发方式：对线路要求低；信令在多段路由上的类型可以多种多样；信令传送速度慢，接续时间长。
+      - 混合方式：在实际中，通常将端到端方式和逐段转发方式结合起来使用，这就是混合方式。
+   3. 控制方式
+      - 非互控方式（脉冲方式）：发端不断地将需要发送的连续或脉冲信令发向收端，而不管收端是否收到。设备简单，但可靠性差。
+      - 半互控方式：发端向收端每发一个或一组脉冲信令后，必须等待收到收端回送的接收正常的证实信令后，才能接着发下一个指令。由发端发向收端的信令叫前向信令，由收端发向发端的信令叫后向信令。半互控方式就是前向信令受后向信令控制。
+      - 全互控方式：发端发前向信令不能自动中断，要等收到收端的证实信令后，才停止发送；收端发证实信令也不能自动中断，须在发端信令停发后，才能停发证实信令。因为前向信令和后向信令均为连续的，所以称之为连续互控。这种方式抗干扰能力强，但是设备很复杂。
+3. 定义：贝尔发明了电话，史端乔发明了交换机，电话加交换机合在一起就可以组成一个通信网络了。然而光有物理设备还不够，得发明一整套 
+   指挥系统来控制这些设备本身以及上面跑来跑去的比特流，才能完成 
+   正常的通信。==在通信网络中，这个指挥系统的指令称之为“信令”==。
+4. 七号信令的基本功能结构由消息传递部分（MTP）和用户部分 （ UP ） 组 成 。 UP 可 以 是 电 话 用 户 部 分 （ TUP ） 、 数 据 用 户 部 分 （DUP）、ISDN部分（ISUP）等
+   - 消息传递部分（Message Transfer Part，MTP）就包含了OSI模型一至三层的功能。
+     1. MTP-1：为信令传输提供一条双向数据通道，定义了信令数据链路的物理、电气功能特性和链路接入方法。
+     2. MTP-2：定义了在信令数据链路上传送信令消息的功能和程序。它和第一级一起共同保证信令消息在两信令点之间的链路上可靠地传送。
+        - 消息信令单元（Message Signal Unit，MSU）、链路状态信令单元（Link Status Signal Unit，LSSU）、插入信令单元（Fill-In Signal Unit，FISU）
+          - ![image-20221110112428257](Communication Technology.assets/image-20221110112428257.png)
+        - 定界：采用码型为“01111110”的标志码作为信令单元的分界，它既表示上一信令单元的结束，又表示下一信令单元的开始。信令单元里本身的“01111110”码型。在信令的发送端进行“0”比特插入，在接收端进行“0”比特删除。“0”比特插入，就是在发端连续发5个“1”之后插入一个比 特“0”，到了接收端，把这个插入的“0”去掉就是“0”比特删除。
+        - 信令单元定位
+        - 误差检测：将信息单元的所有比特对一个生成多项式G （x ）做一个 
+          除法运算，得出一个16比特的余数r （x ），取其二进制反码附在这 
+          些信息位的后面，称为CK字段
+        - 误差校正：前向序号（Forward Sequence Number，FSN），前向指示比特（Forward Indicator Bit， FIB），后向序号（Backward Sequence Number，BSN），后向指示比特（Backward Indicator Bit，BIB）
+        - 插入信令单元（FISU），当链路上没有MSU或者LSSU在跑的时候它就冒出来了，为的就是让大家知道这条链路还是好的，没有中断
+        - 链路状态信令单元（LSSU）：有个叫SF的字段，SF（Status Flag）为状态标志，可以为8bit或16bit
+        - LI（Length Indicator）：长度指示码，指示LI至CK间的八位位组个数，用于区分3种信 
+          令单元
+     3. MTP-3：在消息的实际传递中，将信令消息传至适当的信令链路或用户部分；当遇到故障或拥塞时，完成信令网的重新组合，以保证信令消息仍能可靠地传递。
+        - ![image-20221110114128531](Communication Technology.assets/image-20221110114128531.png)
+        - 编号：SP，Signal Point，信令点。STP， Signal Transfer Point，信令转接点
+        - 发信地址称为OPC（Original Point Code，源点码），收信地址称为DPC（Destination Point Code，目的地码），信令传输中SP之间可能有多条路径，用4bit的链路选择字段SLS（Signal Link Select）来标注这些不同的道路。
+        - 管理消息![image-20221110113233356](Communication Technology.assets/image-20221110113233356.png)
+          - CHM：倒换和倒回消息。
+            ECM：紧急倒换消息。
+            FCM：信令业务流量控制消息。 
+            TFM：禁止、允许、受限传递消息。 
+            RSM：信令路由组测试消息。
+            MIM：管理阻断消息。
+            TRM：业务再启动允许消息。 
+            DLM：信令数据链路连接消息。 
+            UFC：用户部分流量控制消息。
+        - 源地址和目的地地址识别、链路识别和管理消息在一起称为MSU的SIF（Signal Information Field，信令信息字段）
+        - 4bit的SSF 字段，SSF字段的A、B bit备用，C、D bit为网络指示语（NI），用于 区分国内消息或国际业务消息
+        - 4bit的SI为业务字段，用于指明该MSU是到第三级的消息还是到第 
+          四级某一模块去的消息
+        - 
+   - UP（User Part）：由各种不同的用户部分组成，每个用户部分定义和某一类用户相关的信令功能和过程。
 
 # LTE
+
+## 原理和实现
+
+### 概述
+
+![image-20221111111749230](Communication Technology.assets/image-20221111111749230.png)
+
+- LTE 系 统 只 是 一 个 通 俗 的 说 法 ， 实 际 上 规 范 的 称 法 是 EPS （ Evolved Packet System ， 演 进 的 分 组 系 统 ） 。 EPS 由 核 心 网 EPC （ Evolved Packet Core ， 演 进 的 分 组 核 心 网 ） 以 及 E- UTRAN（演进的无线网）组成。EPS基于SAE（System Architecture Evolution，系统架构演进）技术，E-UTRAN基于LTE技术。
+- ![image-20221111112058609](Communication Technology.assets/image-20221111112058609.png)
+
+#### SAE核心网
+
+1. 电路交换需要为业务分配专用的通道，仿佛是在端到端之间建立了一条电路，把主叫方和被叫方连接在一样。因此，CS业务需要独占资源，能保证良好的业务质量，但资源的利用率不高。
+2. PS分组交换业务。分组交换业务是伴随着IP技术而成长起来的，随着IP技术的一统天下，Internet的普及，各种 业 务 都 分 组 化 了 ， PS业 务 日 渐 兴 盛 。 我 们 最 常 用 的 PS业 务 就 是 上网。
+3. 电 路 域 的 设 备 包 括 MSC-Server和 MGW（ Media Gateway ， 媒 体 网 关 ） 两 种 网 元 。 MSC是 移 动 交 换 机 的 意 思 ， MSC- Server可以简写为MSC-S。
+4. 分 组 域 的 主 要 设 备 是 SGSN （ GPRS 服 务 支 持 节 点 ） 和 GGSN（ GPRS网 关 支 持 节 点 ） 。 SGSN的 角 色 类 似 于 电 路 域 的 MSC- S， 负 责 为 服 务 区 域 内 的 分 组 数 据 用 户 提 供 服 务 ， 并 进 行 分 组 数 据 用户的接入控制、安全认证和位置管理等工作。GGSN负责将分组数据传送到相应的网络，是GPRS网络与外部分组交换网络的接口，还要完成协议转换、路由选择和消息过滤等工作。分组业务数据流先经过SGSN，再经过GGSN。
+5. ![image-20221111114554159](Communication Technology.assets/image-20221111114554159.png)
+   - MME （ Mobility Management Entity ， 移 动 性 管 理 实 体 ） ： 这 是 EPC中 的 主 要 网 元 ， 从 名 称 上 就 可 以 看 到 ， MME负 责 管 理 和 控 
+     制，相当于班长。
+   - SGW （ Serving GateWay ， 业 务 网 关 ） ： 这 也 是 EPC 中 的 主 要 网元，负责处理业务流。
+   - PGW（PDN GateWay，PDN网关）：这也是EPC中的主要网元， 负责与PDN接口。所谓PDN（分组数据网），通常是指Internet。 
+   - HSS（Home Subscribers Server，归属用户服务器）：这是HLR的升级，但是作用与HLR一样，负责存储用户的关键信息。 
+   - PCRF（ Policy and Charging Rules Function， 策 略 以 及 计 费 规 则 功 
+     能）：这是用来控制服务质量QoS的网元。
+
+##### MME
+
+1. 用户鉴权：这是移动通信系统最基本的功能，本功能需要与HSS交互。
+2. 移动性管理（寻呼、切换）：是移动通信系统最基本的功能。 
+3. 漫游控制：当漫游用户接入系统后，MME需要访问漫游用户所属的HSS，从而得到该用户的信息。
+4. 网关选择：MME下会连接多个SGW，用户业务选择哪个SGW，由MME来指派。
+5. 承载管理：承载是WCDMA引入的概念，对应用户数据流。承载管理涉及承载的建立、释放等工作。
+6. TA列表管理：TA（Tracking Area，跟踪区）是LTE中引入的新术语 ， 类 似 WCDMA 和 GPRS 系 统 的 路 由 区 RA ， 当 终 端 离 开 所 属TA ， 就 需 要 做 TA 更 新 。 在 LTE 系 统 中 ， eNodeB 可 以 属 于 多 个TA（多达16个），同样终端也可以归属于多个TA（多达16个）， 这样就为LTE系统带来了更多的灵活性。
+
+##### SGW
+
+1. SGW的 功 能 与 MME相 呼 应 。 简 单 地 说 ， SGW就 是 SGSN的 业 务面，负责处理用户的业务，用来完成移动数据业务的承载，并且与eNodeB、MME和PGW等设备进行交互
+2. 漫游时分组核心网的接入点； 
+3. LTE系统内部移动性的锚点； 
+4. 空闲状态时缓存下行数据； 
+5. 数据包路由和转发；
+6. 计费； 
+7. 合法监听
+
+##### PGW
+
+1. 外网互联的接入点；
+2. 用户IP地址分配； 
+3. 数据包路由和转发；计费；
+4. 策略控制执行（PCEF）； 
+5. 合法监听。
+
+##### EPC
+
+- 在建立业务承载时，EPC有两个选择：就近接入和回归接入
+- ![image-20221111135058870](Communication Technology.assets/image-20221111135058870.png)
+
+#### LTE无线网络
+
+- ![image-20221111140348676](Communication Technology.assets/image-20221111140348676.png)
+- ![image-20221111141254086](Communication Technology.assets/image-20221111141254086.png)
+  - RRC（ Radio Resource Control， 无线资源控制）
+    - RRC只处理控制面的信息，主要负责LTE空中接口的无线资源分配与控制，还承担了信令的处理和发送。由于RRC负责LTE空中接口的无线资源管理工作，可以看成LTE空中接口的大脑，因此是LTE空中接口最重要的组成部分。
+  - PDCP（Packet Data Convergence Protocol，分 组 数 据 汇 聚 协 议 ） 
+    - PDCP是链路层L2的最上面的一个子层，主要工作是压缩IP包头， 另外也实施加密和无损切换。从PDCP子层开始，可以同时处理业务面和控制面的信息。
+  - RLC （ Radio Link Control ， 无 线 链 路 控 制 ） 
+    - RLC可以为上层应用提供可靠的数据传输业务，是LTE空中接口上保证服务质量（QoS）的一个重要环节。根据不同级别的QoS要求，RLC可以提 供 3种 模 式 的 数 据 传 输 服 务 ： 透 明 模 式 TM、 非 确 认 模 式 UM和 确 认模 式 AM。 透 明 模 式 的 服 务 质 量 最 低 ， 非 确 认 模 式 次 之 ， 确 认 模 式 的服 务 质 量 是 最 高 的 。
+  - MAC（Medium Access Control，媒介接入控制）
+    - 主要负责与物理层接口，进行传输格式选择和信道的复用，支持无线网络的处理机制，如随机接入、调度、HARQ、上行功率控制等功能。
+    - 进 行 信 道 编 解 码 ， 支 持 OFDM 调 制 复 用 、 支 持 多 天线，体现了LTE技术革命性的一面。
+  - PHY物 理层，
+- ![image-20221111141818527](Communication Technology.assets/image-20221111141818527.png)
+- 信 令 无 线 承 载 ：Signal Radio Bearer，SRB
+- 无 线 承 载：Signal Radio Bearer， RB
+- Non Access Stratum，NAS 非接入层
+- Access Stratum，AS 接入层
+- ![image-20221111142946872](Communication Technology.assets/image-20221111142946872.png)
+- ![image-20221111143800133](Communication Technology.assets/image-20221111143800133.png)
+- ![image-20221111143926592](Communication Technology.assets/image-20221111143926592.png)
+
+## 流程和机制
+
+- 系统架构演进（又名SAE，System Architecture Evolution）是3GPP所制定的LTE无线通信的核心网络标准。
+  - 移动性管理实体（MME，Mobility Management Entity）：MME是LTE接入网络的关键控制节点。它负责空闲模式UE（用户设备）跟踪和寻呼控制。这些内容也包括UE的注册与注销过程，同时帮助UE选择S-GW，以完成LTE系统核心网络（CN）节点切换。
 
 - LTE系统的处理机制及信令流程
   - 处理机制与信令流程这两块内容是透视LTE系统运行 、优化LTE系统运作的必由之路
@@ -1668,7 +1808,7 @@
     - 来源：gsm->wcdma->lte
     - 关机、待机、联机
 
-## 待机状态
+### 待机状态
 
 - ![image-20220927164459908](Communication Technology.assets/image-20220927164459908.png)
 - ![image-20220927164524456](Communication Technology.assets/image-20220927164524456.png)
@@ -1703,7 +1843,7 @@
       - 服务小区，终端当前驻留的小区；
       - 邻区，终端能感知到的其他小区。
 
-### 驻留
+#### 驻留
 
 - Camp
 - 度量：看终端是否与小区同步。
@@ -1712,7 +1852,7 @@
   - 需要终端始终监听网络的寻呼，从而实现一呼即应，就像孩子时刻听从父母的召唤一样。
   - 需要终端始终驻留在最好的小区中，这样可以保证终端在建立业务连接后，业务效果是最好的。这就要求终端不间断地感知周边的环境。
 
-### PLMN选择
+#### PLMN选择
 
 - 原因：用户只能在归属PLMN、等价PLMN和漫游PLMN上得到服务
 - PLMN选 择 基 于 PLMN在 无 线 侧 的 三 大 特 性 
@@ -1732,7 +1872,7 @@
       - PLMN注册从普通小区选择过程开始，以终端驻留到一个合适的小区结束。
       - 终端在选定PLMN对应的频点上进行普通小区选择过程，找到目标小区后，终端进行附着，注册到PLMN中。注册成功后，终端进入驻留状态。
 
-### 小区选择
+#### 小区选择
 
 - 小区选择分为初始小区选择和普通小区选择两种方式
   - ![image-20220926141823701](Communication Technology.assets/image-20220926141823701.png)
@@ -1748,11 +1888,11 @@
   - 终端同步后只需要获得PLMN标识，而且不需要驻留到目标小区中。
   - 初始小区选择是个循环过程，直到扫描完全部频段。
 
-### 小区重选
+#### 小区重选
 
 - ![image-20220926142447783](Communication Technology.assets/image-20220926142447783.png)
 
-### 终端的测量机制与判决
+#### 终端的测量机制与判决
 
 - 测量（Measurement）
 - 小区选择中的测量
@@ -1775,7 +1915,7 @@
     - 终端的移动速度
   - ![image-20220926150102789](Communication Technology.assets/image-20220926150102789.png)
 
-### 小区同步
+#### 小区同步
 
 - LTE的时间结构
 
@@ -1792,7 +1932,7 @@
   - 为了实施同步机制，终端还需要小区的帮助，提供一些信号，这些信号用于同步过程，称为同步信号。
   - ![image-20220926160738912](Communication Technology.assets/image-20220926160738912.png)
 
-### 小区广播机制
+#### 小区广播机制
 
 - 小区通过广播各种系统信息，可以控制终端相应的处理机制。
 
@@ -1830,7 +1970,7 @@
     | SIB7 | GSM邻区信息               | 可选 |
     | SIB8 | cdma2000邻区信息          | 可选 |
 
-### 位置登记与寻呼机制
+#### 位置登记与寻呼机制
 
 - 位置区
   - 由地理上相邻的小区组成的一个区域，这些小区实现连续覆盖。
@@ -1861,7 +2001,7 @@
         4. 得到每个寻呼帧中寻呼信息占用的子帧数量Ns。
         5. 根据双工方式、UE_ID、N和Ns，采用散列的方法，再确定终端寻呼信息所在的寻呼时机。
 
-## 联机状态
+### 联机状态
 
 - Connect mode，终端可以说就是为了联机状 态而生，有了联机状态终端才有存在价值。
   - ![image-20220927170131152](Communication Technology.assets/image-20220927170131152.png)
@@ -1873,3 +2013,185 @@
   - 减少对其他设备的干扰。
 - 流程
   - ![image-20220927171454329](Communication Technology.assets/image-20220927171454329.png)
+- 重要参数
+  - ![image-20221111150238605](Communication Technology.assets/image-20221111150238605.png)
+  - ![image-20221111150300840](Communication Technology.assets/image-20221111150300840.png)
+  - ![image-20221111150315402](Communication Technology.assets/image-20221111150315402.png)
+
+- 联机id
+  - ![image-20221111150410496](Communication Technology.assets/image-20221111150410496.png)
+
+
+#### 随机接入
+
+- 所谓随机，可以理解为异步，也就是终端自行其是，可以随时发起随机接入，基站不能预测、也不能控制终端什么时候进行随机接入。而接入就是终端与基站建立联系，从而能获得网络的资源，建立业务连接。不过在建立业务连接之前，必须让基站实现与终端的同步。
+
+##### 接入时间
+
+- 待机状态的终端有信息要发送，但是没有相应的传输通道，这时就需要随机接入过程，称为初始接入
+- 终端监听到了PDCCH上的DCI，发现是自己的C-RNTI（Cell Radio Network Temporary Identifier，小区级无线网临时标识），但是又没有上行资源；或者终端发送调度请求SR后，得不到基站的响应，退而求其次，就需要执行随机接入过程。
+  - DCI：Downlink Control Information
+- 终端的切换过程也需要进行随机接入
+
+##### 作用
+
+1. 终端获得C-RNTI
+   - C-RNTI是终端在无线网络中的标识，是PDCCH物理信道中用来区分不同用户DCI的标识。
+   - PDSCH：物理下行共享信道，Physical Downlink Shared Channel
+   - PDCCH：PDCCH（Physical Downlink Control Channel）指的是物理下行控制信道。PDCCH承载调度以及其他控制信息，具体包含传输格式、资源分配、上行调度许可、功率控制以及上行重传信息等。
+   - LTE物理下行信道中的一种，是LTE承载主要用户数据的下行链路通道，所有的用户数据都可以使用，还包括没有在PBCH中传输的系统广播消息和寻呼消息-LTE中没有特定的物理层寻呼信道。
+2. 终端实现TA时间提前。实现了TA时间提前，也就实现了上行同步
+3. 终端获得上行资源
+
+##### 问题
+
+1. 区分终端
+   - LTE系统引入了伪随机码ZC序列来表示终端的代号，也就是终端的标识
+2. 避免终端之间的冲突
+   - 非竞争随机接入，就是由基站来指定RAPID，这样终端的RAPID肯定不会冲突。显然这种方式要求终端已经与基站建立连接，也就是只能用于切换。
+   - 竞争性随机接入更为普遍，由终端自由选择PRACH信道和RAPID，同一PRACH信道中不同终端的RAPID可能相同，从而产生冲突，这就需要LTE空中接口MAC子层来解决冲突。
+3. 解决终端之间的干扰
+   - PRACH（Physical Random Access Channel，物理随机接入信道），是UE一开始发起呼叫时的接入信道，UE接收到FPACH响应消息后，会根据Node B指示的信息在PRACH信道发送RRC Connection Request消息，进行RRC连接的建立。
+
+#### 安全机制
+
+##### 鉴权
+
+1. 用户标识IMSI
+2. 用户密码又称密钥，在LTE系统中称为K参数，是个128比特的二进制数，也存储在用户的USIM卡以及核心网的数据库HSS中
+3. ![image-20221110162251667](Communication Technology.assets/image-20221110162251667.png)
+
+##### 加密
+
+1. 核心网通常不直接呼叫用户的IMSI，而是呼叫用户的代号，称为S-TMSI（SAE用户临时号码）。
+
+##### 完整性保护
+
+1. 完整性保护类似于压缩文件后进行的CRC校验，也是在原始信息后附加一段内容。附加内容的产生基于特定的算法，称为完整性保护算法。在执行算法前，需要输入原始数据、完整性保护密钥、计数器的数值以及其他一些参数，这样才能得到正确的附加内容。
+
+#### 资源调度
+
+1. 资源在移动通信系统中，指的是空中接口上由各个用户分享的物理资源，也称为无线资源。在LTE系统中，资源就是时频网格。在随机接入过程中我们已经看到了上行的时频网格，下行方向同样有时频网格，上下行都有相应的资源。
+2. 调度，Scheduling，也就是资源在不同用户之间的分配。
+3. 特点
+   1. 调度分下行和上行两个方向来进行。
+   2. 无论是上行资源还是下行资源，都由基站来掌控。
+   3. 调度过程由基站的调度器来执行，调度器基于调度算法来工作。
+   4. 调度过程需要终端的参与。
+4. 单位
+   1. 时频资源是以调度块为单位来计量的，调度块的英文缩写为SB。一个调度块占用的时频资源等于，时域上1个子帧，也就是1ms或频域上12个连续子载波，也就是1个RB的带宽。
+
+##### 下行资源调度
+
+1. 高速下行分组接入（High Speed Downlink Packet Access，缩写为*HSDPA*）是一种移动通信协议，又称为3.5G（3½G），属于W-CDMA技术的延伸。
+2. 调度过程在基站的调度器中进行，需要输入很多信息，分别来自终端、基站和网络侧。调度器根据调度算法，在终端间安排和分配无线资源，包括调度块SB的数量、时频分布、调制与编码方式等内容。
+3. 调度频率：调度器多长时间调度一次。TTI ， Transport Time Interval。LTE系统的TTI为1ms，等于1个子帧的时长，比HSDPA系统TTI的2ms缩短了一倍。
+4. 优先级：1——重传的信令； ->2——初传信令;->3——重传的数据;->4——初传数据。
+5. 状 态 信 息 中  CQI （ Channel Quality Indicator，信道质量指示）:终端不断测量基站广播的小区参考信号CRS，推导出相应的CQI，然后发送给基站。
+6. 调度算法：轮询RR（Round Robin）；比例公平PF（Proportional Fair）； 小区最大吞吐率MAX。
+
+##### 上行资源调度
+
+1. 终端首先需要发送调度请求（Scheduling Request，SR），表明终端有数据要上传
+2. ![image-20221111103453378](Communication Technology.assets/image-20221111103453378.png)
+3. SR可以通过随机接入过程上传，这时将采用终端的C-RNTI作为冲突检测的标识。基站也可以为终端预先分配传送SR的PUCCH信道，这样SR上传的时延会比较少。另一种基站收到终端通过PUCCH信道发送的SR 后，会给终端分配PUSCH信道，分配信息称为上行许可（UL Grant）， 用终端的C-RNTI加扰后，通过PDCCH信道下发。
+4. 终端收到上行许可后，根据分配的信息，先用这个PUSCH信道来上报缓冲区中待发的上行数据量，称为BSR（Buffer State Report）。
+
+#### 功率控制
+
+1. 功率控制（Power Control），即发射功率控制。
+
+##### 功率源：功放
+
+- LTE无线网络中的基站通常是三扇区的基站，每个扇区连接双端口天线，采用双发射的工作模式，每路发射通道配置一个功放，每个扇区需要配置两个功放。
+
+##### 功率分布：信道与信号
+
+- 下行信号有小区参考信号和同步信号；
+- 下行物理信道有PBCH、PCFICH、PHICH、PDCCH、PDSCH信道； 
+- 上行物理信道有PRACH、PUCCH、PUSCH信道。
+
+##### 功率控制方法
+
+- 下行恒定功率
+- 上行可变功率
+
+#### 测量与切换机制
+
+- 测量的目的是为了更好地切换。 切换是为了保持业务的连续性。
+
+### S1和X2接口协议
+
+- ![image-20221111151557251](Communication Technology.assets/image-20221111151557251.png)
+  - 接入层 （Access Stratum，AS）和非接入层（Non Access Stratum，NAS）两 
+    大部分：接入层（AS）包含物理层、链路层和网络层，而非接入层 （NAS）为上层，如图3.10所示。接入层（AS）通过服务接入点 （SAP）为非接入层（NAS）提供服务。
+
+#### S1接口
+
+##### S1-U
+
+- 用户面，用来连接SGW与eNB。
+
+- ![image-20221111152015251](Communication Technology.assets/image-20221111152015251.png)
+  - GPRS隧道协议（GPRS Tunnelling Protocol，简称GTP）是GPRS核心网目前定义的基于IP的协议。大体上说，这个协议允许GSM或WCDMA网络的最终用户可以随处移动，而同时持续地连接到因特网，如同只是从GGSN的同一个位置进行的。
+  - 它通过承载从当前正在为签约用户（subscriber）提供服务的SGSN到当前正在处理该签约用户的会话的GGSN的签约用户数据来实现。GPRS核心网使用三种形式的GTP。
+  - GTP协议本质上是一种IP包的封装协议，也就是IP over IP。，所谓用户面PDU，就是IP数据包。这些IP数据包经过GTP协议的封装，可以在LTE核心网中传送。
+  - S1-U接口上传送着多个用户的数据流，每个用户也可能并发多个数据流，这些数据流的QoS各不相同。在S1-U接口上，数据流是利用TEID（Tunnel Endpoint Identifier，隧道端点ID）来区分的，而TEID恰恰是GTP协议中的地址
+
+1. ![image-20221111151908700](Communication Technology.assets/image-20221111151908700.png)
+2. ![image-20221111152519953](Communication Technology.assets/image-20221111152519953.png)
+
+##### S1-MME
+
+- 控制面，用来连接MME与eNB；
+- ![image-20221111152830638](Communication Technology.assets/image-20221111152830638.png)
+  - SCTP 是 Stream Control Transmission Protocol的缩写，也就是流控传输协议。SCTP是TCP协议的升级版，性能优于TCP协议。
+- ![image-20221111152945363](Communication Technology.assets/image-20221111152945363.png)
+- 功能
+  - UE上下文的管理；
+    - UE上下文就是终端的上下文，可以理解为终端和用户的档案，是终端和用户相关信息的集合
+  - 传输NAS信令；
+    - 涉及用户的鉴权、加密等过程，与具体的终端相关。
+  - 业务承载E-RAB的管理； 
+  - 终端切换的处理；
+  - 寻呼。
+
+#### X2接口
+
+##### X2-CP，控制面
+
+- X2-CP接口的协议栈结构，除了最上层由S1- AP变成X2-AP，也就是X2接口的应用层协议外，其他的协议栈都保持一致。
+- X2-CP的对等层通信最上层为X2-AP协议，其他和S1-U接口对等层通信一样
+  - 切换；
+  - 小区间负载均衡； 
+  - 小区间干扰协调
+- ![image-20221111154548320](Communication Technology.assets/image-20221111154548320.png)
+  - 源基站在X2-CP接口上向目标基站发出Handover Request消息， 请求切换。
+  - 目标基站收到Handover Request消息后，判断可以接纳终端的切入，向源基站回复Handover Request Acknowledge消息。
+
+##### X2-U，用户面
+
+- X2-U接口的分层结构和S1-U接口协议栈一样
+- X2-U的对等层通信S1-U接口对等层通信一样
+
+### 空中接口
+
+#### 概述
+
+- 空中接口（Radio Interface，也称为Air Interface），是移动通信系统中基站与终端之间的接口
+  - LTE空中接口上传送的信令分为两种：一种是NAS信令，终点是MME；另外一种是RRC信令，终点是eNB。这两种信令在LTE空中接口上，都用SRB来承载。
+  - LTE空中接口利用无线承载（RB）来传送业务数据，RB是Radio 
+    Bearer的缩写。
+    - ![image-20221111160314801](Communication Technology.assets/image-20221111160314801.png)
+- ![image-20221111160541646](Communication Technology.assets/image-20221111160541646.png)
+- ![image-20221111161404975](Communication Technology.assets/image-20221111161404975.png)
+
+#### 分层
+
+- 
+
+# IMS
+
+## 概述
+
+- IMS is a global, access-independent and standard-based IP connectivity and service control architecture that enables various types of multimedia services to end-users using common Internet-based protocols.
