@@ -183,7 +183,7 @@
   - 主谓⼀致规则也都存在争议的空间
   - ![image-20221016172851841](Grammar.assets/image-20221016172851841.png)
 
-### 非谓语动词
+### 非谓语 /动词
 
 - ![image-20221016184146912](Grammar.assets/image-20221016184146912.png)
   - 谓语动词（the finite verb）和⾮谓语动词（the non-finite verb）：动词的限定形式带有时间标记，⽽动词的⾮限定形式没有时间标记
@@ -192,10 +192,16 @@
 
 ## 名词短语及其他篇
 
+### 名词、限定及名词短语
+
+### 介词
+
 - ![image-20221016234859471](Grammar.assets/image-20221016234859471.png)
   - 表达逻辑关系
   - 英⽂介词不是难在数量，⽽是难在意义（senses or meanings）和⽤法（usages）。英⽂介词数量有限，⼤约100多个。
   - 认知语⾔学认为，所有的英语介词最初都是为了表达两个实体之间的空间关系（spatial relations between two physical entities）。不过，这两个实体的地位是不同的。
+
+### 副词
 
 # 长难句
 
