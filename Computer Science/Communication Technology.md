@@ -2180,15 +2180,149 @@
 
 - 空中接口（Radio Interface，也称为Air Interface），是移动通信系统中基站与终端之间的接口
   - LTE空中接口上传送的信令分为两种：一种是NAS信令，终点是MME；另外一种是RRC信令，终点是eNB。这两种信令在LTE空中接口上，都用SRB来承载。
-  - LTE空中接口利用无线承载（RB）来传送业务数据，RB是Radio 
-    Bearer的缩写。
+  - LTE空中接口利用无线承载（RB）来传送业务数据，RB是Radio Bearer的缩写。
     - ![image-20221111160314801](Communication Technology.assets/image-20221111160314801.png)
 - ![image-20221111160541646](Communication Technology.assets/image-20221111160541646.png)
+- 信令的传输过程![image-20221113203107333](Communication Technology.assets/image-20221113203107333.png)
+- ![image-20221113203229548](Communication Technology.assets/image-20221113203229548.png)
 - ![image-20221111161404975](Communication Technology.assets/image-20221111161404975.png)
+  - 这些信道是子层之间SAP的专用术语
+  - 逻辑信道位于RLC子层与MAC子层之间
+  - 传输信道位于MAC子层与物理层之间
+  - 而物理信道是物理层的输出。
+
 
 #### 分层
 
-- 
+- ![image-20221113190511702](Communication Technology.assets/image-20221113190511702.png)
+- ![image-20221113190615892](Communication Technology.assets/image-20221113190615892.png)
+  - PDCP （ Packet Data Convergence Protocol ， 分 组 数 据 汇 聚 协 议 ） 
+  - RLC （ Radio Link Control，无线链路控制）以及
+  - MAC（Medium Access Control，媒体访问 控 制 ） 子 层 
+  - RRC（ Radio Resource Control， 无 线 资 源 控 制 ） 是L3的一个子层。子层的名称通常来源于子层采用的协议。
+  - NAS不是WCDMA空中接口的组成部分，但是产生的信令需要在WCDMA空中接口上传输，所以用虚线框标识。
+
+- ![image-20221113190755185](Communication Technology.assets/image-20221113190755185.png)
+
+##### RRC
+
+- ![image-20221113191019524](Communication Technology.assets/image-20221113191019524.png)
+
+  - RRC子层只有一半的宽度，这是因为RRC子层只处理信令。
+
+  - RRC子层主要负责LTE空中接口的无线资源分配与控制。
+
+  - 由于RRC子层承担了LTE空中接口的无线资源管理工作，可以看成LTE空中接口的大脑，因此是LTE空中接口最重要的组成部分。
+
+  - LTE空中接口中的各种信令承载以及无线承载，包括逻辑信道、传输信道和物理信道的具体配置，都需要通过RRC子层来指定。另外，RRC子层还参与了待机状态和联机状态的众多处理机制， 比如广播、寻呼、鉴权、加密、业务连接的建立与释放、测量配置与测量报告等。以上这些处理机制，可以通过RRC消息的处理和NAS信令的收发来体现。
+
+  - ![image-20221113191427126](Communication Technology.assets/image-20221113191427126.png)
+
+  - RRC信令
+
+    - 
+
+    - | 信令                                    | 主要用途              | 内容                      |
+      | --------------------------------------- | --------------------- | ------------------------- |
+      | RRC Connection Request                  | 建立RRC连接           | 终端的ID，建 立连接的原因 |
+      | RRC Connection Setup                    | 建立RRC连接           | SRB1的信道配 置信息       |
+      | RRC Connection Setup Complete           | 建立RRC连接           | PLMN标识以 及MME标识      |
+      | RRC Connection Reconfiguration          | 建立SRB与RB           | SRB和RB的信 道配置信息    |
+      |                                         | 测量配置              | 测量配置信息              |
+      |                                         | 切换                  | 切换信息                  |
+      | RRC Connection Reconfiguration Complete | 反馈执行完毕          | 无                        |
+      | Measurement Report                      | 测量报告              | 测量报告                  |
+      | Security Mode Command                   | 加密                  | 加密算法和完 整性保护算法 |
+      | Security Mode Complete                  | 加密                  | 无                        |
+      | Paging                                  | 寻呼                  | 终端D                     |
+      | DLInformation Transfer                  | 承载来自MME 的NAS信令 | NAS信令                   |
+      | ULInformation Transfer                  | 承载来自UE的 NAS信令  | NAS信令                   |
+
+##### PDCP
+
+- 功能
+  - 在控制面上，PDCP子层执行加密和完整性保护；
+  - 在用户面上，PDCP子层执行加密、包头压缩以及切换支持（也就是顺序发送和 
+    重复性检查）。
+  - 其主要功能是压缩IP数据包的包头。由于IP数据包都带有一个很大尺寸的包头（20字节），仅仅传输这些头部信息就需要占用大量的无线资源，而这些头部信息往往又可压缩。为了提高IP数据流在空中接口上的传输效率，需要对IP数据包头部信息进行压缩。
+  - 一方面将加密功能也收归旗下，因此也就从仅仅处理用户面，而且扩展到了用户面和控制面，大小通吃；
+  - 另一方面还加入了对无损切换的支持，用来避免在切换过程中丢失数据包。
+  - 在 LTE系 统 中 ， 定 义 了 多 种 加 密 算 法 ， 分 别 编 号 为 eea0、 eea1和eea2 。 其 中 ， eea0 代 表 不 加 密 ， eea1 代 表 采 用 SNOW 3G 加 密 算 法 ， eea2代表采用AES加密算法
+
+##### RLC
+
+- RLC的主要功能是保证点到点数据的可靠传输
+  - 分段；
+  - 重发（ARQ（Automatic Repeat Request）机制）； 
+  - 重组（排序）。
+- 工作模式，根据不同级别的QoS要求
+  - 透明传输模式（TM）：TM模式负责传输上层PDU，不附加任何的RLC信息，不保证数据传输的正确性，实时性最高。TM模式不执行分段／重组功能，基本没有开销。LTE系统的广播与寻呼信息采用了TM模式。
+  - 非确认传输模式（UM）：UM模式负责传输上层PDU，携带有PDU的编号信息。UM模式下利 用 编 号 信 息 可 以 实 现 传 输 信 息 的 唯 一 性 。 UM模 式 下 不 进 行 数 据 重传 ， 因 此 不 保 证 数 据 传 输 的 正 确 性 ， 但 系 统 开 销 较 小 。 LTE 系 统 的 VoIP语音数据包采用了UM模式。
+  - 确认传输模式（AM）：AM模 式 负 责 传 输 上 层 PDU， 能 进 行 数 据 重 传 ， 以 保 证 能 将 数 据正确地送达对等接收实体。当发生意外情况接收端不能正确接收时，AM会通知调用其的上层协议实体。AM模式的缺点是需要更多的处理过程，因此会引入较大的处理延迟，系统开销最大。LTE系统的信令以及数据业务采用了AM模式。
+  - ![image-20221113202018109](Communication Technology.assets/image-20221113202018109.png)
+
+##### MAC
+
+- MAC子 层 的 主 要 作 用 是 实 现 逻 辑 信 道 的 复 用 。 MAC子 层 可 以 将逻辑信道DCCH、DTCH以及BCCH等复用到共享传输信道SCH上。此外，MAC子层还支持HARQ机制、随机接入机制、时间提前机制以及调度机制。
+
+##### PHY
+
+-  LTE系 统 的 OFDM和 多 天 线 两 大 关 键 技术，就是应用于物理层；
+
+- 至于测量以及功率控制等处理机制，也需要物理层来实施。
+
+#### 信息传输
+
+##### 上行
+
+- ![image-20221113202413947](Communication Technology.assets/image-20221113202413947.png)
+
+##### 下行
+
+- ![image-20221113202803374](Communication Technology.assets/image-20221113202803374.png)
+
+##### 对等层
+
+- ![image-20221113202820854](Communication Technology.assets/image-20221113202820854.png)
+
+### 信令流程
+
+- 背景
+  1. 信令就是控制信息。
+  2. 信令流程，就是通信系统不同设备之间信令的交互过程。这些交互过程发生在设备间的接口之上。
+  3. 在接口上传递的信息必须遵循一定的协议，接口两端的设备才能正确理解。由于通信系统功能复杂，因此接口采用了分层结构，分层结构依据OSI分层模型的原理，每层都采用一种协议，每种协议完成一种 特 定 的 功 能 。
+     1. 定义信息的种类；
+     2. 定义信息的格式与内容； 
+     3. 定义信息的时间顺序。
+  4. 在协议中，通常信令的内容以消息为单位，格式由相应的协议来规定；而消息的先后顺序也是由协议规定的，这就是信令流程。协议对理解信令流程非常重要，可以说，协议是信令流程的基石，而信令流程就是协议的具体体现。
+- ![image-20221113221544191](Communication Technology.assets/image-20221113221544191.png)
+  - SRB0用 来 承 载 RRC信 令 ， 逻 辑 信 道 是 CCCH， 其 RLC子 层为虚线框，代表采用TM的传输模式。SRB0的处理路径为SRB0-CCCH- SCH-PDSCH。
+  - SRB1用来承载RRC信令和NAS信令，对应RRC连接，是最重要的SRB。SRB1要经过PDCP子层的处理，进行加密和完整性保护；SRB1的 RLC 子 层 采 用 AM 的 传 输 模 式 。 SRB1 的 处 理 路 径 为 SRB1-DCCH1- SCH-PDSCH。
+  - SRB2用来承载NAS信令。SRB2也要经过PDCP子层的处理，进行加密和完整性保护；SRB1的RLC子层同样采用AM的传输模式。SRB2处理路径为SRB2-DCCH2-SCH-PDSCH。
+- ![image-20221113230939141](Communication Technology.assets/image-20221113230939141.png)
+  1. 当终端需要从待机状态转入联机状态时，在随机接入过程中，利用CCCH信道建立起SRB0，用来收发RRC信令。在SRB0上，终端会接收到eNB发送的RRC connection setup消息，在消息中eNB为终端指配了SRB1的资源。
+  2. 终端根据eNB的指示，建立起SRB1，用于收发RRC信令以及部分NAS信令。当终端的SRB1建立成功后，终端占用的SRB0就释放了。
+  3. 在 SRB1 上 ， 终 端 会 接 收 到 eNB 发 送 的 RRC connectionreconfiguration消息，在消息中eNB为终端指配了SRB2的资源。之所以需要建立SRB2，是为了分流SRB1的信令负荷。
+  4. 在联机状态，终端最后将是SRB1和SRB2并存。
+- ![image-20221113231515942](Communication Technology.assets/image-20221113231515942.png)
+
+#### 位置更新流程
+
+- TAU（Tracking Area Update，跟踪区更新），也就是当终端改变所在的TA后，终端通过TAU流程通知网络自己新的TA。
+- 时间
+  1. 最常见的一种情况，就是终端在小区重选后，发现进入了新的TA，而且新的TA又不在网络下发的TA列表中，这时终端就会发起TAU。
+  2. 终端根据一个定时参数，周期性地进行TAU。周期性TAU的目的是确保网络侧能及时跟踪到终端的位置。
+  3. 终端从异系统返回，也就是从GSM、WCDMA等系统返回LTE系统后，需要进行TAU。
+- TA
+  - 在 基 站 广 播 的 SIB1 消 息 中 ， 包 含 了 跟 踪 区 TA 的 信 息 ， 称 为TAI（Tracking Area Identity），终 端 根 据 SIB1中 的 TAI， 就 知 道 小 区 重 选 后 跟 踪 区 TA是 否 发 生了改变。
+  - ![image-20221113232125621](Communication Technology.assets/image-20221113232125621.png)
+- 如何知道终端
+  - 在 TAU过 程 中 ， 用 到 的 终 端 标 识 称 为 GUTI（ Globally Unique Temporary UE Identity），也就是终端全球唯一标识，由核心网分配。
+  - ![image-20221113232551128](Communication Technology.assets/image-20221113232551128.png)
+    - 16比 特 的 MMEGI代 表 MME池 组 的编 号 ， 8比 特 的 MMEC代 表 MME的 代 码 ， 32比 特 的 M-TMSI则是MME为终端分配的临时标识。
+- 过程
+  - ![image-20221113233120114](Communication Technology.assets/image-20221113233120114.png)
+  - ![image-20221113233153910](Communication Technology.assets/image-20221113233153910.png)
 
 # IMS
 
