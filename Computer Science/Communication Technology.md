@@ -2309,20 +2309,103 @@
 #### 位置更新流程
 
 - TAU（Tracking Area Update，跟踪区更新），也就是当终端改变所在的TA后，终端通过TAU流程通知网络自己新的TA。
+
 - 时间
   1. 最常见的一种情况，就是终端在小区重选后，发现进入了新的TA，而且新的TA又不在网络下发的TA列表中，这时终端就会发起TAU。
   2. 终端根据一个定时参数，周期性地进行TAU。周期性TAU的目的是确保网络侧能及时跟踪到终端的位置。
   3. 终端从异系统返回，也就是从GSM、WCDMA等系统返回LTE系统后，需要进行TAU。
+
 - TA
   - 在 基 站 广 播 的 SIB1 消 息 中 ， 包 含 了 跟 踪 区 TA 的 信 息 ， 称 为TAI（Tracking Area Identity），终 端 根 据 SIB1中 的 TAI， 就 知 道 小 区 重 选 后 跟 踪 区 TA是 否 发 生了改变。
   - ![image-20221113232125621](Communication Technology.assets/image-20221113232125621.png)
+
 - 如何知道终端
   - 在 TAU过 程 中 ， 用 到 的 终 端 标 识 称 为 GUTI（ Globally Unique Temporary UE Identity），也就是终端全球唯一标识，由核心网分配。
   - ![image-20221113232551128](Communication Technology.assets/image-20221113232551128.png)
     - 16比 特 的 MMEGI代 表 MME池 组 的编 号 ， 8比 特 的 MMEC代 表 MME的 代 码 ， 32比 特 的 M-TMSI则是MME为终端分配的临时标识。
+
 - 过程
   - ![image-20221113233120114](Communication Technology.assets/image-20221113233120114.png)
   - ![image-20221113233153910](Communication Technology.assets/image-20221113233153910.png)
+  - ![image-20221114114649990](Communication Technology.assets/image-20221114114649990.png)
+
+- TAU Request的主要内容
+
+  - | 项目                                                         | 说明                           |
+    | ------------------------------------------------------------ | ------------------------------ |
+    | Security info                                                | 安全相关的信息                 |
+    | Active Flag                                                  | 位置更新后是否进入联机 状态    |
+    | EPS Update Type                                              | 位置更新方式（如联合位置更新） |
+    | EPS Mobile Identity - o1d GUTI                               | 终端的原GUTI标识               |
+    | UE Network Capability                                        | 终端的能力                     |
+    | Tracking Area Identity - Last visited Registered TAI         | 终端原来的TAI                  |
+    | DRX Parameter                                                | DRX参数                        |
+    | EPS Bearer Context Status                                    | 承载的状态                     |
+    | MS Network Capability                                        | GSM终端的能力                  |
+    | Location Area Identification - old location Area Identification | GSM终端原来的LAI               |
+    | Mobile Station Classmark 2                                   | GSM终端的能力2                 |
+    | Mobile Station Classmark 3                                   | GSM终端的能力3                 |
+    | GUTI Type - old GUTI Type                                    | 终端原GUTI的类型               |
+
+- 鉴权
+
+  - ![image-20221114134123666](Communication Technology.assets/image-20221114134123666.png)
+
+- NAS加密
+
+  - ![image-20221114134748476](Communication Technology.assets/image-20221114134748476.png)
+
+- 接收位置更新
+
+  - ![image-20221114135234794](Communication Technology.assets/image-20221114135234794.png)
+    - RRC的Security Mode Command消息用于启动接入层AS的加密机制，消息中指定了在AS加密所用的加密算法和完整性保护算法。终端收到后响应Security Mode Complete消息，表明开始接入层的加密。于是，继NAS加密后，AS加密也启动了。
+
+- TAU Accept的主要内容
+
+  - | 项目                        | 说明                          |
+    | --------------------------- | ----------------------------- |
+    | Security Info               | 安全相关的信息                |
+    | EPS Update Result Value     | 位置更新方式（联合位置 更新） |
+    | EPS Mobile Identity - GUTI  | 终端的标识GUTI                |
+    | GPRS Timer - T3412 Value    | 周期性位置更新参数            |
+    | Tracking Area Identity List | TA列表                        |
+    | EPS Bearer Context Status   | 承载的状态                    |
+    | EPS Network Feature Support | 网络的业务能力（含 VoLTE）    |
+
+- 完成位置更新
+
+  - ![image-20221114140225941](Communication Technology.assets/image-20221114140225941.png)
+  - 如果MME没有为终端分配新的GUTI，终端就不用回复TAU Complete消息。
+    如果MME为终端分配了GUTI，那么终端在收到TAU Accept消息后， 将回复TAU Complete消息，eNB将终端的TAU Complete消息转发给MME
+
+#### Attach流程
+
+- Attach，即终端在PLMN中注册，从而建立了自己的档案，即前面讲过的终端上下文
+- 时间
+  1. 终端开机后需要进行附着，这种附着称为初始附着。这是最常见的一种情况。
+  2. 终端从覆盖盲区返回到覆盖区，需要进行附着。
+  3. 终端原来没有插SIM卡，后来插入SIM卡了，就需要进行附着。
+- 作用
+  - 终端在PLMN中注册，并驻留到小区；
+  - 在MME中建立终端上下文； 
+  - 为终端建立默认承载。
+    - 默认承载，Default Bearer，也翻译为缺省承载。这是一个为了实现终端始终在线（Always On），减少处理时延而提供的EPS承载。
+    - 默认承载意味着终端在附着后从核心网那里得到了一个IP地址以及默认的QoS设置，并且在SGW、基站和终端之间也建立了相应的E-RAB，对应SGW与基站间的S1承载以及基站与终端间的无线承载RB。
+- ![image-20221114143435110](Communication Technology.assets/image-20221114143435110.png)
+
+##### 流程
+
+1. ![image-20221114141102465](Communication Technology.assets/image-20221114141102465.png)
+   - ![image-20221114141511265](Communication Technology.assets/image-20221114141511265.png)
+2. ![image-20221114141442155](Communication Technology.assets/image-20221114141442155.png)
+3. ![image-20221114141811487](Communication Technology.assets/image-20221114141811487.png)
+4. 鉴权
+5. NAS加密
+6. ![image-20221114142013136](Communication Technology.assets/image-20221114142013136.png)
+   - MME在确认用户是合法用户后，为用户在eNB中创建相应的终端上下文，并开始建立默认承载。
+   - 建立默认承载需要MME与SGW交互，并通过PGW最终建立默认承载，交互的过程反映在核心网的信令上。
+7. 完成附着
+   - ![image-20221114142849416](Communication Technology.assets/image-20221114142849416.png)
 
 # IMS
 
