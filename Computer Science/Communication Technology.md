@@ -2407,6 +2407,99 @@
 7. 完成附着
    - ![image-20221114142849416](Communication Technology.assets/image-20221114142849416.png)
 
+#### 收发数据
+
+- 收发数据是LTE终端的主要工作，LTE系统利用EPS承载来传输数据。EPS承载落实到无线网络就是E-RAB，因此终端收发数据流程是围绕建立E-RAB展开的。
+
+##### 待机
+
+###### 终端发起
+
+- 如果终端处于待机状态，那么需要先经过随机接入的过程，终端获得资源，从而建立起E-RAB，用来承载数据。建立E-RAB其实是重建默认承载对应的E-RAB。这是因为默认承载在初始附着过程中就已经建立好了。
+- ![image-20221130140656213](Communication Technology.assets/image-20221130140656213.png)
+- ![image-20221130140718734](Communication Technology.assets/image-20221130140718734.png)
+  - ![image-20221130140825817](Communication Technology.assets/image-20221130140825817.png)
+  - ![image-20221130141028005](Communication Technology.assets/image-20221130141028005.png)
+
+###### 网络发起
+
+- ![image-20221130142643480](Communication Technology.assets/image-20221130142643480.png)
+  1. ![image-20221130142614826](Communication Technology.assets/image-20221130142614826.png)
+
+##### 联机
+
+###### 终端发起
+
+- 联机状态下终端已经建立了SRB1和SRB2，不需要经过随机接入过程，就可以发起建立EPS承载的过程
+- ![image-20221130141244561](Communication Technology.assets/image-20221130141244561.png)
+  1. ![image-20221130141506996](Communication Technology.assets/image-20221130141506996.png)
+  2. ![image-20221130141553454](Communication Technology.assets/image-20221130141553454.png)
+  3. ![image-20221130142032145](Communication Technology.assets/image-20221130142032145.png)
+
+###### 网络发起
+
+- ![image-20221130142804385](Communication Technology.assets/image-20221130142804385.png)
+
+#### 切换流程
+
+- ![image-20221130143032692](Communication Technology.assets/image-20221130143032692.png)
+- ![image-20221130143114855](Communication Technology.assets/image-20221130143114855.png)
+  1. ![image-20221130143546403](Communication Technology.assets/image-20221130143546403.png)
+
+##### 基于X2接口的切换
+
+- ![image-20221130143751167](Communication Technology.assets/image-20221130143751167.png)
+  1. ![image-20221130143803280](Communication Technology.assets/image-20221130143803280.png)
+  2. ![image-20221130144253689](Communication Technology.assets/image-20221130144253689.png)
+  3. ![image-20221130144336768](Communication Technology.assets/image-20221130144336768.png)
+
+##### 基于S1接口的切换
+
+- ![image-20221130144510645](Communication Technology.assets/image-20221130144510645.png)
+
+#### 释放流程
+
+- 一个是RRC连接的释放过程，另一个是去附着的过程。
+
+##### RRC连接释放
+
+- ![image-20221130150330976](Communication Technology.assets/image-20221130150330976.png)
+
+##### detach
+
+- 去附着是附着过程的逆过程，去附着执行后，终端的默认承载会被清除。
+- 去附着可以由终端发起，也可以由网络发起，最常见的是手机关机引起的去附着。
+
+- 关机引起的detach，去附 着 类 型 为 关 机 （ Switch Off ）
+  - ![image-20221130151550673](Communication Technology.assets/image-20221130151550673.png)
+- 非手机关机引起的去附着，去附着类型为正常去附着（Normal Detach）
+  - ![image-20221130152633673](Communication Technology.assets/image-20221130152633673.png)
+
+### IRAT
+
+- 介绍：IRAT就是终端在4G系统与2G或者3G系统之间的切换。
+  - IRAT是Inter Radio Access Technology的缩写，中文翻译为异系统互操作。
+    - 异系统，指的是2G、3G系统，比如GSM、WCDMA、TD-SCDMA、cdma2000系统，相对于LTE系统来说，都是异系统。
+    - 互操作，就是转移的意思，与切换类似，是终端从一个系统转换到另外一个系统。
+- 背景
+  1. 4G网络的覆盖不够完善，还存在很多覆盖盲区
+  2. 4G网络无法支持某些业务，比如语音业务。LTE系统中原生态只支持分组交换业务，除非部署了VoLTE，不然是没有办法支持基于电路交换技术的语音业务。
+     - CSFB：Circuit Switched Fallback，电路域回落
+- 种类
+  - 待机状态下，IRAT就是多模终端的跨制式小区重选
+  - 联机状态下，IRAT有三种方式，分别是切换PSHO、重定向以及快速返回FR
+  - ![image-20221130160516226](Communication Technology.assets/image-20221130160516226.png)
+    - 切换PSHO就是在LTE的联机状态和3G的联机状态间转换；
+      重定向就是从LTE的联机状态进入2G或3G的待机状态；
+      快速返回FR就是从3G的联机状态进入LTE的待机状态。
+
+#### 联机策略
+
+- ![image-20221130161408880](Communication Technology.assets/image-20221130161408880.png)
+- ![image-20221130161433662](Communication Technology.assets/image-20221130161433662.png)
+- ![image-20221130161447965](Communication Technology.assets/image-20221130161447965.png)
+  - EVDO：CDMA2000 1xEV-DO的简称是EVDO，EVDO（EV-DO)实际上是三个单词的缩写：Evolution（演进）、 Data Only。1xEV的意思是 'Evolution'，也表示标准的发展，DO的意思为Data Only(后来有为了能够更好地表达此技术的含义，把Data Only改为Data Optimized,表示EV-DO技术是对CDMA2000 1X网络在提供数据业务方面的一个有效的增强手段)。
+
 # IMS
 
 ## 概述
