@@ -2485,6 +2485,9 @@
   1. 4G网络的覆盖不够完善，还存在很多覆盖盲区
   2. 4G网络无法支持某些业务，比如语音业务。LTE系统中原生态只支持分组交换业务，除非部署了VoLTE，不然是没有办法支持基于电路交换技术的语音业务。
      - CSFB：Circuit Switched Fallback，电路域回落
+       - CSFB不是由于覆盖原因导致的切换，而是由于业务原因导致的切换，我们认为进行CSFB时多模终端应该切换到同覆盖的3G或者2G的邻区。
+       - 由于是同覆盖，因此在LTE系统中的测量过程就不是特别重要了。 
+       - 考虑到在CSFB中关键的指标是呼叫时延，为了加快切换速度，缩短呼叫时延，实施CSFB时终端可以采用盲切的方式，直接切换到预先定义的3G或者2G的邻区。
 - 种类
   - 待机状态下，IRAT就是多模终端的跨制式小区重选
   - 联机状态下，IRAT有三种方式，分别是切换PSHO、重定向以及快速返回FR
@@ -2492,6 +2495,8 @@
     - 切换PSHO就是在LTE的联机状态和3G的联机状态间转换；
       重定向就是从LTE的联机状态进入2G或3G的待机状态；
       快速返回FR就是从3G的联机状态进入LTE的待机状态。
+- 性能对比
+  - ![image-20221202154245285](Communication Technology.assets/image-20221202154245285.png)
 
 #### 联机策略
 
@@ -2500,8 +2505,131 @@
 - ![image-20221130161447965](Communication Technology.assets/image-20221130161447965.png)
   - EVDO：CDMA2000 1xEV-DO的简称是EVDO，EVDO（EV-DO)实际上是三个单词的缩写：Evolution（演进）、 Data Only。1xEV的意思是 'Evolution'，也表示标准的发展，DO的意思为Data Only(后来有为了能够更好地表达此技术的含义，把Data Only改为Data Optimized,表示EV-DO技术是对CDMA2000 1X网络在提供数据业务方面的一个有效的增强手段)。
 
+#### 小区重选
+
+- 原因：LTE网络的覆盖范围有限
+- ![image-20221202101816411](Communication Technology.assets/image-20221202101816411.png)
+
+##### 跨制式小区重选
+
+1. 接收系统信息
+   - ![image-20221202110655924](Communication Technology.assets/image-20221202110655924.png)
+2. 测量与判决
+   - LTE系统引入了参数S nonIntraSearchP，在SIB3中广播。当终端测量到服务小区的RSRP低于S nonIntraSearchP对应的信号强度后，才会启动异频测量
+   - 小区重选可能涉及两个以上的制式，LTE系统中引入了频点的优先级，以控制多系统之间小区重选的效果，让优先级高的频点优先重选。通过频点与制式之间明确的映射关系，隐含建立了制式的优先级。
+   - 相邻小区的频点和频点的优先级在系统信息中广播，
+     - threshXHigh（SIB6/SIB7/SIB8）；
+     - threshServingLow（SIB3）；
+     - threshXLow（SIB6/SIB7/SIB8）。
+     - SIB6对应异系统邻区为WCDMA或TD-SCDMA邻区，SIB7对应异系统邻区为GSM/GPRS邻区，SIB8对应异系统邻区为cdma2000邻区。
+     - 终端在异频测量中，得到了高优先级邻区的RSRP，利用S算法转换为Srxlev，n，如果Srxlev，n满足Srxlev，n >threshXHigh，终端就会重选到高优先级邻区。
+3. 随机接入
+4. RAU/TAU
+   - 在待机状态下，LTE核心网基于跟踪区TA管理LTE终端的位置，而对于WCDMA和GPRS系统的终端，核心网的位置管理基于路由区RA。
+   - Track area update/Routing Area Update
+   - ![image-20221202111955620](Communication Technology.assets/image-20221202111955620.png)
+5. 信道释放
+
+##### 异系统重选整体流程
+
+- ![image-20221202112519921](Communication Technology.assets/image-20221202112519921.png)
+- ![image-20221202112539172](Communication Technology.assets/image-20221202112539172.png)
+
+#### 异系统切换
+
+- 特点
+  - 异系统切换是多模终端从LTE系统的联机态转换到异系统的联机态，由于LTE系统基于分组交换PS，因此这种切换简称为PSHO
+    - PSHO：Packet Switch HandOver
+  - 异系统切换只发生在4G系统与3G系统之间，4G系统与GSM系统之间不支持PSHO
+  - 即使是3G系统，WCDMA系统与TD-SCDMA系统支持PSHO的情况也是有差别的，支持能力与具体设备厂家有关
+- 流程
+  - ![image-20221202140126437](Communication Technology.assets/image-20221202140126437.png)
+    1. 测量：PSHO与普通切换一样，也是通过测量过程来启动的。eNB收到多模终端发出的测量报告后，发现目标小区是3G邻区，而且支持PSHO，就会进行PSHO。当然，如果目标小区不满足PSHO的条件，eNB会发起重定向的过程。
+    2. 切换
+       1. ![image-20221202140654155](Communication Technology.assets/image-20221202140654155.png)
+       2. ![image-20221202140726983](Communication Technology.assets/image-20221202140726983.png)
+
+#### 异系统互操作的测量过程
+
+- 基站利用测量事件来启动异频测量。
+- 同频测量A3事件，异频测量A2事件
+  - A2事件定义为服务小区的信号弱于一个绝对门限，因此如果发生了A2事件，基站就可以要求终端启动异频测量。
+  - 异系统测量的相关事件通常是B2事件，也就是服务小区信号弱于绝对门限1而异系统邻区信号强于绝对门限2。
+  - 如果发生了B2事件，那么终端需要切换PSHO或者重定向到异系统的邻区。
+  - ![image-20221202141601214](Communication Technology.assets/image-20221202141601214.png)
+
+#### 重定向
+
+- 重定向，Redirect，就是终端从一 种制式的联机状态转到另外一种制式的待机状态。
+- 原因：无法进行PSHO。PSHO要求太高，当前网络没有办法支持。
+- 类别（根据源网络与目标网络的区别）
+  1. 从4G系统切换到3G系统
+     - 重定向（R8）
+     - 增强重定向（R9）
+  2. 从4G系统切换到GSM系统
+     - CCO（Cell Change Order，改变小区指令）； 
+     - NACC（网络辅助的CCO，等价于增强重定向）。
+  3. 从4G系统切换到cdma2000系统
+     - 非优化切换（等价于重定向）。
+  4. 从3G系统切换到4G系统
+     - FR（FastReturn，快速返回，等价于重定向）。
+
+##### 重定向（R8）的流程
+
+- LTE规范R8版本中定义的重定向，非优化激活切换以及FR也是基于类似的处理流程
+- ![image-20221202152001808](Communication Technology.assets/image-20221202152001808.png)
+  - eNB收到B2测量事件后，判断需要进行重定向，于是向多模终端发送RRC Connection Release消息，其中携带Release with redirect信息单元，包含了3G系统的频点号ARFCN。
+  - 多模终端在ARFCN指定的频点上搜索小区，接收目标小区的系统信息广播，从而获得接入参数。最后，多模终端根据接入参数进行随机接入。
+
+##### 增强重定向（R9）的流程
+
+- 增强重定向的改进在于，在基站下发的Release with Redirect信息单元中，还携带了3G系统信息广播的内容。
+- 要想实施增强重定向，eNB必须掌握周边3G邻区的系统信息广播内容，这就要求在eNB与3G的RNC之间建立信息通道，并能传送相应的系统信息
+- ![image-20221202153337430](Communication Technology.assets/image-20221202153337430.png)
+
+##### CCO的流程
+
+- CCO（Cell Change Order，改变小区指令）是从4G系统切换到GSM系统的专用流程
+- ![image-20221202153917765](Communication Technology.assets/image-20221202153917765.png)
+
 # IMS
 
 ## 概述
 
-- IMS is a global, access-independent and standard-based IP connectivity and service control architecture that enables various types of multimedia services to end-users using common Internet-based protocols.
+- IP  Multimedia  Subsystem(IMS) is a global, access-independent and standard-based IP connectivity and service control architecture that enables various types of multimedia services to end-users using common Internet-based protocols.
+- ![image-20221202162519919](Communication Technology.assets/image-20221202162519919.png)
+- From  GSM  to  3GPP  Release  7
+  - ETSI：The European Telecommunications Standards Institute
+  - GSM：Global System for Mobile Communications
+  - GPRS：General Packet Radio Service
+  - UTRAN：UMTS Terrestrial Radio Access Network
+  - BTS：Base Transceiver Station
+  - RNC：Radio Network Controller
+  - SGSN：Serving GPRS Support Node 
+  - OSA: Open Service Architecture 
+  - MSC：Mobile Switching Centre
+  - MGW：Server–Media Gateway
+  - ![image-20221202170242855](Communication Technology.assets/image-20221202170242855.png)
+
+## 架构
+
+### Architectural  requirements
+
+1. IP  multimedia  sessions
+   1. Existing communication networks are able to oﬀer voice, video and messaging type of services using circuit-switched bearers.
+   2. end-users’ service oﬀerings should not decline
+   3. oﬀering enriched communication means
+   4. IMS users are able to mix and match a variety of IP-based services in any way they choose during a single communication session.
+2. IP  connectivity
+   1. IPv4，IPv6
+   2. IP connectivity can be obtained either from the home network or the visited network
+   3. ![image-20221202181548173](Communication Technology.assets/image-20221202181548173.png)
+      - This would allow users to use new, fancy IMS services even when they are roaming in an area that does not have an IMS network but 
+        provides IP connectivity.
+3. Ensuring  quality  of  service  for  IP  multimedia  services
+   - Quality of Service (QoS)
+   - Via the IMS, the UE negotiates its capabilities and expresses its QoS requirements during a Session Initiation Protocol (SIP) session setup or session modiﬁcation procedure.
+     - Media  type,  direction  of  traﬃc.
+     - Media  type  bit  rate,  packet  size,  packet  transport  frequency. 
+     - Usage  of  RTP  payload  for  media  types.
+     - Bandwidth  adaptation.
