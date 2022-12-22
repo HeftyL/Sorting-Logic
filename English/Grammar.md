@@ -251,6 +251,26 @@
 - ![image-20221120175106971](Grammar.assets/image-20221120175106971.png)
 - ![image-20221120175123908](Grammar.assets/image-20221120175123908.png)
 
+# 句子成分
+
+- 为什么要分析？断句，使用语法术语进行一般性表述和分析。
+- 句子成分有哪些？
+- 怎么分析句子成分
+
+## 概述
+
+- ![image-20221216164616162](Grammar.assets/image-20221216164616162.png)
+  - 基本成分
+    - 主语（subject）
+    - 谓语动词（main verb）
+    - 宾语（object）
+    - 补足语（complement）
+  - 修 饰 成 分 （modifiers）：
+    - 状语（adverbial）：这是用来修饰动 词 的成分（注：状语的修饰对象不仅限于动词）
+    - 定语（attribute）：这是用来修饰名 词 的成分
+- ![image-20221216164923541](Grammar.assets/image-20221216164923541.png)
+- <img src="Grammar.assets/image-20221216165157831.png" alt="image-20221216165157831" style="zoom:150%;" />
+
 # 长难句
 
 - 准确、完整和通顺

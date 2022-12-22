@@ -4947,6 +4947,8 @@
 
 ## SPN流程
 
+- 数据的apn使用的是default 的
+
 ### 从SIM卡读取
 
 ### 从配置文件读取
@@ -5102,6 +5104,32 @@
   9. Wait for the handset to boot up and run cmds below:
      -  adb root
      - adb remount
+- adb shell dumpsys activity activities：查看activity栈
+- adb shell pm path com.android.dialer：查看包的位置
+
+## SN Writer
+
+- imei：353587400014311 
+- SN：PRVGNZHQ8H8PHM6X 
+- Barcode：MTKO00220830151117000037
+
+1. SN_Setup.ini的Write Serial No. = True
+2. 打开SN_Writer.exe，选择System Config
+3. Write Option子菜单选择imei
+4. DataBase File子菜单，MD1_DB和AP_DB，都来自刷机包flash的db目录
+5. Save
+6. 主菜单start
+7. 手机关机，连接手机，写入imei和sn号。
+
+## TestSystemPlatform
+
+- password：234
+
+1. 选择系统->系统模式->Single PC Mode，输入password确认。
+2. 根据手机的平台，选择MTK/高通平台工具集->包装-写号操作，输入password确认。
+3. 选择参数配置->关键参数配置，输入密码确认，选择需要刷入的参数写入。
+4. 右侧输入框输入值，多个值按顺序用逗号隔开。
+5. 点击start，插入手机，等待写入结束。
 
 # 版本控制
 

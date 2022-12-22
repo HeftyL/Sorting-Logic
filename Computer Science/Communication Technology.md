@@ -1799,6 +1799,8 @@
 
 ## 流程和机制
 
+- ![img](Communication Technology.assets/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5Lic5ZOlVjV-,size_20,color_FFFFFF,t_70,g_se,x_16.png)
+  
 - 系统架构演进（又名SAE，System Architecture Evolution）是3GPP所制定的LTE无线通信的核心网络标准。
   - 移动性管理实体（MME，Mobility Management Entity）：MME是LTE接入网络的关键控制节点。它负责空闲模式UE（用户设备）跟踪和寻呼控制。这些内容也包括UE的注册与注销过程，同时帮助UE选择S-GW，以完成LTE系统核心网络（CN）节点切换。
 
@@ -2181,7 +2183,7 @@
 - 空中接口（Radio Interface，也称为Air Interface），是移动通信系统中基站与终端之间的接口
   - LTE空中接口上传送的信令分为两种：一种是NAS信令，终点是MME；另外一种是RRC信令，终点是eNB。这两种信令在LTE空中接口上，都用SRB来承载。
   - LTE空中接口利用无线承载（RB）来传送业务数据，RB是Radio Bearer的缩写。
-    - ![image-20221111160314801](Communication Technology.assets/image-20221111160314801.png)
+    - ![GTP-U 与 EPS Bearer](Communication Technology.assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9pcy1jbG91ZC5ibG9nLmNzZG4ubmV0,size_16,color_FFFFFF,t_70.png)
 - ![image-20221111160541646](Communication Technology.assets/image-20221111160541646.png)
 - 信令的传输过程![image-20221113203107333](Communication Technology.assets/image-20221113203107333.png)
 - ![image-20221113203229548](Communication Technology.assets/image-20221113203229548.png)
@@ -2598,6 +2600,7 @@
 
 - IP  Multimedia  Subsystem(IMS) is a global, access-independent and standard-based IP connectivity and service control architecture that enables various types of multimedia services to end-users using common Internet-based protocols.
 - ![image-20221202162519919](Communication Technology.assets/image-20221202162519919.png)
+- ![image-20221205173119191](Communication Technology.assets/image-20221205173119191.png)
 - From  GSM  to  3GPP  Release  7
   - ETSI：The European Telecommunications Standards Institute
   - GSM：Global System for Mobile Communications
@@ -2633,3 +2636,651 @@
      - Media  type  bit  rate,  packet  size,  packet  transport  frequency. 
      - Usage  of  RTP  payload  for  media  types.
      - Bandwidth  adaptation.
+4. IP  policy  control  for  ensuring  correct  usage  of  media  resources
+   - the capability to authorize and control the usage of bearer traﬃc intended for IMS media
+   -  The policy control element is able to verify that values negotiated in SIP signalling are used when activating bearers for media traﬃc.This allows an operator to verify that its bearer resources are not misused
+   - The policy control element is able to enforce when media traﬃc between the end points of a SIP session start or stop.This makes it possible to prevent the use of the bearer until session establishment is completed and allows traﬃc to start/stop in synchronization with the start/stop of charging for a session in IMS.
+   - The policy control element is able to receive notiﬁcations when the IP connectivity access network service has either modiﬁed, suspended or released the bearer(s) of a user associated with a session.This allows IMS to release an ongoing session because, for instance, the user is no longer in the coverage area.
+5. Secure  communication
+   - ![image-20221205112444635](Communication Technology.assets/image-20221205112444635.png)
+6. Charging  arrangements
+   - The IMS architecture allows diﬀerent charging models to be used
+   - ![image-20221205113341882](Communication Technology.assets/image-20221205113341882.png)
+     - the IMS adds the possibility to charge for user IP traﬃc in a more granular manner than before.
+7. Support  of  roaming
+   - 所谓用户平面，就是真正传输业务数据（e.g. DNS Request、HTTP Request）的平面，简称 UP。相对应的，传送信令数据（e.g. E-RAB Setup Request、Create Bearer Request）的平面称为控制平面（Control Plane），简称 CP。
+8. Interworking  withother  networks
+9. Service  control  model
+   - the entity that has access to the subscriber database and interacts directly with service platforms is always located at the user’s home network
+10. Service  development
+11. Layered  design
+    - ![image-20221205140133668](Communication Technology.assets/image-20221205140133668.png)
+12. Access  independence
+    - IMS services can be provided over any IP connectivity networks 
+
+### entities  and  functionalities
+
+- Session  management  and  routing  family  (CSCFs). 
+- Databases  (HSS,  SLF).
+- Services  (application  server,  MRFC,  MRFP).
+- Interworking  functions  (BGCF,  MGCF,  IMS-MGW,  SGW). 
+- Support  functions  (PDF,  SEG,  THIG).
+- Charging.
+
+#### Call  Session  Control  Functions  (CSCF)
+
+- 分类
+  - Proxy-CSCF (P-CSCF)
+  - Serving-CSCF (S-CSCF) 
+  - Interrogating-CSCF (I-CSCF)
+- 作用：
+  - they all play a role during registration and session establishment and form the SIP routing machinery
+  - Both entities are able to release sessions on behalf of the user (e.g., when S-CSCF detects a hanging session or P-CSCF receives a notiﬁcation that a media bearer is lost) and are able to check the content of the Session Description Protocol (SDP) payload and to check whether it contains media types or codecs, which are not allowed for a user. When the proposed SDP does not ﬁt the operator’s policy, the CSCF rejects the request and sends a SIP error message to the UE.
+
+#### Proxy Call  Session  Control  Function(P-CSCF)
+
+- the ﬁrst contact point for users within the IMS
+- 任务：SIP compression, IPSec security association, interaction with Policy Decision Function (PDF) and emergency session detection.
+
+#### Interrogating  Call  Session  Control  Function  (I-CSCF)
+
+- a contact point within an operator’s network for all connections destined to a subscriber of that network operator
+- 任务
+  - Obtaining  the  name  of  the  next  hop  (either  S-CSCF  or  application  server)  from  the  Home  Subscriber  Server  (HSS).
+  - Assigning an S-CSCF based on received capabilities from the HSS
+  - Routing  incoming  requests  further  to  an  assigned  S-CSCF  or  the  application  server
+  - Providing  Topology  Hiding  Inter-network  Gateway  (THIG)  functionality
+
+#### Serving  Call  Session  Control  Function  (S-CSCF)
+
+-  the focal point of the IMS as it is responsible for handling registration processes, making routing decisions and maintaining session states, and storing the service proﬁle(s)
+  - service proﬁle：A service proﬁle is a collection of user-speciﬁc information that is permanently stored in the HSS
+- ![image-20221205153219110](Communication Technology.assets/image-20221205153219110.png)
+
+#### 紧急呼叫会话控制功能（E-CSCF)
+
+- 紧急呼叫会话控制功能（E-CSCF)是一个处理IMS紧急请求，比如报警、火警和急救的专用功能实体。
+
+#### Databases
+
+- Home  Subscriber  Server  (HSS) 
+  - the main data storage for all subscriber and service-related data of the IMS
+  - 类型
+    - user identities：
+      - private  user identities：registration and authorization
+      - public user identities：other users can use for requesting communication with the end-user
+    - registration information
+    - access parameters：to set up sessions and include parameters like user authentication, roaming authorization and allocated S-CSCF names
+    - service-triggering information：enables SIP service execution
+  - ![image-20221205155035073](Communication Technology.assets/image-20221205155035073.png)
+- Subscription  Locator  Function  (SLF)：a resolution mechanism that enables the I-CSCF, the S-CSCF and the AS to ﬁnd the address of the HSS that holds the subscriber data for a given user identity when multiple and separately addressable HSSs have been deployed by the network operator
+
+#### 服务功能
+
+- 类别：多媒体资源功能控制器( Multimedia Resource Function Controller，MRFC)、多媒体资源功能处理器( Multimedia Resource Function 
+  Processor，MRFP)和应用服务器(Application Server，AS)。
+
+##### 应用服务器
+
+- 功能
+  - 处理和影响从IMS接收到的SIP来话的能力;
+  - 发起SIP请求的能力;
+  - 向计费功能实体发送账目信息的能力。
+- 提供的业务并不局限于基于SIP的服务，因为运营商能够为其IMS用户基于移动网络增强逻辑的定制应用（Customized Applications for Mobile 
+  network Enhanced Logic，CAMEL)服务环境（Service Environment，CSE)和开发服务结构（Open Service Architecture，OSA)提供服务接入。因此，“AS”是一个术语，一般用来捕捉SIP AS、OSA服务性能服务器(Service Capability Server，SCS）和CAMEL IP多媒体服务交换功能（CAMEL IP Multimedia Service Switching Function，IM-SSF)的行为。
+- ![image-20221205165842504](Communication Technology.assets/image-20221205165842504.png)
+
+##### 多媒体资源功能处理器( MRFP)
+
+- 输入媒体流的混合（例如为多方通话进行的混合);
+- 媒体流信源（如多媒体公告信源);
+- 媒体流处理(例如音频代码转换、媒体分析)
+
+##### IMS-CS互连互通功能
+
+- ![image-20221205170502408](Communication Technology.assets/image-20221205170502408.png)
+
+##### 支撑功能
+
+- 策略与计费规则功能（ PCRF)
+  - PCRF负责根据从P-CSCF获得的会话和媒体相关信息来制定策略。
+- 互连边界控制功能(IBCF)
+  - 互连边界控制功能提供特定的功能以实现两个运营商域间的互连。它能支持IPv6与IPv4 IMS应用间的互通、实现网络拓扑隐藏、控制传输平面功能、屏蔽SIP信令消息、选择合适的信令互通、产生计费数据记录等。
+- 传输网关（TrGW)
+  - IBCF内的ALG功能可以控制传输网关（TrCW)，该网关负责不同IP版本在传输平面的互通（也就是修改真正传输IMS应用媒体的IP包，如RTP等)。
+- 安全网关（SEG)
+  - 安全网关（SEG)有在安全域间保护控制平面流量的功能。
+- 位置检索功能（LRF)。
+  - 位置检索功能（LRF)协助E-CSCF来处理IMS紧急会话，它将发起IMS紧急会话的UE的位置信息或/和会话所发往的公共安全应答点( PSAP)的地址传送到E-CSCF。
+
+##### GPRS实体
+
+- 服务GPRS支持节点( SCSN)：服务GPRS支持节点( SCSN)连接RAN和分组核心网。它负责为PS域进行控制和业务处理功能。控制部分包括两大主要功能:移动性管理和通话管理。移动性管理处理UE的位置和状态，并且对用户和UE进行鉴权。控制部分的通话管理处理连接接纳控制和现有数据连接中的任何变化，它也负责监督管理3G网络业务和资源，而且它还负责业务处理的执行。SGSN是作为用户数据通道的网关，换言之，它是UE和GGSN之间用户业务的中继。作为这个功能的一部分，SGSN也需要保证这些连接接收到适当的QoS。另外，SGSN还生成计费信息。
+- 网关GPRS支持节点（GGSN)：网关GPRS支持节点（GCSN)提供与外部分组数据网之间的互连。GCSN的主要功能就是提供UE与外部数据网之间的连接，而外部数据网提供基于IP的应用和业务。例如，外部数据网可以是IMS或者因特网。
+
+### IMS参考点
+
+- ![image-20221205173119191](Communication Technology.assets/image-20221205173119191.png)
+- Gm参考点
+  - Gm参考点连接UE和IMS。它用于传输UE和IMS之间所有的SIP信令消息。IMS中相对应的部分是P-CSCF。Gm参考点中的过程可以分为三大类:注册、会话控制和处理
+  - 在注册过程中，UE使用Gm参考点发送注册请求给P-CSCF，该注册请求包含UE支持的安全机制的指示。在注册过程中，UE为其自身的鉴权与网络的鉴权需要交换必要的参数，获得固有的已注册的用户身份，协商与P-CSCF的安全关联的必要参数，还可能启动SIP压缩。另外，如果网络侧发起注销或者重鉴权请求时，需要Gm参考点通知UE。
+  - 会话控制过程包含了移动台侧发起会话和移动台侧终止会话中的机制。在移动台侧发起会话中，Gm参考点用于转发从UE到P-CSCF的请求。在移动台终止侧会话中，Gm参考点用于转发从 P-CSCF到UE的请求。
+  - 处理( transaction）过程通过Gm参考点发送独立的请求（例如 MESSAGE消息请求）和接收该请求所对应的所有响应（例如200 OK消息)。处理过程与会话控制过程之间的差别在于通话没有建立。
+- Mw参考点
+  - Gm参考点连接UE到IMS（也就是P-CSCF)。接下来，就需要不同CSCF之间基于SIP的参考点，这个参考点就是Mw。Mw参考点中的过程可以分为三大类:注册、会话控制和处理
+  - 在注册过程中，P-CSCF使用Mw参考点转发来自UE的注册请求给I-CSCF。然后I-CSCF使用Mw参考点传送这个请求给S-CSCF。最后，S-CSCF的响应再通过Mw参考点反向传输回来。另外，在网络侧发起的注销和重授权过程中，S-CSCF使用Mw参考点将相应事件报告给UE。基于这个信息，UE和 P-CSCF可以执行必要的操作。例如，假设网络侧发起注销过程，P-CSCF要求PCRF确保所有传输层的资源都被相应地释放掉。
+  - 会话控制过程包含了移动台侧发起会话和移动台侧终止会话中的机制。在移动台侧发起的会话中，Mw参考点用于转发从P-CSCF 到 S-CSCF和从 S-CSCF到I-CSCF的请求。在移动台侧终止会话中，Mw参考点用于转发从I-CSCF到 S-CSCF和从S-CSCF到P-CSCF的请求。这个参考点也用于网络侧发起的会话释放。例如，如果P-CSCF接收到了来自PCRF的媒体承载丢失指示，它就可以向S-CSCF发起一个会话释放。另外，计费相关的信息也是通过Mw参考点进行传输的。
+  - 处理过程通过Mw参考点发送独立的请求（例如MESSAGE请求）和接收该请求所对应的所有响应（例如200 OK消息)。正如前面已经提到的，处理过程与会话控制过程之间的差别在于会话没有建立。
+
+- 
+
+- | 参考点名称 | 与之相关实体                                            | 目的                                                         | 协议      |
+  | ---------- | ------------------------------------------------------- | ------------------------------------------------------------ | --------- |
+  | Gm         | UE，P-CSCF                                              | 该参考点用于在UE和CSCF之间交 互消息                          | SIP       |
+  | Mw         | P-CSCF，I-CSCF，s-CSCF,                                 | 该参考点用于在不同CSCF 之间交 互消息                         | SIP       |
+  | ISc        | s-CSCF，AS                                              | 该参考点用于在S-CSCF与AS之间 交互消息                        | sIP       |
+  | Ma         | 1-CSCF，AS                                              | 该参考点用于在I-CSCF 与 AS之间 交互消息                      | SIP       |
+  | Cx         | 1-CSCF，s-CSCF，HSS                                     | 该参考点用于1-CSCF/S-CSCF和 HSS之间的通信                    | Diameter  |
+  | Dx         | l-CSCF，s-CSCF，SLF                                     | 该参考点用于在多HSS环境下选择 合适的HSS                      | Diameter  |
+  | Sh         | SIP AS，OSA sCs，HSS                                    | 该参考点用于在SIP AS/OSA SCS和 HSS之间进行通信               | Diameter  |
+  | si         | IM-SSF，HSS                                             | 该参考点用于在IM-SSF 和 HSS之 间交互消息                     | MAP       |
+  | Dh         | SIP AS，OSA，SCF, IM-SSF，HSS                           | 该参考点用于在多HSS环境下AS 找到合适的HSS                    | Diarmeter |
+  | Mm         | I-CSCF，s-CSCr, IBCF，外部IP网                          | 该参考点用于在IMS和外部IP网之 间交互消息                     | sIP       |
+  | Mg         | MGCF一1-CSCF                                            | 该参考点用于在MGCF和I-CSCF之 间呼叫消息                      | SIP       |
+  | Mi         | s-CSCF BCCF                                             | 该参考点用于在S-CSCF与 BCCF之 间交互消息                     | sIP       |
+  | Mj         | BGCFMGCF                                                | 该参考点用于在相同IMS网络中的 BGCF与 MGCF之间的交互          | SIP       |
+  | Mk         | BGCF→BGCF                                               | 该参考点用于不同IMS网络中的 BGCF之间的交互                   | SIP       |
+  | Mr         | s-CsCF，MRFC                                            | 该参考点用于在S-CSCF与MRFC之 间交互消息                      | SIP       |
+  | Mp         | MRFC，MRFP                                              | 该参考点允许MRFP的用户平面资 源控制                          | H248      |
+  | Mn         | MGCF，IMS-MGw                                           | 该参考点允许IMS-MGW的用户平 面资源控制                       | H.248     |
+  | Ut         | UE，AS ( SIP AS, OSASCS，IM-SSF)                        | 该参考点使得UE可以管理与它的 业务相关的信息                  | HTTP      |
+  | Cx         | PCRF，接人网关                                          | 该参考点用于将策略和计费规则推 人接人网关，获得传输平面事件通知， 交换计费标识符 | Diameter  |
+  | Rx         | P-CSCF，PCRF                                            | 该参考点用于向PCRF传递注册和 会话信息，获得传输层事件通知，并 交换计费标识符 | Diameter  |
+  | Ro         | As，MRCF，S-CSCF，oCs                                   | AS/MRFC/s-CSCF用该参考点来向 OCS执行在线计费。备注:在S-CSCF 与OCS之间可能需要一个进行协同的 逻辑功能 | Diameter  |
+  | Rf         | P-CSCF，s-CSCF, 1-CSCF，BGCF，MGCF, AS，MRFC，IBCF，CDF | IMS实体用该参考点来向CDF执行 离线计费                        | Diameter  |
+  | Ml         | E-CSCF，LRF                                             | 该参考点用于为去往紧急呼叫中心 的路由请求交换必要的信息      | 未定义    |
+  | Mx         | CSCF，BGCF，IBCF                                        | 当与不同运营商进行通信时，用该 参考点来使用IBCF的能力        | 未定义    |
+  | lx         | IBCF，TrGw                                              | 该参考点允许进行trGW资源控制                                 | 未定义    |
+  | lq         | P-CSCF，IMS接人网关                                     | 该参考点允许进行IMS接人网关 控制                             | 未定义    |
+
+## 概念
+
+- 注册
+  - 在IMS注册之前，用户设备（UE)必须找到它要发送一个REGISTER请求的IMS实体，这个概念被称为代理呼叫会话控制功能（P-CSCF）发现。另外，在注册过程之前，UE需要从身份模块中取出用户身份。
+  - 在注册过程中，将给UE分配一个服务CSCF( s-CSCF)，用以进行认证和建立相应的安全机制，之后用户配置将被下载到所分配的S-CSCF中，会话初始化协议（SIP)压缩也得到初始化，并传递隐性注册的公共用户身份。
+
+### 注册
+
+- 注册过程使得UE可以使用IMS服务。在进行IMS注册之前，UE必须获得一个IP连接承载，并且发现IMS系统的人口点（即P-CSCF)。
+- ![image-20221207161114939](Communication Technology.assets/image-20221207161114939.png)
+  - 左侧显示了第一阶段——网络如何向UE注册表示异议（ challenge);
+  - 右侧展示了第二阶段——UE如何对网络的异议进行响应，并完成注册过程。
+  - 流程
+    1. UE发送一个SIP注册（ SIP REGISTER)请求给已发现的P-CSCF。这个请求包含要注册的身份和归属域名称（问询CSCF或称I-CSCF的地址)。该P-CSCF处理这个 RECISTER请求，并使用所提供的归属域名称来解析I-CSCF的IP地址。随后I-CSCF将会联系归属用户服务器（HSS)，以便为S-CSCF选择过程来获取所需的S-CSCF能力要求。在S-CSCF选定之后，I-CSCF将 RECISTER请求转发给选定的S-CSCF。s-CSCF会发现这个用户没有被授权，因此它向HSS索取认证数据，并且通过一个401未授权响应来对该用户的注册表示异议。其次，UE将计算对这个异议的响应，并且发送另外一个 RECISTER请求给P-CSCF。P-CSCF再次找到I-CSCF，并且I-CSCF也将依次找到S-CSCF。最后，S-CSCF检查这个响应，如果这个响应正确，它就从HSS下载用户配置，并且通过一个200 OK响应来接受该注册。一旦UE成功被授权，UE就能够发起和接收会话了。在注册过程中，UE和P-CSCF会了解到网络中的哪个S-CSCF将要为UE提供服务。
+    2. 通过周期性的注册更新，UE可以保持其注册处于激活状态，这是UE功能。如果UE没有更新其注册信息，那么在注册计时器超时的时候，S-CSCF将毫无声息地清除该注册。当UE想要解除在IMS中的注册时，它就简单地发送一个REGISTER请求，该请求中的注册计时器取值为0（过期)。
+
+### Go接口单次多用户身份注册
+
+- 一个用户有时需要分配一个以上的公共用户标识，这样能将其朋友和家人知道的个人身份与同事们所知道的企业公共身份区分开来，或者用来满足不同的服务需求。
+- SIP只允许一次注册一个公共用户身份，因此，如果一个用户有多于一个公共用户身份，那么他必须分别注册每一个公共用户身份。
+- 隐性注册：一个隐性注册集是指通过单条注册请求来注册的一组公共用户身份。当集合内的一个公共用户身份注册后，所有与该隐性注册集合相关联的公共用户身份均同时被注册。同样地，当该集合内的一个公共用户身份被注销时，所有已隐性注册的公共用户身份也同时被注销。属于一个隐性注册集合的公共用户身份可能指向不同的服务配置。这些公共用户身份中的一些也可能指向相同的服务配置。
+
+### 会话发起
+
+- ![image-20221207165425253](Communication Technology.assets/image-20221207165425253.png)
+- 当用户A想要与用户B进行会话时，UEA就生成一个SIP INVITE请求，并且通过Gm参考点将该请求发送给P-CSCF。P-CSCF会对这个请求进行处理，例如，它在将这个请求通过Mw参考点向S-CSCF转发之前，将其解压缩，并且验证呼叫发起用户的身份。S-CSCF继续处理这个请求，执行服务控制，这可能包括与应用服务器(AS)的交互，并且通过SIP INVITE请求中用户B的身份最终确定用户B的归属运营商的入口点。I-CSCF会通过Mw 参考点收到该请求，并且通过Cx 参考点来联系HSs,以找到正在为用户B提供服务的S-CSCF。该请求通过Mw参考点传送到S-CSCF。该s-CSCF负责处理这个终结的会话，这可以包括与应用服务器的交互，并最终通过Mw参考点将该请求发送给P-CSCF。经过进一步处理（例如压缩和隐私检查）之后，P-CSCF通过Gm参考点将这个SIP INVTTE请求发送给UE B。UEB生成一个响应，即183会话进行中。该响应将按照从UEA到UEB的相同路径反向传回UEA（也就是UE B→P-CSCF→s-cSCF→I-CSCF_S-CSCFP-CSCF→UE A)。再经过几次往返之后，两个UE都完成了会话建立过程，并且能够开始真正的应用了（例如一个棋类游戏)。在会话建立过程期间，运营商可以对媒体业务流所使用的承载进行控制。
+
+### 标识
+
+- 类别：用户（公共用户身份)、用户的订购（私有用户身份)、用户设备与公共用户身份的结合（全球可路由的用户代理URI)、服务（公共服务身份）或IMS网络实体。
+
+#### 公共用户身份
+
+- IMS网络中的用户身份被称作公共用户身份，它们是用于请求与其他用户通信时所用的身份。
+- 公共身份可以被公布（例如在电话本中、网页上和名片上)。
+- IMS用户能够发起和接收与很多不同网络（例如GSM 网络和因特网）间的会话。为了从CS侧可以访问到，公共用户身份必须遵循电信编号方式（例如+358501234567)。与此类似，请求与因特网客户端通信时，公共用户身份就必须遵循因特网命名规则（例如joe. de@ example. com)。
+- IMS体系对公共用户身份提出了下列要求[3GPP TS 23.228，TS 23.003 ] :
+  - 公共用户身份采用SIP统一资源标识符（URI)或者电话统一资源定位符（ telURL)的格式。
+  - ISIM 应用中要安全地存储至少一个公共用户身份。
+  - UE无法修改公共用户身份。
+  - 在一个公共用户身份被用于发起IMS会话和与IMS会话无关的过程（例如MESSAGE、SUBSCRIBE、NOTIFY)之前，公共用户身份需要先被注册。
+  - 在充当IMS会话终结点之前，其公共用户身份应先被注册，并且与终结的IMS会话无关的过程将被传送到公共用户身份所归属用户的终端UE上。这些并不会阻碍未注册的用户使用网络中的服务。
+  - 通过一个UE请求就可以一次注册多个公共用户身份。
+  - 在注册过程中，网络不会对公共用户身份进行认证。
+
+#### 私有用户身份
+
+- 私有用户身份是一个由归属网络运营商定义的具有惟一性的全球身份，可用于在归属网络中从网络的角度惟一地标识用户[3GPP TS 23.228]。它并不是标识用户本身，相反地，它标识了用户的订购关系。因此，它主要用于认证的目的，但使用私有用户身份来实现计费和管理目的也是可以的。
+- IMS体系对私有用户身份提出了下列要求[3GPP TS 23.228，TS 23.003]:
+  - 私有用户身份采用「 RFC2486]所定义的网络接入标识符(NAI)的形式。
+  - 私有用户身份会被包含在所有从UE发往归属网络的注册请求中。
+  - 私有用户身份仅在用户的注册期间被认证（包括重新注册和注册解除)。
+  - s-CSCF需要从注册中和未注册的终结中获取并存储私有用户身份。
+  - 私有用户身份不会被用于SIP消息的路由转发。
+  - 私有用户身份被永久地分配给用户，并安全地存储在IMS身份模块（ISIM)应用中。私有用户身份在用户与归属网络间的订购关系存在期间内是有效的。
+  - UE无法修改存储在ISIM 应用中的私有用户身份。
+  - HSS需要存储私有用户身份。
+  - 根据运营商的策略，私有用户身份可以作为可选项放入计费记录中。
+  - NAI举例：private_user1@ home1. operator. net
+
+####  私有用户标识和公共用户标识的关系
+
+- 多对多
+- 一个IMS用户可以拥有一个私人用户身份和多个公共用户标识。
+- 用户公共标识可以被多个用户设备共享。因此，这个特殊的用户公共标识，可能同时被拥有不同私有用户标识和不同联系地址的用户设备注册。
+- ![image-20221207173928723](Communication Technology.assets/image-20221207173928723.png)
+
+#### 没有ISIM的身份生成
+
+- ISIM：IP Multimedia Services Identity Module
+
+-  私有用户标识和公共用户标识都存储在ISIM中
+
+- 在这个模型中，私有用户身份、公共用户身份和归属域名称都从国际移动用户标识符（IMSI)中导出。这个机制非常适合具有通用用户身份模块（USIM)应用的UE。
+
+- 导出的私有用户身份：由IMSI导出的私有用户身份是根据下列步骤构建的[3GPP TS 23.003 ] 
+
+  1. 私有用户身份的用户部分由IMSI 的整串数字所构成。
+  2. 私有用户身份的域部分由IMSI的 MCC和 MNC值所组成，并且有一个预先定义的域名:IMSI. 3gppnetwork. org。这三个部分组合在一起，并且按照下列顺序用圆点隔离:移动网络代码(MNC，一个数字或者多个数字的组合，公共陆地移动网络的惟一标识)、移动国家代码（MCC，移动用户所属国家的惟一标识代码）和预先定义的域名
+     - 234150999999999@ 234.15.IMSI. 3gppnetwork. org
+
+- 临时公共用户身份
+
+  - 如果没有ISIM应用来保存公共用户身份，就要基于IMSI来导出一个临时公共用户身份。临时公共用户身份采用SIP URI的形式“sip: user@domain”。用户部分和域部分都是使用与私有用户身份类似的方法导出的。
+  - IMS体系对临时公共用户身份提出了下列要求[3GPP TS 23.228]:
+    - 对于IMS的非注册过程，强烈推荐设置临时公共用户身份为“被禁止(Barred)”，这样它就无法用于IMS通信。如果临时公共用户身份被设置为“被禁止”，那么就要遵守下列附加要求:
+      - 临时公共用户身份不能显示给用户，并且也不能用于公共场合（例如，显示在名片上)。
+      - 临时公共用户身份只能用于在注册期间获取隐性注册的公共用户身份（隐性注册的公共用户身份的概念请参见3.3节)。
+    - 在其他SIP消息和随后的注册过程中，隐性注册的公共用户身份将被用于会话处理。
+    - 在初始注册之后,只有UE使用隐性注册的公共用户身份。·只有CSCF和HSS节点可以获得临时公共用户身份。
+
+- 服务的标识（公共服务身份)
+
+  - 通过前面对标准的在线状态、消息、会议和组服务能力的介绍可以发现，对于AS所拥有的服务和组，也必须使用标识符来进行识别。用于这些目的的身份也可以在服务过程中临时创建，换言之，它们可以由用户根据需要而在AS中创建，并且在使用之前不需要进行注册。普通的公共用户身份不足以适应这种特点，因此版本6中引入了一个新的身份类型:公共服务身份。公共服务身份采用SIP URI的形式或者tel URL格式。
+
+- 用户设备标识
+
+  - 背景：在IMS 中，公共用户身份用于到达接收方，同时单个公共用户身份可以在同一个订购下的多个设备间共享。这就意味着，当有一个以上设备使用同一个公共用户身份注册时，就不可能识别出会话具体是发往哪个设备的。
+  - 为了到达某个特定的设备，必须使用一个特殊的称为全球可路由用户代理URI(CRUU)的标识。
+  - ![image-20221208095849318](Communication Technology.assets/image-20221208095849318.png)
+  - 定义有两种GRUU，即临时GRUU和公共GRUU。IMS中的公共GRUU是用户的公共用户身份与设备的标识之间的组合，通过该组合，公共用户身份注册到IMS。公共GRUU的目的是实现具有长久地到达某个特定设备的能力，因为只要“公共用户身份-设备”这一对存在，到达设备就总是相同。相反，临时CRUU是一个具有有限存在期的标识（新的临时GRUU在每次进行IMS注册请求时创建)，并且它会让公共用户身份得到隐藏，比如，他根本就不包含用户的公共用户身份。
+
+### IP多媒体服务身份模块
+
+- IP多媒体服务身份模块（ISIM)是一个位于通用集成电路卡 ( UICC)上的应用，这是一个物理上安全的设备，它可以从UE中插入和取出，在UICC中可以有一个或多个应用，例如通用用户身份模块（USIM)和ISIM。ISIM本身存储了主要由IMS运营商提供的IMS专用的用户数据，主要在用户将一个设备注册到IMS时使用。例如,当一个用户从运营商获得IMS订购时，将存储如下数据。
+  - 用户的私有用户身份。它用于在注册请求中标识用户的订购关系（参见3.5.2节中的进一步说明)。
+  - 用户的一个或多个公共用户身份。它用于在注册请求中标识要注册的身份，并且用于请求与其他用户间建立通信（参见3.5.1节中的进一步说明)。
+  - 归属网络的人口名称（归属网络的域名)。用于在注册请求中，将请求路由到用户的归属网络。
+  - 管理数据。包括多种数据，可以被IMS用户用于IMS操作，或者被设备商用来执行厂家自定义的自检。
+  - 接入准则参考。它所存储的信息被用来检验用户的个人标识符号码是否被允许访问特定的应用。
+  - P-CSCF的地址。当接人技术不支持动态P-CSCF发现时，可用该地址。
+  - 与通用启动加载体系（Generic Bootstrapping Architecture）有关的安全参数。安全参数用于进行IMS认证。
+
+### 多终端间共享单个公共用户身份
+
+- 版本6的IMS 允许用户通过多个UE来注册同一个公共用户身份。另外，用户可以在注册阶段指出其对于某一个UE的优先选择。不同的注册可通过私有用户身份和所使用的IP地址加以区分。
+- ![image-20221208102508346](Communication Technology.assets/image-20221208102508346.png)
+  - 如果请求中没有包含具体去往哪个设备的信息时，则由他的S-CSCF首先来决定到底联系哪个UE。该决策可基于注册阶段给定的优先级别来完成。
+  - 除了基于优先选择( preference-based）的路由外，S-CSCF也可能进行分叉( forking)。
+    - 顺序分叉是指逐个联系不同的UE。例如，S-CSCF首先将请求发送到2号UE;如果一定时间期限内用户没有响应，则S-CSCF接着尝试通过1号UE来到达Joe。
+      并行分叉是指同时联系不同的UE。例如，当两个UE同时振铃时，用户可以决定使用哪个UE来对到达的会话进行接听，不过最终会话只能接往一个UE。
+
+### IMS的入口点的发现
+
+- 为了与IMS网络通信，UE必须知道P-CSCF的至少一个P地址。UE找到这些地址的机制就被称为“P-CSCF发现”
+- 在第三代合作伙伴计划（3GPP)中对P-CSCF发现定义了两种动态机制:动态主机配置协议（ DHCP）域名系统（DNS）过程和GPRS过程。另外，也可以在UE配置P-CSCF名字或者P-CSCF的IP地址。
+- ![image-20221208104244664](Communication Technology.assets/image-20221208104244664.png)
+  - 在GPRS过程中，UE在PDP上下文激活请求（或者次PDP上下文激活请求）中包含了P-CSCF地址请求标记，并且在响应中得到P-CSCF的P地址。这个信息是在协议配置可选信息单元中传送的[ 3GPP TS24.008 ]。网关GPRS支持节点( GGSN)如何获得P-CSCF的IP地址的机制并没有标准化。版本5之前的GCSN不支持该机制。
+- ![image-20221208104417884](Communication Technology.assets/image-20221208104417884.png)
+  - 在DHCP DNS过程中，UE发送一个 DHCP请求给IP连接接入网络(例如GPRS )，该网络将这个请求转发给DHCP服务器。根据〔 RFC3319]和[ RFC3315]，UE可以请求一个SIP服务器域名形式的P-CSCF 列表，或者请求一个SIP服务器IPv6地址形式的P-CSCF列表。当返回域名时，UE需要执行一个DNS查询(NAPTR/SRV)来找到P-CSCF的IP地址。DHCP DNS机制是一个与接入无关的发现P-CSCF的方式。
+
+### S-CSCF的指定
+
+- 情况
+  - 用户向网络中注册。
+  - s-CSCF需要代表未注册用户运行服务。
+  - 先前指定的S-CSCF没有响应。
+
+#### 注册期间的S-CSCF指定
+
+- 当用户向网络中注册时，UE发送一个 REGISTER请求给已发现的P-CSCF，P-CSCF找到用户的归属网络实体I-CSCF，接下来I-CSCF 与HSS交换消息UAR和 UAA 。其结果是只要没有先前指定的S-CSCF , I-CSCF会接收到S-CSCF能力集。基于接收的能力集，I-CSCF选择一个合适的S-CSCF。能力集信息在HSS和1-CSCF之间使用服务器-能力属性值对(AVP)进行传送。
+- 服务器-能力AVP类型〔3GPP TS 29.228]和[3GPP TS 29.229]:
+  - 零个或多个必选能力AVP——这个AVP的值是一个无符号整数，包括S-CSCF的必选能力。每个运营商的网络中可以利用的每个必选能力都将被分配一个惟一的值。
+  - 零个或多个可选能力AVP——这个AVP的值是一个无符号整数，包括S-CSCF的可选能力。每个运营商的网络中可以利用的每个可选能力都将被分配一个惟一的值。
+  - 零个或多个服务器-名字AVP——这个AVP包含用于标识一个SIP服务器的SIP URI。
+- 基于必选和可选能力AVP，一个运营商就可以根据每个S-CSCF拥有的不同能力集（用户服务所要求的能力集、运营商基于每个用户的优先选择等)，将用户在S-CSCF之间进行分配。运营商需要负责定义必选和可选能力的确切含义(可能基于部署在网络中的每个S-CSCF所提供的功能)。I-CSCF将首先选择具有该用户所要求的所有必选和可选能力的S-CSCF。如果这不可能，那么I-CSCF就采用一个“最佳选择”算法来选择S-CSCF。这种选择算法没有被标准化（也就是说解决方案取决于具体实现)。
+
+#### 为未注册用户运行服务而指定S-CSCF
+
+- 位置检索过程（也就是说到达的SIP请求将触发LIR/LIA命令来找出服务于用户B的S-CSCF)，如果HSS知道当前没有指定的S-CSCF，而用户又有与未注册状态相关的服务，那么它就会返回S-CSCF能力信息，3.9.1节所述S-CSCF指定过程就会在I-CSCF中发生。
+
+#### 出现错误情况下的S-CSCF指定
+
+- 当指定的S-CSCF没有响应的时候，3GPP标准允许在注册过程中对S-CSCF进行重新指定
+
+#### s-CSCF指定的解除
+
+- 当用户从网络中解除注册时或者网络决定注销某个用户的时候（例如，由于注册过期或者用户的订购关系过期)，S-CSCF指定就会被解除。S-CSCF负责从 HSS中清除所存储的S-CSCF名字。
+
+#### s-cSCF指定的保留
+
+- 当用户从网络中解除注册时或者S-CSCF注册计时器超时时，运营商可以决定为这个未注册的用户保留其对同一个S-CSCF的指定。S-CSCF负责向HSS通知用户已经解除注册，不过，S-CSCF可以指出它希望保留用户配置。这就优化了Cx参考点的负荷，因为当用户一旦进行再次注册，或者有与未注册状态相关服务需要接收会话时，就不需要再传输用户配置了。
+
+### 承载业务流的控制机制
+
+- 背景：控制平面和用户平面的分离可能是IMS网络设计中最重要的方面之一。这两层之间完全独立并不可行，因为没有用户平面和控制平面之间的交互，运营商将无法控制服务质量（QoS)、IMS媒体业务流的源/目的地址，以及媒体业务流开始和停止的时间。因此，创建了一种机制来对IMS媒体业务流将要使用的承载业务流进行授权和控制
+- 策略与计费控制（ PCC)：该机制基于在IMS会话中所协商的会话描述协议（ SDP)参数。这种在接人网和IMS之间进行的全部交互被称为策略控制，而同样的体系结构方案也被用来实现接入网和IMS之间的一致性计费，因此总体概念通常被称为策略与计费控制 ( PCC)。
+
+#### 门控和QoS控制
+
+- IMS 网络中的会话建立和修改包含了使用SIP和SDP进行的端到端消息交换。在这个消息交换期间，UE将协商一套媒体特性（例如通用的编解码方案)。如果一个运营商实施了策略控制，那么P-CSCF就将转发相关的SDP信息给PCRF，PCRF基于这些信息形成IP QS授权数据。
+- 当UE为媒体激活或者修改IP CAN承载（例如PDP上下文)时，它必须执行其自身的映射，将SDP参数和应用的要求映射成IP CAN QoS参数（例如UMTS QoS参数)。当接入网关接收到IP-CAN承载激活或修改命令时，它向PCRF询问授权信息。PCRF会将接收到的信息与存储的信息进行比较，并返回一个授权决策。该决策包含送给IP-CAN承载和分组分类器的IP QoS参数，用于建立合适的门控，以及关于如何将业务流绑定到IP-CAN承载的信息。
+- 如果是肯定决策，接入网关会将授权的IP QoS参数映射成授权的与接入相关的QoS参数，并且IP-CAN承载激活或修改将被接受。图3-12显示了该功能。为了简化，图中的PCRF表示为P-CSCF的一部分。如果存在独立的PCRF，那么P-CSCF需要将SIP/SDP信令信息映射成合适的Diameter信息单元，并把相应的 Diameter请求通过Rx参考点发送给PCRF。该功能将在3.10.5节中进一步讲述。
+
+#### 业务平面事件报告
+
+- 使用策略控制能力，P-CSCF能够跟踪IMS信令和用户平面承载的状态（新承载创建，承载丢失，丢失的承载已恢复)，这样当某些服务数据流（如视频流）或所有服务数据流（即某个SIP会话的所有媒体流）被去激活时,设备当前正在使用的IP-CAN( s）可以得到通知。通过使用该信息，IMS能够让服务运行得到改进。
+
+#### 网络发起承载激活
+
+- 当GPRS推入市场时，在3GPP版本7中引人了广泛部署的移动通信系统分组承载。
+- 在GPRS系统中，移动站(MS）从第一天起就已控制了承载激活（建立）过程。换言之，MS已决定需要多少条PDP上下文，以及它需要在每个PDP上下文中使用哪种业务类型和QoS参数。
+- 该模型在版本8中有可能改变，因此称为演进分组系统(EPS)。当前，当使用演进分组系统架构来进行通信时，主要是由网络来决定UE需要什么样的承载。在版本7中，当在GPRS接入网络中定义IMS用户平面流量时，已经将使用网络发起业务承载作为可选能力，这是通往网络发起业务承载的第一步。
+
+### 计费
+
+- 为了提供后付费业务，IMS需要支持离线（ Offline）计费机制。离线计费是在会话之后收集计费信息，而且计费系统不会实时地影响所使用服务的计费过程。在该模型中，用户一般每月收到一张账单，该账单显示一个特定时期内的计费项目。预付费业务需要在线（ Online)计费支持。这就意味着IMS网络实体需要在允许用户使用业务之前咨询在线计费系统（OCS)。这个系统负责实时地与用户账户进行交互，控制或者监视与业务使用相关的费用。
+
+- ![image-20221209110952140](Communication Technology.assets/image-20221209110952140.png)
+
+  - 离线计费：所有处理SIP信令的IMS实体能够与离线计费实体进行通信—即计费数据功能（ CDF)——-通过使用单一的基于Diameter的 Rf参考点[ 3GPP TS 32.299]。CDF接收到同样来自接入网实体的 Diameter请求，并且基于来自不同实体提供的信息，它就可以创建通过Ga参考点传送给计费网关功能（CCF)的CDR[3GPP TS 32.295]。最后，CGF处理接收到的CDR，并使用Bx参考点转发最后的CDR给计费系统[3GPP TS 32.240]。
+  - 在线计费：与离线计费不同，只有三个IMS实体(AS、MRFC和S-CSCF)被用于在线计费。而且，由于版本5时间帧上设计不佳，S-CSCF不能直接与OCS通信。IMS网关功能(IMS-GWF)用于执行必要的协议转换。OCS支持来自其他网络实体的两个参考点。SGSN使用CAMEL应用部分（CAP)，其他实体使用基于Diameter的Ro参考点。就像离线计费中的CGF一样，OCS除了信用( credit)控制处理（实时地认可资源）之外，也能够创建CDR。
+
+- | 离线计费功能       | 关键过程                                                     |
+  | ------------------ | ------------------------------------------------------------ |
+  | 计费触发功能（CTF) | 监测SIP信令 检测触发器条件 从SIP信令中提取信息并且重组计费信息 发送计费信息给CDF |
+  | 计费数据功能（CDF) | 构建CDR 传送CDR给CGF                                         |
+  | 计费网关功能（CCF) | 关联、合并、过滤不必要的域并且在接收到的账户信息中增 加运营商特定的信息 CDR错误处理和存储 传送CDR给计费系统 预处理CDR |
+  | 计费系统           | 创建实际的账单                                               |
+
+### 用户配置
+
+- 用户配置是用户特定信息的集合，它永久存储在HSS中。当S-CSCF需要为注册和未注册用户运行业务时，就将用户配置下载到S-CSCF中。用户配置至少包含一个私有的用户身份和单个服务配置。
+- ![image-20221209112412930](Communication Technology.assets/image-20221209112412930.png)
+  - 公共标识指示运行特定服务配置的一个或多个身份。身份可以是公共用户身份，也可以是公共服务身份。
+  - 核心网服务授权：服务授权定义有两种不同的能力，即媒体策略和IMS通信服务标识策略。媒体策略信息包含一个整数，用于标识在S-CSCF中的一个订阅的媒体配置（如允许的SDP参数)。该信息允许运营商在其IMS网络中定义不同的用户配置。IMS通信服务标识策略包含一个服务标识符列表,用来标识哪个IMS通信服务用户可以被授权使用。
+  - 服务触发信息采用初始过滤规则的形式表示。初始过滤规则用来描述到来的SIP消息何时被进一步路由到一个特定的应用服务器。用户配置可以同时包含针对用户的服务触发信息（将其编码为初始过滤规则）和一个初始过滤规则的参考值（由S-CSCF本地管理和存储)。后者被称为共享初始过滤规则，编码为一个整数值，该整数值仅在单个运营商网络内有意义。
+  - 触发点用来描述应该检查的条件，以决定是否应该联系所指示的应用服务器。如果没有触发点，表明将对AS进行无条件触发。每个触发点包含一个或多个服务点触发器的实例。服务点触发器可通过逻辑表达式的方法（与、或、非）组合起来。
+  - 应用服务器定义当触发点被匹配时应该联系的AS。AS可以包含当与AS的联系失败时相关会话的默认处理的信息。基于初始过滤规则中的信息，默认处理或者终止会话，或者让会话继续。另外，应用服务器包含О或1个服务信息的例程。当在注册期间初始过滤规则的条件被满足时，服务信息能够提供通过S-CSCF透明地传送到AS的信息。
+
+### 服务提供
+
+- 严格来讲，IMS本身并不是一个服务，相反地，它是一个基于SIP的体系，以在PS网络之上实现先进的IP服务和应用。IMS为服务的触发提供必要的方法，该功能称为“服务提供( Service Provision )”。IMS服务提供包含以下三个基本步骤。
+  1. 定义可能的服务或服务集合。
+  2. 当用户定购/修改订购关系（ subscription)时，以初始过滤规则的形式创建用户专有的服务数据。
+  3. 将到达的初始请求传递给AS。
+
+### 传统电路交换用户与IMS 用户之间的连接
+
+- ![image-20221209141656104](Communication Technology.assets/image-20221209141656104.png)
+  - MGCF：Mutimedia Gateway Control Function
+- ![image-20221209141815637](Communication Technology.assets/image-20221209141815637.png)
+
+### IMS转接
+
+- ![image-20221209155901373](Communication Technology.assets/image-20221209155901373.png)
+
+### SIP压缩
+
+- IMS使用IETF定义的信令压缩（ SigComp）方案。该机制中，在通过网络发送消息之前，使用应用协议来进行消息压缩。对于应用来说，就是在应用协议和传送协议[ RFC3320和 RFC4896]之间的一层。SigComp使用通用解压缩虚拟机（UDVM)来对消息进行解压缩。使用SigComp进行压缩的消息称为SigComp消息。
+- ![image-20221209162421224](Communication Technology.assets/image-20221209162421224.png)
+
+## SIP
+
+- SIP is an application layer protocol that is used for establishing, modifying and terminating multimedia sessions in an Internet Protocol (IP) network. 
+- SIP, as part of the IETF process, is based on the Hypertext Transfer Protocol (HTTP) and the Simple Mail Transfer Protocol (SMTP)
+  - ![image-20221213133025084](Communication Technology.assets/image-20221213133025084.png)
+- 目标
+  - transport protocol neutrality - able to run over reliable(TCP, SCTP) and unreliable(UDP) protocols;
+  - request routing - direct (performance) or proxy-routed (control);
+  - separation of signalling and media description -can add new applications or media;extensibility;
+  - personal mobility.
+
+### 架构
+
+- 成员：
+  - User Agents (UAs) 
+    - User Agent Client (UAC)- the caller application that initiates requests.
+    - User Agent Server (UAS)- accepts, redirects, rejects requests and sends responses to incoming requests on behalf of the user.
+    - Gateways  are  special  cases  of  UAs.
+    - ![image-20221213173756995](Communication Technology.assets/image-20221213173756995.png)
+  -  intermediaries (servers)
+    - SIP intermediaries are logical entities through which SIP messages pass on their way to their ﬁnal destination. These intermediaries are used to route and redirect requests.These intermediaries are used to route and redirect requests.
+    - Proxy server:receives and forwards SIP requests
+      - dialog-statefull proxy – a proxy is dialog-statefull if it retains the state for a dialog from the initiating request (INVITE request) right through to the terminating request (BYE request);
+      - transaction-statefull  proxy  –  a  proxy  that  maintains  client  and  server  transaction-state  machines  during  the  processing  of  a  request;
+      - stateless  proxy  –  a  proxy  that  forwards  every  request  it  receives  downstream  and every  response  it  receives  upstream.
+    - Redirect  server : maps  the  address  of  requests  to  new  addresses.  It  redirects  requests 
+      but  does  not  participate  in  the  transaction.
+    - Location  server  –  keeps  track  of  the  location  of  users.
+    - Registrar server – a server that accepts REGISTER requests. It is used to store explicit binding between a user’s address of record (SIP address) and the address of the host where the user is currently residing or wishes to receive requests.
+    - Application  server  –  an  AS  is  an  entity  in  the  network  that  provides  end-users  with  a service.
+    - B2BUA（Back-to-Back User Agent，背靠背用户代理）是通讯网络中，使用SIP（Session Initiation Protocol，会话发起协议）实现会话的一种逻辑实体。B2BUA作为SIP呼叫两端的用户代理，负责处理呼叫两端的所有SIP信令，从呼叫确立到终止全程跟踪每个呼叫。
+
+### 消息格式
+
+- ![image-20221215160703268](Communication Technology.assets/image-20221215160703268.png)
+  - 一次呼叫只能建立一次session，但可以建立多个Dialog，因为接受请求的可能不止一个。
+
+- 组成部分
+  1. the   start   line
+     - The start line contents vary depending on whether the SIP message is a request or a response. For requests it is referred to as a ‘‘request line’’ and for responses it is referred to as a ‘‘status line’’.
+  2. message  headers  
+  3. body.
+  4. ![image-20221214114332115](Communication Technology.assets/image-20221214114332115.png)
+
+#### Requests
+
+- SIP requests are distinguished from responses using the start line. As indicated earlier, the start line in the request is often referred to as the request line. It has three components: a method name, a request-URI and the protocol version. They appear in that order and are separated by a single space character. The request line itself terminates with a Carriage Return–Line Feed (CRLF) pair、
+  1. Method：the method indicates the type of request. Six are deﬁned in the base SIP speciﬁcation [RFC3261]: the INVITE request, CANCEL request, ACK request and BYE request are used for session creation, modiﬁcation and termination; the REGISTER request is used to register a certain user’s contact information; and the OPTIONS request is used as a poll for querying servers and their capabilities. Other methods have been created as an extension to [RFC3261].
+  2. Request-URI：the  request-URI  is  a  SIP  or  a  Secure  SIP  (SIPS)  URI  that  identiﬁes  a resource  that  the  request  is  addressed  to.
+  3. Protocol    version：the    current    SIP    version    is    2.0.    All    requests    compliant    with [RFC3261]  must  include  this  version  in  the  request,  in  the  form  ‘‘SIP/2.0’’.
+
+#### Response
+
+- SIP responses can be distinguished from requests by looking at the start line. As indicated earlier, the start line in the response is often referred to as the status line. It has three components: the protocol version, status code and reason phrase. They appear in that order and are separated by a single space character. The status line itself terminates with a CRLF pair:
+  1. Protocol  version  –  this  is  identical  to  the  protocol  version  in  the  request  line. 
+  2. Status   code   –   the   status   code   is   a   three-digit   code   that   identiﬁes   the   nature   of   the response.  It  indicates  the  outcome  of  the  request.
+  3. Reason   phrase   –   this   is   a   free   text   ﬁeld   providing   a   short   description   of   the   status code.  It  is  mainly  aimed  at  human  users.
+- **Status  codes**  are  classiﬁed  in  six  classes  (classes  2xx  to  6xx  are  ﬁnal  responses)
+  - 临时应答1xx：临时应答，也就是消息性质的应答，标志了对方服务器正在处理请求，并且还没有决定最后的应答。如果服务器处理请求需要花200ms以上才能产生终结应答的时候，它应当发送一个1xx应答。注意1xx应答并不是可靠传输的。他们不会导致客户端传送一个ACK应答。临时性质的（1xx）应答可以包含消息体，包含会话描述。
+    1. 100 Trying：这个应答表示下一个节点的服务器已经接收到了这个请求并且还没有执行这个请求的特定动作（比如，正在打开数据库的时候）。这个应答，就像其他临时应答一 样，种植了UAC重新传送INVITE请求。100(Trying)应答和其他临时应答不同的是，在这里，它永远不会被有状态proxy转发到上行流中。
+    2. 180 Ringing：UA收到INVITE请求并且试图提示给用户。这个应答应当出世化一个本地回铃。
+    3. 188 Call is Being Forwarded(呼叫被转发)：服务器可以用这个应答代码来表示呼叫正在转发到另一个目的地集合。
+    4. 182 Queued：当呼叫的对方暂时不能接收呼叫的时候，并且服务器决定将呼叫排队等候，而不是拒绝呼叫的时候，那么就应当发出这个应答。当被叫方一旦恢复接收呼叫，他会返回 合适的终结应答。对于这个呼叫状态，可以有一个表示原因的短语，比如：”5 calls queued;expected waiting time is 15minutes”。服务器可以给出好几个182（Queued）应答告诉呼叫方排队的情况（比如排队靠前了等等）。
+    5. 183 会话进度：183（Session Progress）应答用于提示建立对话的进度信息。Reason-Phrase（表达原因的句子）、头域或者消息体可以用于提示呼叫进度的更消息的信息。
+  - 成功信息2xx：这个应答表示请求是成功的。
+    - 200 OK：请求已经处理成功。这个信息取决于不同方法的请求的应答。
+  - 转发请求3XX：3xx系列的应答是用于提示用户的新位置信息的，或者为了满足呼叫而转发的额外服务地点。
+    1. 300 Multiple Choices：请求的地址有多个选择，每个选择都有自己的地址，用户或者（UA）可以选择合适的通讯终端，并且转发这个请求到这个地址。应答可以包含一个具有每一个地点的在Accept请求头域中允许的资源特性，这样用户或者UA可以选择一个最合适的地址来转发请求。没有未这个应答的消息体定义MIME类型。这些地址选择也应当在Contact头域中列出（20.10节）。不同于HTTP，SIP应答可以包含多个Contact头域或者一个Contact头域 中具有一个地址列表。UA可以使用Contact头域来自动转发或者要求用户确认转发。不过，本规范没有定义自动转发的标准。如果被叫方可以在多个地址被找到，并且服务器不能或者不愿意转发请求的时候，可以使用这个应答来给呼叫方。
+    2. 301 Moved Permently：当不能在Request-URI指定的地址找到用户的时候，请求的客户端应当使用Contact头域(20.10)所指出的新的地址重新尝试。请求者应当用这个新的值来更新本地的目录，地址本，和用户地址cache，并且在后续请求中，发送到这个/这些列出的地址。
+    3. 302 Moved Temporarily：请求方应当把请求重新发到这个Contact头域所指出的新地址(20.10)。新请求的Request-URI应当用这个应答的Contact头域所指出的值。在应答中的Expires(20.19节)或者Contact头域的expires参数定义了这个Contact URI的生存周期。UA或者proxy在这个生存周期内cache这个URI。如果没有严格的有效时见，那么这个地址仅仅本次有效，并且不能在以后的事务 中保存。如果cache的Contact头域的值失败了，那么被转发请求的Request-URI应当再次尝试一次。临时URI可以比超时时间更快的失效，并且可以有一个新的临时URI。
+    4. 305 Use Proxy：请求的资源必须通过Contact头域中指出的proxy来访问。Contact头域指定了一个proxy的URI。接收到这个应答的对象应当通过这个proxy重新发送这个单个请求。305（UseProxy）必须是UAS产生的。
+    5. 380 Alternative Service：呼叫不成工，但是可以尝试另外的服务。另外的服务在应答的消息体中定义。消息体的格式在这里没有定义，可能在以后的规范中定义。
+  - 请求失败4xx：4xx应答定义了特定服务器响应的请求失败的情况。客户端不应当在不更改请求的情况下重新尝试同一个请求。（例如，增加合适的认证信息）。不过，同一个请求交给不同服务器也许就会成功。
+    1. 400 Bad Request：请求中的语法错误。Reason-Phrase应当标志这个详细的语法错误，比如”Missing Call-ID header field”。
+    2. 401 Unauthorized：请求需要用户认证。这个应答是由UAS和注册服务器产生的，当407（Proxy Authentication Required）是proxy服务器产生的。
+    3. 402 Payment Required：保留/以后使用
+    4. 403 Forbidden：服务端支持这个请求，但是拒绝执行请求。增加验证信息是没有必要的，并且请求应当不被重试。
+    5. 404 Not Found：服务器返回最终信息：用户在Request-URI指定的域上不存在。当Request-URI的domain和接收这个请求的domain不匹配的情况下， 也会产生这个应答。
+    6. 405 Method Not Allowed：服务器支持Request-Line中的方法，但是对于这个Request-URI中的地址来说，是不允许应用这个方法的。应答必须包括一个Allow头域，这个头域包含了指定地址允许的方法列表。
+    7. 406 Not Acceptable：请求中的资源只会导致产生一个在请求中的Accept头域外的，内容无法接收的错误。
+    8. 407 Proxy Authentication Required：这个返回码和401（Unauthorized）很类四，但是标志了客户端应当首先在proxy上通过认证。这个返回码用于应用程序访问通讯网关（比如，电话网关），而很少用于被叫方要求认证。
+    9. 408 Request Timeout：在一段时间内，服务器不能产生一个终结应答，例如，如果它无法及时决定用户的位置。客户端可以在稍后不更改请求的内容然后重新尝试请求。
+    10. 410 Gone：请求的资源在本服务器上已经不存在了，并且不知道应当把请求转发到哪里。这个问题将会使永久性的。如果服务器不知道，或者不容易检测，这个资源消失是临时性质的还是永久性质的，那么应当返回一个404（Not Found）。
+    11. 413请求实体过大。：服务器拒绝处理请求，因为这个请求的实体超过了服务器希望或者能够处理的大小。这个服务器应当关闭连接避免客户端重发这个请求。如果这个情况是暂时的，那么服务端应当包含一个Retry-After头域来表明这是一个暂时的故障，并且客户端可以过一段时间再次尝试。
+    12. 414 Request-URI Too Long：服务器拒绝这个请求，因为Request-URI超过了服务器能够处理的长度。
+    13. 415 Unsupported Media Type：服务器由于请求的消息体的格式本服务器不支持，所以拒绝处理这个请求。这个服务器必须根据内容的故障类型，返回一个Accept，Accpet-Encoding,或者Accept-Language头域列表。
+    14. 416 Unsupported URI Scheme：服务器由于不支持Request-URI中的URI方案而终止处理这个请求。
+    15. 420 Bad Extension：服务器不知道在请求中的Proxy-Require(20.29)或者Require(20.32)头域所指出的协议扩展。服务器必须在Unsupported头域中列出不支持的扩展。
+    16. 421Extension Required：UAS需要特定的扩展来处理这个请求，但是这个扩展并没有在请求的Supported头域中列出。具有这个应答码的应答必须包含一个Require头域列出所需要的扩展。UAS不应当使用这个应答除非它真的不能给客户端提供有效的服务。相反，如果在Support头域中没有列出需要的扩展，服务器应当根据基准的SIP兼容的方法和客户端支持的扩展来进行处理。
+    17. 423 Interval Too Brief：服务器因为在请求中设置的资源刷新时间（或者有效时间）过短而拒绝请求。这个应答可以用于注册服务器来拒绝那些Contact头域有效期过短的注册请求。
+    18. 480 Temporarily Unavailable：请求成功到达被叫方的终端系统，但是被叫方当前不可用（例如，没有登陆，或者登陆了但是状态是不能通讯，或者有”请勿打扰”的标记）。应答应当在 Retry-After中标志一个合适的重发时间。这个用户也有可能在其他地方是有效的（在本服务器中不知道）。Reason-Phrase(原因短句) 应当提示更详细的原因，为什么被叫方暂时不可用。这个值应当是可以被UA设置的。状态码486（Busy Here）可以用来更精确的表示本请求失败的特定原因。这个状态码也可以是转发服务或者proxy服务器返回的，因为他们发现Request-URI指定的用户存在，但是没有一个给这个用户的合适的当前转发的地址。
+    19. 481 Call/Transaction Does Not Exist：这个状态表示了UAS接收到请求，但是没有和现存的对话或者事务匹配。
+    20. 482 Loop Detected：服务器检测到了一个循环(16.3/4)
+    21. 483 Too Many Hops：服务器接收到了一个请求包含的Max-Forwards(20.22)头域是0
+    22. 484 Address InComplete：服务器接收到了一个请求，它的Request-URI是不完整的。在原因短语中应当有附加的信息说明。这个状态码可以和拨号交叠。在和拨号交叠中，客户端 不知道拨号串的长度。它发送增加长度的字串，并且提示用户输入更多的字串，直到不在出现484（Address Incomplete）应答为止。
+    23. 485 Ambiguous：Request-URI是不明确的。应答可以在Contact头域中包含一个可能的明确的地址列表。这个提示列表肯囊个在安全性和隐私性对用户或者组织造 成破坏。必须能够由配置决定是否以404（NotFound）代替这个应答，又或者禁止对不明确的地址使用可能的选择列表。部分email和语音邮箱系统提供了这个功能。这个状态码和3xx状态码不同：对于300来说，它是假定同一个人或者服务有不同的地址选择。所以对3xx来说，自动选择系统或者连续查找就有效，但是对485（Ambiguous）应答来说，一定要用户的干预。
+    24. 486 Busy Here：当成功联系到被叫方的终端系统，但是被叫方当前在这个终端系统上不能接听这个电话，那么应答应当回给呼叫方一个更合适的时间在Retry-After头域 重试。这个用户也许在其他地方有效，比如电话邮箱系统等等。如果我们知道没有其他终端系统能够接听这个呼叫，那么应当返回一个状态码600（Busy Everywhere）。
+    25. 487 Request Terminated：请求被BYE或者CANCEL所终止。这个应答永远不会给CANCEL请求本身回复。
+    26. 488 Not Acceptable Here：这个应答和606（Not Acceptable）有相同的含义，但是只是应用于Request-URI所指出的特定资源不能接受，在其他地方请求可能可以接受。包含了媒体兼容性描述的消息体可以出现在应答中，并且根据INVITE请求中的Accept头域进行规格化（如果没有Accept头域，那么就是application/sdp）。这个应答就像给OPTIONS请求的200(OK)应答的消息体一样。
+    27. 491 Request Pending：在同一个对话中，UAS接收到的请求有一个依赖的请求正在处理。
+    28. 493 Undecipherable：UAS接收到了一个请求，包含了一个加密的MIME,并且不知道或者没有提供合适的解密密钥。这个应答可以包含单个包体，这个包体包含了合适的公钥，这个公钥用于给这个UAS通讯中加密包体使用的。细节描述在23.2节。
+  - Server Failure 5xx：5xx应答是当服务器本身故障的时候给出的失败应答。
+    1. 500 Server Internal Error：服务器遇到了未知的情况，并且不能继续处理请求。客户端可以显示特定的错误情况，并且可以在几秒种以后重新尝试这个请求。如果这个情况是临时的，服务器应当在Retry-After头域标志客户端过多少秒钟之后重新尝试这个请求。
+    2. 501 Not Implemented：服务器没有实现相关的请求功能。当UAS不认识请求的方法的时候，并且对每一个用户都无法支持这个方法的时候，应当返回这个应答。（proxy不考虑请求的方法而转发请求）。注意405（Method Not Allowed）是因为服务器实现了这个请求方法，但是这个请求方法在特定请求中不被支持。
+    3. 502 Bad Gateway：如果服务器，作为gateway或者proxy存在，从下行服务器上接收到了一个非法的应答（这个应答对应的请求是本服务器为了完成请求而转发给下行服务器的）。
+    4. 503 Service Unavailable：由于临时的过载或者服务器管理导致的服务器暂时不可用。这个服务器可以在应答中增加一个Retry-After来让客户端重试这个请求。如果没有Retry-After指出，客户端必须就像收到了一个500（Server Internal Error）应答一样处理。客户端（proxy或者UAC）收到503（Service Unavailable）应当尝试转发这个请求到另外一个服务器处理。并且在Retry-After头域中指定的时间内，不应当转发其他请求到这个服务器。作为503(Service Unavaliable)的替代，服务器可以拒绝连接或者把请求扔掉。
+    5. 504 Server Time-out:服务器在一个外部服务器上没有收到一个及时的应答。这个外部服务器是本服务器用来访问处理这个请求所需要的。如果从上行服务器上收到的请求中的Expires头域超时，那么应当返回一个408（Request TimeOut）错误。
+    6. 505 Version Not Supported:服务器不支持对应的SIP版本。服务器是无法处理具有客户端提供的相同主版本号的请求，就会导致这样的错误信息。
+    7. 513 Message To Large:服务器无法处理请求，因为消息长度超过了处理的长度。
+  - Global Failures 6xx:global failure responses. The request cannot be fulﬁlled at any server. The server responding with this response class needs to have deﬁnitive information about the user.
+    1. 600 Busy Everywhere:成功联系到被叫方的终端系统，但是被叫方处于忙的状态，并不打算接听电话。这个应答可以通过增加一个Retry-After头域更明确的告诉呼叫方多久以 后可以继续呼叫。如果被叫方不希望提示拒绝的原因，被叫方应当使用603（Decline）。只有当终端系统知道没有其他终端节点（比如语音邮箱系统）能 够访问到这个用户的时候才能使用这个应答。否则应当返回一个486（Busy Here）的应答。
+    2. 603 Decline:当成功访问到被叫方的设备，但是用户明确的不想应答。这个应答可以通过增加一个Retry-After头域更明确的告诉呼叫方多久以后可以继续呼叫。只有当终端知道没有其他任何终端设备能够响应这个呼叫的势能才能给出这个应答。
+    3. 604 Does Not Exists Anywhere:服务器验证了在请求中Request-URI的用户信息，哪里都不存在
+    4. 606 Not Acceptable:当成功联系到一个UA,但是会话描述的一些部分比如请求的媒体，带宽，或者地址类型不被接收。606（NotAcceptable）应答意味着用户希望通讯，但是不能充分支持会话描述。606（Not Acceptable）应答可以在Warning头域中包含一个原因列表，用于解释为何会话描述不能被支持。在应答中，可以出现一个包含媒体兼容性描述的消息体，这个消息体的格式根据INVITE请求中的Accept头域指出的格式进行规格化（如果没有Accept头域，那么就是application/sdp），就像给OPTIONS亲求的200(OK)应答中的消息一样。我们希望这些媒体协商不要经常需要，并且当一个新用户被邀请加入已经存在的会话的时候，这个媒体协商可能不需要。这取决于邀请的初始化者是否需要对606（Not Acceptable）进行处理。这个应答只有当客户端知道没有其他终端能够处理这个请求的时候才能发出。
+
+#### Header  ﬁelds
+
+- Header ﬁelds contain information related to the request: for example, the initiator of the request, the recipient of the request and call identiﬁer. Header ﬁelds also indicate message body characteristics.Header ﬁelds end with a CRLF pair. The headers section of a SIP message  terminates 
+  with  a  CRLF.
+
+- The  format  of  the  header  ﬁelds 
+
+  ```http
+  Header-name: header-value
+  ```
+
+- Some   headers   are   mandatory   in   every   SIP   request   and   response
+
+  - | header              | example                                               |
+    | ------------------- | ----------------------------------------------------- |
+    | To header           | To:SIP-URI(;parameters)                               |
+    | From header         | From: SIP-URI(;parameters)                            |
+    | Call-ID header      | Call-ID: unique-id                                    |
+    | CSeq header         | CSeq: digit method                                    |
+    | Via header          | Via: SIP/2.0/[transport-protocol] sent-by(parameters) |
+    | Max-Forwards header | Max-Forwards: digit                                   |
+    | Contact header      | Contact: SIP-URI(;parameters)                         |
+
+    - that the brackets around parameters indicate that they are optional
+
+#### Body
+
+- The message body (payload) can carry any text-based information, while the request method and the response status code determine how the body should be interpreted.When  describing  a  session  the  SIP  message  body  is  typically  a  Session  Description Protocol  (SDP)  message.
+
+### The  SIP  URI
+
+- The SIP URI follows the same form as an email address: user@domain. There are two URI  schemes
+  - sip:bob.smith@nokia.com   is   a   SIP   URI.   This   is   the   most   common   form   and   was introduced  in  [RFC2543].
+  - sips:bob.smith@nokia.com    is    a    SIPS    URI.    This    new    scheme    was    introduced    in [RFC3261]  and  requires  TLS  over  TCP  as  transport  for  security.
+- There  are  two  types  of  SIP  and  SIPS  URIs
+  - Address Of Record (AOR)：this is a SIP address that identiﬁes a user. This address can be handed out to people in much the same way as a phone number: e.g., sip:bob.smith@nokia.com (needs DNS SRV records to locate SIP servers for the nokia.com domain).
+  - Fully Qualiﬁed Domain Name (FQDN) or IP address (identiﬁes a device) of the host 。e.g., sip:bob.smith@127.233.4.12 or sip:bob.smith@pc2.nmp. nokia.com (which needs no resolution for routing).
+- The   SIP   URI   has   the   form:   `sip:userinfo@hostport[parameters][headers]`.   The   SIPS URI  follows  exactly  the  same  syntax  as  the  SIP  URI
+  - Userinfo ： a  user  name  or  a  telephone  number.
+  - Hostport ：the  domain  name  or  numeric  network  address  and  port.
+  - Parameters ： deﬁnes   speciﬁc   URI   parameters,   such   as   transport,   time   to   live,   etc. 
+  - Headers ：another  rarely  used  form  that  passes  on  extra  information.
+
+### The  tel  URI
+
+- The telephone URI (tel URI) is used to identify resources using a telephone number. SIP allows requests to be sent to a tel URI. This means that the request-URI of a SIP request can contain a tel URI.
+- The tel URI can contain a global number or a local number. A global number follows the rules of E.164 numbers and starts with a ‘‘+’’, while a local number follows the rules of local private numbering plans. Local numbers need to have the phone-context parameter, which identiﬁes the context (owner) of the local number and, therefore, the scope of the number.
+
+### SIP  structure
+
+- SIP is a layered protocol that allows diﬀerent modules within it to function indepen-dently with just a loose coupling(连接器) between each layer
+- ![image-20221214155656033](Communication Technology.assets/image-20221214155656033.png)
+  1. Syntax  and  encoding  layer：Encoding makes use of augmented Backus-Naur Form (BNF) grammar, the complete description 
+     of which can be found in [RFC3261].
+     - 巴科斯范式（英语：Backus Normal Form，缩写为 BNF），又称为巴科斯-诺尔范式（英语：Backus-Naur Form，缩写同样为 BNF，也译为巴科斯-瑙尔范式、巴克斯-诺尔范式），是一种用于表示上下文无关文法的语言，上下文无关文法描述了一类形式语言。它是由约翰·巴科斯（John Backus）和彼得·诺尔（Peter Naur）首先引入的用来描述计算机语言语法的符号集。
+  2. transport layer： As the name indicates, this is the layer that dictates how clients send requests and receive responses and how servers receive requests and send responses. The transport layer is closely  related to the sockets layer of a  SIP  entity.
+  3. Transaction  layer：A transaction, in SIP terms, is a request that is sent by a client to a server, along with all responses to that request sent from the server back to the client. The transaction layer handles the matching of responses to requests.Application-layer re-transmissions and application-layer transaction timeouts are also handled in this layer and are dependent on the transport protocol used. A client transaction sends requests and receives responses, while a server transaction receives requests and sends responses. The transaction layer uses the transport layer for sending and receiving requests and responses.The   transaction   layer   has   four   transaction-state   machines.   Each   transaction-state machine  has  its  own  timers,  re-transmission  rules  and  termination  rules
+     - INVITE  client  transaction; 
+     - non-INVITE  client  transaction; 
+     - INVITE  server  transaction; 
+     - non-INVITE  server  transaction.
+  4. Transaction User (TU) layer
+     - This is the layer that creates client and server transactions. When a TUwishes to send a SIP request it creates a client transaction instance and sends the request along with the destination IP address, port and name of the transport protocol to use. TUs are deﬁned to be UAC 
+       core and UAS core, or simply UAC and UAS.
+       - There are two factors that can aﬀect TUbehaviour: one is the method name in the SIP message and the other is the state of the request with regard to dialogs
+     - UAC  behaviour
+       - The  To  header  is  populated  with  the  target’s  AOR  (an  AOR  is  similar  to  a  business card  address).
+       - The  From  header  is  populated  with  the  sender’s  AOR.  It  is  also  populated  with  a  tag parameter.  The  tag  is  one  of  the  components  used  to  identify  a  dialog.
+       - The  Call-ID  header  is  populated  with  an  identiﬁer  that  is  unique.
+       - The CSeq header is used to identify the order of transactions. The CSeq number is arbitrary for requests outside a dialog. It contains two parts, a CSeq and a method name separated by a space. The method part is populated with the same method as the one in the request line.
+       - The Max-Forwards header is used to limit the number of hops a request traverses and is used to avoid loops. It is typically set to 70 (indicating the number of hops). Each hop decrements the value by 1.
+       - The Via header contains two vital pieces of information: the transport protocol and the address where the response is to be sent. The protocol name and value are always set to SIP and 2.0, respectively. The Via header contains a branch parameter that identiﬁes transactions and is used to match requests to responses. It must be unique. The branch inserted by an element compliant with this speciﬁcation always begins with the characters ‘‘z9hG4bK’’.
+       - The  Contact  header  is  populated  with  a  URI  that  is  typically  the  address  of  the  host where  the  request  originated.
+       - The request-URI is normally populated with the value in the To header. REGISTER requests are special cases in which the request-URI is populated by the registrar address.
+
+### Registration
+
+- SIP supports the concept of user mobility and discovery. A user can make herself available for communication by explicitly binding her AOR to a certain host address. 
+  - Address Of Record：ARO
+- A user can be registered at many devices simultaneously by sending a REGISTER request from each device. Similarly, a user can create multiple bindings from the same device; this can be achieved by sending one REGISTER request with multiple bindings to the AOR. To do this, a user adds multiple contact headers in the REGISTER request.
+- SIP registrations are, by nature, soft-state: this means that registration bindings must be periodically refreshed (updated). The expiration time of a binding is indicated by the registering entity using the expires parameter in a Contact header. If this parameter is not present, the registrar assumes an expiration time of 1 hour.
+
+### Dialogs
+
+- A dialog is a SIP relationship between two collaborators. The dialog provides the necessary states required for the routing and sequencing of messages between those collaborators.
+- A dialog state is needed for creating, sending, receiving and processing of messages within a dialog. This state consists of the dialog-ID, a local sequence number, a remote sequence number, a local URI, a remote URI, a remote target, a Boolean ﬂag called a ‘‘secure’’ ﬂag and a route set.
+  - via的作用就是标记请求所经过的节点，好让其对应的响应能按照via标记好的路径返回回去；
+  - Route set（一个请求或应答中可以包含多个Route标记，这些Route标记称为Route Set）的作用是强制请求必须从Route set中设定的节点通过，Route set的生成可以是手动配置也可以是协议自己生成，需要手动配置的情况如，客户端向registar注册的时候，registar的路径就应该是通过手动配置，协议自己生成的情况如在对话生成前各个proxy往请求中添加Record-Route为了让后续的请求能继续通过该proxy发送，当对话建立好后就确定了后续的请求该走的路由，之后将Record-Route中的记录登记在Route set中来强制请求的路由。
+  - Record-Route的是各个想在后续请求对话中还继续接收请求和应答的Proxy，将自己的地址信息添加在Record-Route中来帮助协议生成最终的Route set（也就是为什么说对话中的请求和应答包含的是Route-set，对话外的请求包含的Record-Route的原因，Route set用在对话外的情况就是在注册时客户端最初不清楚该往哪里去注册，需要手动配置，总之一句话，Route set的作用就是强制让请求通过其包含的路由列表传输请求和应答）。
+
+### Session
+
+- A multimedia session consists of a set of multimedia senders and receivers and the data streams that ﬂow between them. Sessions use SIP dialogs and follow SIP rules for sending requests within dialogs.
+- INVITE  requests  can  also  be  sent  within  dialogs  to  re-negotiate  the  session  description.
+- It is important to remember that all transactions must complete independently of each other.
+- A   session   is   terminated   by   a   BYE   request.   The   BYE   request   is   sent   in   exactly   the same  way  as  any  other  request  within  a  dialog.
+
+### The  SDP  Oﬀer/Answer  model  with  SIP
+
+- Using basic SIP, Oﬀer and Answer can only appear in INVITE requests, reliable responses to INVITE requests and ACK requests. 
+
+### Security
+
+- threats  and  attacks：Denial of service、Eavesdropping、Tearing down sessions、Registration hijacking、Session hijacking、Impersonating  a server、Man in the middle
+- Security  framework：Authentication、Authorization 、Conﬁdentiality、Integrity、Privacy  、Non-repudiation
+- AKA：Authentication and Key Agreement (AKA) protocol
+-  random challenge (RAND) 
+-  the network authentication token (AUTN)
+- S/MIME：Secure Multipurpose Internet Mail Extension (S/MIME) provides message integrity, conﬁdentiality and authentication, which is achieved by protecting SIP headers in an encrypted and/or signed S/MIME SIP message body. It does not require a shared secret.
+
+### SIP  extensions
+
+#### Event notification framework
+
+- SIP has been the extension used for the purpose of event notiﬁcation. A user or resource subscribes to another resource that has an event of interest and receives notiﬁcations of the state and any changes in such an event.The  SIP  SUBSCRIBE  method  is  used  for  subscription  while  the  NOTIFY  method  is used  to  deliver  notiﬁcations  of  any  changes  to  an  event.
+- SUBSCRIBE、NOTIFY
+  - Event    header    –    this    identiﬁes    the    event    to    which    a    subscriber    is    subscribing    for notiﬁcations.
+  - Allow-Events header – this indicates to the receiver that the sender of the header understands the event notiﬁcation framework. The tokens present in the header indicate the event packages that it supports.
+  - Subscription-State header – this indicates the status of a subscription. ‘‘Active’’, ‘‘pending’’ and ‘‘terminated’’ are the three deﬁned subscription states. This header also carries the reason for a subscription state: ‘‘deactivated’’, ‘‘probation’’, ‘‘rejected’’, ‘‘timeout’’, ‘‘giveup’’ and ‘‘noresource’’. Extensions are possible for subscription-state and reason values.
+  - ‘‘202 Accepted’’ response – this indicates that the subscription request has been preliminarily accepted, but is still pending a ﬁnal decision, which will be indicated in the NOTIFY request.
+  - ‘‘489   Bad   Event’’   response   –   this   response   is   returned   when   the   notiﬁer   does   not understand  an  event  as  described  in  the  Event  header.
+  - Much like registration, subscriptions are in soft state and need refreshing. The duration of a subscription is indicated in an Expires header. The default value is 1 hour if the header is not present in the SUBSCRIBE request.
+- State  publication  (the  PUBLISH  method)
+  - The event notiﬁcation framework speciﬁes how to subscribe to the state of an event and how to get notiﬁcation of changes to the state of an event. It does not specify how the state can be published. However, the SIP extension for state publication speciﬁcation [RFC3903] allows a client to publish its event state to the state agent, which acts as the compiler of such state and generating notiﬁcations. This is achieved using the 
+    PUBLISH method.
+- SIP  for  instant  messaging
+  - SIP  is  extended  for  instant  messaging  by  the  introduction  of  the  MESSAGE  method in  [RFC3428].
+  - There are two modes of instant message exchange: page mode and session mode. The MESSAGE method is used in page mode. Page mode is a one-shot instant message where a subsequent instant message is not related, at the protocol level, to the preceding one. It is used when a conversation or interaction is not unexpected.
+
+#### Reliability  of  provisional  responses
+
+- It was later discovered that reliability in the transmission of provisional responses in some cases was both important and useful: therefore, 
+  [RFC3262] was created. In 3GPP, reliable provisional responses and their acknowledgments are used to exchange additional SDP Oﬀer/Answer messages.
+- The reliability of the provisional  responses extension    only    applies    to    INVITE requests.

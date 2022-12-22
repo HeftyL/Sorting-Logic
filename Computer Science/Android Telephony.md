@@ -89,7 +89,8 @@
   | adb install xxx.apk                     | 安装apk                              |
   | adb root                                | 以root启动adb                        |
   | adb shell pm uninstall -k --user 0 包名 | 删除系统预装应用                     |
-  | adb shell pm list packages              |                                      |
+  | adb shell pm list packages              | 显示所有的包                         |
+  | adb shell ps -ef                        | 显示                                 |
 
 # 通话流程
 
