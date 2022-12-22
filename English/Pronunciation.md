@@ -1,3 +1,8 @@
+# 概述
+
+- 口腔
+  - ![image-20221218133417816](Pronunciation.assets/image-20221218133417816.png)
+
 # 音标体系
 
 - DJ音标
