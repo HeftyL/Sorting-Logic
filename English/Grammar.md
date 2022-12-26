@@ -384,6 +384,13 @@
   - ![image-20221226152753488](Grammar.assets/image-20221226152753488.png)
     1. be＋主补:系动词be不论作何种变形，其实质就类似于一个等于号“＝”，或者说类似于一座桥梁，一边连着主语，另一边连着主语补足语。
     2. die+名词短语：如果是宾语，只能是同源宾语
+  - ![image-20221226221542328](Grammar.assets/image-20221226221542328.png)
+  - 系动词的语义分类
+    - 单 纯 表 示 主 语 的 特 征 、 状 态 的：feel, look, sound, taste, smell, seem, appear等。
+    - 表 示 主 语 由 一 种 状 态 转 变 为 另 一 种 状 态 的：become, grow, get, turn, fall, go, come等
+    - 表 示 主 语 保 持 或 继 续 某 种 状 态 的：continue, remain, stay, keep等
+  - 各种句型＋主补
+    - 主 语 ＋ 谓 语 ＋ 主 语 补 足 语
 
 # 长难句
 
