@@ -3179,6 +3179,10 @@
 
 - The message body (payload) can carry any text-based information, while the request method and the response status code determine how the body should be interpreted.When  describing  a  session  the  SIP  message  body  is  typically  a  Session  Description Protocol  (SDP)  message.
 
+### 请求类型
+
+- 
+
 ### The  SIP  URI
 
 - The SIP URI follows the same form as an email address: user@domain. There are two URI  schemes
@@ -3284,3 +3288,16 @@
 - It was later discovered that reliability in the transmission of provisional responses in some cases was both important and useful: therefore, 
   [RFC3262] was created. In 3GPP, reliable provisional responses and their acknowledgments are used to exchange additional SDP Oﬀer/Answer messages.
 - The reliability of the provisional  responses extension    only    applies    to    INVITE requests.
+- A UAC receiving a reliable provisional response responds to it with a provisional response acknowledgment (PRACK) request. The PRACK request carries a RACK header, which reﬂects the value in the RSeq header and that in the CSeq header, in that order.
+
+#### The  UPDATE  method
+
+- The UPDATE method is an extension to SIP that enables UAs to update a session description without having any impact on a dialog. The UPDATE method can be sent within early and conﬁrmed dialogs, but must not be sent if a dialog is not created (i.e., before a dialog-creating provisional response is sent/received). It is constructed like any other request within a dialog.
+- UPDATE requests are only used for dialogs created using INVITE requests.An UPDATE request can be sent by the caller (the INVITE UAC) as well as the 
+  callee (the INVITE UAS) and is only used for sessions
+
+#### Integration  of  resource  management  and  SIP  (preconditions)
+
+- the caller indicates by means of an SDP oﬀer a set of constraints about the session. The answerer responds to the oﬀer with an SDP answer; however, it neither establishes a session nor does it alert the user
+
+#### The  SIP  REFER  method
