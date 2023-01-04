@@ -218,6 +218,40 @@
 
 - ![image-20221204224443844](Grammar.assets/image-20221204224443844.png)
 
+#### 概述
+
+- 定语从句是一种后置定语
+- 由两个简单句合并而成
+- 先行词和关系词
+  - ![image-20221230095919836](Grammar.assets/image-20221230095919836.png)
+
+#### 结构
+
+- 关系词在定语从句中的位置
+  - 主语关系代词（subject relatives）
+  - 动词宾语关系代词（verb-object relatives）
+  - 介词宾语关系代词（preposition-object relatives）
+  - 定语关系限定词（possessive relatives）
+    - “whose+名词”与“名词+of which”：只限于whose的先行词是事物，而不是人，因为of which不能指代人。
+      1. 只能修饰事物，即此时的先行词是“指物”。
+      2. 一般在名词前面有the限定，即“the+名词+of which”。
+      3. 一般有逗号分隔定语从句与先行词。如上面b句中a house与the roof之间有逗号。
+      4. 可以换成“of which+the+名词”结构。
+      5. 主要用于正式的书面语中。
+    - which+名词![image-20230103162748440](Grammar.assets/image-20230103162748440.png)
+  - 补语关系代词（complement relatives）
+  - 状语关系副词（adverbial relatives）
+- 判断逻辑
+  - ![image-20221230144611590](Grammar.assets/image-20221230144611590.png)
+  - ![image-20221230152752365](Grammar.assets/image-20221230152752365.png)
+  - ![image-20221230152822203](Grammar.assets/image-20221230152822203.png)
+
+- 注意
+  - 当 关 系 代 词在定语从句中充当主语补足语时，不论先行词是人还是物，都用which引 导 定 语 从 句 。作主语补足语的先行词虽然指人，但是泛指“一类人”，此时我们用which来引导定语从句，以表达分类的概念。
+  - 作主语补足语的先行词虽然指人，但当其表示一种身份或一种职业时，用which来引导定语从句。
+  - 有时 ， 主 句 中 指 人 的 名 词 并 非 先 行 词 ， 所 以 ， 自 然 不 用 who来引 导 定 语 从 句 。 此 时 我 们 用 which来 指 代 主 句 中 的 其 他 部 分 ， 引 导一个定语从句。
+
+
 ### 状语从句
 
 - ![image-20221204224528788](Grammar.assets/image-20221204224528788.png)

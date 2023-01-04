@@ -2495,8 +2495,8 @@
   - 联机状态下，IRAT有三种方式，分别是切换PSHO、重定向以及快速返回FR
   - ![image-20221130160516226](Communication Technology.assets/image-20221130160516226.png)
     - 切换PSHO就是在LTE的联机状态和3G的联机状态间转换；
-      重定向就是从LTE的联机状态进入2G或3G的待机状态；
-      快速返回FR就是从3G的联机状态进入LTE的待机状态。
+    - 重定向就是从LTE的联机状态进入2G或3G的待机状态；
+    - 快速返回FR就是从3G的联机状态进入LTE的待机状态。
 - 性能对比
   - ![image-20221202154245285](Communication Technology.assets/image-20221202154245285.png)
 
@@ -3301,3 +3301,27 @@
 - the caller indicates by means of an SDP oﬀer a set of constraints about the session. The answerer responds to the oﬀer with an SDP answer; however, it neither establishes a session nor does it alert the user
 
 #### The  SIP  REFER  method
+
+- The sender of a REFER request refers the recipient to a resource that is identiﬁed in the REFER request itself
+- One application of the REFER method is call transfer. For instance, a secretary receives a call from an associate asking for the manager. The secretary then transfers the call to the manager by sending the associate a REFER request with the manager’s contact information. The associate’s UA then calls the manager by sending an INVITE.
+- The receiver of a REFER request typically responds to it with a ‘‘202 Accepted’’ response. Its recipient also creates a subscription and sends notiﬁcations of the outcome. According to the event notiﬁcation framework, a NOTIFY request is gener- ated and sent immediately after accepting the REFER request. 
+
+# SDP
+
+- The Session Description Protocol (SDP) is an application-layer protocol intended to describe multimedia sessions. It is a text-based protocol. When describing a session the caller and callee indicate their respective ‘‘receive’’ capabilities, media formats and receive address/port.
+- Capability   exchange   can   be   performed   during   session   setup   or   during   the   session itself  –  i.e.,  while  the  session  is  in  progress.
+
+## SDP  message  contents
+
+1. Session-level description – this includes the session identiﬁer and other session-level parameters, such as the IP address, subject, contact info about the session and/or creator.
+   - ![image-20230103153909525](Communication Technology.assets/image-20230103153909525.png)
+2. Timing   description   –   start   and   stop   times,   repeat   times,   one   or   more   media-level descriptions.
+   - ![image-20230103153929447](Communication Technology.assets/image-20230103153929447.png)
+3. Media   type   and   format   –   transport   protocol   and   port   number,   other   media-level parameters. Note that the media address may be diﬀerent from the signalling address.
+   - ![image-20230103153959868](Communication Technology.assets/image-20230103153959868.png)
+
+## Format
+
+- The  SDP  syntax  is  very  strict  and  all  lines  follow  the  same  format.  Every  SDP  line  has the  format:`<character>=<value>`.
+- No spaces are allowed on either side of the ‘‘=’’ sign. The <value> part of the line contains one or more parameters and there is exactly one space between each parameter.
+- Each   SDP   line   ends   with   a   Carriage   Return–Line   Feed   (CRLF)   and   each   line   has   a deﬁned  number  of  parameters.
