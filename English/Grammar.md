@@ -241,6 +241,7 @@
     - which+名词![image-20230103162748440](Grammar.assets/image-20230103162748440.png)
   - 补语关系代词（complement relatives）
   - 状语关系副词（adverbial relatives）
+    - where引导具体地点抽象地点名词（情况、情形、心理、情感、语言、交流）
 - 判断逻辑
   - ![image-20221230144611590](Grammar.assets/image-20221230144611590.png)
   - ![image-20221230152752365](Grammar.assets/image-20221230152752365.png)
