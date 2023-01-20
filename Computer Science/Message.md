@@ -5071,19 +5071,30 @@
   2. modem log的接收流程，有没有接收到，如果接收途中失败了，在哪里失败了。
      1. 如果modem接收到了，但app没有显示，查看ap log，确定是在app层还是framework层失败
 
+### common
+
+- fail
+- failure
+- unsupported
+- error
+
 ## sms
 
+- smsdispatch
 - smssender
 - ims_sms
 - wappush
 - gid
 - SEND_SMS
+- NEW_SMS
 
 ## APN
 
 - apnsetting
 - setup_data
 - data_registration
+
+
 
 # 刷机
 
