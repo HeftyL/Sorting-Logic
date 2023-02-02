@@ -5070,6 +5070,8 @@
      1. 如果根本就没到modem，查看ap log，确定是在app层还是framework层失败
   2. modem log的接收流程，有没有接收到，如果接收途中失败了，在哪里失败了。
      1. 如果modem接收到了，但app没有显示，查看ap log，确定是在app层还是framework层失败
+- mainline 查看 ：home/project2/liaohaifei/share/U5690/LA.QSSI.12.0.r1/LINUX/android/vendor/partner_modules/build（使用gitk查看记录）
+- gms的messages查看：/home/project2/liaohaifei/share/P800AE/LA.QSSI.12.0.r1/LINUX/android/vendor/gms/apps/Messages
 
 ### common
 
@@ -5094,7 +5096,13 @@
 - setup_data
 - data_registration
 
+## voicemail
 
+- androidt/vendor/mediatek/proprietary/packages/services/Telephony/src/com/android/phone/NotificationMgr.java
+- updatemwi
+- getVoiceMailNumber
+- onVoicemailStatusFetched
+- DialerVoicemailStatusQuery
 
 # 刷机
 
