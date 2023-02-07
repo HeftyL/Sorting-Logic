@@ -5075,20 +5075,19 @@
 
 ### common
 
-- fail
-- failure
-- unsupported
-- error
+- fail、failure、unsupported、error
+- adb logcat -b all |Select-String androidruntime
 
 ## sms
 
 - smsdispatch
 - smssender
 - ims_sms
-- wappush
+- dispatchwapPdu()
 - gid
 - SEND_SMS
 - NEW_SMS
+- GsmInboundSmsHandler
 
 ## APN
 
@@ -5103,6 +5102,10 @@
 - getVoiceMailNumber
 - onVoicemailStatusFetched
 - DialerVoicemailStatusQuery
+
+## MMS
+
+- WAP_PUSH_DELIVER
 
 # 刷机
 
