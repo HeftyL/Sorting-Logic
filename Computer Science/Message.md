@@ -3698,6 +3698,85 @@
      }
      ```
 
+## wappush
+
+- ![image-20230210100644648](Message.assets/image-20230210100644648.png)
+
+## VM
+
+- 
+
+## VVM
+
+- vvm sms with port 5499
+
+  ```
+  //received vvm sms with port 5499
+  
+  1222352, 787712, 15235103, 15:54:44:938 2023/01/31, MOD_IMCSMS, , MOD_IMCSMS_BASELINE_TRACE_PEER_H, [NW->MS] [MT] IMCSMS__RP_DATA (rl_id=3)
+  Message Content
+  GSM A-I/F RP - RP-DATA (Network to MS)
+  Message Type RP-DATA (Network to MS)
+  RP-Message Reference
+  RP-Message Reference: 0x72 (114)
+  RP-Originator Address - (19703769769)
+  Length: 7
+  1... .... = Extension: No Extension
+  .001 .... = Type of number: International Number (0x1)
+  .... 0001 = Numbering plan identification: ISDN/Telephony Numbering (ITU-T Rec. E.164 / ITU-T Rec. E.163) (0x1)
+  Called Party BCD Number: 19703769769
+  RP-Destination Address
+  Length: 0
+  RP-User Data
+  Length: 130
+  TPDU (not displayed)
+  GSM SMS TPDU (GSM 03.40) SMS-DELIVER
+  0... .... = TP-RP: TP Reply Path parameter is not set in this SMS SUBMIT/DELIVER
+  .1.. .... = TP-UDHI: The beginning of the TP UD field contains a Header in addition to the short message
+  ..0. .... = TP-SRI: A status report shall not be returned to the SME
+  .... 0... = TP-LP: The message has not been forwarded and is not a spawned message
+  .... .1.. = TP-MMS: No more messages are waiting for the MS in this SC
+  .... ..00 = TP-MTI: SMS-DELIVER (0)
+  TP-Originating-Address - ()
+  Length: 10 address digits
+  1... .... = Extension: No extension
+  .111 .... = Type of number: Reserved for extension (7)
+  .... 1111 = Numbering plan: Reserved for extension (15)
+  TP-OA Digits:
+  TP-PID: 0
+  00.. .... = Defines formatting for subsequent bits: 0x0
+  ..0. .... = Telematic interworking: no telematic interworking, but SME-to-SME protocol
+  ...0 0000 = The SM-AL protocol being used between the SME and the MS: 0
+  TP-DCS: 0
+  00.. .... = Coding Group Bits: General Data Coding indication (0)
+  Special case, GSM 7 bit default alphabet
+  TP-Service-Centre-Time-Stamp
+  Year: 23
+  Month: 1
+  Day: 31
+  Hour: 18
+  Minutes: 54
+  Seconds: 46
+  Timezone: GMT - 5 hours 0 minutes
+  TP-User-Data-Length: (127) depends on Data-Coding-Scheme
+  TP-User-Data
+  User-Data Header
+  User Data Header Length: 6
+  IE: Application port addressing scheme, 16 bit address (SMS Control)
+  Information Element Identifier: 0x05
+  Length: 4
+  Destination port: UDP/TCP port numbers assigned by IANA without the need to refer to 3GPP (5499)
+  Originator port: UDP/TCP port numbers assigned by IANA without the need to refer to 3GPP (0)
+  SMS text [truncated]:
+  
+  TRACE_NAME, IMCSMS_MT_NW_TO_MS_PEER_MSG
+  
+  01-31 15:55:40.095536 4482 4828 D RILJ : [UNSL]< UNSOL_RESPONSE_NEW_SMS [PHONE0]
+  01-31 15:55:40.097609 4482 4893 D MtkGsmInboundSmsHandler-0: DeliveringState.processMessage: processing EVENT_NEW_SMS
+  01-31 15:55:40.098388 4482 4893 D MtkGsmInboundSmsHandler-0: destination port: 5499
+  ```
+
+  
 
 # WEA
 
@@ -5009,6 +5088,7 @@
 - **CarrierConfig**：配置文件位于packages/apps/CarrierConfig/assets/xxx.xml
   - **key**对应着CarrierConfigManager.java的配置。
   - **carrier_list.textpb**：配置文件的名字来源，文件名和carrier_list中一一对应。
+- TelephonyManager.java
 
 # JIRA Workflow
 
@@ -5023,7 +5103,7 @@
    - 编译选项为userdebug，相关命令在tinno wiki上查找
      - 刷机根据对应的平台以及对应的手机型号有区别，不清楚需提前询问。
 
-   - 单编
+   - 单编/单
      1. source build/envsetup.sh
      2. lunch （对应版本的选择在项目立项之初就已经确定，不清楚需提前询问）
      3. 编译命令
@@ -5031,6 +5111,19 @@
         - mma：编译当前目录下的模块及其依赖项。
         - mmma：编译指定路径下所有模块，并且包含依赖。
      4. adb install `apk/jar的路径`
+     5. MTK
+     
+        - MTK Android S 单编译相关文档见如下链接：
+           https://online.mediatek.com/QuickStart/QS00178#QSS01819
+     
+           例如: 编译system下面的某个模块，Command 如下：
+           source build/envsetup.sh && export OUT_DIR=out_sys && lunch sys_mssi_64_ww-userdebug && mmma XXXX
+           注意lunch项目的选择见目录device/mediatek/system/项目/ 下对应的项目文件名+variant，如下图所示：
+     
+           - ![image-20230208145712051](C:\Users\haifei.liao\AppData\Roaming\Typora\typora-user-images\image-20230208145712051.png)
+     6. Qualcomm
+     
+        - source build/envsetup.sh && export OUT_DIR=out_sys && lunch qssi-userdebug && mmma XXXX
 
 3. 修改对应的CarrierConfig文件
 
@@ -5055,7 +5148,7 @@
      - git remote -v
      - git checkout .
 
-# Log流程查看
+# Log关键字
 
 ## 概述
 
@@ -5075,8 +5168,7 @@
 
 ### common
 
-- fail、failure、unsupported、error
-- adb logcat -b all |Select-String androidruntime
+- fail、failure、unsupported、error、Androidruntime
 
 ## sms
 
@@ -5095,7 +5187,7 @@
 - setup_data
 - data_registration
 
-## voicemail
+## VM&VVM
 
 - androidt/vendor/mediatek/proprietary/packages/services/Telephony/src/com/android/phone/NotificationMgr.java
 - updatemwi
@@ -5142,8 +5234,6 @@
   9. Wait for the handset to boot up and run cmds below:
      -  adb root
      - adb remount
-- adb shell dumpsys activity activities：查看activity栈
-- adb shell pm path com.android.dialer：查看包的位置
 
 ## SN Writer
 
@@ -5168,6 +5258,12 @@
 3. 选择参数配置->关键参数配置，输入密码确认，选择需要刷入的参数写入。
 4. 右侧输入框输入值，多个值按顺序用逗号隔开。
 5. 点击start，插入手机，等待写入结束。
+
+# ADB指令
+
+- adb shell dumpsys activity activities：查看activity栈
+- adb shell pm path com.android.dialer：查看包的位置
+- adb logcat -b all |Select-String androidruntime：查看开机 androidruntime log
 
 # 版本控制
 
@@ -5214,3 +5310,16 @@
   - `-f`：即使某个项目同步失败，也继续同步其他项目。
   - `-j <num>`：设定并发数。默认 4 个并发。
   - 可以查看 .repo/manifest.xml 拉取一部分代码。
+
+test 
+
+# Case提交
+
+## Qualcomm
+
+1. 创建账号，进入网址：https://support-qualcomm.force.com/s/case/Case/Default
+2. 创建case
+   - ![image-20230213160115479](Message.assets/image-20230213160115479.png)
+3. 提交附件和添加邮件通知成员
+   - ![image-20230213160322318](Message.assets/image-20230213160322318.png)
+4. 交流并解决问题。
