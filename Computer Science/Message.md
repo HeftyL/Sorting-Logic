@@ -5323,3 +5323,11 @@ test
 3. 提交附件和添加邮件通知成员
    - ![image-20230213160322318](Message.assets/image-20230213160322318.png)
 4. 交流并解决问题。
+
+# 系统配置
+
+1. com.android.internal.R
+   - 编译前：frameworks/base/core/res/res/目录
+   - 编译后：out/target/common/R/com/android/internal/R.java
+2. trunk
+3. tinnofeature
