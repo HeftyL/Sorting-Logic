@@ -5170,7 +5170,7 @@
 
 - fail、failure、unsupported、error、Androidruntime
 
-## sms
+## SMS
 
 - smsdispatch
 - smssender
@@ -5198,6 +5198,11 @@
 ## MMS
 
 - WAP_PUSH_DELIVER
+
+## RCS
+
+- bugle
+- carrierservices
 
 # 刷机
 
