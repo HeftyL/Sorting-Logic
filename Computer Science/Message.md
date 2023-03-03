@@ -5090,6 +5090,16 @@
   - **carrier_list.textpb**：配置文件的名字来源，文件名和carrier_list中一一对应。
 - TelephonyManager.java
 
+# SIM
+
+- 查看SIM卡的信号强度：
+  1. AP侧关键字：onSignalStrength ，Rsrp: >-105（<-110认为无信号或极差，更低则无意义）
+  2. Modem侧：match items->b193或refilter items->log packets-LTE-ML1-[0xB193]LTE ML1 Serving Cell Meas Response
+     Inst RSRP Rx[0] = -125.75 dBm
+     Inst RSRP Rx[1] = -118.06 dBm
+     Inst Measured RSRP = -118.06 dBm (可参考这个值，取上面两根天线中信号较好的)                                                                                                     
+  3. RSRP（Reference Singal Receiving Power）：参考信号接收功率，用于衡量某扇区的参考信号的强度，在一定频域和时域上进行测量并滤波。可以用来估计UE离扇区的大概路损，LTE系统中测量的关键对象。在小区选择中起决定作用
+
 # JIRA Workflow
 
 ## 配置类的问题
