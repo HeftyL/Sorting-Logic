@@ -740,7 +740,6 @@ req.getCookies() //Cookie[]
   | setMaxInactiveInterval(int interval)      | 设置  Session  的超时时间（以秒为单位），超过指定的时长，Session 就会被销毁。值为正数的时候，设定  Session  的超时时长。 负数表示永不超时（极少使用） |
   | int getMaxInactiveInterval()              | 获取  Session  的超时时间，默认的超时时间长为  30  分钟      |
 
-
 ## Filter
 
 - Filter 过滤器它是 JavaWeb 的三大组件之一。三大组件分别是：Servlet 程序、Listener 监听器、Filter 过滤器
@@ -754,7 +753,7 @@ req.getCookies() //Cookie[]
 
 ```java
 //1、编写一个类去实现  Filter  接口
-public class AdminFilter implements Filter { 
+public class AdminFilter implements Filter {
   /*** doFilter */
 // 2、实现过滤方法  doFilter()
 @Override
@@ -777,11 +776,11 @@ public void doFilter(ServletRequest servletRequest, ServletResponse servletRespo
 3、到  web.xml  中去配置  Filter 的拦截路径
 
 ```xml
-<!--  filter 标签用于配置一个Filter  过滤器      -->
+<!--  filter 标签用于配置一个Filter  过滤器 -->
 <filter>
-	<!-- 给   filter  起一个别名     -->
+	<!-- 给   filter  起一个别名  -->
 	<filter-name>AdminFilter</filter-name> 
-	<!-- 配置   filter  的全类名     -->
+	<!-- 配置   filter  的全类名 -->
 	<filter-class>com.atguigu.filter.AdminFilter</filter-class> 
 </filter>
 <filter-mapping>
