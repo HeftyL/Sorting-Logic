@@ -3949,6 +3949,7 @@
     - TP-User-Data->User-Data Header->Destination port: 2948
     - Wireless Session Protocol, Method: Push (0x06)或者0x07
     - Content-Type:application/vnd.wap.mms-message
+    - PORT_WAP_PUSH_SECURE   2949
 
 - log流程
 
@@ -3957,6 +3958,7 @@
 
 ## VM
 
+- ![image-20230323135931567](Message.assets/image-20230323135931567.png)
 - androidt/vendor/mediatek/proprietary/packages/services/Telephony/src/com/android/phone/NotificationMgr.java
 - androidt/frameworks/opt/telephony/src/java/com/android/internal/telephony/uicc/SIMRecords.java
 
@@ -5449,7 +5451,7 @@
 - gid
 - SEND_SMS
 - NEW_SMS
-- GsmInboundSmsHandler
+- GsmInboundSmsHandler/InboundSmsHandler
 - ImsSmsDispatcher
 - ImsService
 
@@ -5458,6 +5460,7 @@
 - apnsetting
 - setup_data
 - data_registration
+- getGroupIdLevel1_gid
 
 ## VM&VVM
 
@@ -5470,6 +5473,7 @@
 ## MMS
 
 - WAP_PUSH_DELIVER
+- MmsService
 
 ## RCS
 
@@ -5512,7 +5516,7 @@
      -  adb root
      - adb remount
 
-## SN Writer
+## SN Writer（废弃）
 
 - imei：353587400014311 
 - SN：PRVGNZHQ8H8PHM6X 
@@ -5541,6 +5545,9 @@
 - adb shell dumpsys activity activities：查看activity栈
 - adb shell pm path com.android.dialer：查看包的位置
 - adb logcat -b all |Select-String androidruntime：查看开机 androidruntime log
+- PCAP log 抓取:adb shell tcpdump -i any -vv -s 0 -w /cache/tcpdump.pcap
+  - 导出：adb pull /cache/tcpdump.pcap.
+
 
 # 版本控制
 
@@ -5608,3 +5615,15 @@ test
    - 编译后：out/target/common/R/com/android/internal/R.java
 2. trunk
 3. tinnofeature
+
+# 查看软件版本
+
+- mtk
+
+  - debuglogger/mobilelog/APLog***/properties
+
+- bugreport/bugreport***.txt
+
+- 关键词：build.version
+
+  
