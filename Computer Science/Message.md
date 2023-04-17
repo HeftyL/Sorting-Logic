@@ -3959,6 +3959,8 @@
 ## VM
 
 - ![image-20230323135931567](Message.assets/image-20230323135931567.png)
+- ![image-20230410100224374](Message.assets/image-20230410100224374.png)
+- ![image-20230410101005674](Message.assets/image-20230410101005674.png)
 - androidt/vendor/mediatek/proprietary/packages/services/Telephony/src/com/android/phone/NotificationMgr.java
 - androidt/frameworks/opt/telephony/src/java/com/android/internal/telephony/uicc/SIMRecords.java
 
@@ -5346,6 +5348,7 @@
 - **CarrierConfig**：配置文件位于packages/apps/CarrierConfig/assets/xxx.xml
   - **key**对应着CarrierConfigManager.java的配置。
   - **carrier_list.textpb**：配置文件的名字来源，文件名和carrier_list中一一对应。
+- CarrierConfig/res/xml/vendor.xml
 - TelephonyManager.java
 
 # SIM
@@ -5451,7 +5454,7 @@
 - gid
 - SEND_SMS
 - NEW_SMS
-- GsmInboundSmsHandler/InboundSmsHandler
+- InboundSmsHandler/MtkGsmInboundSmsHandler/GsmInboundSmsHandler
 - ImsSmsDispatcher
 - ImsService
 
@@ -5466,6 +5469,8 @@
 
 - androidt/vendor/mediatek/proprietary/packages/services/Telephony/src/com/android/phone/NotificationMgr.java
 - updatemwi
+- IMCSMS
+- +EIMSCMT
 - getVoiceMailNumber
 - onVoicemailStatusFetched
 - DialerVoicemailStatusQuery
@@ -5595,7 +5600,8 @@
   - `-j <num>`：设定并发数。默认 4 个并发。
   - 可以查看 .repo/manifest.xml 拉取一部分代码。
 
-test 
+- repo forall -c "git clean -fd;git reset --hard" ：清除所有的修改。
+
 
 # Case提交
 
@@ -5626,4 +5632,9 @@ test
 
 - 关键词：build.version
 
-  
+
+# 仪表log查看
+
+- CMWmarsViewer
+  - 文件类型：msglog、rsmsglog
+  - 选择verdicts

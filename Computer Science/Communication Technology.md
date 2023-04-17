@@ -3519,6 +3519,8 @@
 
 #### P-CSCF发现
 
+- <img src="Communication Technology.assets/image-20230406112139275.png" alt="image-20230406112139275" style="zoom:150%;" />
+
 1. P-CSCF是Tobias 的 UE向IMS发送的所有SIP消息的惟一人口。因此，在发送第一个SIP消息之前，UE必须知道P-CSCF的地址。由于本例中该地址不是事先配置好的，因此UE首先要发现该地址。
 2. 在GPRS中，UE可以在建立通用或者信令PDP上下文的过程中请求P-CSCF地址。GGSN在对PDP上下文激活请求的应答中返回P-CSCF的IPv6地址前缀。
 3. 此外，UE也可以选择使用DHCPv6 ( IPv6的动态主机配置协议）来发现P-CSCF。如果DHCP返回的P-CSCF地址是一个全合格域名（FQDN)而非一个IP地址，那么与其他SIP服务器一样，P-CSCF的地址可以通过域名系统（ DNS）来解析。
@@ -3564,6 +3566,654 @@
      - UE收集到了将SIP REGISTER请求路由到拜访网络中第一跳P-CSCF的所有信息。
 
 #### SIP注册和注册路由问题
+
+1. 与路由有关的消息头
+
+   - | 消息头        | 功能                                                         | 设置                                                         |
+     | ------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+     | Via           | 对请求消息进行路由转发                                       | 在请求的路由转发过程中，每个途经的SHIP实体都来 设置，将其地址写入 Via消息头 |
+     | Route         | 对请求消息进行路由转发                                       | 初始请求:由发起请求的UE来设置，它将填人P- CSCF（出站代理）地址和Service-Route消息头的条目 初始请求:由CSCF来设置，它们从请求URI中的公 共用户身份（通过查询DNS和HSS）或者收到的Path 消息头中发现下一跳 后续请求:由发起请求的UE来设置，它根据初始请 求路由过程中由Record-Route消息头所采集的条目放入 Route消息头 |
+     | Record-Route  | 为一个会话中的后续请求 记录Route消息头中的条目               | 由CSCF来设置，如果它们希望收到对话中的后续请 求，就将其地址放入Record-Route消息头 |
+     | Service-Route | 指示初始请求的Route消息 头条目，初始请求由UE发往 用户的S-CSCF(用户发起) | 由S-CSCF来设置，它在对REGISTER请求的200 ( OK）响应中返回本消息头 |
+     | Path          | 收集Route消息头条目，用 于从S-CSCF向用户P-CSCF 发出初始请求（用户终结) | 由P-CSCF来设置，它将自己的地址放人REGISTER 请求的Path消息头中，并将其发往S-CSCF |
+
+2. Tobias的UE首先会生成一个REGISTER请求，发往 Tobias运营商的归属域。相关信息将从Tobias的 USIM模块（通用用户标识模块）上的IP多媒体服务标识模块(ISIM)应用中获得。该请求将经过P-CSCF和 I-CSCF，如果没有事先指定S-CSCF，I-CSCF将为Tobias选择一个S-CSCF。
+
+3. S-CSCF将根据REGISTER请求中的信息来建立Tobias 公共用户身份与UE的IP地址之间的绑定关系。这使得来自其他用户的请求可以通过S-CSCF路由到Tobias的UE。S-CSCF会更新HSS中的注册信息，下载Tobias 的用户配置，并根据从HSS中收到的初始过滤准则来通知所有与Tobias注册状态相关的应用服务器（AS)。
+
+4. 在注册过程中，UE可以从Service-Route消息头中获知通往S-CSCF的直接路由。此后，当Tobias 的UE需要发出初始请求时，就不需要再联络I-CSCF 了。
+
+5. S-CSCF 从 Path消息头中得知P-CSCF的地址。这是必需的，因为所有发往Tobias的初始化请求都必须首先经过P-CSCF才能达到UE。
+
+6. ![image-20230406165940374](Communication Technology.assets/image-20230406165940374.png)
+
+##### 构造REGISTER请求
+
+1. 在建立信令PDP上下文并发现P-CSCF地址之后，Tobias的UE可以开始生成初始的REGISTER请求
+   - ![image-20230406112806332](Communication Technology.assets/image-20230406112806332.png)
+     1. 上述消息不是一个完整的IMS RECISTER请求，其中隐去了一些消息头和参数。它只包含了为解释本节中的过程而必需的信息，后续的消息也是这样。
+     2. 该请求消息的最终目的地是注册服务器，在请求URI中标志为sip: home1. fr（从ISIM中读出的Tobias 的归属网络的域名)。
+     3. 在To消息头中有要注册的公共用户身份sip: tobias@ home1. fr，是从ISIM中读出。SIP注册的目的是告诉注册服务器:公共用户身份sip: tobias@home1.fr是可以通过Contact消息头中所指出的P地址访问到的。该IP地址包含一个IPv6前缀，这是UE在建立专用信令PDP上下文时分配的
+     4. 在Contact消息头中，UE还指出这个IP地址和SIP URI 之间的绑定可以持续600000s(大约一星期)。在 IMS中强制要求UE注册如此长的时间，然而网络可以调整这个时间。
+        1. 在注册过程中，在 REGISTER请求的200 ( OK)响应消息Contact消息头中，将超时时间设置为一个小些的值。
+        2. 在用户注册之后，使用状态注册事件通知（例如网络发起的重新认证部分)。
+     5. UE的IP地址还包含端口号（“:1357”)
+     6. Contact消息头还包含字符串“Mobile Phone-Tobias”作为显示名称。该名称不是必需的，但会对某些高级服务场景有用，例如将呼叫从一个设备转移到另一个设备。
+     7. UE还将它的I地址放到请求消息的 Via消息头中，这就可以保证所有对该请求的响应都可以路由回UE。Via消息头中还包含一个 Branch参数用于惟一标识该事务( Transaction)。路由上的每个实体都将加人它自己的 Via消息头。
+     8. UE还将它的IP地址放到请求消息的Via消息头中，这就可以保证所有对该请求的响应都可以路由回UE。Via消息头中还包含一个Branch参数用于惟一标识该事务( Transaction)。路由上的每个实体都将加入它自己的 Via消息头。
+     9. 解析得到的P-CSCF地址也放到Route消息头中。P-CSCF是该RECISTER消息的下一跳，因此它是Route消息头最顶部也是惟一的一个条目。“; lr”参数表示该P-CSCF是一个宽松路由器，即它支持如RFC3261中描述的SIP路由机制。早期的SIP版本使用所谓的直接路由机制，这种机制在IMS中并未使用。
+     10. From消息头标识了正在进行注册的那个用户。可以看出在From消息头与To消息头中的公共用户身份是一样的，这是因为Tobias进行的是所谓的第一方(First-party)注册（即他在注册他自己)。
+     11. 还有Call-ID消息头，它和CSeq消息头一起标识这个RECISTER事务(Transac-tion)。
+     12. 最后，由于Content-Length消息头中的内容为0，因此表示该RECISTER请求的正文部分是空的。
+     13. 消息头的名字都是以长格式给出的。为了避免空中接口传送不必要的过长的信令，Tobias的UE可以使用压缩格式，这时该RECISTER请求是这样的:
+         - ![image-20230406145526428](Communication Technology.assets/image-20230406145526428.png)
+
+##### 从UE到P-CSCF
+
+1. 现在Tobias 的UE可以发出该REGISTER请求了，其下一跳为Route消息头的最顶部的条目（即 P-CSCF)。该请求通过UDP发送，因为UE 从 DNS NAPTR响应中选择了“E2U + sip”服务)。为了到达 P-CSCF，UE在下层消息中放入了如下信息:
+   1. UDP端口设置成5060，在DNS SRV响应中，用它来标识pcscf1. visited1. fi;
+   2. IP地址设置成5555:: 67:87:59:32，它是从 DNS AAAA 响应中的 pcscf1. visited1.fi解析得来的。
+
+##### 从P-CSCF到I-CSCF
+
+1. 当接收到初始的REGISTER请求时，P-CSCF首次获知Tobias的UE正在使用它作为SIP的出站代理。由于此时Tobias还没有通过认证，P-CSCF还只能承担SIP出站代理的功能，因此它将尝试把REGISTER请求转发到下一跳。
+2. P-CSCF 从 Route消息头中移去它自己的条目，这样Route消息头就空了。现在所留下的惟一-路由信息是请求URI中的注册服务器地址，该地址指向Tobias 的归属网络。为了找到归属网络中SIP代理的地址，P-CSCF需要通过DNS进行域名解析（域名在请求URI中给出)。通过使用DNS NAPTR、SRV和AAAA查询，P-CSCF可以解析出Tobias归属网络中某个I-CSCF的地址。
+3. 然而，P-CSCF并不把I-CSCF的地址放在 Route消息头中，因为它不能确定该I-CSCF是否可以承担宽松路由器( Loose Router)的功能。因此，P-CSCF将I-CSCF的地址放在传送SIP请求的UDP分组中，直接作为UDP的目的地址。
+   - 宽松路由器是相对于严格路由器而言。后者要求发往它的SIP请求的请求URI必须是它的地址，而前者则不要求这一点。
+4. 在发送 REGISTER消息之前，P-CSCF还将自己加入到Via消息头中，以便可以接收到对该请求的响应。它还在Via消息头中增加一个分支(Branch）参数。
+
+##### 从I-CSCF到S-CSCF
+
+1. I-CSCF是到达Tobias归属网络的入口，它将收到Tobias 的UE所发起的每一个RECISTER请求。由于I-CSCF并不知道用户配置到特定S-CSCF的分配情况，它需要找出它应该将RECISTER请求转发给哪个S-CSCF。因此，它需要查询HSS。在本例中，我们假设网络中只有一个HSS，所以I-CSCF不需要首先查询SLF。
+2. 为了得到S-CSCF地址，I-CSCF通过Cx 接口执行User Registration Status Query(主用注册状态查询)的过程。
+3. I-CSCF向 HSS 发出一个 Diameter UAR(用户授权请求)，其中包含以下信息:
+   1. “R”命令标志设置成“1”，表明这是一个Diameter请求;
+   2. Commond-Code设置成“300”，表明是一条Diameter“User Authorization”命令;.“Visited-Network-Identifier”AVP (600)，表明此时包含在接收到的SIP REGIS-TER请求中的 P-Visited-Network 消息头的值是“Kaunis MustaKissa”;
+   3. 可选的“User-Authorization-Type”AVP ( 623)。这个AVP表明了接收到的RECISTER请求的目的。如果Contact消息头中包含的终止时间是0，那么必须要有一个重新注册的过程。在初始注册过程，该值被设置成600000s，因此AVP设置成“REGISTRATION”(O)，这是一个默认值,此时也可以忽略该AVP。
+   4. “User-Name”AVP ( 1）设置成Tobias 的私有身份，该私有身份包含在SIPREGISTER请求中Authorization消息头的用户名字段中，即设置为“tobias_private@home1. fr”;
+   5. “Origin-host”AVP (264）设置查询I-CSCF的地址，即“icscf1. home1. fr”;.“Origin-Realm”AVP (296）设置成I-CSCF所在的运营商网络的域名，即“home1. fr”;
+   6. “Destination-Realm”AVP(283）设置成HSS的归属域，即“home1. fr”，因为这是查询用户位置信息的域;
+   7. “Destomation-Host”AVP (293）设置成HSS的地址，这个地址已经在S-CSCF中本地配置,而不需要执行SLF查询。
+      接收到UAR之后，HSS首先检查是否允许I-CSCF (“Origin-Host”AVP中所标识）查询Tobias 的认证状态，在本例中当然是允许的。HSS接着检测到当前没有S-CSCF被分配给Tobias，因此将关于选择哪一个S-CSCF给Tobias的决定权留给I-CSCF。它返回一条 Diameter位置信息应答(LIA)消息，其中包含以下内容:
+      1. “R”命令标志设置成“0”，表明这是一个Diameter回复;
+      2. Commond-Code设置成“300”，表明这是一条Diameter“User Authorization"命令;
+      3. “Result-Code”AVP (268）设置成“DIAMETER_SUCCESS”(2001 )，表明查询成功;
+      4. “Server-Capabitities”AVP (603）包含一系列Mandatory-Capability AVP (604)以及Optional-Capability AVP (605)，这些能力用整数来表示，其含义是运营商网络特定的。运营商需要确保I-CSCF能理解所有列出来的必选和可选能力，因为I-CSCF将要基于这个列表来选择一个S-CSCF用于后续注册。基于所接收到的必选和可选能力列表，I-CSCF为Tobias选择一个S-CSCF。在这种情况下，S-CSCF的地址为sip:scscf1. home1. fr. lr。
+4. I-CSCF 在把自己的条目放在Via消息头的顶部，然后把该REGISTER请求发往S-CSCF。s-CSCF的地址要么是I-CSCF 从 HSS中查询得到的，要么是I-CSCF自己选择的。
+   - ![image-20230406154630001](Communication Technology.assets/image-20230406154630001.png)
+
+##### 在S-CSCF处注册
+
+1. 接到初始的REGISTER请求之后，S-CSCF要求Tobias进行认证。这将导致Tobias发来另一个 RECISTER请求。第二个RECISTER请求包含相同的有关注册的信息，并且它所经过的路由也与初始REGISTER请求完全相同。但是，第二个RECISTER请求将产生一个新的Call-ID。因此，它将包含新的CSeq号码、Branch参数和一个新的From标签。S-CSCF接到的第二个REGISTER 消息如下:
+   - ![image-20230406155003970](Communication Technology.assets/image-20230406155003970.png)
+2. 假设认证过程成功，S-CSCF将对Tobias进行注册。这意味着S-CSCF将创建一个绑定关系，绑定REGISTER请求To消息头中的公共用户身份( sip: tobias@home1. fr)和Contact地址（ sip: [5555:: a: b: c: d])。这个绑定将严格的存在600000s，即UE在Contact消息头“expires”参数中填写的值，除非S-CSCF基于本地策略而决定缩短该时间。
+3. s-CSCF还会更新HSS中的数据，指示Tobias现在已经注册。HSS会通过Cx 接口向S-CSCF下载Tobias 的用户数据。所以S-CSCF通过Cx接口给HSS发送一条Diameter服务器分配请求(SAR)消息，执行Diameter S-CSCF Registration Noti-fication过程,其中包含以下内容:
+   1. .“R”命令标志设置成“1”，表明这是一个 Diameter请求;
+   2. Commond-Code设置成“301”，表明是一条Diameter“Server Assignment”命令;“Pubic-Identity”AVP (600)，表明所注册的公共用户身份，即包含在REGIS-TER请求中TO消息头的URI“sip: Tobias@ home1. fr”;
+   3. “Server-Name”AVP (602）设置成执行SAR的S-CSCF的 SIP URI，即“sip;scscfl. home1. fr”;
+   4. “User-Name”AVP ( 1）设置成Tobias 的私有身份，该私有身份包含在SIPREGISTER请求中Authorization消息头的用户名字段中，即设置为“tobias_private@home1. fr”;
+   5. “Server-Assignment-Type”AVP (614)设置为“RECISTRATION” (1)，因为这是一个初始注册。Server-Assignment-Type AVP 的其他值可以是例如“RE-REGIS-TRATION”(2)(此时Tobias 的手机发送出另一个RECISTER请求，以保持注册仍处于active状态），或者是“USEr-DERECISTRATION”(5)(此时，Tobi-as 发送另一个过期时间设置为“O”的REGISTER请求);
+   6. “UserData-Already-Available”AVP (624）设置成“USER_DATA_NOT_AVAIL-ABLE”(O)，表明S-CSCF本地没有可用的Tobias的服务信息;
+   7. “Origin-host”AVP (264）设置S-CSCF的地址，即“scscf1. home1. fr”;
+   8. “Origin-Realm”AVP (296）设置成I-CSCF所在的运营商网络的域名，即“Home1.fr”;
+   9. “Destination-Realm”AVP (283）设置成HSS的归属域，即“home1.fr”，因为这是查询用户位置信息的域;
+   10. “Destination-Host”AVP (293）设置成HSS 的地址，这个地址已经在S-CSCF中本地配置,而不需要执行SLF查询。
+       HSS把S-CSCF名称分配给Tobias公共用户身份的注册集合。这就意味着，只要Tobias 保持与S-CSCF 的注册，每个发送给HSS的有关询问如何进一步路由到Tobias的位置查询，HSS将用S-CSCF的地址进行应答。
+       HSS还将Tobias 的用户配置信息 ( user profile）设置成为“registered”，这有可能引发向相关的应用服务器（AS）发送 Sh-Notification消息。
+       HSS给S-CSCF返回一条Diameter服务器分配应答（ SAA)，其中包含以下内容:
+       1. “R”命令标志设置成“0”，表明这是一个 Diameter应答;
+       2. Commond-Code设置成“301”，表明这是一条Diameter“Server Assignment "命令;
+       3. “User-Name”AVP (1）设置成Tobias的私有身份，即设置为Tobias_private@home1. fr ;
+       4. “Result-Code”AVP (268）设置成“DIAMETER_SUCCESS”(2001)，表明请求已成功;
+       5. “User-Data”AVP (606)，包含了Tobias的用户配置信息;
+       6. “Charging-Information”AVP(618)，在如下AVP中包含计费功能的地址:
+          1. “Primary-Event-Charging-Function-Name”AVP (619)，包含主在线计费功能(OCF）的地址“5555::f66: e77: d88: c77”，该地址将会在 P-Char-ging-Function-Address 消息头中出现;
+          2. “Secondary-Event-Charging-Function-Name”AVP (620)，包含次在线计费功能的地址，secondary OCF存储在S-CSCF中;
+          3. “Primary-Charging-Collection-Function-Name”AVP (621）包含主计费数据功能(CDF，见3.11节）地址“5555:: a55: b44:c33:d22”，该地址将会在P-Charging-Function-Address消息头中出现;
+          4. “Secondary-Charging-Collection-Function-Name”AVP (622）包含次计费数据功能的地址，secondary OCF存储在S-CSCF中;
+          5. 可选择的“Associated-Identity”AVP (632)，包含属于同一个用户的相关私有身份（注意:不是公共身份)，在本例中是Tobias。Tobias可能有多个电话，每一个都配置USIM/ISIM，他可能还有HTTP Digest用户名（私有身份）和密码，在这种情况下，私有身份列表会被发送给S-CSCF。
+   11. 可选择的“Associated-ldentity”AVP (632)，包含属于同一个用户的相关私有身份（注意:不是公共身份)，在本例中是Tobias。Tobias可能有多个电话，每一个都配置USIM/ISIM，他可能还有HTTP Digest用户名（私有身份）和密码，在这种情况下，私有身份列表会被发送给S-CSCF。
+
+##### 200( OK)响应
+
+- ![image-20230406160023613](Communication Technology.assets/image-20230406160023613.png)
+  - ![image-20230406161042554](Communication Technology.assets/image-20230406161042554.png)
+  - s-CSCF在To消息头中增加了一个tag标签。
+  - 这个响应被路由回UE时途经所有接收过RECISTER请求的 CSCF，之所以可以这样是由于各CSCF 在接收REGISTER请求时都把自己的地址放在了Via消息头的顶端。现在，当接收到200 ( OK)响应时，它们所作的就是从Via列表中移除自己的条目，并将请求转发到当前Via消息头中最顶端的地址。
+  - 当收到响应后，UE就得知注册过程已经成功了。
+
+##### Service-Route消息头
+
+- 在注册过程中UE和P-CSCF都不知道S-CSCF的地址，因此必须联系I-CSCF以便从 HSS获得S-CSCF的地址。
+- 为了避免UE发起每个初始消息时都要将I-CSCF作为额外的一跳，S-CSCF需要在反馈给RECISTER请求的200 (OK)响应中的Service-Route消息头中填入它的地址
+  - ![image-20230406160908378](Communication Technology.assets/image-20230406160908378.png)
+  - ![image-20230406161224799](Communication Technology.assets/image-20230406161224799.png)
+    - 本例中S-CSCF在其Service-Route条目中增加了一个用户部分(“orig")，因为它需要区分两类不同的请求:
+      - 从服务对象用户（例如Tobias)发起的请求;
+      - 发往Tobias UE的请求。
+    - 任何时候当S-CSCF收到一个初始请求（例如INVITE请求）时，它需要判断该请求是来自用户还是发往服务对象的用户。利用Route消息头中的用户部分，S-CSCF能容易地知道所收到的请求是否是由服务对象用户发起的，因为Tobias 的UE会在发出的所有请求中的Route 条目中填入S-CSCF的 Service-Route 条目。
+  - 当接收到200 (OK）响应时，UE将保存Service-Route消息头中所有的条目。这样无论何时当UE发出任何REGISTER 以外的初始请求时，它将:
+    - ![image-20230406161256380](Communication Technology.assets/image-20230406161256380.png)
+      - 把Service-Route消息头中得到的地址填写在初始请求的 Route消息头中;
+      - 把P-CSCF地址放在初始请求Route消息头的最顶端。
+
+##### Path消息头
+
+- S-CSCF将接到所有发往Tobias 的初始请求，因为它充当了他的注册服务器。在正常的SIP过程中，注册服务器能够直接向UE发送请求。但在IMS中，这是不可能的，因为需要首先联系P-CSCF。这是因为P-CSCF已经和UE建立IPsec SA安全联盟，保证所有收发的消息都得到完整性保护。不仅如此，P-CSCF还在媒体授权上扮演重要角色，因为它是IMS中惟一与GGSN有直接连接的网元。
+- S-CSCF需要确保发往UE的每个请求都要首先经过P-CSCF。为了达到这个目的，P-CSCF 在所有RECISTER请求中添加Path消息头，填入自己的地址。
+  - ![image-20230406164154890](Communication Technology.assets/image-20230406164154890.png)
+    - 当用户成功注册后，S-CSCF保存下这个P-CSCF地址。任何时候当接收到发往Tobias 的请求时，S-CSCF就添加一个Route消息头，填入从Path消息头中得到的地址。
+
+##### 向应用服务器的第三方注册
+
+- 在成功注册后，S-CSCF 要检查所下载的该用户的过滤规则。我们假设有一个在线状态服务器为Tobias提供服务，该在线状态服务器需要知道Tobias 现在已经注册并且因而是可达的。为了将此信息通知给该在线状态服务器，需要设置过滤规则，触发所有由Tobias 公共用户身份发起的RECISTER请求。
+  - ![image-20230406164501126](Communication Technology.assets/image-20230406164501126.png)
+
+
+
+- 由于这些过滤规则，无论何时Tobias成功地实施了注册，S-CSCF就要生成一个第三方REGISTER请求并发往在线状态服务器。
+  - ![image-20230406165227144](Communication Technology.assets/image-20230406165227144.png)
+  - ![image-20230406165423618](Communication Technology.assets/image-20230406165423618.png)
+    - 这个RECISTER请求发往在线状态服务器presence. home1. fr，如请求URI 所示。由于没有包含Route消息头，因此该请求将直接发往这个地址。
+    - To消息头中包含Tobias的公共用户身份，这是被注册了的URI。
+    - s-CSCF在From消息头中给出自己的地址，它代表Tobias (即作为第三方）来注册Tobias 的公共用户身份。此外，S-CSCF还在Contact消息头中给出了自己的地址，这保证了在线状态服务器永远不会直接路由到Tobias 的 UE，而总是会先与S-CSCF联络。
+- 在线状态服务器将为这个REGISTER请求向S-CSCF发回一个200 ( OK)响应，但并不会充当Tobias 的注册服务器。它会认为这个REGISTER 请求意味着Tobias已经在S-CSCF上成功地注册，而这个S-CSCF才是Tobias的注册服务器。如果在线状态服务器需要关于Tobias注册状态的更多信息（例如Tobias隐含注册的所有其他公共用户身份)，它可以采取与UE和P-CSCF相同的方式，以订阅Tobias 的注册状态信息。
+
+##### 用户配置信息更新
+
+1. s-CSCF 从 HSS下载的用户配置信息，可以在任何时间被Tobias所在网络的运营商修改，包括在Tobias进行注册期间。如果进行了修改，HSS会执行Diameter User Profile Update过程，通过Cx接口通知S-CSCF。HSS给s-CSCF发送一条Diameter推送配置请求（PPR)，其中包含如下信息:
+   1. “R”命令标志设置成“1”，表明这是一个Diameter请求;
+   2. Command-Code设置成“305”，表明是一条Diameter“Server Assignment”命令;
+   3. “User-Name”、“User-Data”和“Charging-Information”AVP与服务器分配应答( SAA)消息中的定义一样;
+   4. “Origin-Host”和“Origin-Realm”AVP设置HSS的地址和域名（ homel. fr);“Destination-host”和“Destination-Realm”AVP分别是S-CSCF的地址( scscf1.home1. fr)和域名( home1. fr)。
+2. S-CSCF相应地更新Tobias的用户配置信息，并发回一条Diameter推送配置应答( PPM)消息。其中，PPM仅包含“Result-Code”AVP ( 268)，并将其设置成“DI-AMETER_SUCCESS”(2001 )，以表明请求成功。新的用户配置信息将会在S-CSCF中立刻启用，用于所有由Tobias新发起或最新到达Tobias的、单独的SIP事务和对话。对于那些已经存在的事务和对话,用户配置信息不能被更改。
+
+#### 认证
+
+![image-20230406175018447](Communication Technology.assets/image-20230406175018447.png)
+
+##### 概述
+
+1. ![image-20230406170313208](Communication Technology.assets/image-20230406170313208.png)
+
+   - IMS中有几组安全关系。其中两个会影响SIP信令:用户与网络间的认证，UE与P-CSCF间的SA安全联盟。IMS中的认证和SA建立过程都与SIP注册过程直接结合在一起。
+   - 假设3GPP AKA用于用户的认证。介绍一个关于CIBA( GPRS-IMS-bundled authentication，GPRS-IMS绑定认证)的例子。
+
+2. IMS认证基于一个共享密钥和一个序列号( SQN)，它们仅在 HSS和Tobias手机UICC（统一集成芯片)的ISIM应用处可见。由于 HSS从不直接和UE通信，因此由s-CSCF执行认证过程以及S-CSCF需要的所有安全性相关的参数。在注册过程中，S-CSCF 从 HSS处下载所谓的认证向量(AV)。
+
+3. 为了进行认证，Tobias 在初始的REGISTER请求中发送他的私有用户身份（在我们的例子中是tobias_private@homel. fr)。该私有用户身份保存在ISIM应用中，只用于认证和注册过程。
+
+4. 当收到REGISTER请求时，S-CSCF 从 HSS 中下载AV。该AV本身并不包含共享密钥和 SQN,而是包括（此外还有其他参数):
+
+   1. ·一个随机挑战（RAND) ;
+   2. 所期望的结果（XRES) ;
+   3. 网络认证令牌（ AUTN) ;
+   4. 完整性密钥(IK);Integrity-Key
+   5. 加密密钥（CK)。Confidentiality-Key
+
+5. 这些参数使得S-CSCF不需要知道共享密钥和SQN就可以执行认证过程。为了进行认证，S-CSCF用一个401（未授权）响应来拒绝用户发出的初始 REGISTER请求，响应中包括RAND、AUTN、IK和CK（此外还有其他参数)。当接收到401（未授权）响应后，P-CSCF去掉其中的IK和CK，然后才发往UE。IK是随后在 P-CSCF和UE之间建立的SA的基础。
+
+   - ```
+     WWW-Authenticate: Digest realm="one.att.net",algorithm=AKAv1-MD5,qop="auth",nonce="VVVVVVVVVVVVVVVVVVVVVVZRUFNSXYAAVVRXVlFQ01I=",opaque="5ccc069c403ebaf9f0171e9517f40e415ccc069c403ebaf9f0171e9517f40e415ccc069c403ebaf9f0171e9517f40e41"
+     ```
+
+6. 在接收到响应后，UE将收到的参数传给ISIM应用，后者:
+
+   1. 基于共享密钥和SQN来校验AUTN。若AUTN校验成功，网络就通过认证了(即UE可以确认认证数据是从归属运营商网络中发来的);
+   2. 基于共享密钥和收到的RAND来计算结果（RES) ;
+   3. 计算IK，P-CSCF和UE将共享该IK，作为SA的基础。
+
+7. 然后，UE在第二个REGISTER请求中把认证挑战响应（RES）反馈给S-CSCF,s-CSCF将其与来自HSS的AV中的XRES相比较。如果校验成功，S-CSCF 就认为用户通过了认证，并继续执行SIP注册过程。
+
+8. 任何时候当UE再发出另一个 REGISTER请求时（即由于重注册或注册解除)，它总是包含与第二个RECISTER请求相同的认证参数，直到S-CSCF重新认证UE。
+
+##### HTTP摘要和3GPP AKA
+
+1. [ RFC2617]定义了超文本传输协议（HTTP)摘要，[ RFC3261 ]中介绍了如何在SIP中使用它。另一方面，IMS是第三代伙伴计划/通用移动通信系统( 3GPP/UMTS)体系的一部分，它使用3GPP认证和密钥协商(AKA)机制来进行认证。
+2. 为了在IMS中实现基于3GPP AKA 的认证，[ RFC3310]定义了3GPP AKA 参数(如上文所述）如何映射到HTTP摘要认证中。因此，用于承载3GPP AKA信息的信令元素（SIP消息头和参数）与用于承载HTTP摘要所使用的信令元素是完全一样。但是，它们的含义（即它们在UE、P-CSCF和S-CSCF处的解释)却不同。
+3. 为了将3GPP AKA认证机制与其他的 HTTP摘要机制（例如MD5）区别出来，它被授予了一个新的算法值:“AKAv1-MD5”。
+
+##### 初始REGISTER请求中的认证信息
+
+1. 在初始REGISTER请求中，Tobias 的UE使用HTTP摘要的Authorization消息头来传输Tobias的私有用户身份。为了满足HTTP摘要的要求，UE在 Authorization消息头中包含以下字段:
+   - ![image-20230406172754064](Communication Technology.assets/image-20230406172754064.png)
+   - 认证模式——由于3GPP AKA被映射到HTTP摘要机制，因此该值设置为“Di-gest”;
+   - 用户名字段——其值设置为Tobias的私有用户身份，它将被S-CSCF 和 HSS用于识别用户并找到相应的AV;
+   - 域和URI字段——其值设置为Tobias的归属域;
+   - 响应和 nonce域——其值设为空。该字段在 HTTP摘要中是必需的，但不用于初始REGISTER请求中。
+2. 由于在UE和P-CSCF相互之间没有建立任何类型的SIP信令级相互安全机制，P-CSCF 不能保证RECISTER请求真的是Tobias 发出的。例如，一个恶意用户可能伪造这个请求并把它发给P-CSCF，而P-CSCF并不了解真相。因此，P-CSCF在 Authoriza-tion消息头中增加integrity-protected字段并将值设为“no”，然后再将请求发往Tobias的归属网络。
+   - ![image-20230406172853294](Communication Technology.assets/image-20230406172853294.png)
+
+
+
+##### S-CSCF从 HSS下载认证向量
+
+- 收到REGISTER请求后，S-CSCF通过Cx 接口发送 Diameter 多媒体认证请求(MAR)）消息给HSS，执行Diameter认证过程，从而实现从HSS下载认证向量(AV)。
+
+
+##### S-CSCF挑战UE
+
+- ![image-20230406173350507](Communication Technology.assets/image-20230406173350507.png)
+
+- 基于AV中的数据，S-CSCF通过401（未授权）响应返回WWW-Authenticate消息头并将其字段填写如下:
+
+  - 在nonce字段填入 RAND和AUTN参数，都是32B长度并采用Base64 编码( nonce字段还可能包含其他的服务器专用数据)。
+  - 在算法字段填入“AKAv1-MD5”，表示3GPP AKA机制。
+  - 在IK和CK扩展字段中填入完整性密钥和加密密钥，就像在MAA消息中的Confi-dentiality-Key 和 Integrity-Key AVP呈现的那样。注意〔RFC3261]对wWW-Authenticate消息头的原始定义中并不包含这两个字段。这两个字段在[3CPP TS 24.229]中定义。
+
+- 在接收到401（未授权）响应后，P-CSCF必须从 WWW-Authenticate消息头中去除ik和ck并将其存储起来，然后再将响应发往UE:
+
+  - ![image-20230406173937580](Communication Technology.assets/image-20230406173937580.png)
+
+  - ```
+    WWW-Authenticate: Digest realm="one.att.net",algorithm=AKAv1-MD5,qop="auth",nonce="VVVVVVVVVVVVVVVVVVVVVVZRUFNSXYAAVVRXVlFQ01I=",opaque="5ccc069c403ebaf9f0171e9517f40e415ccc069c403ebaf9f0171e9517f40e415ccc069c403ebaf9f0171e9517f40e41"
+    ```
+
+    - opaque：一个服务器指定的带引号的字符串，应在 [`Authorization`](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Authorization) 中原封不动的返回。这对客户端是不透明的。建议服务器包含 Base64 或十六进制数据。
+    - qop：带引号的字符串，表示服务器支持的保护程度。这必须提供，并且必须忽略无法识别的选项。
+      - `"auth"`：身份验证
+      - `"auth-int"`：有完整保护的身份验证
+
+##### UE对挑战的响应
+
+1. 根据收到的AUTN参数，Tobias UE的ISIM应用确定该401（未授权）响应确实是Tobias 的归属运营商网络所发送的。它还可以从AUTN 参数中推导出:HSS和 ISIM之间的SQN(序列号)仍处于同步状态。
+2. 根据所收到的参数和共享密钥，ISIM 能够生成响应消息所需要的数值，并将其交给UE。UE在第二个REGISTER请求中加上Authorization消息头，包含以下字段（之外还有其他参数):
+   1. 用户名字段——该字段中包含Tobias的私有用户身份。
+   2. nonce字段——该字段原样返回401（未授权）响应中 WWW-Authentication消息头中的同名字段的值。
+   3. 响应字段——该字段包含认证挑战结果 RES，它是ISIM根据接收到的 RAND和共享密钥而计算生成的。
+3. ISIM还会计算K，P-CSCF也知道该值。根据这个密钥（以及其他信息)，UE和P-CSCF建立IPsec SA安全联盟，在此基础上UE发送第二个RECISTER请求:
+   - ![image-20230406174732347](Communication Technology.assets/image-20230406174732347.png)
+
+##### 完整性保护和成功认证
+
+1. 在P-CSCF能够检验出所收到的RECISTER请求在从UE到P-CSCF的路上是否被篡改过，因为它现在能够检查其完整性。如果检验成功，P-CSCF在Authentication消息头的“integrity-protected”字段内写入“yes”，并将RECISTER请求发往Tobias 的归属网络。
+   - ![image-20230406174916413](Communication Technology.assets/image-20230406174916413.png)
+2. S-CSCF将比较所接收到的RES 和AV中的 XRES（包含在从HSS接收到的MAA消息的SIP-Authorization AVP中)。如果两个参数是完全相同的，则S-CSCF就成功地认证了用户。只有完成这一步之后，它才会继续进行正常的SIP注册过程。
+
+#### 接入安全性 一 IPsec SA
+
+- ![image-20230406175330652](Communication Technology.assets/image-20230406175330652.png)
+
+
+##### 概述
+
+- Gm接口的安全性是基于IPsec SA 实现的，它要求在SIP信令级完成特定的处理。本节描述UE和P-CSCF如何协商安全性机制，如何交换IPsec有关的参数，以及SA 如何建立和处理。
+- 由于IPsec SA的建立是基于用户认证的基础上，因此每次重认证过程中都要建立新的SA，所以在UE和 P-CSCF之间就必须建立新的IPsec SA 对。
+
+##### 初始注册过程中建立SA
+
+1. 初始RECISTER请求以及401（未授权）响应在UE和P-CSCF之间传递时，没有受到任何保护措施。这两个消息传递了必要的信息，使得UE和P-CSCF之间可以协商安全机制，并对SA 要使用的参数和端口达成一致。
+2. 在注册过程中，UE和P-CSCF之间建立了两对IPsec SA。如不特别说明，将这两对SA 安全联盟称为“一组SA”，而将这四个中的单个的或特定的IPsec SA安全联盟称为一个“SA”。
+3. 这四个IPsec SA 并不是静态的连接（例如TCP连接)，它们可以看作UE和P-CSCF之间的逻辑联合，使SIP消息得以安全交换。
+4. 一组SA使用四个端口;
+   - 受保护的UE客户端端口(uc1 ) ;
+   - 受保护的UE服务器端口( us1 ) ;
+   - 受保护的P-CSCF客户端端口 ( pc1 ) ;
+   - 受保护的P-CSCF 服务器端口( ps1 )。
+5. ![image-20230407095711912](Communication Technology.assets/image-20230407095711912.png)
+   1. 在初始注册中，UE和P-CSCF使用SIP安全机制协议的Security-Client、Security-Server和Security-Verify等消息头，来协商这些端口。
+   2. 这组SA的建立需要使用共享的密钥。然而，P-CSCF对Tobias ISIM应用与归属网络HSS之间共享的安全参数一无所知。因此，S-CSCF在401（未授权)响应中使用wWW-Authenticate消息头将IK和CK发给P-CSCF。P-CSCF必须将这两个密钥从消息头中去掉并保存在本地，然后才能将401（(未授权）响应发给UE。之后P-CSCF就使用IK作为这组SA 的共享密钥。Gm接口另一侧的UE就从收到的401（未授权)响应中的挑战来计算IK，并将其作为共享密钥。
+   3. 通过Ik，P-CSCF 和UE可以在四个端口之间建立起一组SA，关于这四个端口的信息已经事先在初始REGISTER请求及其响应中进行了交换:
+      1. 在uc1和 ps1之间用于UE向P-CSCF发送 SIP请求;
+      2. 在us1和 pc1 之间用于P-CSCF向UE发送 SIP响应;
+      3. 在us1和 pcl 之间用于P-CSCF向UE发送 SIP请求;
+      4. 在uc1 和 ps1之间用于UE向P-CSCF发送 SIP响应。
+   4. 一组SA在建立之后被分配一个临时的生命周期。虽然UE将要通过这组临时SA来发送所有后续的请求和响应，但是必须等到UE和S-CSCF之间的认证过程完成之后，这组SA 才能投入使用。这样做是为了确保UE和P-CSCF之间的安全机制是建立在对用户成功认证的基础上。
+   5. 在向UE发送200 ( OK）响应时，P-CSCF将更新这组SA 的生命周期，变为注册时的生命周期（即Contact消息头中的超时时间）再加上30s。UE在接收到200 ( OK)响应后也进行同样的操作。
+   6. 如果是初始注册（即现在所描述的情况)，P-CSCF和UE双方随后都将立刻开始使用这组SA。这意味着P-CSCF将通过所建立的这组SA来发送所有去往UE的SIP消息。UE也将同样通过所建立的这组SA发出所有SIP消息。
+
+##### 重认证情况下对多组SA的处理
+
+1. 我们已经见到第一组SA是如何在初始注册过程中建立的。由于一组SA的建立是基于S-CSCF 发出的401（未授权）响应中的认证数据，因此每次重认证都会在UE和P-CSCF之间建立一组新的SA。在重认证成功后，UE和P-CSCF之间会维护两组SA
+   - ![image-20230407101241854](Communication Technology.assets/image-20230407101241854.png)
+     - 在重注册发生之前已经建立并投入使用的那组SA，现在称为“旧SA组”;
+     - 基于重认证而建立一组新的SA，现在称为“新SA组”。
+2. 这种情况的复杂之处在于，P-CSCF无法确认Tobias 的UE是否已经收到对第二个REGISTER 请求的200 (OK)响应，因为SIP没有定义对收到响应的确认机制，只有对INVITE请求的响应除外。如果UE没有接收到对第二个RECISTER 的 200 (OK）响应，它就无法使用新SA组。所以，P-CSCF必须等待UE使用新SA组发来新请求，它自己才能开始使用新SA组。这意味着，只要P-CSCF还没有在新SA组上收到UE发来的请求，它就:
+   - 在向UE发送请求时使用旧SA 组，即从它的受保护的客户端端口pcl到UE的受保护的服务器端口us1 ;
+   - 保持两组SA，直到其中之一或两者全部超时，或者接收到一个来自UE的新请求。
+3. 当UE需要发送新请求时，它会使用新SA组，P-CSCF就能确认新SA组已经完全可以投入使用。此外，此时还不能立刻放弃旧SA组，因为有可能UE已经通过它收到或发出了一-个请求，而对端还没有响应。因此，旧SA组还需要再保存64 * Ts ( IMS环境下一般是128s)后才可以丢弃。
+   - ![image-20230407102243610](Communication Technology.assets/image-20230407102243610.png)
+4. 还要注意UE不能用新SA组对来自旧SA组的请求（例如一个 MESSAGE请求)发送响应（例如200 ( OK)响应)。由于P-CSCF的 Via消息头或者TCP连接的约束，UE必须使用与请求相同的端口和相同的SA组发送该请求的响应。
+5. 任何时候一旦一个临时的SA建立起来，UE就要丢弃所有其他的SA，唯独发送最后一个REGISTER请求所使用的那个SA除外。因此，UE永远不需要同时处理多于两组的SA。
+
+##### SA的生命周期
+
+1. 在一个正在进行的认证过程中，临时SA组的生命周期被限制为4min，这保证可以完成认证过程。在认证成功后，新SA组的生命周期被设置为以下两者之一:
+2. 刚结束的注册过程的超时时间加上30s。该注册过程超时时间如对 REGISTER的200 ( OK)响应中Contact消息头 expire参数所示。或者
+3. 如果已经存在另一组SA，只要这组SA的生命周期超过刚结束的注册过程的超时时间加30s，则设为该组SA的生命周期。
+4. 任何时候一旦重注册成功完成，P-CSCF和UE就要把所有现存SA 的生命周期更新为刚结束的注册过程的超时时间再加30s，只要这个值超过现存SA组已分配的生命周期。
+5. 因此，UE和P-CSCF间的SA 的生命周期总是比Tobias向 IMS网络注册的生命周期长30s。
+6. 当P-CSCF得知Tobias 不再是注册状态时（例如，收到了包含Tobias注册状态信息的NOTIFY 消息，指示网络发起了注册解除)，P-CSCF将在64 *T, s之后丢弃所有到达该UE的SA。
+
+##### 端口设置和路由
+
+1. 使用SA端口需要特别注意，因为这严重影响P-CSCF 和UE间的路由。Tobias 的UE:
+   1. 将从受保护的客户端端口(2468)发出所有请求;
+   2. 期望从受保护的服务器端口( 1357)收到所有的响应;
+   3. 期望从受保护的服务器端口( 1357)收到所有的请求;
+   4. 将从受保护的客户端端口(2468)发出对所收到请求的所有响应。
+2. 另一方面，P-CSCF:
+   1. 将从受保护的客户端端口(8642)发送所有发往UE的请求;
+   2. 期望从受保护的服务器端口(7531)收到所有来自UE的响应;
+   3. 期望从受保护的服务器端口(7531)收到所有来自UE的请求;
+   4. 将从受保护的客户端端口(8642)发送所有发往UE的响应。
+3. 为了确保所有请求都是通过IPsec SA 发出的:
+   1. UE将其受保护的服务器端口设置为其地址的一部分:
+      1. 在每个请求的Contact消息头中（包括所有的REGISTER请求);
+      2. 在每个请求的Via消息头中，不止是首个REGISTER请求。
+   2. UE在它发出的每个初始请求的Route消息头中，将P-CSCF 的受保护的服务器端口设为出站代理（即 P-CSCF)地址的一部分。
+   3. P-CSCF将其受保护的服务器端口设为其地址的一部分:
+      1. 在每个发往UE的初始请求的Record-Route消息头中;
+      2. 在每个响应的Record-Route消息头中，这些响应是发往UE，并携带P-CSCF的Record-Route条目(在Record-Route消息头中设置端口号)。
+
+###### 注册过程中的端口设置
+
+1. Tobias的UE使用如下信息来进行初始注册:
+
+   - ![image-20230407103226855](Communication Technology.assets/image-20230407103226855.png)
+
+     - UE将按照以下端口建立IPsec SA:
+       - 将端口2468作为受保护的客户端端口(Security-Client消息头中的port-c参数);
+       - 将精口1357作为受保护的服务器端口（Security-Client 消息头中的port-s参数)。
+     - UE期望所有呼入请求都被路由到它的受保护的服务器端口（Contact消息头中的port值)。
+     - UE将这个初始RECISTER请求发往P-CSCF未受保护的端口5060，因为Route消息头中没有指定端口号。
+     - UE将在未受保护的端口5060上等候对该初始RECISTER的所有响应，因为Via消息头中没有指定端口号。
+
+   - ```
+     Security-Client: ipsec-3gpp; alg=hmac-md5-96; ealg=des-ede3-cbc; spi-c=2683907603; spi-s=1525066104; port-c=43779; port-s=40925,ipsec-3gpp; alg=hmac-md5-96; ealg=aes-cbc; spi-c=2683907603; spi-s=1525066104; port-c=43779; port-s=40925,ipsec-3gpp; alg=hmac-md5-96; ealg=null; spi-c=2683907603; spi-s=1525066104; port-c=43779; port-s=40925,ipsec-3gpp; alg=hmac-sha-1-96; ealg=des-ede3-cbc; spi-c=2683907603; spi-s=1525066104; port-c=43779; port-s=40925,ipsec-3gpp; alg=hmac-sha-1-96; ealg=aes-cbc; spi-c=2683907603; spi-s=1525066104; port-c=43779; port-s=40925,ipsec-3gpp; alg=hmac-sha-1-96; ealg=null; spi-c=2683907603; spi-s=1525066104; port-c=43779; port-s=40925
+     ```
+
+2. 随后UE收到的401(未授权)响应将如下所示:
+
+   - ![image-20230407103534178](Communication Technology.assets/image-20230407103534178.png)
+     - 这意味着P-CSCF将使用以下端口建立IPsec SA:
+       - 将端口8642作为受保护的客户端端口(Security-Server消息头中的port-c参数)﹔
+       - 将端口 7531作为受保护的服务器端口( Security-Server消息头中的 port-s参数)。
+
+3. 在上述交换之后，UE和P-CSCF之间就建立起临时的SA 组，UE将按保护方式发出第二个RECISTER 请求，如下所示:
+
+   1. ![image-20230407110219252](Communication Technology.assets/image-20230407110219252.png)
+      1. 注意，这个请求仍然包含Security-Client和 Security-Verify消息头，但由于它们对于SA的建立和路由已经不再有什么影响了，因此就没有显示在这个例子中。上述RECISTER请求意味着UE会:
+         1. 希望所有呼入初始请求都被路由到它的受保护的服务器端口(Contact消息头中的端口号);
+         2. 已经通过临时IPsec SA 发送该REGISTER请求（即发往P-CSCF受保护的服务器端口——Route消息头中的端口号);
+         3. 希望对于该RECISTER请求的所有响应都通过临时IPsec SA发送过来（即它的受保护的服务器端口1357——Via消息头中的端口号)。
+
+###### 重认证过程的端口设置
+
+1. 如前所述，每次重认证都会生成一对新的IPsec SA。当根据SIP安全机制协议而为新建SA交换安全参数索引和受保护的端口号时，P-CSCF 和UE仅仅改变它们的受保护的客户端端口:
+   1. 对于两组SA，UE都是通过它受保护的服务器端口(us1）接收请求和响应;
+   2. 对于两组SA，P-CSCF都是通过它受保护的服务器端口( ps1）接收请求和响应;
+   3. 对于新SA组，UE使用一个新的受保护客户端端口(uc2）向P-CSCF 发送请求和响应;
+   4. 对于新SA组，P-CSCF使用一个新的受保护客户端端口(pc2)向UE发送请求和响应。
+2. 这是由于两组SA不能使用完全相同的端口参数。而且，如果受保护的服务器端口发生改变,将产生重大问题,意味着:
+   1. UE将需要进行重认证，因为它已注册的联系方式中包含受保护的服务器端口;
+   2. UE将需要对所有已建立的会话发送re-INVITE，因为它发送给对端的联系方式信息中包含受保护的服务器端口;
+   3. P-CSCF将在旧的受保护的服务器端口上接收UE对每个已建立对话的所有后续请求（包含UE的所有订阅信息)，因为SIP不可能对已建立的对话变更其路由信息。
+      1. 改变受保护的服务器端口将导致SIP路由产生很多问题。因此非常重要的就是，只要用户保持注册状态，就不能对该值进行修改。
+
+###### UDP和TCP两种情况下的端口使用
+
+1. 介绍了如何通过一个或多个SA组对请求和响应进行传送。在所选的例子中，只使用了UDP作为传输协议。然而对于TCP，这些过程稍有不同。
+   若通过UDP发送请求时，所有相关的响应都要传送到Via消息头所指示的IP地址和端口号。当通过TCP发送请求时，Via消息头中的信息被覆盖掉，响应被传送回发送该请求的IP地址和端口号。这里需要注意TCP本质上是面向连接的传输协议。通过使用这个规则，可以确保不需要建立额外的TCP连接，来发送对TCP接收的请求的响应。这使得P-CSCF 和UE之间SIP消息的路由行为会根据协议的不同而有所不同。不论使用UDP还是TCP，UE将在其发出的每个请求的Via消息头中设置其受保护的服务器端口(us1)。所有的请求都是从UE的受保护的客户端端口( uc1)发出。
+   - ![image-20230407111738611](Communication Technology.assets/image-20230407111738611.png)
+2. 当使用UDP时，对于该请求的响应将发往Via消息头中所指示的UE受保护的服务器端口( us1 )。
+3. 当使用TCP时，对于该请求的响应将发往UE受保护客户端端口(uc1 )，请求就是从该端口发出的。对于另一个方向也是同样的（即由P-CSCF 发往UE的请求及其响应)。
+
+#### SIP安全机制协议
+
+- ![image-20230407140917902](Communication Technology.assets/image-20230407140917902.png)
+
+##### 概述
+
+1. 必要性
+   - 3GPP版本5和版本6的IMS采用IPsec作为P-CSCF和UE之间的安全机制。IPsec仅是几种可能的安全机制之一。IMS的设计还允许Gm接口使用其他的安全机制。提供这种开放性往往会导致后向兼容性问题，例如，兼容版本6的UE可能无法理解任何其他的安全机制，但是它应该可以附着到一个更高版本的、已经支持IPsec 以外的其他安全机制的P-CSCF上。
+   - 因此，设计了SIP安全机制协议（ Sip-Sec-Agree）以使UE和P-CSCF间可以协商和采用共同的安全机制。在版本8中，还会引入TLS和HTTP Digest。
+2. 假设UE支持IPsec 和 HITP摘要，而P-CSCF支持IPsec和传输层安全（TLS)，并优先选择TLS。
+3. UE发往P-CSCF的初始REGISTER请求是没有安全保护的。为了建立一个共同的安全机制，Tobias的UE通过初始REGISTER的 Security-Client消息头公布那些它已经支持的机制,该消息头中包含对所支持的机制的列表。
+4. P-CSCF在401（未授权)响应中返回Security-Server消息头，包含P-CSCF侧所支持的机制的列表。而且，P-CSCF对每个机制添加一个优先级（q值)。
+   基于这些信息，UE和P-CSCF现在都可以得知双方所共同支持的安全机制。如果有超过一个的安全机制，将选择和采用被P-CSCF赋予最高优先级的机制。为了保证这个机制可以立刻建立起来，P-CSCF还会在401（未授权）响应中发送进一步的信息，使UE可以建立起该机制。例如，在一个非IMS环境下，如果所选择的机制是HTTP摘要，可以发送一个Proxy-Authenticate消息头。
+5. UE和P-CSCF随后就会建立起安全机制，在本例中是基于IPsec SA。之后两个实体间的所有消息都通过这些SA受保护地进行传递。然而，初始的REGISTER 请求及其响应仍然是得不到保护的，因此该消息就有可能被恶意用户篡改或者在易误码的空中接口上发生错误。
+6. UE发出的第二个RECISTER请求会重复所有为认证和注册过程所必需的信息，认证和注册都是在UE与S-CSCF之间进行的。为了确保与SIP安全机制协议有关的信息也没有被改变，UE会:
+   1. 在第二个REGISTER中重复初始RECISTER中的Security-Client消息头;
+   2. 将来自P-CSCF的401（未授权）响应中Security-Server消息头中的内容复制到Security-Verify消息头中，并在第二个REGISTER中发送出去。
+7. 只要建立的安全联盟在使用中，UE就会在每个发往P-CSCF的请求中重复Securi-ty-Verify消息头。
+8. 通过交换Security-Client(来自UE)和Security-Server(来自P-CSCF)消息头，双方还可以对IPsec SA的一些参数达成一致，也就是说，它们会相互告知受保护的客户端和服务器端口( port-c和port-s）以及安全参数索引(SPI:spi-c和 spi-s)。
+
+##### 初始REGISTER请求中与SIP安全机制协议有关的消息头
+
+1. 为了激活安全机制协定，UE在初始REGISTER请求中包含如下信息:
+   - ![image-20230407114157470](Communication Technology.assets/image-20230407114157470.png)
+     - Proxy-Require消息头中包含了选项标签“sec-agree”，它指示下一跳代理（这里就是P-CSCF)必须支持SIP安全机制协议的过程，以便进一步处理本请求。如果下一跳代理不支持SIP安全机制协议的过程，它会根据〔 RFC3261]定义的对Proxy-Require消息头的处理规定，发回一个420（无效扩展）响应，其中包含一个 Unsupported消息头，其内容是选项标签“sec-agree”。由于本例中的P-CSCF完全兼容IMS版本5和版本6，它当然会支持SIP SA过程而不会向UE发送这样的响应。
+     - 此外，还包括一个 Require消息头，指示了“sec-agree”选项标签。[ RFC 3329 ]定义了SIP安全机制协议，强制要求包括该字段。Require消息头与Proxy-Require的用法相同，但它是被远端UE所用（而非代理)。它的存在仅仅是为了防止如下情况:如果请求（本例中是REGISTER请求）直接从源UE发往最终目的地( S-CSCF)，而后者根本不看Proxy-Require消息头，这就意味着不会发生安全机制的协商。Require消息头则可以强制接收方执行sec-agree过程。
+     - 由于P-CSCF可以执行SIP安全机制协议过程，它将Require 和 Proxy-Require 中的sec-agree选项标签删除,然后将请求送往Tobias的归属运营商网络。
+     - Tobias UE在Security-Client消息头中将所支持的安全机制列表发送给P-CSCF。根据该消息头中的信息，P-CSCF了解到Tobias UE支持两种安全机制:一个是HTIP摘要(“digest”)，另一个是3GPP所使用的IPsec (“IPsec-3gpp")。这两种机制在消息头中使用逗号隔开。后者的参数列表（用“;”隔开)包括:
+       1. 算法（ alg参数)——用于IPsec加密和保护，在本例中是 HMAC SHA 1-96算法，在[RFC2404]中定义;
+       2. 受保护的客户端端口( port-c）和受保护的服务器端口( port-s)——用于UE侧的IPsec SA;
+       3. SPI—IPsec SA中与受保护的客户端端口相关的spi-c，以及 IPsec SA中与受保护的服务器端口相关的spi-s。
+     - P-CSCF也会删除Security-Client消息头，然后再进一步转发REGISTER请求。注意在IMS 中，只有IPsec-3gpp安全机制是可用的。此处的例子使用了摘要和TLS，作为SIP-Sec-Agree有关的消息头中可能使用的额外的安全机制。这仅仅是为了解释协商过程隐含的原理。
+
+##### 401(未授权）响应中的Security-Server消息头
+
+- 当接到来自S-CSCF的对于REGISTER请求的401（未授权）响应时，P-CSCF在响应的Secutity-Server消息头中包含了一个所支持的安全机制的列表。
+  - ![image-20230407134353531](Communication Technology.assets/image-20230407134353531.png)
+    - 在这个例子中，P-CSCF支持两个安全机制:3GPP特定的IPsec和TLS。它还给予TILS较高的优先级:只要UE也支持TLS，就应该选择它作为UE和P-CSCF之间消息的安全保护。
+    - 此外，P-CSCF使用与UE相同的方式，发送关于SPI、受保护的客户端和服务器端口等与IPsec有关的信息。
+    - 当向UE发送401（未授权)响应时，P-CSCF已经知道将使用IPsec作为安全机制，因为它了解到这是UE和它自己都能支持的惟一的机制。
+
+##### 第二个REGISTER消息中的SIP安全机制协议消息头
+
+- 在接到401（未授权）响应后，UE就可以建立 IPsec SA了。当这完成之后，它可以使用已经建立起来的SA来发送第二个 REGISTER请求。在这个RECISTER请求中包含以下有关信息:
+  - ![image-20230407135705139](Communication Technology.assets/image-20230407135705139.png)
+    - 这里Require和 Proxy-Require消息头又一次包含了选项标签“sec-agree”。它们的作用与初始REGISTER请求一样，并且会重复出现在UE发出的每一个RECISTER请求中。P-CSCF总会先将它们删掉再继续转发该请求，与初始REGISTER请求的处理方式一样。如果在删除sec-agree之后发现Proxy-Require或Require消息头之一(或全部）变成空，则P-CSCF也会将其删除。
+    - Security-Verity消息头复制了所收到的Security-Server消息头。Security-Client 的内容就是对初始REGISTER请求的简单重复。
+    - P-CSCF将会比较初始和第二个RECISTER请求中的两个 Security-Client消息头，看它们是否匹配。它还会比较两个消息头的内容:一是它所发送的401（未授权）响应中的Security-Server消息头，二是它所收到的第二个REGISTER请求中的Security-Verify 消息头。
+    - 在进一步发送这个RECISTER请求之前，P-CSCF将从中删除Security-Client和 Se-curity-Server消息头。
+
+##### SIP安全机制协议与重注册
+
+1. 在每次重注册过程中，S-CSCF都可以决定对UE进行重新认证;通过重新认证,它强制UE和P-CSCF之间建立一组新的IPsec SA，因为IPsec SA所依赖的IK在每次重认证过程中都要改变。建立一组新的SA也就意味着，要协商一组新的SPI、新的受保护的客户端和服务器端口。
+2. 当UE发送新的RECISTER请求来重注册时，它还不能确定S-CSCF是否会要求重认证。因而它需要在每个新的REGISTER请求中加人新的Security-Client消息头，其中包含新的SPI值、受保护的客户端和服务器端口。
+   1. ![image-20230407140257496](Communication Technology.assets/image-20230407140257496.png)
+      1. 请注意，Security-Client消息头中SPI的值和受保护的客户端端口号已经发生了改变，在S-CSCF要求重认证UE时，这样才能建立一组新的SA。UE的受保护的服务器端口没有变化，在用户的注册状态下始终保持不变。
+      2. Security-Verify消息头的内容没有改变，因为它是最后一次收到的Security-Server消息头的复制品。
+      3. 在收到S-CSCF发来的对该RECISTER请求的响应时，P-CSCF 和UE就能知道是否需要建立新的 IPsec SA:也就是说，是接到了一个401（未授权）响应还是接到了一个200 ( OK)响应。
+      4. 当从S-CSCF收到一个401（未授权）响应时，P-CSCF将会在这个响应中添加一个新的 Security-Server消息头，提供新的受保护端口值和新的SPI。
+   2. ![image-20230407140517473](Communication Technology.assets/image-20230407140517473.png)
+   3. 此外，P-CSCF不会改变受保护的服务器端口(7531)。于是，UE和P-CSCF之间就建立了一组新的临时SA.。作为对重认证挑战的响应，REGISTER请求将通过这组新的临时SA发送出去，并包含以下消息头:
+      1. ![image-20230407140652815](Communication Technology.assets/image-20230407140652815.png)
+   4. 与初始注册过程一样，第二个RECISTER请求仍然重复了上一个REGISTER请求的Security-Client消息头（但采用新值)，并将刚才收到的401（未授权）响应的Security-Server消息头的值复制到Security-Verify消息头中。重注册过程的第二个 RECISTER请求，将不再承载与以前建立的SA组有关的任何信息。
+      - ![image-20230407140812760](Communication Technology.assets/image-20230407140812760.png)
+
+#### IMS通信服务标识和其他被叫方能力
+
+- ![image-20230407143212143](Communication Technology.assets/image-20230407143212143.png)
+
+##### 概述
+
+1. IMS 允许一个用户同时有多个终端在工作，这些终端都使用用户相同的公共用户身份( SIP AOR)。每个终端可能支持特定的能力，其中有些终端会限制只能给用户提供某些服务。例如，移动电话可以在进行SIP会话的同时，发送和接收视频流，而固定电话则可能不支持此项功能，并且也不能用于移动场景。
+2. 我们假设Tobias 既通过移动电话也通过固定电话进行了注册，那么他向IMS 网络指明这些电话特定能力会很有用，这样到达他的呼叫就可以被路由到与呼叫方偏好最匹配的终端。
+3. 我们会介绍Tobias 的电话如何在注册过程中向网络表明自己的能力（被叫方能力)。随后介绍主机方如何表达出自己的偏好，从而将呼叫路由到支持一种或多种特定能力的终端。为了将呼叫路由到那些被叫方终端，终端能力需要首先在网络中进行注册。
+4. 被叫方能力和主叫方偏好可以用所谓的特性标签来表示。特性标签被用来选择被呼叫用户的终端,以最大可能地满足呼叫用户的偏好选择。
+5. 在IMS中，特性标签被用来表示IMS通信服务标识(ICSI)和IMS应用参考标识(IARI)。
+
+##### 特性标签:被叫方能力
+
+1. 在注册过程中，Tobias的UE向网络表明以下被叫方能力:
+   1. UE支持语音流的发送和接收(语音);
+   2. UE支持视频流的发送和接收（视频);·
+   3. UE是一个移动电话（移动性);
+   4. UE支持接收的SIP方法( methods = )。
+2. 由于这些特性标签表达的是设备能力，因此它们会被包含在Contact消息头中，即终端所注册的IP地址会将相关的特性标签作为参数。所以，RECISTER消息的Contact消息头如下:
+   1. ![image-20230407141858219](Communication Technology.assets/image-20230407141858219.png)
+      1. Contact消息头现在包含了一个很长的参数列表，每个参数彼此用“;”隔开。最开始的三个参数（“;audio ; video ; mobility”)是没有特定数值的特性标签，即它们直接表示了UE的能力。
+      2. 而最后一个参数则加上了tag-value-list，即表明UE支持所有被列出的SIP方法。这就意味着，如果一个呼叫要求支持一个或多个上面所列的方法，当这个呼叫到来时,它将会被传递给该UE。
+
+##### IMS通信服务标识和IMS应用参考标识
+
+1. SIP特性标签还可用来表示IMS通信服务标识（ICSI)和 IMS应用参考标识( IARI)。
+2. 在 IMS中 ICSI支持两个不同的目的:一个是网络中的服务标识，另一个是将请求路由到支持该服务的终端。当在IMS注册过程中将ICSI指示为一个特性标签时，这是仅用作第二个目的，即它将请求路由到正在进行注册的终端。
+3. IARI值仅用于将请求路由到支持相关服务的终端。
+4. 在本例中，我们假设Tobias的终端支持三种IMS通信服务和一种特定的IMS应用，即
+   1. IMS多媒体电话通信服务( urn: urn-xxx :3gpp-service-Ims. icis. mmtel) ;
+   2. 一个在线游戏，假设将它的ICSI值定义为urm: urn-xxx: other-vendor-service-Ims. icsi. ongame;
+   3. 一个通过SIP支持设备远程控制的服务，它的ICSI值为urn: urn-xxx: other-vendor-service-Ims. icsi. remotecontrol;
+   4. 一个特定的可以对Tobias家乡的消防员进行报警的应用，因为Tobias是一名消防志愿者。假定为这个应用定义的IARI为urn: urn-xxx: other-app-Ims. iari. firefighter。
+      - 注意，当这些URN与因特网编号管理委员会（ IANA）进行注册后，其中的“xxx”将被确定的数值替代。
+5. 运营商会在IMS MO下发一个ICSI值的列表。Tobias 的电话只会使用如下这些ICSI值，即在IMS MO的列表中出现过，同时其电话支持，而且仅留下IMS多媒体电话和在线游戏的ICSI值。运营商不会限制IARI数值，因此Tobias可以使用上面所列的IARI值。
+6. 这些ICSI 和 IARI值被定义为服务URN，会通过以下方式表示出来:
+   1. 一个被称为“g.3gpp. icsi_ref”的新的SIP特性标签，它把ICSI数值的列表记为tag-value-list ;
+   2. 一个被称为“g. 3gpp. iari_ref”的新的SIP特性标签，它把 IARI数值的列表记为tag-value-list，与“methods”特性标签表示方式相同。
+7. 由于将ICSI和 IARI定义为URN了，所以在对Contact消息头编码时会遇到另外一个问题。在[ RFC 3840]中定义的 tag-value-list不支持将冒号(“:”)作为有效字符，因此需要如〔RFC 3986]所定义那样，避开在ICSI和 IARI URN 中的冒号。这就意味着当每次出现冒号字符时，就要用字符串“%3A”来替代。所以现在本例中的Contact消息头表示如下:
+   - ![image-20230407143015030](Communication Technology.assets/image-20230407143015030.png)
+     - 为简便起见，后面大多数例子中的Contact消息头都没有包含前两章中所介绍的特性标签。另外需要注意的是，本例给出的ICSI和IARI值中，只有IMS多媒体电话通信服务标识( urmn;urn-xxx :3gpp-service-Ims. icis. mmtel)已进行标准化并投人使用了。上述其他ICSI 和 IARI 值都是为举例而创造的。
+
+#### 压缩协商
+
+- ![image-20230407172559086](Communication Technology.assets/image-20230407172559086.png)
+
+##### 概述
+
+1. 对于IMS而言，空中接口上对SIP消息进行压缩的能力十分重要。本节介绍UE和P-CSCF如何告知对方它们支持SigComp并且都愿意启用它。
+2. P-CSCF 和 IMS UE都必须支持SIP信令压缩( SigComp)，但不是必须启用。因此,它们需要一种机制来表达它们是否愿意使用信令压缩。
+3. [ RFC3486]定义了一个新的URI参数“comp”，可以被UE或SIP代理（在IMS中只能是P-CSCF)设置为“comp = SigComp”来表达它们愿意收发某些压缩后的SIP消息。
+4. Tobias UE在初始REGISTER请求中就已经向P-CSCF表明它是否愿意启用信令压缩。P-CSCF在401（未授权)响应中给出类似的指示。由于这两个SIP消息都是没有保护的，因此此时UE和P-CSCF都不会为信令压缩创建状态（容器，compartment):这是为了确保防止因恶意用户强制P-CSCF预留海量的不必要的信令压缩容器而导致 P-CSCF过负荷，比如想对P-CSCF发起拒绝服务（DOS）攻击的恶意用户。
+5. 只有在UE和 P-CSCF之间建立IPsec SA后，才会创建状态（容器)。
+
+##### 指示是否愿意使用 SigComp
+
+1. "comp”参数可以设置成:
+   1. 由UE在RECISTER请求的Contact消息头中设置——这意味着UE愿意接受以自己为目的地、采用压缩形式的初始请求，因为发往UE的初始请求都是根据UE注册的Contact地址来进行路由的。
+   2. 由UE在任何其他的初始请求的Contact消息头，或对初始请求的第一个响应中的Contact消息头中设置——这意味着UE愿意接受该对话的所有后续请求都采用压缩形式，因为后续请求是根据初始请求中（从请求发起侧）或初始请求的第一个响应中(从请求终结侧)的 Contact消息头中的地址进行路由的。
+   3. 由UE在任何请求的Via消息头中设置——这意味着UE愿意接受对于这个请求的所有响应都采用压缩形式，因为响应是根据相关请求中的Via消息头进行路由的。
+   4. 由P-CSCF在发往UE的Record-Route消息头中自己的条目中设置——这意味着P-CSCF愿意接受该对话的后续请求都采用压缩形式，因为发往SIP代理的后续请求是根据Route消息头（由Record-Route消息头产生)中的条目进行路由的。
+   5. 由P-CSCF在任何请求的 Via消息头中设置——这意味着P-CSCF愿意接受所有对这个请求的响应都采用压缩形式，因为响应是根据相关请求中 Via消息头进行路由的。
+
+##### 注册过程中的comp = SigComp参数
+
+1. UE发送的初始RECISTER请求中包含以下与压缩有关的信息:
+   - ![image-20230407171728993](Communication Technology.assets/image-20230407171728993.png)
+     - Via消息头包含了comp = SigComp参数，指示UE愿意接受对于该请求的所有响应都采用压缩形式。因此，P-CSCF可以按照压缩形式发送401（未授权)响应，但是它不应该由此就创建一个状态（即一个容器)。
+     - Contact消息头也出现了comp = SigComp参数。这个参数将包含在UE所接收到的每个初始请求中，因为S-CSCF会将每一个初始请求的请求-URI（指向sip: tobias@home1. fr）替换为已注册的联系地址（即sip:[5555: 1: 2:3:4]:1357; comp =SigComp)。
+     - 来自P-CSCF的401（未授权）响应不会包含任何关于P-CSCF执行信令压缩能力的进一步信息。在首次注册之前发现的P-CSCF地址（见10.3节)中不会见到comp = Sig-Comp参数。由于只有在下一跳地址中设置了comp = SigComp参数时，SIP消息才会采用压缩形式，因此UE不会向P-CSCF发送任何压缩格式的初始请求。
+2. 后续请求（例如ACK、PRACK、UPDATE和BYE)可以按压缩形式发送，由于从UE到P-CSCF的路由遵循P-CSCF的 Record-Route条目，其中P-CSCF可以设置comp = SigComp参数。从UE到P-CSCF的响应也是同样的，因为它们是根据P-CSCF的Via消息头条目进行路由的，其中 P-CSCF也进行了设置。
+3. 虽然要求使用comp参数来指示是否采用了压缩，但3GPP TS 24.229并未明确要求指示初始消息是否采用了压缩格式。这样就存在一种可能性，即UE只要按照压缩形式发送所有初始请求就可以，因为P-CSCF无论如何也要支持SigCompo
+4. 于是UE将comp = SigComp参数添加在之前发现的P-CSCF地址中。这样它就可以按压缩形式发送第二个REGISTER请求。
+   - ![image-20230407172301988](Communication Technology.assets/image-20230407172301988.png)
+
+
+
+##### 其他请求中的comp =SigComp参数
+
+#### 接入和位置信息
+
+- ![image-20230407174043297](Communication Technology.assets/image-20230407174043297.png)
+
+##### P-Access-Network-Info
+
+1. P-Access-Network-Info消息头是3GPP特有的消息头，用于向IMS网络指示UE正通过哪种接入技术附着到IMS上。在我们的例子中所使用的接入技术是GPRS。它还包含小区全球ID(CGI)，标志用户所处的位置。
+2. Tobias UE在其发送的每个请求（包括ACK和CANCEL 请求）和每个响应（包括对CANCEL请求的响应）中包含P-Access-Network-Info消息头，但必须是当该请求具有完整性保护时（即通过SA发送)。
+3. 因此，该消息头首次发送是在第二个REGISTER请求中，在UE收到401（未授权)响应之后。该消息头如下所示:
+   - ![image-20230407173518468](Communication Technology.assets/image-20230407173518468.png)
+     - Tobias的 S-CSCF从每个请求或响应中删除P-Access-Network-Info消息头，然后转发给下一个实体。该规则的惟一例外是:当AS 与S-CSCF处于同一个信任域时。
+     - 当一个紧急呼叫的 INVITE请求中包含P-Access-Network-Info消息头时，P-CSCF和S-CSCF可以从Cell-ID 中判断出离用户最近的应急中心而进行联络。
+
+##### P-Visited-Network-ID
+
+1. P-Visited-Network-ID消息头向Tobias 的归属网络指示他正在漫游的网络的标志。Tobias UE当前所附着的P-CSCF添加了该消息头。S-CSCF用该消息头中的信息检查与拜访网络间的漫游协议。
+2. 假设Tobias正在芬兰漫游，并附着到虚构的芬兰运营商Musta Kissa。由于P-CSCF也是由该运营商提供，它在每个发往Tobias归属网络的REGISTER请求中增加一个P-Visited-Network-ID消息头。该消息头中有一个字符串，用于S-CSCF识别拜访网络。
+   - ![image-20230407174022855](Communication Technology.assets/image-20230407174022855.png)
+
+#### 注册过程中与计费有关的信息
+
+1. 在注册过程中与计费有关的SIP消息头的内容及其处理。
+2. 当P-CSCF收到初始REGISTER请求时，它生成IMS计费ID(ICID)，只要用户处于注册状态，该ID对于所有的IMS有关的信令就是有效的。该ICID值通过P-Char-ging-Vector消息头从P-CSCF传送到S-CSCF。
+   - ![image-20230407174315404](Communication Technology.assets/image-20230407174315404.png)
+     - 当收到这个消息头后，S-CSCF会保存ICID，并执行计费过程。P-Charging-Vector消息头在[RFC3455]中定义，该消息头的扩展和在IMS中的用法在[ 3GPP TS 24.229] 中描述。
+
+#### 用户身份
+
+##### 概述
+
+1. Tobias需要向他的归属网络进行注册才能发起对他姐姐的呼叫。在本例中，目前他使用SIP URI sip: tobias@home1.fr来进行注册。当Tobias使用与工作无关的服务时他使用这个用户身份。然而，Tobias 在其法国的运营商处注册了一整套用户身份
+   - ![image-20230407174734676](Communication Technology.assets/image-20230407174734676.png)
+     - 一个注册组可由几个SIP URI和 tel URL组成。对于每个tel URL,在网络中必须要有一个相关SIP URI可用，即 SIP URI用户部分取tel URL的数值。这些tel URL和它们相关的SIP URI都是公共用户身份的别名（Alias ID)，这就意味着它们分享HSS中的相同用户配置信息。
+     - 在初始注册过程中，Tobias 只能明确地注册这些URI的其中之一，在我们的例子中就是sip: tobias@ home1. fr。然而，IMS 允许隐性地和明确地注册更多的公共用户身份:
+       1. 在初始注册阶段，上面列出的部分身份可以被网络自动（隐性地）注册。
+       2. 其他的身份可以保持未注册状态，直到Tobias 明确地请求注册它们。
+2. 当接收到对第二个REGISTER请求的200 (OK)响应时，Tobias的终端和P-CSCF都会发现Tobias 的默认公共用户身份，这是就是P-Associated-URI消息头中第一个URI。
+   为了发现分配给Tobias 的其他公共用户身份的更多注册状态，UE自动订阅归属网络S-CSCF所提供的注册状态事件信息。在首次注册成功后，要求UE必须立刻执行这个订阅，这是由于:
+   1. UE需要了解关联URI的注册状态;
+   2. 该订阅使得网络(S-CSCF)能够强制UE进行重认证;
+   3. 该订阅使得网络（( S-CSCF)能够解除用户的注册。
+3. 与此同时，P-CSCF也订阅了用户注册状态信息，主要是为了获知网络发起注册解除。
+
+##### 注册的公共和私有用户身份
+
+1. 初始RECISTER请求中所携带的身份是从ISIM中读出的，ISIM是UE的UICC卡(通用集成电路)上的应用之一。ISIM中读出的数据包括:
+   1. 用户的私有用户身份;
+   2. 用于注册的公共用户身份;
+   3. 用户的SIP注册服务器的地址。
+2. 私有用户身份仅用于认证。公共用户身份就是Tobias 将要首次注册的SIP URI。Tobias可以有其他多个公共用户身份，其中一些甚至可以存储在ISIM中,但是在开始只有一个可以显式注册的。
+3. 如果UE中没有配备ISIM，它可以从同样存在于UICC中的USIM应用中得到用户身份和注册服务器地址。USIM应用包含了所有与用户电路交换（CS）域和分组交换（ PS）域的注册和认证有关的数据。
+4. 拥有了这些参数，UE可以填写初始RECISTER请求中的如下字段:
+   - ![image-20230407180057140](Communication Technology.assets/image-20230407180057140.png)
+     - 从ISIM中读出的公共用户身份，写入To和 From消息头。Authorization消息头中username字段取值为私有用户身份，而注册服务器的地址则放入请求URI中以及Au-thorization消息头的realm和uri字段中。
+
+##### 从USIM派生出的身份
+
+1. 当Tobias注册时，其UE从 UICC上运行的ISIM应用中读出 SIP URI“sip: tobiashome1. fr”，该UICC是从运营商处得到并置于UE中。ISIM总是保存至少一个有效的公共用户身份。
+2. 然而，IMS服务也可以提供给UICC卡上没有ISIM应用的用户，于是也就没有有效的公共用户身份。因此，UE需要依据USIM应用内的数据来创建一个临时的公共用户身份，并使用这个临时身份进行注册。
+3. 由于临时公共用户身份是依据USIM中与安全相关的数据生成的，因此不允许暴露给IMS 以外的任何网元。因此，它被视为“被隔离的身份（ Barred Identity)”来处理，也就是说，强烈建议网络拒绝除用户注册以外的情况下以任何形式使用这个身份。
+4. 在这种情况下，私有用户身份也从USIM 数据中生成。其用户部分遵照IMSI(国际移动用户标识）的形式;继之以一个宿主部分，包括IMSI中的MCC（移动国家代码）和MNC（移动网络代码)。例如，Tobias 的私有用户身份可能类似如下:22330999999999@ims. mnc33. mcc222. 3gppnetwork.org。
+5. Tobias 的归属网络的域名也可以从 USIM中得到，看上去类似于用户身份的域名部分，即 ims. mnc33. mcc222.3gppnetwork.org。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
