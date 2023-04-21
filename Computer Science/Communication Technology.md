@@ -4132,6 +4132,8 @@
 
 #### 用户身份
 
+- ![image-20230419165641630](Communication Technology.assets/image-20230419165641630.png)
+
 ##### 概述
 
 1. Tobias需要向他的归属网络进行注册才能发起对他姐姐的呼叫。在本例中，目前他使用SIP URI sip: tobias@home1.fr来进行注册。当Tobias使用与工作无关的服务时他使用这个用户身份。然而，Tobias 在其法国的运营商处注册了一整套用户身份
@@ -4167,17 +4169,270 @@
 4. 在这种情况下，私有用户身份也从USIM 数据中生成。其用户部分遵照IMSI(国际移动用户标识）的形式;继之以一个宿主部分，包括IMSI中的MCC（移动国家代码）和MNC（移动网络代码)。例如，Tobias 的私有用户身份可能类似如下:22330999999999@ims. mnc33. mcc222. 3gppnetwork.org。
 5. Tobias 的归属网络的域名也可以从 USIM中得到，看上去类似于用户身份的域名部分，即 ims. mnc33. mcc222.3gppnetwork.org。
 
+##### 默认的公共用户身份/P-Associated-URI消息头
 
+1. 如果Tobias在初始注册中使用了临时公共用户身份，他将遇到这样的问题:虽然已经注册过，但是不能进行任何其他操作（例如，呼叫他的姐姐或者订购服务)，因为他注册中所使用的身份不能再继续使用（被屏蔽的身份)。他的终端需要知道另一个隐性注册的身份。
+2. 任何时候一旦用户成功地进行了认证和注册，S-CSCF于是就会对RECISTER 请求发出一个200 ( OK）响应，在该响应中发送P-Associated-URI消息头。该消息头列出了该用户的所有SIP URI和 tel URL （即公共用户身份)，这些都与用户关联，但并非必须注册。消息头中只有第一个列出的URI总是有效的、已注册的公共用户身份，可被UE和 P-CSCF用来实施进一步操作。
+3. 对应于Tobias RECISTER请求的200 ( OK）响应中，其中的P-Associated-URI 如下所示：
+   1. ![image-20230417170721944](Communication Technology.assets/image-20230417170721944.png)
+      - 通过这些信息，Tobias可以知道至少有一个公共用户身份“sip: tobias @home1. fr”是已经注册的。他还可以得知还可使用其他两个SIP URI和两个tel URL,但他并不知道这些标识现在是否已经注册。
+      - 由于P-Associated-URI只定义为传递SIP URI，因此它用SIP URI 的格式来表示所包含的、与Tobias关联的两个tel URL ( tel:+44123456789和tel:+44123456111)。
 
+##### 全球可路由用户代理URI的分配
 
+1. 至此我们已经看到了两种类型的身份标识，它们都是与用户有关，即公共用户身份和私有用户身份。而在有些情况下，不仅是对某个用户，而且对某个设备进行寻址也很重要。一个例子如:一个用户想要把正在进行的固定电话呼叫无缝地转移到某个特定的移动电话上去。虽然也可以用私有身份来标识（至少比如当电话配备有UICC时）该设备，但它不能用于注册上下文以外的地方，否则会泄露安全相关的信息。
+2. 为了弥补这个不足，引入了全球可路由用户代理URI ( GRUU)。GRUU允许设备以SIP寻址方式对设备进行标识。
+   - 会暴露用户身份的公共 GRUU，即对于分配有CRUU的用户，他的SIP地址很容易从GRUU中得知。例如，sip: tobias@ home1. fr;gr = jklhzzqu7as9asfd;
+   - 能隐藏用户身份的临时CRUU，即 CRUU有一个SIP地址，但该地址不会让人知道对应于GRUU用户的SIP地址，例如，sip: 98hzah4pmmn@ home1.net;gro
+3. 在注册过程中，IMS终端被强制要求同时申请一个公共CRUU和一个临时GRUU。S-CSCF在没有任何HSS的参与下分配GRUU，而且 GRUU也不会存储在 HSS 中。
+4. 为了请求CRUU的分配，Tobias 的电话在它发送的RECISTER请求的Contact消息头中包含一个instance-ld参数，即
+   1. ![image-20230417171336021](Communication Technology.assets/image-20230417171336021.png)
+5. 如果注册成功，那么S-CSCF将同时分配公共 GRUU和临时GRUU，并在200(OK)(对 REGISTER请求的响应)的Contact消息头中将它们发回:
+   - ![image-20230417171445777](Communication Technology.assets/image-20230417171445777.png)
+     - 如上所述，GRUU与注册状态下的公共用户身份和Contact 地址（即进行注册的设备的地址)都有关联。GRUU总是同时与用户和设备进行绑定。
+     - GRUU由SIP URI中的“gr”参数标识。在这里分配的公共CRUU是Tobias的SIPURI，并且将“gr”参数设置为所注册的instance ID。这样，可以很容易地知道CRUU分配给了哪个用户。临时GRUU使用在用户名字符串中，它是由S-CSCF创建的，并且不会显示任何与Tobias或Tobias 的电话之间的关系。为了确保在不将该地址存储在HSS中的情况下仍能对其进行路由，该临时GRUU会在其用户部分显示所分配的S-CSCF的地址（( scscf1. home1. fr)，这就确保I-CSCF 不用从SLF/HSS中解析GRUU（见12.3.3.4节)，因为基于GRUU主机部分的信息，它可以直接转发到分配CRUU的S-CSCF。另外，临时GURR也包含“gr”参数，但这次它是空的，因为用户名中的字符串是全球惟一的，不需要进一步区分。
+     - s-CSCF和 Tobias的电话都会存储公共GRUU和临时GRUU。
 
+##### UE订阅注册状态信息
 
+1. ![image-20230417174349296](Communication Technology.assets/image-20230417174349296.png)
+2. 在成功进行初始注册和认证之后，Tobias 的终端发送一个SUBSCRIBE请求，包含如下信息:
+   - ![image-20230417172156620](Communication Technology.assets/image-20230417172156620.png)
+     1. 没有显示 SUBSCRIBE请求的所有信息，以上只列出了必需的消息头，以便理解注册状态事件订阅的实质和请求消息的路由。
+     2. 该订阅仅针对名为“reg”的事件，就是注册状态事件包，在请求消息的Event消息头中指示。
+     3. 请求URI指示了要订阅哪个用户的注册状态信息，因此，需要设置为Tobias已注册的公共用户身份，并在To消息头中明示。
+     4. 为了标识他自己，Tobias UE将To和P-Preferred-ldentity消息头设置为据他所知目前已注册的SIP URI。这可以是:
+        - 收到的P-Associated-URI消息头中默认公共用户身份。
+        - 在初次注册时所显式注册的公共用户身份，只要它不是一个临时的公共用户身份。如果没有使用临时公共用户身份，那么有可能这个显式注册的公共用户身份与默认公共用户身份相同。
+     5. 由于SUBSCRIBE是初始请求，因此To消息头中并不包含标签，因此这个标签需要由远端（本例中即 S-CSCF)来指定。
+     6. Expires消息头要设置为与初始注册中超时时间相同的值（即 600000s，大约7天)。
+     7. Accept消息头指示在本次订阅中，UE只能处理“reginfo + xml”类型的信息，即XML（扩展标记语言)格式的注册状态信息。
+     8. Contact消息头设置的联系信息与注册过程中的联系信息相同，即由接人网分配的UE的IP地址和由IPsec SA 使用的受保护的服务器端口。
+     9. Route消息头:它包含了REGISTER请求的200 ( OK）响应中Service-Route消息头中的路由集合，其中最顶端的就是P-CSCF的地址，它用作出站代理。这使得SUBSCRIBE请求首先被路由到P-CSCF，而后直接继续转发到注册过程中指派的S-CSCF。
+3. P-CSCF接到UE发来的SUBSCRIBE请求后，将检查P-Preferred-Identity消息头中的信息集合是否是Tobias 的有效的公共用户身份。如果是，它将P-Preferred-Identity消息头换成P-Asserted-ldentity消息头。
+   - ![image-20230417174217272](Communication Technology.assets/image-20230417174217272.png)
+4. s-CSCF在接收到SUBSCRIBE请求后，会检查P-Asserted-Identity消息头中的用户身份是否已经在S-CSCF上注册。随后，它会检查它是否可以向订阅者用户提供Tobias的注册状态信息。由于本例中Tobias订阅的是他自己的注册状态信息，是允许的。因此，S-CSCF会立即:
+   - 对SUBSCRIBE请求返回一个200 ( OK)响应，指示该订阅已经成功;
+   - 生成一个reginfo类型的XML文件，包含Tobias 关联的URI的当前注册状态信息;
+   - 通过一个NOTIFY消息将所生成的XML文件发送给订阅者（本例中即TobiasUE)。
+5. 由于200 ( OK)响应和NOTIFY 请求几乎是同时发送的，NOTIFY 请求有可能在200 ( OK）响应之前到达。在这种异常情况下，UE必须能够根据NOTIFY 请求创建相关的订阅对话，也就是说，不能够由于事先没有收到SUBSCRIBE请求的200 ( OK)响应，而丢弃NOTIFY请求中的信息。
 
+##### P-CSCF订阅注册状态信息
 
+1. ![image-20230417175708574](Communication Technology.assets/image-20230417175708574.png)
+2. P-CSCF也需要订阅Tobias的注册状态信息，因此它也创建一个SUBSCRIBE请求，看上去与终端创建的请求类似。
+   - ![image-20230417175533506](Communication Technology.assets/image-20230417175533506.png)
+     - 两者主要的区别在于这次是P-CSCF要订阅Tobias的注册状态信息。因此它要在From消息头和P-Asserted-Identity消息头中标识自己。由于P-CSCF是可信任的实体，它直接在请求中加入P-Asserted-Identity消息头。
+3. 由于初次注册阶段，P-CSCF并没有出于自身路由的目的而保存任何路由信息，因此它不知道为用户指定了哪个S-CSCF，因此也就无法包含Route消息头。所以，它只能根据请求URI的主机部分（即“home1.fr”）来进行该请求消息的路由，可以通过DNS解析找到Tobias归属网络中一个或多个I-CSCF-的地址。然后I-CSCF查询HSS得到分配给URI sip: tobias@homel.fr的S-CSCF地址，并将请求发给S-CSCF。
+   1. 注意：通过这个SUBSCRIBE请求也建立起一个新的对话，这次是在P-CSCF和S-CSCF之间。这个对话与UE是否订阅了同样的注册状态信息完全没有关系，因此S-CSCF要分别针对UE的订阅和P-CSCF 的订阅，生成包含Tobias注册状态信息的、单独的NOTIFY请求。
 
+##### 注册状态信息的元素
 
+1. 在收到一个新的订阅后，无论何时注册状态信息发生变化时（例如注册了一个新的公共用户身份)，S-CSCF都会立刻用Tobias的注册状态信息创建一个NOTIFY 消息。
+2. 本节中我们仅仅看一下Tobias终端在订阅之后立刻收到的NOTIFY 请求和注册状态信息。这些信息与P-CSCF收到的完全一样，而且基本上是同时收到的。
+   - ![image-20230417180224545](Communication Technology.assets/image-20230417180224545.png)
+     - 由于这个请求是从通知者（S-CSCF) 发往订阅者(Tobias 的UE)的，To和From消息头发生了改变。尽管这两个消息头的内容几乎完全相同，但是它们的标签不同。S-CSCF又增加了一个“To”标签（“peruna")，但现在出现在From消息头中。
+     - 增加了Subscription-State消息头，指示该订阅是活跃的，并将在599999s后超时。
 
+##### NOTIFY请求正文中的注册状态信息
 
+- NOTIFY请求消息的正文部分包含了Tobias关联URI的注册状态信息。注册状态信息是一个分级的列表．
+
+- ```
+  2023 Mar 21  23:05:04.127  [0F]  0x156E  IMS SIP Message  --  IMS_SIP_NOTIFY/INFORMAL_RESPONSE
+  Subscription ID = 1
+  Version = 1
+  Direction = NETWORK_TO_UE
+  SDP Presence = 0
+  SIP Call ID Length = 62
+  SIP Message Length = 3311
+  SIP Message Logged Bytes = 3312
+  Message ID = IMS_SIP_NOTIFY
+  Response Code = INFORMAL_RESPONSE (0)
+  CM Call ID = 255
+  SIP Call ID = 1970469123_1559107196@fc01:bbbb:cdcd:efe0:ac35:a1ff:fe80:ac6e
+  Sip Message = NOTIFY sip:4ee79861-fbbe-4a73-a739-539069e6a74d@[fc01:bbbb:cdcd:efe0:ac35:a1ff:fe80:ac6e]:40925 SIP/2.0
+  Call-ID: 1970469123_1559107196@fc01:bbbb:cdcd:efe0:ac35:a1ff:fe80:ac6e
+  Contact: <sip:scscf.att.net>
+  Content-Type: application/reginfo+xml
+  CSeq: 1 NOTIFY
+  Event:  reg
+  From: <tel:+11234567890>;tag=abc-SubscribeToTag
+  Max-Forwards: 69
+  Subscription-State: active;expires=3600
+  To: <tel:+11234567890>;tag=1970469127
+  Via: SIP/2.0/TCP [fc01:abab:cdcd:6fee::1]:5064;branch=z9hG4bK784503296,SIP/2.0/TCP scscf.att.net;branch=z9hG4bK1829863936
+  Content-Length: 2742
+  
+  <?xml version="1.0" encoding="UTF-8"?>
+  
+  <reginfo xmlns="urn:ietf:params:xml:ns:reginfo" version="0" state="full">
+    <registration aor="tel:+11234567890" id="a100" state="active">
+      <contact state="active" event="created" id="980">
+        <uri>sip:4ee79861-fbbe-4a73-a739-539069e6a74d@[fc01:bbbb:cdcd:efe0:ac35:a1ff:fe80:ac6e]:40925</uri>
+        <unknown-param name="+g.3gpp.accesstype">"cellular2"</unknown-param>
+        <unknown-param name="mobility">mobile</unknown-param>
+        <unknown-param name="+sip.instance">"&lt;urn:gsma:imei:01618800-006875-0&gt;"</unknown-param>
+        <unknown-param name="+g.gsma.rcs.botversion">"#=1"</unknown-param>
+        <unknown-param name="audio"/>
+        <unknown-param name="text"/>
+        <unknown-param name="+g.3gpp.nw-init-ussi"/>
+        <unknown-param name="+g.3gpp.iari-ref">"urn%3Aurn-7%3A3gpp-application.ims.iari.rcs.geopush,urn%3Aurn-7%3A3gpp-application.ims.iari.rcs.fthttp,urn%3Aurn-7%3A3gpp-application.ims.iari.rcs.chatbot"</unknown-param>
+        <unknown-param name="+g.3gpp.smsip"/>
+        <unknown-param name="video"/>
+        <unknown-param name="+g.3gpp.icsi-ref">"urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel,urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.session,urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.largemsg,urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.filetransfer,urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.msg"</unknown-param>
+      </contact>
+    </registration>
+    <registration aor="sip:+11234567890@one.att.net" id="a101" state="active">
+      <contact state="active" event="registered" id="981">
+        <uri>sip:4ee79861-fbbe-4a73-a739-539069e6a74d@[fc01:bbbb:cdcd:efe0:ac35:a1ff:fe80:ac6e]:40925</uri>
+        <unknown-param name="+g.3gpp.accesstype">"cellular2"</unknown-param>
+        <unknown-param name="mobility">mobile</unknown-param>
+        <unknown-param name="+sip.instance">"&lt;urn:gsma:imei:01618800-006875-0&gt;"</unknown-param>
+        <unknown-param name="+g.gsma.rcs.botversion">"#=1"</unknown-param>
+        <unknown-param name="audio"/>
+        <unknown-param name="text"/>
+        <unknown-param name="+g.3gpp.nw-init-ussi"/>
+        <unknown-param name="+g.3gpp.iari-ref">"urn%3Aurn-7%3A3gpp-application.ims.iari.rcs.geopush,urn%3Aurn-7%3A3gpp-application.ims.iari.rcs.fthttp,urn%3Aurn-7%3A3gpp-application.ims.iari.rcs.chatbot"</unknown-param>
+        <unknown-param name="+g.3gpp.smsip"/>
+        <unknown-param name="video"/>
+        <unknown-param name="+g.3gpp.icsi-ref">"urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel,urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.session,urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.largemsg,urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.filetransfer,urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.msg"</unknown-param>
+      </contact>
+    </registration>
+  </reginfo>
+  
+  ```
+
+  1. 根元素“reginfo”，包含与一个用户关联的注册状态信息;
+     1. “reginfo”根元素的一个或多个子元素“registration”。每个“registration”子元素仅包含与一个URI（即一个公共用户身份)的信息;
+        1. 每个“registration”子元素包括零个或多个“contact”子元素。每个“contact"子元素包含了关于地址的信息，该地址已经用于为“registration”子元素中的URI进行注册（或解除注册)。
+           1. 每个“contact”子元素的“uri”子元素，指示注册的contact地址;
+           2. 每个“contact”子元素包括零个或一个“display-Name”子元素，指示在Contact消息头中为相关contact地址所设置的该显示名称;
+           3. 每个“contact”子元素包括零个或一个“gr: pub-gruu”子元素以及零个或一个“gr: temp-gruu”子元素，指示在注册过程中，分配给设备的公共和临时的GRUU;
+           4. 每个“contact”子元素包括零个或多个“unknown-parameter”子元素。每个“unknown-parameter”子元素包含注册过程中，Contact消息头中更多的参数。
+  2. registration子元素中可以包含以下属性:
+     1. 记录地址（ AOR)）属性,后面是公共用户身份的URI。
+     2. ID属性，惟一标识了每个registration子元素，将它们相互区别开。registration子元素的state属性，指示相应的URI处于以下哪种状态
+        1. “活跃(Active)”(即已注册);
+        2. “已终结(Terminated)”(即已解除注册); .
+        3. “初始化（Init)”(即处于正在注册的过程中，例如已经接到一个初始的REGISTER 请求,但还没有完成认证过程)。
+  3. contact子元素包含了注册的contact地址，并可以包含以下属性:
+     1. ID属性，惟一标识每个contact子元素，将它们相互区别开。
+     2. contact子元素的state属性，指示相应的contact地址处于以下哪种状态，该状态与registration子元素URI的状态相关联:
+        1. “活跃（ Active)”（即URI使用本contact 地址进行了注册)﹔
+        2. “已终结(Terminated)”(即刚刚解除了URI和本 contact信息之间的绑定关系)。
+     3. contact子元素的event属性，指示导致contact 的state属性发生最后一次变化的事件。
+        1. 已注册（Registered)——该事件将contact地址状态从“初始化”变成“活跃”，并指示AOR已经被显式注册了（即收到了一个针对本AOR的有效的REGISTER请求,并且已经绑定了相关的contact 信息)﹔
+        2. 已生成(Created)——该事件与“已注册”事件的含义相同，但它指示了AOR是隐性注册的（即绑定是自动创建的，例如当收到一个对其他AOR的REGISTER请求时);
+        3. 已刷新(Refreshed) --—该事件发生在对一个AOR进行重新注册时，也可能是隐性的（即对关联的AOR进行了重新注册);
+        4. 已缩短（Shortened)——该事件发生在网络缩短了AOR的超时时间时（例如要触发网络发起的重认证);
+        5. 去激活（ Deactivated)—---该事件发生在网络删除绑定关系时（例如由于网络发起的解除注册)，使用户能够以后再尝试进行新的初始注册;
+        6. 探测( Probation)——通过本事件，网络可以解除用户的注册，并要求一定时间（取决于retry-after值)后再发送一个新的初始注册;
+        7. 注册解除（Unregistered)——该事件发生在用户明确地解除该contact信息的注册状态时;
+        8. 拒绝( Rejected )——该事件发生在网络不允许用户注册某特定的contact时。
+     4. 附加的属性，例如:
+        1. expire属性——指示某特定contact 地址的已注册状态的剩余超时时间（在“已缩短”事件中必须设置,在其他事件中为可选);
+        2. duration-registered属性——指明该contact已经注册了多长时间;
+        3. callid属性——指明用来注册contact地址的 REGISTER请求中Call-ID消息头的值;
+        4. cseq属性——指明用来注册contact地址的REGISTER请求中CSeq 消息头的值;
+        5. retry-after属性——仅为“探测”事件设置，指示UE应等候多长时间后再次尝试进行注册。
+
+- 举例
+
+  1. Tobias 的注册状态信息包含在 NOTIFY请求消息的正文部分中，这个NOTIFY请求是S-CSCF发往UE和P-CSCF的。它首先包含一个XML文件的头部:
+     1. ![image-20230419110817327](Communication Technology.assets/image-20230419110817327.png)
+        1. 该头部指示所使用的XML版本（ 1.0)。注册信息总是从根元素“reginfo”开始，它包括很多属性:
+        2. xmlns属性指向统一资源名称（URN)，它定义了XML文件和XML命名空间。
+        3. version属性总是从“O”开始，并且在每次有新版本（即更新后)的注册状态信息发往同一接收者时，该属性的值就递增1。
+        4. state属性指示下面的注册状态信息是与Tobias有关的所有AOR的完整列表。第一个版本（“O”)的reginfo文件总是要作为完整列表(“full”）来发送，后续信息(从“1”开始）可以是“部分”的，可以仅包含上一次通知之后发生的改变。
+  2. 和Tobias有关的所有公共用户身份及其注册状态在如下文档中列出:
+     1. ![image-20230419111327769](Communication Technology.assets/image-20230419111327769.png)
+        1. 第一个AOR或URI是sip: tobias@home1. fr，在前面的例子中已经了解。它现在的状态是已注册（ state =“active")。这个registration子元素的内容是一个contact子元素，它指示S-CSCF创建了在sip; tobias@home1.fr 和联系信息sip:[5555:: 1: 2: 3:4](“uri”子元素〉之间的绑定。event属性设置为“registered”，表示该AOR显式注册为这个contact地址。除此之外，我们看到一些其他的属性，给出了关于注册的contact的更多信息，例如duration-registered属性，可以显示contact 已注册多长时间。
+        2. 和contact 一起显式注册的更多信息和参数如下所示:
+           1. Tobias 的电话所设置的显示名称，以便从所有其他正在进行的注册中识别当前的电话;
+           2. 已注册的语音、视频、移动性和方法的支持能力
+           3. IMS通信服务标识（ICSI）和 IMS应用参考标识（IARI)
+           4. 客户端的instance-id
+           5. 被分配给设备的公共GRUU和临时GRUU，gr: pub-gru和gr: temp-gruu元素。
+  3. ![image-20230419141844469](Communication Technology.assets/image-20230419141844469.png)
+     1. 另一个AOR是另一个隐性注册的SIP URI ( event = “ created”)，与第一个AOR使用相同的I地址。这个隐性注册是由S-CSCF根据Tobias的用户配置数据来完成的。由于是隐性注册，所有显式注册的公共用户身份的callee 能力（即各个特性标签，包含ICSI 和 IARI值）也都应用于隐式注册的用户身份，因此也都被复制为未知参数。
+     2. 此外，该URI也分配有公共GRUU和临时GRUU，只是与显式注册的公共用户身份的取值不同。公共 GRUU将instance-Id加到注册元素的SIP URI 中，而临时GRUU则赋予一个不同的值。每个隐式注册的公共用户身份将被分配不同的GRUU值。
+  4. ![image-20230419142231108](Communication Technology.assets/image-20230419142231108.png)
+     1. 另一个AOR是一个隐式注册的tel URL ( event = “ created")，并且与第一个AOR有相同的IP地址。由S-CSCF基于Tobias 的用户配置信息来执行该隐式注册。
+  5. ![image-20230419142450679](Communication Technology.assets/image-20230419142450679.png)
+     1. 这两个AOR目前都还是未注册状态（ state = “ terminated")，因此registration子元素并不包含任何信息。
+  6. ![image-20230419142539176](Communication Technology.assets/image-20230419142539176.png)
+     1. Tobias还是一个在线角色扮演游戏（RPG)的游戏管理员。他非常重视他这个游戏管理员的工作，因此他总是通过一个游戏控制台保持注册状态，控制台地址是sip:[5555 : : 101:102:103: 104]:1458。控制台的contact地址是显式注册的 （ event = “registered”)。但是，Tobias还希望在他通过IMS UE在线时也能获知游戏的进展状态，因此接收到对sip: tobias@home1.fr的 RECISTER请求时，这个AOR也被S-CSCF隐性注册( event = " created") 了。
+
+##### 多个终端和注册状态信息
+
+- 可以通过不同的终端（即不同的UE)注册一个或多个公共用户身份。Tobias还可能拥有一个简单的寻呼设备，也使用他的公共用户身份sip: tobi-as@home1. fr。在使用IMS服务之前，这个设备也需要执行注册过程。这个注册过程可以通过另一个不同的P-CSCF进行，但是最终必须与第一个注册使用同一个S-CSCF。于是S-CSCF执行显式以及隐式注册。由于注册地址属于三个不同公共用户身份的注册组，因此所有三个都会用新的contact地址进行注册。
+- 在寻呼设备注册之后，Tobias 的UE和他的P-CSCF会接收到另一个 NOTIFY 消息，指示关于其公共用户身份出现了另一个contact 信息
+
+#### 重注册和重认证
+
+- ![image-20230419171728734](Communication Technology.assets/image-20230419171728734.png)
+
+##### 用户发起的重注册
+
+- Tobias 的UE在任何时候实施重注册，只需要向网络发出一个新的REC-ISTER请求。例如由于注册时间即将超时，注册就需要进行刷新，这时就会发生重注册。由于重注册的处理与初始SIP注册过程完全一样，这里不再进一步介绍。
+  - ![image-20230419170134640](Communication Technology.assets/image-20230419170134640.png)
+
+##### 网络发起的重认证
+
+1. IMS UE对于其contact信息的注册有效期长度是600000s，这意味着S-CSCF将把已注册公共用户身份和物理IP地址的绑定关系保持约7天。由于用户认证过程是与注册过程直接结合在一起，因此在这段时间内S-CSCF 无法发起对用户的重认证。然而，有些情况下，S-CSCF确实需要对UE进行重新认证。
+2. 为实现这一目的，S-CSCF可以缩短用户注册的超时时间。我们假设Tobias 已经注册了3h了，他的归属运营商希望实施一次随机的重认证。为Tobias 分配的S-CSCF将把Tobias注册状态的超时时间缩短为600s ( 10min)。但此时Tobias UE还无法知道注册时间已经缩短，因此不会实施重新注册，而重注册是为实现重认证所必需的。为了将这个情况通知UE，S-CSCF利用了UE对注册状态事件包的订阅功能。
+3. s-CSCF为注册状态事件包生成一个NOTIFY 请求，并发送给Tobias UE，指示缩短了UE的注册时间。接到这个请求后，UE立刻更新其注册超时时间信息。
+4. 然后，所有订阅了Tobias注册状态信息的订阅者（例如P-CSCF以及有订阅的AS)都将收到来自S-CSCF的 NOTIFY 请求，携带了更新后的状态信息。
+5. 当所指示的时间过去一半以后（即 300s)，UE将发出另一个REGISTER请求。从那时起，进人正常注册过程，S-CSCF就可以再次对用户进行认证。
+
+##### 网络发起的重认证通知
+
+- ![image-20230419171529885](Communication Technology.assets/image-20230419171529885.png)
+- ![image-20230419171417034](Communication Technology.assets/image-20230419171417034.png)
+  - 所有注册和相关contact信息的状态仍然设置为“active”，但对contact信息所发生的最后一个事件指示为“shortened”。超时时间值显示UE在10min之后就需要再次进行注册。在上述文件中，只传递了部分的注册状态信息（文档头中state =“par-tial”)，因为其他的注册状态信息没有改变。
+  - 因为S-CSCF只发送部分信息，所以没有缩短的contact元素也就没有显示在这条注册状态信息中。
+
+#### 解除注册
+
+1. 关机时，手机会向S-CSCF 发出另一个 RECISTER请求，包含我们已经见到的所有信息，但指示这次该消息是为了解除注册。s-CSCF则清除为Tobias所保存的所有信息，更新HSS 数据，并向TobiasUE发出一个200 ( OK)响应。
+   - ![image-20230419172055869](Communication Technology.assets/image-20230419172055869.png)
+2. 有时网络也会需要解除用户的注册。可能是由于S-CSCF需要关机。这些情况下，S-CSCF只需要向Tobias UE发出另一个携带注册状态信息的NOTIFY 消息，但这次是指示他已经被解除注册。
+   1. ![image-20230419172248334](Communication Technology.assets/image-20230419172248334.png)
+   2. 如果注册时间过期，而且Tobias 也没有进一步发送任何RECISTER请求，那么注册就被终止，NOTIFY请求会被发送给所有订阅了Tobias 注册状态信息的订阅者，但这时并不解除UE的注册。由于绑定已过期，因此不能向它发送任何消息。
+   3. 在以上任何一种情况下，S-CSCF都会发出 NOTIFY请求给P-CSCF以及所有订阅了Tobias注册状态信息的订阅者，指示Tobias 已经被解除注册。通过发送这个 NOTI-FY请求，也将关闭在订阅注册状态事件期间创建的对话。
+
+##### 用户发起的注册解除
+
+- 当Tobias 关闭手机时，UE会向网络发出一个RECISTER请求，以便解除注册。
+  - ![image-20230419172448551](Communication Technology.assets/image-20230419172448551.png)
+    1. 以上信息与其他REGISTER请求中已经看到过的信息基本相同，主要区别在于超时时间设置成0，意味着用户希望解除公共用户身份（在To消息头中）和IP地址（在Contact消息头中)之间已注册的绑定关系。
+    2. 这个REGISTER请求和其他每个REGISTER请求经历完全相同的路由（即不会按照已存储的Service-Route进行路由)。因此，它将:
+       - 穿越P-CSCF——进行完整性保护检查，并在Authorization消息头中增加integri-ty-protected = yes的标志;
+         穿越I-CSCF—向HSS 询问为用户指定了哪个S-CSCF地址;
+       - 最终到达S-CSCF——将在这里实施注册解除。
+    3. s-CSCF通过Cx接口给HSS 发送一条SAR ( Diameter Server-Assignment Request )消息，来执行Diameter注册解除通知过程。 
+    4. HSS 从Tobias 的注册相关数据中删除S-CSCF的名称，并返回一条Diameter 服务器分配应答( SAA)消息给S-CSCF
+    5. s-CSCF 会立刻向UE发回一个200 (OK）响应，包含的expires消息头也设为0。随后，S-CSCF会创建NOTIFY请求，发往所有订阅了Tobias注册状态信息的订阅者，包括Tobias UE。每个 NOTIFY 请求都包含Subscription-State消息头，并设置为“terminated”，表示已经终止了对于该用户的注册状态信息的订阅关系。
+       - ![image-20230419175727375](Communication Technology.assets/image-20230419175727375.png)
+    6. 这些NOTIFY请求的消息正文中会包含Tobias的注册状态信息
+       - ![image-20230419175902121](Communication Technology.assets/image-20230419175902121.png)
+         - 这个XML文件仍然包含一个“partial”状态指示，因为它并不显式地列出尚未注册的公共用户身份
+    7. ![image-20230419180412246](Communication Technology.assets/image-20230419180412246.png)
+       - 公共用户身份sip: tobias@ home1.fr仍然是激活的，因为它还已被Tobias的寻呼机注册，只有移动电话的contact地址设置为已结束。
+       - 游戏的URI sip: gameMaster@homel.fr也保持了注册状态，因为另一个UE正在活跃地使用它。只有显式解除注册的contact地址才会被删除。
+
+##### 网络发起的注册解除
+
+- 如果注册在S-CSCF处本地超时，即 Tobias没有进一步发送 REGISTER消息来刷新注册过期，并且这是Tobias当前惟一激活的注册（即他没有从其他终端注册)，那么S-CSCF 和 HSS会通过Cx接口执行Diameter注册解除通知过程。
+
+##### 管理方注册解除时的Cx通信
+
+- 如果Tobias 的归属网络因为管理因素让Tobias解除注册，则HSS将通知S-CSCF对用户进行注册解除。HSS会通过Cx 接口给S-CSCF发送一条Diameter注册终止请求（(RTR)消息，来执行Diameter网络发起的注册解除过程。
+
+##### 网络发起注册解除时的用户注册状态信息
+
+- 任何时候只要网络发现需要解除用户的注册状态，或者需要解除用户的某些用户身份的注册状态时，S-CSCF就会生成NOTIFY 请求，方式和之前只是XML文件的内容看起来不一样。在本例中，我们假设Tobias 已经通过他的移动电话进行了注册解除，此时只有其寻呼设备仍处于激活（ active）状态:
 
 
 

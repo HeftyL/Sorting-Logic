@@ -3959,10 +3959,25 @@
 ## VM
 
 - ![image-20230323135931567](Message.assets/image-20230323135931567.png)
+
 - ![image-20230410100224374](Message.assets/image-20230410100224374.png)
+
 - ![image-20230410101005674](Message.assets/image-20230410101005674.png)
+
 - androidt/vendor/mediatek/proprietary/packages/services/Telephony/src/com/android/phone/NotificationMgr.java
+
 - androidt/frameworks/opt/telephony/src/java/com/android/internal/telephony/uicc/SIMRecords.java
+
+- server来通知已读
+
+  - ```
+    04-14 10:14:50.811749  1788  1981 W SmsMessage: MWI in DCS for Vmail. DCS = 200 Dont store = true vmail count = 0
+    04-14 10:14:50.813162  1788  2042 D MtkGsmInboundSmsHandler-1: DeliveringState.processMessage: processing EVENT_NEW_SMS
+    04-14 10:14:50.814512  1788  2042 D Phone : setVoiceMessageCount: Storing Voice Mail Count = 0 for mVmCountKey = vm_count_key3 in preferences.
+    ```
+
+    - vm为0：一般来讲server会发来count为0的通知这时候DUT才会真正清理
+
 
 ## VVM
 
@@ -4033,6 +4048,8 @@
   01-31 15:55:40.097609 4482 4893 D MtkGsmInboundSmsHandler-0: DeliveringState.processMessage: processing EVENT_NEW_SMS
   01-31 15:55:40.098388 4482 4893 D MtkGsmInboundSmsHandler-0: destination port: 5499
   ```
+
+- vm和vvm不是一个服务器，留言状态不会同步。
 
   
 
