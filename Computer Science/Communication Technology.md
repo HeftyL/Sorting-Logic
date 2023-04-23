@@ -4778,8 +4778,68 @@
   - ⽤于让⽀持了RCS的设备，发现和知道相关服务提供⽅的对应的配置信息
   - 目的：RCS设备，获取了配置参数（configuration parameters）后，才⽅便访问IMS core和RCS的服务
   - 何时、次数：在⽤户注册到IMS core之前，有且要做1次Configuration Provisioning
-
 - capability discovery ：three types of response
   - The  contact  is  registered  for  service  resulting  in  the  contact’s  current  service capabilities being received and logged.
   - The contact is not registered (they are provisioned but not registered).
   - The contact is not found (they are not provisioned for service).
+  - 重要性：This discovery mechanism is important since it ensures User A can determine what servicesare available before communicating and allows Service Providers to roll out new agreedservices based on their own deployment schedule. These same mechanisms can be used to initially discover the service capabilities of all the contacts within an address book when the user first registers for the service.
+
+## RCS基础流程
+
+### RCS架构
+
+- For RCS, the base network element is the IMS core system which enables peer-to-peer communication between RCS clients. Other network nodes can be deployed by the Service Provider to provide additional parts of the RCS feature set.
+- ![image-20230423110206706](Communication Technology.assets/image-20230423110206706.png)
+  1. The PS/CS gateway (GW) is used for interworking between Circuit Switched (CS) and Packet Switched (PS) voice, for example, Voice over Long Term Evolution (VoLTE).
+  2. MSG Store relates to the CPM (Converged IP Messaging) Message Store Server
+  3. Legacy Msg refers to the Short Message Service (SMS)/Multimedia Message Service (MMS) services that may be utilized via an IWF (Interworking Function) located in the group of Application Servers (ASs) which in addition to these IWF node(s) may also include various other nodes used by the RCS services, for example:
+     1. Presence Server
+     2. Messaging Server
+     3. ASs for the support of Chatbot Functionality 
+        - An Autoconfiguration Server is used to provide the clients with the configuration to support RCS services.
+  4. two RCS Service Providers exchanging traffic with each other using the standard NNI mechanisms (IPX, IP Packet Exchange)
+  5. RCS also provides support for Chatbot communications through the integration of Chatbot Platforms in the overall architecture. These platforms can either connect through the interconnect infrastructure or connect directly to an RCS Service Provider’s network.
+
+### RCS 设备和客户端类型
+
+- **Primary device**：a device carrying a Subscriber Identity Module (SIM) that is associated with the identity (i.e. IMPU/MSISDN) used for RCS. 
+  - Two types of RCS clients exist for such a device that connect directly to the IMS
+    - **RCS embedded client**: This is the client that is provided as part of the handset implementation and it is fully integrated with the native applications (address book, gallery/file browser application, calling application, etc.).
+    - **RCS downloadable client**: This is a client providing its own IMS connectivity that may be preinstalled or that has to be downloaded by the user. However, it is not part of the device base software, (i.e. it has no access to internal Application Programming Interfaces [APIs] and advanced Operating System [OS] functionality). The level of integration with the native applications is limited to the possibilities permitted by the corresponding mobile OS or OS platform API.
+    - 注意：there may also be downloadable clients that use terminal APIs to access the RCS functionality that is provided by a device’s RCS embedded client. This type of client is not considered in this document because it does not alter the UNI which is handled by the device’s RCS embedded client.
+- **Secondary device**: a device that does not carry a SIM that is associated to the identity used for RCS、
+  - It may happen that a secondary device carries a SIM (e.g. a tablet or PC providing cellular data connectivity). That SIM will be associated to a
+    different identity than the one used for RCS though.
+
+### 配置流程
+
+#### 客户端配置参数（Client configuration parameters）
+
+- The client shall offer individual RCS services to the user only if the Service Provider has authorised the use via the relevant client configuration parameters. In addition, the Service Provider need to provide IMS Core network configuration data to the client. RCS clients shall support the procedures for client configuration
+- Some IMS Core network related configuration parameters are not applicable if the device registers services via the IMS well-known APN as defined in [PRD-RCC.15].
+- If the configuration data resulting from the client provisioning authorises the client to use RCS services, then the RCS client shall register with the network in accordance with definitions for the services described in this document. Once this registration process has successfully completed, the user is able to make use of the RCS services.
+- Client configuration parameters could also be updated and withdrawn by the Service Provider using the mechanism described in this section.
+- All the RCS client configuration parameters must be restricted from being modified by the user.
+
+#### RCS客户端autoconfiguration机制
+
+- rcc.14、rcc.15、rcc.20
+- If supported, the RCS client shall indicate the support of the Non-Access Stratum Management Object defined [3GPP TS 24.368] by inclusion of an "app" HTTP GET request configuration parameter as defined in [PRD-RCC.14] with the value set to "urn:oma:mo:ext-3gpp-nas-config:1.0".
+
+### IMS 注册
+
+- The device and IMS core network must follow the SIP registration procedures defined in [3GPP TS 24.229], complemented with the modifications described in this document (e.g. non-registration of some feature tags).
+- As specified in [3GPP TS 24.229], the SIP REGISTER request shall be sent to the IP address and port obtained via the discovery procedure (see section 2.4.5). If the device was unable to obtain a specific port, then the default port as specified in [RFC3261] shall be used.
+- The client shall send subsequent SIP REGISTER and non-REGISTER requests to the IP address and port that is used for the initial REGISTER, unless the security mechanism requires the use of negotiated ports for the exchange of protected messages.
+
+#### Telephony feature tag
+
+- The feature tag is defined as `+g.gsma.rcs.telephony=<values>`.
+  - RCS定义了一个电话功能标签，用于向IMS网络表明设备是否支持CS电话服务，从而在设备没有在IMS中注册信息传递时可以接收与RCS使用的身份相关的短信。该功能标签应在注册时包括在联系头中，可能的值包括 "none "或 "CS"。如果特征标签中没有包含任何值，IMS网络将视其为带有 "无none"的值。
+
+#### Services feature tags
+
+- 根据相关的服务规范，当相应的服务已被授权/启用于所使用的接入（即蜂窝或Wi-Fi）时，客户应在SIP REGISTER请求中包括以下功能标签：
+  - ![image-20230423160341335](Communication Technology.assets/image-20230423160341335.png)
+  - ![image-20230423160638760](Communication Technology.assets/image-20230423160638760.png)
+    - CPIM：Common Profile for Instant Messaging
