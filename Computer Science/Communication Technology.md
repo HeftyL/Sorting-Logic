@@ -4843,3 +4843,22 @@
   - ![image-20230423160341335](Communication Technology.assets/image-20230423160341335.png)
   - ![image-20230423160638760](Communication Technology.assets/image-20230423160638760.png)
     - CPIM：Common Profile for Instant Messaging
+
+### Capability and new user discovery mechanisms
+
+#### Capability discovery
+
+- 能力或服务发现机制是一个过程，它通过允许用户了解在某些时间点可用于访问和/或与他们的联系人沟通的RCS服务子集来增强服务的可用性。
+- When available, the RCS specification provides two alternative mechanisms to perform the capability discovery
+  - SIP OPTIONS exchange：SIP OPTIONS端到端消息被用来查询目标联系人的能力（其他用户可用的服务），并传递关于请求者支持哪些能力的信息。使用这种方法，两个用户都能在一次事务中得到更新的信息。
+  - Presence：不是执行端到端的事务，而是使用标准的开放移动联盟（OMA）SIP即时通讯和Presence扩展（SIMPLE）Presence程序对服务器进行查询
+  - The discovery mechanism that is to be used by the device is by using the configuration parameter CAPABILITY DISCOVERY MECHANISM
+- When a SIP OPTIONS message is sent from User A to User B, User A shall handle the response as described in the following table:
+  - ![image-20230423174204791](Communication Technology.assets/image-20230423174204791.png)
+  - ![image-20230423174257411](Communication Technology.assets/image-20230423174257411.png)
+
+- Capability discovery via presence
+  - The capabilities are announced in a Presence document that is published by using the SIP PUBLISH method as defined in [Presence]. When the terminal is started, the client then sends a SIP PUBLISH request containing the capabilities. This SIP PUBLISH request shall not include an Expires header field. Service capabilities publication through OMA Presence Enabler [Presence2.0_TS] or [Presence] must follow [PDE_14] rules.
+  - If changes are required in the published capabilities (for example, due to the behaviour specified), a presence modify request is sent using the ‘Sip-If-Match’ header according to [Presence]. When the client/device is switched off, it shall remove the published capabilities before unregistering according to the procedure defined in [RFC3903]
+- Service Capabilities Retrieval
+  - Service capabilities of an RCS user can be retrieved by another RCS user via a presence subscription issued by their client, providing the pertaining Presence Authorisation rules allow him to do so.
