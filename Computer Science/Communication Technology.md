@@ -4844,7 +4844,7 @@
   - ![image-20230423160638760](Communication Technology.assets/image-20230423160638760.png)
     - CPIM：Common Profile for Instant Messaging
 
-### Capability and new user discovery mechanisms
+### 能力及新用户发现机制
 
 #### Capability discovery
 
@@ -4862,3 +4862,219 @@
   - If changes are required in the published capabilities (for example, due to the behaviour specified), a presence modify request is sent using the ‘Sip-If-Match’ header according to [Presence]. When the client/device is switched off, it shall remove the published capabilities before unregistering according to the procedure defined in [RFC3903]
 - Service Capabilities Retrieval
   - Service capabilities of an RCS user can be retrieved by another RCS user via a presence subscription issued by their client, providing the pertaining Presence Authorisation rules allow him to do so.
+  - When using Presence as the enabler for Capability exchange, RCS clients shall retrieve the service capability information of contacts by means of Anonymous Fetch operations
+  - This will result in a single NOTIFY request indicating the service capabilities of that contact. The contact shall be considered as an RCS user only if the response includes one of the service-IDs
+  - Authorisation for capabilities retrieval：为了提供使用匿名获取请求检索能力的授权，支持使用presence的能力交换的RCS服务提供商应在presence服务器上提供允许匿名订阅检索能力的服务提供商策略，或者在presence XDMS中为每个RCS用户设置提供这种授权的presence规则文档。
+
+- Service part of the presence Data Model
+
+  - ```
+    1130179, 13:41:08.856 2023/04/13, Protocol 1, SIM 1, MS->NW, fc01:bbbb:cdcd:efe0:ac6d:45f7:8e39:7955, fc01:abab:cdcd:6fee:0:0:0:1, CELLULAR, TCP, PUBLISH tel:+11234567890 SIP/2.0,  1 PUBLISH, UTPt7dYCAA@[fc01:bbbb:cdcd:efe0:ac6d:45f7:8e39:7955]
+    PUBLISH tel:+11234567890 SIP/2.0
+    Call-ID: UTPt7dYCAA@[fc01:bbbb:cdcd:efe0:ac6d:45f7:8e39:7955]
+    CSeq: 1 PUBLISH
+    From: <tel:+11234567890>;tag=UTPt7dYDAA
+    To: <tel:+11234567890>
+    Via: SIP/2.0/TCP [fc01:bbbb:cdcd:efe0:ac6d:45f7:8e39:7955]:5060;branch=z9hG4bK3f14d82331f8525d3375a0704a1480cc383136;rport
+    Max-Forwards: 70
+    Route: <sip:[fc01:abab:cdcd:6fee:0:0:0:1]:5060;transport=tcp;lr>
+    SIP-If-Match: dx200xyz
+    User-Agent: ATT U6080AA U6080AA V47 messages.android_20221115_01_RC01
+    Event: presence
+    Content-Type: application/pidf+xml
+    Accept: application/pidf+xml
+    Contact: <sip:+11234567890@[fc01:bbbb:cdcd:efe0:ac6d:45f7:8e39:7955]:50001>;mobility="mobile"
+    Proxy-Require: sec-agree
+    Require: sec-agree
+    P-Access-Network-Info: 3GPP-E-UTRAN-FDD;utran-cell-id-3gpp=310410000B0038000
+    Content-Length: 1756
+    Security-Verify: ipsec-3gpp;alg=hmac-sha-1-96;spi-c=186634097;spi-s=224574659;port-c=5063;port-s=5064;q=0.9, ipsec-3gpp;alg=hmac-md5-96;spi-c=186634097;spi-s=224574659;port-c=5063;port-s=5064;q=0.7
+    
+    <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+    				<presence entity="tel:+11234567890" xmlns="urn:ietf:params:xml:ns:pidf" xmlns:op="urn:oma:xml:prs:pidf:oma-pres" xmlns:caps="urn:ietf:params:xml:ns:pidf:caps">
+    					<tuple id="tid2">
+    						<status>
+    							<basic>open</basic>
+    						</status>
+    						<op:service-description>
+    							<op:service-id>org.3gpp.urn:urn-7:3gpp-application.ims.iari.rcse.dp</op:service-id>
+    							<op:version>1.0</op:version>
+    							<op:description>Capabilities Discovery Service</op:description>
+    						</op:service-description>
+    						<contact>tel:+11234567890</contact>
+    					</tuple>
+    					<tuple id="tid3">
+    						<status>
+    							<basic>open</basic>
+    						</status>
+    						<op:service-description>
+    							<op:service-id>org.3gpp.urn:urn-7:3gpp-service.ims.icsi.mmtel</op:service-id>
+    							<op:version>1.0</op:version>
+    							<op:description>Voice and Video Service</op:description>
+    						</op:service-description>
+    						<caps:servcaps>
+    							<caps:audio>true</caps:audio>
+    							<caps:video>true</caps:video>
+    							<caps:duplex>
+    								<caps:supported>
+    									<caps:full/>
+    								</caps:supported>
+    							</caps:duplex>
+    						</caps:servcaps>
+    						<contact>tel:+11234567890</contact>
+    					</tuple>
+    					<tuple id="tid4">
+    						<status>
+    							<basic>open</basic>
+    						</status>
+    						<op:service-description>
+    							<op:service-id>org.3gpp.urn:urn-7:3gpp-application.ims.iari.rcs.geopush</op:service-id>
+    							<op:version>1.0</op:version>
+    						</op:service-description>
+    						<contact>tel:+11234567890</contact>
+    					</tuple>
+    					<tuple id="tid5">
+    						<status>
+    							<basic>open</basic>
+    						</status>
+    						<op:service-description>
+    							<op:service-id>org.openmobilealliance:File-Transfer-HTTP</op:service-id>
+    							<op:version>1.0</op:version>
+    						</op:service-description>
+    						<contact>tel:+11234567890</contact>
+    					</tuple>
+    					<tuple id="tid6">
+    						<status>
+    							<basic>open</basic>
+    						</status>
+    						<op:service-description>
+    							<op:service-id>org.openmobilealliance:ChatSession</op:service-id>
+    							<op:version>2.0</op:version>
+    						</op:service-description>
+    						<contact>tel:+11234567890</contact>
+    					</tuple>
+    				</presence>
+    ```
+
+  - ![image-20230424102523000](Communication Technology.assets/image-20230424102523000.png)
+
+  - ![image-20230424102546390](Communication Technology.assets/image-20230424102546390.png)
+
+- Service/capability indicators
+  - The RCS capabilities represent the list of services that an RCS user/client can access at a certain point in time. The capabilities depend on four factors:
+    - User Service Provider provisioning status: A Service Provider may choose to limit service to customers depending on subscription status (e.g. chat and file share, but not video).
+    - The terminal hardware (HW): A terminal with limited HW (i.e. no capability to process video) may not be able to access all the RCS Services.
+    - The terminal status: Even if a terminal HW supports all the services, it could be that the device status introduces a limitation (e.g. receiving files is not possible when the file storage is full).
+    - Connectivity status: Some services may require a certain level of network Quality of Service (QoS). For example, streaming video over a 2G General Packet Radio Service (GPRS) is not possible with the used enablers.
+- feature tags and Service IDs that are used for indicating that a specific RCS service is available:
+  - <img src="Communication Technology.assets/image-20230424105147780.png" alt="image-20230424105147780" style="zoom:150%;" />
+  - <img src="Communication Technology.assets/image-20230424105323845.png" alt="image-20230424105323845" style="zoom:150%;" />
+
+- Future extensions to the mechanism
+  - A Service Provider (or group of Service Providers) to deploy additional services which can benefit from the RCS discovery mechanism, an additional tag and Service ID format is defined.
+    - ![image-20230424111045328](Communication Technology.assets/image-20230424111045328.png)
+    - ![image-20230424111748037](Communication Technology.assets/image-20230424111748037.png)
+
+### RCS 协议
+
+- ![image-20230424114119705](Communication Technology.assets/image-20230424114119705.png)
+- MSRP session matching：For all services using MSRP, an RCS client shall set up MSRP sessions as per [RCS-CPMCONVFUNC-ENDORS].
+- SIP Issues
+  - An RCS client should use a random originating SIP signalling port of the range 1025-65535， If the selected port is not available, the next port number shall be used for this session.
+  - An RCS client shall build its SIP contact address to be unique. A recommended way to do so is to use a hashed value of the +sip.instance tag as user part of the URI of the contact address.
+  - The content in the body of SIP request or response could be compressed with the indication of Content-Encoding header as described in [RFC3261].
+  - When the size of the SIP request/response content exceeds the configured parameter CONTENT COMPRESS SIZE defined in Section A.1.3 (e.g. Chatbot messages with big JSON payload, Group Chat invitation/1-to-Many Messaging with big MIME resource-list body and CPM Group Session Participant Information via SIP Notify), and SIP Content-Compression is supported by the client, the SIP content (except SDP) should be compressed with the Content-Encoding header indication; an example is shown as below:
+    - Content-Encoding: gzip
+  - The receiver of the SIP request/response should handle the compressed content accordingly.
+
+End User Confirmation Requests
+
+## RCS 服务
+
+### Messaging
+
+#### 1-to-1 Messaging Technology Selection
+
+- Messaging towards contacts not known as Chatbots
+  - ![image-20230424162536551](Communication Technology.assets/image-20230424162536551.png)
+- Messaging towards contacts known as Chatbots
+  - ![image-20230424165621666](Communication Technology.assets/image-20230424165621666.png)
+  - If capability discovery is not enabled, and if
+    - 如果只启用了Chatbot Standalone Messaging或1对1 Chatbot会话中的一种，那么客户应选择已启用的技术来建立与Chatbot的对话。如果收到一个SIP 405 Method Not Allowed响应，其中的Allow头表示chatbot能理解的方法（即所选技术不被聊天机器人支持），那么聊天机器人就不能使用，如果满足下面提到的条件，客户可以通过SMS重新发送消息。
+    - 如果同时启用了Chatbot独立消息和1对1 Chatbot会话，那么客户应选择使用3.6.8.3.1节中定义的1对1 Chatbot会话。如果收到SIP 405 Method Not Allowed响应，包括Allow header中的MESSAGE方法（即聊天工具只支持Chatbot Standalone Messaging），客户应使用3.6.8.3.2节中定义的Chatbot Standalone Messaging重新发送消息。
+  - 如果RCS客户端在建立消息通信时没有注册，或者在技术选择程序中没有提供chatbot服务，那么在满足以下条件的情况下，可以使用短信
+    - An SMS address is known for the Chatbot through the Chatbot Information dataand
+    - The user is sharing their MSISDN with the Chatbot (see section 3.6.5.1)
+    - The Chatbot is not known as a party sending spam (see section 3.6.6)
+    - The message to be sent is a regular text message i.e. not a File Transfer or one of the message types defined in section 3.6.10.1 and
+    - The RCS client is in coverage conditions where a SMS message can be sent.
+
+#### Standalone messaging
+
+- configuration parameter STANDALONE MSG AUTH is set to "1" or "2"
+- The SDP of the SIP INVITE request and response in Large Message Mode should not be compressed even if SIP Content-Compression is supported by the client.
+- Delivery and Display Notifications
+  - The disposition status notifications for a sent Standalone Message will follow the reverse path of the sent message. The disposition notifications for Standalone Messaging could be used for the 1-to-1 or 1-to-Many messaging and for two types of notifications, delivery and display
+- Deferred Messaging
+  - The terminating Participating Function, amongst other procedures, performs the procedure for deferring messages if none of the RCS capable devices of the recipient is online.
+  - When no RCS target recipient client is registered, the terminating Participating Function holding the message for delivery may decide to defer the standalone message for delivery at a later time. For the delivery of a deferred standalone message, the Participating Function shall, as specified in [RCS-CPM-CONVFUNC-ENDORS], push the deferred standalone messages once one of the clients of the target recipient RCS user becomes available.
+  - If a deferred Standalone Message expires before it is delivered, the terminating Participating Function shall handle the deferred message by discarding it.
+- mutidevice
+  - RCS supports delivering of Standalone Messages to multiple devices, the delivery of Standalone Messages will be done to all the user’s RCS devices that are online. Also, when applicable, the message is delivered to a single non-RCS device of the user through interworking with either SMS or MMS 
+- Standalone Message Delivery Assurance
+  - Interworking with Legacy Messaging services
+    - 发端和终端网络都将提供与xMS的互通，前者用于向非RCS用户或没有提供stand alone信息互通协议的运营商的用户发送stand alone信息。后者将用于主要设备处于离线状态，但可以到达的RCS用户。这被认为是为stand alone消息提供了交付保证，但SIP MESSAGE请求与聊天机器人IARI除外。
+  - Standalone Message Revocation
+    - Standalone Message Revocation is currently only used for SIP MESSAGE request with the Chatbot IARI
+
+#### 1-to-1 Chat
+
+1. SIP procedures for the setup of sessions using MSRP for the message exchange;
+2. In the SDP of the SIP INVITE request and response, the a=accept-types attribute shall include only message/cpim and application/im-iscomposing+xml, i.e., “a=accept-types:message/cpim application/im-iscomposing+xml”.
+3. The SDP of the SIP INVITE request and response shall not be compressed even if SIP Content-Compression is supported by the client.
+4. In normal circumstances, between two users at most only a single session is active at a time. A client shall, therefore, not initiate a new Chat session towards a user with whom there is already an established Chat session.
+5. Multimedia content within a Chat session is not permitted. Therefore, in the SDP of the SIP INVITE request and response, the a=accept-wrapped-types attribute shall only include text/plain and message/imdn+xml and if File Transfer using HTTP or Geolocation PUSH is supported application/vnd.gsma.rcs-ft-http+xml and application/vnd.gsma.rcspushlocation+xml respectively, e.g., a=accept-wrapped-types:text/plain message/imdn+xml.
+
+##### Store and Forward Mode
+
+##### Interworking towards SMS/MMS
+
+##### Multidevice handling
+
+##### Emoticons
+
+- Selected emoticons are displayed graphically but sent and received as text.
+
+##### Chat message size limitations
+
+- The maximum size of a text Chat message in bytes that a user can enter is controlled through the MAX SIZE IM configuration parameter
+
+##### 1-to-1 Chat Delivery Assurance
+
+- ![image-20230427101716744](Communication Technology.assets/image-20230427101716744.png)
+  - The indication and the support of a network fallback mechanism is mandatory. This includes service provider deployments supporting termination of 1-to-1 Chat sessions only.
+
+###### Generating Chat MessageRevoke Requests
+
+- When a message is to be revoked, the client shall send a SIP MESSAGE request according to the rules and procedures of [RCS-CPM-CONVFUNC-ENDORS] with the clarifications listed here. In this SIP MESSAGE request
+  - shall include an Accept-Contact header field with the CPM ICSI for Session Mode Messaging, similarly to the case for IMDNs carried in SIP MESSAGE requests;
+  - shall add a dedicated Accept-Contact header field carrying the Message Revoke feature tag  along with the require and explicit parameters;
+  - shall include the Content-Type header field with the value set to the message revocation content-type application/vnd.gsma.rcsrevoke+xml
+
+#### Group Chat
+
+#### File Transfer
+
+- This section describes the File Transfer mechanism that is based on
+  - the originating client uploading a file and optionally a thumbnail file to the HTTPContent Server,
+  - the HTTP Content Server returning a HTTP Content Server response body to the client containing the file meta data,
+  - the originating client processing the received HTTP Content Server response body to create the File Transfer message body, use of Standalone Messaging, 1-to-1 Chat and Group Chat procedures
+  - the terminating client extracting the file meta data from the File Transfer message body and downloading the file(s) from the HTTP Content Server, optionally via a Localisation Function.
+- ![image-20230428171709292](Communication Technology.assets/image-20230428171709292.png)
+
+#### Geolocation Push services
+
+- The geolocation information shall be sent directly as a message in a Chat session provided the intended recipient (for a 1-to-1 Chat) or the Controlling Function (for a Group Chat) supports Geolocation Push.
+- That allows potentially reusing an already established 1-to-1 or Group Chat session for Geolocation PUSH.
+- ![image-20230505133610401](Communication Technology.assets/image-20230505133610401.png)
+- ![image-20230505133626507](Communication Technology.assets/image-20230505133626507.png)

@@ -5501,6 +5501,8 @@
 
 - bugle
 - carrierservices
+- capabilityCacheExpiration
+- onConfigurationStatusChanged
 
 # 刷机
 
@@ -5561,6 +5563,12 @@
 3. 选择参数配置->关键参数配置，输入密码确认，选择需要刷入的参数写入。
 4. 右侧输入框输入值，多个值按顺序用逗号隔开。
 5. 点击start，插入手机，等待写入结束。
+
+## APN文件 push到 手机
+
+1. adb root;adb remount
+2. adb push apns-conf.xml system/etc/
+3. Settings--> Network&internet-->Mobile network-->Access Point Names--> Reset to default
 
 # ADB指令
 
