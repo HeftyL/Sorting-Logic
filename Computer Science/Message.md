@@ -127,7 +127,7 @@
   | 说明 | SCA长度(不包括自身len，表示的是type+addr的长度) | SCA类型 | SCA地址              |
   | 举例 | 08                                              | 91      | 68 31 08 20 05 05 FO |
   
-  - Each address field of the SMTL consists of the following subfields: An AddressLength field of one octet, a TypeofAddress field of one octet, and one AddressValue field of variable length; 
+  - Each address field of the SM-TL consists of the following subfields: An AddressLength field of one octet, a TypeofAddress field of one octet, and one AddressValue field of variable length; 
 
 #### TPDU
 
@@ -598,7 +598,7 @@
      }
      ```
 
-   - 在sendMessageInternal（）中设置短信的内容和接收者，检查短信格式，根据结果执行相对应的操作
+   - 在sendMessageInternal()中设置短信的内容和接收者，检查短信格式，根据结果执行相对应的操作
 
      - ```java
        //packages/apps/Messaging/src/com/android/messaging/ui/conversation/ComposeMessageView.java
@@ -5454,6 +5454,19 @@
 - mainline 查看 ：home/project2/liaohaifei/share/U5690/LA.QSSI.12.0.r1/LINUX/android/vendor/partner_modules/build（使用gitk查看记录）
 - gms的messages查看：/home/project2/liaohaifei/share/P800AE/LA.QSSI.12.0.r1/LINUX/android/vendor/gms/apps/Messages
 
+### log抓取操作步骤
+
+MTK
+
+- `*##873733284#*#*`:进入engineering mode
+  1. Log and Debugging->DebugLoggerUI
+
+Qualcomm
+
+- `*#*#5644464#*#*`进入logcollector
+  - ticket id填入任意的8位都可以
+    - 选择想要抓取的log
+
 ### common
 
 - fail、failure、unsupported、error、Androidruntime
@@ -5474,6 +5487,11 @@
 - InboundSmsHandler/MtkGsmInboundSmsHandler/GsmInboundSmsHandler
 - ImsSmsDispatcher
 - ImsService
+- RILC
+- RILJ
+- RCS_TAG
+- MessagingApp
+- BlockedNumbers
 
 ## APN
 
@@ -5491,11 +5509,14 @@
 - getVoiceMailNumber
 - onVoicemailStatusFetched
 - DialerVoicemailStatusQuery
+- vmail count
+- setVoiceMessageCount
 
 ## MMS
 
 - WAP_PUSH_DELIVER
 - MmsService
+- RCS_TAG
 
 ## RCS
 
@@ -5503,6 +5524,12 @@
 - carrierservices
 - capabilityCacheExpiration
 - onConfigurationStatusChanged
+- [ACS]
+- dns contains config(wireshark)
+- Single Registration
+- BugleRcsEngine
+- BugleRcsProvisioning
+- RCS_TAG
 
 # 刷机
 
@@ -5519,6 +5546,9 @@
 - `*#*#873733284#*#*`:进入调试模式
   1. Log and Debugging
   2. DebugLoggerUI
+- `*#*#8#*#*`：进入硬件调试模式
+  - ITEM TEST->Receiver : 测试扬声器
+
 - remount
   1. enter Settings->System->About phone
   2. Press "Build number" several times to enable Developer options
@@ -5573,7 +5603,7 @@
 # ADB指令
 
 - adb shell dumpsys activity activities：查看activity栈
-- adb shell pm path com.android.dialer：查看包的位置
+- adb shell pm path com.android.messaging：查看包的位置
 - adb logcat -b all |Select-String androidruntime：查看开机 androidruntime log
 - PCAP log 抓取:adb shell tcpdump -i any -vv -s 0 -w /cache/tcpdump.pcap
   - 导出：adb pull /cache/tcpdump.pcap.
@@ -5625,7 +5655,7 @@
   - `-j <num>`：设定并发数。默认 4 个并发。
   - 可以查看 .repo/manifest.xml 拉取一部分代码。
 
-- repo forall -c "git clean -fd;git reset --hard" ：清除所有的修改。
+- repo forall -c "git clean -fd;git reset --hard" ：清除所有的改动。在repo sync出现问题的时候，请先使用这个命令进行清楚，确保自己本地的环境被回退到没有改动的状态。
 
 
 # Case提交
@@ -5657,9 +5687,9 @@
 
 - 关键词：build.version
 
-
 # 仪表log查看
 
 - CMWmarsViewer
   - 文件类型：msglog、rsmsglog
   - 选择verdicts
+

@@ -4474,7 +4474,10 @@
 
 ## SIP
 
+- 在基于互联网的应用程序中，存在着创建和管理会话的需求，这些会话被视为参与者之间进行数据交换的方式。然而，这些应用程序的实现受到参与者行为复杂性的影响，因为用户可能在不同的终端之间切换，可能具有多个可寻址的标识，并且可能同时使用多种不同的媒体进行通信。为了传输实时多媒体会话数据（如语音、视频或文本消息），已经开发了多种协议。会话初始化协议（SIP）与这些协议协同工作，使得互联网终端（也称为用户代理）能够相互发现并就共享的会话进行协商。为了定位潜在的会话参与者并执行其他功能，SIP可以建立一个网络主机基础设施（代理服务器），用户代理可以向这些代理服务器发送注册、会话邀请和其他请求。SIP是一种灵活且通用的工具，用于创建、修改和终止会话，它独立于底层传输协议，并且不依赖于正在建立的会话类型。
 - SIP is an application layer protocol that is used for establishing, modifying and terminating multimedia sessions in an Internet Protocol (IP) network. 
+  - Call-ID包含了此通话的全局唯一标识符，由随机字符串和softphone的主机名或IP地址的组合生成。To标签、From标签和Call-ID三者组合完全定义了Alice和Bob之间的点对点SIP关系，并被称为对话（dialog）。
+
 - SIP, as part of the IETF process, is based on the Hypertext Transfer Protocol (HTTP) and the Simple Mail Transfer Protocol (SMTP)
   - ![image-20221213133025084](Communication Technology.assets/image-20221213133025084.png)
 - 目标
@@ -4491,7 +4494,7 @@
     - User Agent Server (UAS)- accepts, redirects, rejects requests and sends responses to incoming requests on behalf of the user.
     - Gateways  are  special  cases  of  UAs.
     - ![image-20221213173756995](Communication Technology.assets/image-20221213173756995.png)
-  -  intermediaries (servers)
+  - intermediaries (servers)
     - SIP intermediaries are logical entities through which SIP messages pass on their way to their ﬁnal destination. These intermediaries are used to route and redirect requests.These intermediaries are used to route and redirect requests.
     - Proxy server:receives and forwards SIP requests
       - dialog-statefull proxy – a proxy is dialog-statefull if it retains the state for a dialog from the initiating request (INVITE request) right through to the terminating request (BYE request);
@@ -4504,31 +4507,106 @@
     - Application  server  –  an  AS  is  an  entity  in  the  network  that  provides  end-users  with  a service.
     - B2BUA（Back-to-Back User Agent，背靠背用户代理）是通讯网络中，使用SIP（Session Initiation Protocol，会话发起协议）实现会话的一种逻辑实体。B2BUA作为SIP呼叫两端的用户代理，负责处理呼叫两端的所有SIP信令，从呼叫确立到终止全程跟踪每个呼叫。
 
-### 消息格式
+### 术语定义
+
+1. 地址记录（Address-of-Record，AOR）是一个指向具有位置服务的域的SIP或SIPS URI，该位置服务可以将URI映射到用户可能可用的另一个URI。通常，位置服务是通过注册来填充的。AOR通常被视为用户的“公共地址”。
+2. 后向用户代理（Back-to-Back User Agent，B2BUA）是一个逻辑实体，它接收请求并将其作为用户代理服务器（UAS）进行处理。为了确定应该如何回答请求，它充当用户代理客户端（UAC）并生成请求。与代理服务器不同，它维护对话状态，并且必须参与在其建立的对话中发送的所有请求。由于它是UAC和UAS的串联，因此不需要对其行为进行显式定义。
+3. 通话（Call）：通话是一个非正式术语，指的是对等方之间的某种通信，通常用于进行多媒体对话的目的。**用Call-ID来标识；不论两方通话还是在多方通话中，在每个UA中是使用同一个Call-ID；**
+4. 通话分支（Call Leg）：对话的另一个名称；
+5. 通话状态保持（Call Stateful）：如果代理服务器在从发起的INVITE请求到终止的BYE请求期间保留对话状态，则称其为通话状态保持代理。通话状态保持代理始终是事务状态保持的，但反之不一定成立。
+6. 客户端（Client）：客户端是指发送SIP请求并接收SIP响应的任何网络元素。客户端可以直接或间接地与人类用户进行交互。用户代理客户端和代理服务器都是客户端。
+7. 会议（Conference）：包含多个参与者的多媒体会话。
+8. 核心（Core）：核心指的是特定类型的SIP实体（如有状态或无状态代理、用户代理或注册服务器）的特定功能。除了无状态代理的核心之外，所有核心都是事务用户
+9. 对话（Dialog）：对话是两个用户代理之间持续一段时间的点对点SIP关系。对话是通过SIP消息建立的，例如对INVITE请求的2xx响应。对话由呼叫标识符、本地标签和远程标签来标识。**To标签、From标签和Call-ID三者组合定义了Dialog**
+10. 下行（Downstream）：在事务中指的是消息转发的方向，表示请求从用户代理客户端流向用户代理服务器的方向。
+11. 最终响应（Final Response）：终止SIP事务的响应，与不具有终止作用的临时响应相对。所有2xx、3xx、4xx、5xx和6xx响应都是最终响应。
+12. 头部（Header）：头部是SIP消息的组成部分，用于传递消息的信息。它结构化为一系列头字段。
+13. 头字段（Header Field）：头字段是SIP消息头部的组成部分。一个头字段可以出现为一个或多个头字段行。头字段行由头字段名称和零个或多个头字段值组成。在给定的头字段行上，多个头字段值之间用逗号分隔。某些头字段只能有一个头字段值，因此始终显示为单个头字段行。
+14. 头字段值（Header Field Value）：是一个单独的值；头字段由零个或多个头字段值组成。
+15. 本地域（Home Domain）：为SIP用户提供服务的域。通常，这是在注册的地址记录（address-of-record）的URI中存在的域。
+16. 信息响应（Informational Response）：与临时响应（provisional response）相同。
+17. 发起方、呼叫方、主叫方（Initiator, Calling Party, Caller）：通过INVITE请求发起会话（和对话）的一方。主叫方在发送建立对话的初始INVITE请求之后，保持这个角色直到对话终止。
+18. 邀请（Invitation）：一个INVITE请求。
+19. 被邀请方、被叫方、被呼叫方、被叫号码（Invitee, Invited User, Called Party, Callee）：接收INVITE请求以建立新会话的一方。被叫方在接收INVITE请求直到由该INVITE建立的对话终止时保持这个角色。
+20. 位置服务（Location Service）：SIP重定向或代理服务器使用位置服务来获取有关被叫方可能位置的信息。它包含一个地址记录键到零个或多个联系地址的绑定列表。这些绑定可以通过多种方式创建和删除；本规范定义了一个更新绑定的REGISTER方法。
+21. 循环（Loop）：一个请求到达代理服务器，被转发，然后再次到达同一个代理服务器。当它第二次到达时，其请求URI与第一次相同，并且其他影响代理操作的头字段保持不变，以便代理在第一次请求上做出相同的处理决策。循环请求是错误的，协议描述了检测和处理它们的过程。
+22. 宽松路由（Loose Routing）：如果代理服务器遵循本规范定义的处理Route头字段的过程，则称其为宽松路由。这些过程将请求的目的地（在请求URI（Request-URI）中）与需要在途中访问的代理服务器集合（在Route头字段中）分开。符合这些机制的代理服务器也被称为宽松路由器。
+23. 消息（Message）：作为协议的一部分，在SIP元素之间发送的数据。SIP消息可以是请求或响应。
+24. 方法（Method）：方法是请求在服务器上执行的主要功能。方法包含在请求消息本身中。示例方法包括INVITE和BYE。
+25. 出站代理（Outbound Proxy）：即使它可能不是由Request-URI解析的服务器，也会接收来自客户端的请求的代理服务器。通常，用户代理（UA）通过手动配置或通过自动配置协议了解出站代理。
+26. 并行搜索（Parallel Search）：在收到传入请求时，代理服务器向可能的用户位置发出多个请求进行并行搜索。与顺序搜索中发出一个请求，然后等待最终响应再发出下一个请求不同，一个并行搜索在不等待上一个请求的结果的情况下发出请求。
+27. 临时响应（Provisional Response）：服务器用来表示进展的响应，但不终止SIP事务。1xx响应是临时响应，其他响应被视为最终响应。
+28. 代理，代理服务器（Proxy, Proxy Server）：一个中间实体，既作为服务器又作为客户端，代表其他客户端发出请求。代理服务器主要扮演路由的角色，即确保请求被发送到“更接近”目标用户的另一个实体。代理还有助于强制执行策略（例如，确保用户有权进行呼叫）。代理在转发请求之前解释并可能重写请求消息的特定部分。
+29. 递归（Recursion）：当客户端生成一个新的请求，发送到响应中Contact头字段中的一个或多个URI时，它对3xx响应进行递归。
+30. 重定向服务器（Redirect Server）：重定向服务器是一个用户代理服务器，它对收到的请求生成3xx响应，指示客户端联系一个备用的URI集合。
+31. 注册服务器（Registrar）：注册服务器是一个接受REGISTER请求并将其接收到的信息放入所处理域的位置服务中的服务器。
+32. 常规事务（Regular Transaction）：除了INVITE、ACK或CANCEL之外的任何具有方法的事务。
+33. 请求（Request）：从客户端发送到服务器的SIP消息，用于执行特定操作。
+34. 响应（Response）：从服务器发送到客户端的SIP消息，用于指示客户端发送的请求的状态。
+35. 回铃音（Ringback）：呼叫方应用程序产生的信令音，表示正在提醒（响铃）被叫方。
+36. 路由集（Route Set）：路由集是一组有序的SIP或SIPS URI，代表在发送特定请求时必须经过的代理服务器列表。路由集可以通过Record-Route等头字段学习，也可以进行配置。
+37. 服务器（Server）：服务器是一个网络元素，接收请求以便为其提供服务，并向这些请求发送响应。服务器的示例包括代理服务器、用户代理服务器、重定向服务器和注册服务器。
+38. 顺序搜索（Sequential Search）：在顺序搜索中，代理服务器按顺序尝试每个联系地址，只有在前一个地址生成最终响应后才继续下一个地址。2xx或6xx类的最终响应总是终止顺序搜索。
+39. 会话（Session）：根据SDP规范：“一个多媒体会话是一组多媒体发送方和接收方，以及从发送方到接收方流动的数据流。多媒体会议是多媒体会话的一个示例。”（按照SDP的定义，一个会话可以由一个或多个RTP会话组成。）根据定义，被叫方可以通过不同的呼叫多次邀请到同一个会话。如果使用SDP，会话由SDP用户名、会话ID、网络类型、地址类型和发送字段(in the origin field)中的地址元素串联定义：
+    1. SDP user name
+    2.  session id,
+    3. network type,
+    4. address type,
+    5. address elements 
+40. SIP事务（SIP Transaction）：SIP事务发生在客户端和服务器之间，包括从客户端发送到服务器的第一个请求到服务器发送给客户端的最终（非1xx）响应的所有消息。如果请求是INVITE并且最终响应是非2xx，事务还包括对响应的ACK。对于INVITE请求的2xx响应的ACK是一个单独的事务。
+41. 螺旋（Spiral）：螺旋是指将SIP请求路由到一个代理服务器，继续转发，并再次到达该代理服务器，但这次与原始请求有所不同，将导致不同的处理决策。通常，这意味着请求的Request-URI与之前到达的不同。螺旋不是一个错误条件，与循环不同。这种情况的典型原因是呼叫转发。用户呼叫joe@example.com。example.com代理将其转发到Joe的PC，然后由Joe的PC转发到bob@example.com。这个请求被代理返回到example.com代理。然而，这不是一个循环。由于请求针对的是不同的用户，它被认为是一个螺旋，是一个有效的条件。
+42. 有状态代理（Stateful Proxy）：在处理请求期间，维护本规范定义的客户端和服务器事务状态机的逻辑实体，也称为事务有状态代理。有状态（事务）代理与有通话状态的代理不同。
+43. 无状态代理（Stateless Proxy）：在处理请求时，不维护本规范定义的客户端或服务器事务状态机的逻辑实体。无状态代理将接收到的每个请求向下游转发，将接收到的每个响应向上游转发。
+44. 严格路由（Strict Routing）：如果代理服务器遵循RFC 2543和本RFC的许多之前的工作版本的路由处理规则，则称其为严格路由。这个规则导致代理在存在Route头字段时销毁Request-URI的内容。本规范不使用严格路由行为，而是使用宽松路由行为。执行严格路由的代理也被称为严格路由器。
+45. 目标刷新请求（Target Refresh Request）：在对话中发送的目标刷新请求被定义为可以修改对话的远程目标的请求。
+46. 事务用户（TU）：位于事务层之上的协议处理层。事务用户包括UAC核心、UAS核心和代理核心。
+    1. UAC（User Agent Client）和UAS（User Agent Server）的角色，以及代理服务器和重定向服务器的角色是基于每个事务进行定义的。例如，发起呼叫的用户代理在发送初始的INVITE请求时充当UAC，在接收到被叫方的BYE请求时充当UAS。同样，同一个软件可以在一个请求中充当代理服务器，在下一个请求中充当重定向服务器。
+
+### SIP Messages
+
+- SIP是一种基于文本的协议，使用UTF-8字符集。
+- SIP消息可以是客户端向服务器发出的请求，也可以是服务器向客户端发出的响应。
 
 - ![image-20221215160703268](Communication Technology.assets/image-20221215160703268.png)
   - 一次呼叫只能建立一次session，但可以建立多个Dialog，因为接受请求的可能不止一个。
-
-- 组成部分
-  1. the   start   line
-     - The start line contents vary depending on whether the SIP message is a request or a response. For requests it is referred to as a ‘‘request line’’ and for responses it is referred to as a ‘‘status line’’.
-  2. message  headers  
-  3. body.
-  4. ![image-20221214114332115](Communication Technology.assets/image-20221214114332115.png)
+- 组成部分：无论是请求还是响应消息，都使用了RFC 2822 的基本格式，尽管语法在字符集和具体语法方面有所不同（例如，SIP允许存在一些在RFC 2822中无效的头字段）。这两种类型的消息都由起始行、一个或多个头字段、表示头字段结束的空行以及可选的消息体组成。
+  - ![image-20230725114358777](Communication Technology.assets/image-20230725114358777.png)
+     - the   start   line
+       - The start line contents vary depending on whether the SIP message is a request or a response. For requests it is referred to as a ‘‘request line’’ and for responses it is referred to as a ‘‘status line’’.
+  
+     - message  headers  
+     - body.
+     - 起始行、每个消息头行和空行必须以回车换行序列（CRLF）结尾。注意，即使消息体不存在，空行也必须存在。
+  
+  - ![image-20221214114332115](Communication Technology.assets/image-20221214114332115.png)
+  
 
 #### Requests
 
-- SIP requests are distinguished from responses using the start line. As indicated earlier, the start line in the request is often referred to as the request line. It has three components: a method name, a request-URI and the protocol version. They appear in that order and are separated by a single space character. The request line itself terminates with a Carriage Return–Line Feed (CRLF) pair、
-  1. Method：the method indicates the type of request. Six are deﬁned in the base SIP speciﬁcation [RFC3261]: the INVITE request, CANCEL request, ACK request and BYE request are used for session creation, modiﬁcation and termination; the REGISTER request is used to register a certain user’s contact information; and the OPTIONS request is used as a poll for querying servers and their capabilities. Other methods have been created as an extension to [RFC3261].
-  2. Request-URI：the  request-URI  is  a  SIP  or  a  Secure  SIP  (SIPS)  URI  that  identiﬁes  a resource  that  the  request  is  addressed  to.
-  3. Protocol    version：the    current    SIP    version    is    2.0.    All    requests    compliant    with [RFC3261]  must  include  this  version  in  the  request,  in  the  form  ‘‘SIP/2.0’’.
+- SIP请求通过在起始行带一个 Request 行和其他的 method 加以区别。一个请求行包含method 名称，一个 Request URI ，和由单空格字符分开的协议版本。
+- 请求行以换行符CRLF 结束。可以允许无回车或换行，除了在以换行符结束 的序列中。不允许在任何网元中有任意数量的空白格（ LWS ）存在。
+  1. ![image-20230801172744206](Communication Technology.assets/image-20230801172744206.png)
+  2. Method:此规范定义了六个方法 : REGISTER 支持注册联系消息， INVITE ACK ，和CANCEL 支持会话创建， BYE 支持结束会话， OPTIONS 支持对服务器的能力查询。SIP 拓展中定义了其他的方法。
+  3. Request URI: Request URI 是一个 SIP 或 SIP URL,它指示了此请求所针对的用户或服务。请求URI不得包含未转义的空格或控制字符，并且不得用“<>”括起来。
+  4. SIP-Version: 请求和响应消息都包含正在使用的SIP版本，并遵循[H3.1]（其中将HTTP替换为SIP，HTTP/1.1替换为SIP/2.0）关于版本排序、合规要求和版本号升级方面的规定。为了符合本规范，发送SIP消息的应用程序必须包含一个"SIP/2.0"的SIP-Version。SIP-Version字符串不区分大小写，但实现必须使用大写字母。
+
 
 #### Response
 
-- SIP responses can be distinguished from requests by looking at the start line. As indicated earlier, the start line in the response is often referred to as the status line. It has three components: the protocol version, status code and reason phrase. They appear in that order and are separated by a single space character. The status line itself terminates with a CRLF pair:
-  1. Protocol  version  –  this  is  identical  to  the  protocol  version  in  the  request  line. 
-  2. Status   code   –   the   status   code   is   a   three-digit   code   that   identiﬁes   the   nature   of   the response.  It  indicates  the  outcome  of  the  request.
-  3. Reason   phrase   –   this   is   a   free   text   ﬁeld   providing   a   short   description   of   the   status code.  It  is  mainly  aimed  at  human  users.
+- SIP响应通过具有Status-Line作为起始行来与请求进行区分。Status-Line由协议版本、数字状态码及其关联的文本短语组成，每个元素之间用一个空格字符（SP）分隔。
+- 请求行以换行符CRLF 结束。可以允许无回车或换行，除了在以换行符结束 的序列中。
+  1. ![image-20230801173558298](Communication Technology.assets/image-20230801173558298.png)
+  2. 状态码:是一个三位整数的结果代码，它表示一个测试输出的响应理解，满足请求的要求。
+     1. 状态码的第一个数字定义了响应的级别。状态码后两位没有层级的设置。因为这个原因，任何状态码介于 100 和 199 之间的响应被看作是 "1xx response"，任何状态码介于 200 和 299 的响应看作是一个 "2xx 响应，以此类推。以第一个数字为划分类别， SIP/2.0 支持了六个级别的状态响应码
+        1. 1xx: Provisional 请求收到的响应码，表示是临时响应，会继续处理此请求；
+        2. 2xx: Success 成功收到处理流程，理解，接受了处理流程；
+        3. 3xx: Redirection 需要进一步的流程处理来完成此请求；
+        4. 4xx: Client Error 此请求中包含错误语法或不能满足服务器的要求；
+        5. 5xx: Server Error 服务器端不能满足一个明确有效请求；
+        6. 6xx: Global Failure 任何服务器都不能满足此请求流程。
+  
+  3. 原因短语的目的是对状态码给予一个短语解释。使用状态码的目的是为了系统的自动处理，而原因短语的目的是方便用户阅读理解状态原因，具有可阅读性。用户不要求检查或显示原因短语。
+  
 - **Status  codes**  are  classiﬁed  in  six  classes  (classes  2xx  to  6xx  are  ﬁnal  responses)
   - 临时应答1xx：临时应答，也就是消息性质的应答，标志了对方服务器正在处理请求，并且还没有决定最后的应答。如果服务器处理请求需要花200ms以上才能产生终结应答的时候，它应当发送一个1xx应答。注意1xx应答并不是可靠传输的。他们不会导致客户端传送一个ACK应答。临时性质的（1xx）应答可以包含消息体，包含会话描述。
     1. 100 Trying：这个应答表示下一个节点的服务器已经接收到了这个请求并且还没有执行这个请求的特定动作（比如，正在打开数据库的时候）。这个应答，就像其他临时应答一 样，种植了UAC重新传送INVITE请求。100(Trying)应答和其他临时应答不同的是，在这里，它永远不会被有状态proxy转发到上行流中。
@@ -5078,3 +5156,29 @@ End User Confirmation Requests
 - That allows potentially reusing an already established 1-to-1 or Group Chat session for Geolocation PUSH.
 - ![image-20230505133610401](Communication Technology.assets/image-20230505133610401.png)
 - ![image-20230505133626507](Communication Technology.assets/image-20230505133626507.png)
+
+#### Audio Messaging
+
+- An RCS client shall encode the audio message using the Adaptive Multi-Rate (AMR) codec.
+- The RCS Recorded Audio Message (RRAM) shall be formatted in the file format defined in [RFC4867].
+- The transport of RRAM uses the File Transfer as defined in section 3.2.5. The following features are applicable for Audio Messaging:
+  - disposition notifications of the File Transfer transport services
+  - store and forward of the File Transfer transport services
+  - auto-acceptance rules for File Transfer
+- The duration of the RRAM shall be limited to a maximum duration of 10 minutes. The Client shall automatically stop the recording when this limit is reached.
+- When sending a RRAM to a contact, the RRAM is transported via the File Transfer service. The File Disposition shall be set to ‘render’.
+  - ‘render’ means that the content of the file can be played directly from the Chat application upon user action.
+
+### Content sharing
+
+#### In-Call services
+
+- rcc.20
+
+  - Shared Map
+
+  - Shared Sketch
+
+- Interaction of In-Call services with voice Call
+
+- From RCS services perspective, the Shared Map and Shared Sketch services are not available during a multiparty call
