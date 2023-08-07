@@ -1,5 +1,10 @@
 # 引言
 
+## 基础概念
+
+- 因特网：计算机网络(cornputer network )。因特网是一个世界范围的计算机网络，即它是一个互联了遍及全世界数十亿计算设备的网络。
+- 协议(protocol)： 定义了在两个或多个通信实体之间交换的报文(message)的格式和顺序，以及报文发送和／ 或接收一条报文或其他事件所采取的动作。
+
 ## 目的
 
 - 掌握计算机网络
@@ -232,8 +237,13 @@
 ### 排队时延和丢包
 
 - 排队时延
-  - 什么时候排队时延大，什么时候又不大呢?该问题的答案很大程度取决于流量到达该队列的速率、链路的传输速率和到达流量的性质，即流量是周期性到达还是以突发形式到达。为了更深人地领会某些要点，令ü表示分组到达队列的平均速率(a的单位是分组/秒，即 pkt/s)。前面讲过R是传输速率，即从队列中推出比特的速率（以bps即 b/s为单位)。为了简单起见,也假定所有分组都是由L比特组成的。则比特到达队列的平均速率是La bps。最后，假定该队列非常大，因此它基本能容纳无限数量的比特。比率 La/R被称为流量强度（traffic intensity)，它在估计排队时延的范围方面经常起着重要的作用。如果La/R >1，则比特到达队列的平均速率超过从该队列传输出去的速率。在这种不幸的情况下,该队列趋向于无限增加,并且排队时延将趋向无穷大!因此,流量工程中的一条金科玉律是:设计系统时流量强度不能大于1。
-
+  - 什么时候排队时延大，什么时候又不大呢?该问题的答案很大程度取决于流量到达该队列的速率、链路的传输速率和到达流量的性质，即流量是周期性到达还是以突发形式到达。
+  - 比率La/R 被称为流量强度(traffic intensity)
+    - 令a 表示分组到达队列的平均速率(a 的单位是分组／秒，即pkt/s) 。
+    - R 是传输速率，即从队列中推出比特的速率（以bps 即bis 为单位） 。
+    - 假定所有分组都是由L 比特组成的。则比特到达队列的平均速率是La bps 。
+    - 假定该队列非常大，因此它基本能容纳无限数量的比特。
+  
 - 丢包
   - 在上述讨论中，我们已经假设队列能够容纳无穷多的分组。在现实中，一条链路前的队列只有有限的容量，尽管排队容量极大地依赖于路由器设计和成本。因为该排队容量是有限的，随着流量强度接近1，排队时延并不真正趋向无穷大。相反，到达的分组将发现一个满的队列。由于没有地方存储这个分组,路由器将丢弃( drop）该分组,即该分组将会丢失(lost)。
 
@@ -261,6 +271,7 @@
 - 我们再次关注某层向它的上一层提供的服务 (service) ,   即所谓一层的服务模型 (service model) 。 
 - 一个协议层能够用软件、硬件或两者的结合来实现。
 - 协议分层具有概念化和结构化的优点。分层提供了一种结构化方式来讨论系统组件。模块化使更新系统组件更为容易。
+- 一个分组具有两种类型的字段： 首部字段和有效载荷字段(payload field)
 - 将这些综合起来，各层的所有协议被称为协议栈(protocol stack）。因特网的协议栈由5个层次组成
   - 应用层
     - 应用层是网络应用程序及它们的应用层协议存留的地方。
@@ -304,7 +315,7 @@
 
 - 应用层对应用程序的通信提供服务。
 
-- 应用层协议（application- layer protocol）∶
+- 应用层协议（application- layer protocol）∶定义了运行在不同端系统上的应用程序进程如何相互传递报文。
 
   - 应用进程交换的报文类型，请求还是响应?
   - 各种报文类型的语法，如报文中的各个字段及其详细描述。
@@ -430,8 +441,7 @@
 #### 采用非持续连接的HTTP
 
 - 往返时间 ( Round-Trip Time,  RTT)：该时间是指一个短分组从客户到服务器然后再返回客户所花费的时间。 
-
-- 假设该HTML文件的URL为:http:// www. someSchool. edu/someDepartment/home. index 。
+- 从服务楛向客户传送一个Web 页面的步骤：假设该页面含有一个HTML 基本文件和10 个JPEG 图形、并且这1 1 个对象位于同一台服务器上。进一步假设该HTML文件的URL为:http:// www. someSchool. edu/someDepartment/home. index 。
   1. HTTP客户进程在端口号80发起一个到服务器www.someSchool. edu的TCP连接,该端口号是 HTTP的默认端口。在客户和服务器上分别有一个套接字与该连接相关联。
   2. HTTP客户经它的套接字向该服务器发送一个HTTP请求报文。请求报文中包含了路径名/ someDepartment/home. index（后面我们会详细讨论HTTP报文)。
   3. HTTP服务器进程经它的套接字接收该请求报文，从其存储器（RAM或磁盘)中检索出对象www. someSchool. edu/ someDepartment/home. index，在一个 HTTP响应报文中封装对象，并通过其套接字向客户发送响应报文。
@@ -461,7 +471,13 @@
 ### HTTP 报文格式
 
 - HTTP 规范 [ RFC 1945;  RFC 2616;  RFC 7540]  包含了对HTTP报文格式的定义。HTTP报文有两种：请求报文和响应报文
-- ![image-20220607171440730](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607171440730.png)
+- ![image-20220607171440730](Computer Internet.assets\image-20220607171440730.png)
+
+  - ```text
+    CR  = <US-ASCII CR, carriage return (13)>
+    LF  = <US-ASCII LF, linefeed (10)>
+    SP  = <US-ASCII SP, space (32)>
+    ```
 
 #### HTTP 请求报文
 
@@ -489,7 +505,7 @@
     - User- agent : 首部行用来指明用户代理,即向服务器发送请求的浏览器的类型。 这里浏览器类型是Mozilla/5. 0, 即 Firefox 浏览器。
     - Accept- language : 首部行表示用户想得到该对象的法语版本 （ 如果服务器中有这样的对象的话）;否则，服务器应当发送它的默认版本。
 
-- ![image-20220606214353322](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220606214353322.png)
+- ![image-20220606214353322](Computer Internet.assets\image-20220606214353322.png)
 
 #### HTTP 响应报文
 
@@ -522,14 +538,16 @@
   - 在 HTTP请求报文中的一个cookie首部行;
   - 在用户端系统中保留有一个cookie文件，并由用户的浏览器进行管理;
   - 位于Web站点的一个后端数据库。
+- ![image-20230719211550273](Computer Internet.assets/image-20230719211550273.png)
 
-## 因特网中的电子邮件
+## 电子邮件
 
 ### SMTP
 
 - 电子邮件系统组成：用户代理（user agent）、邮件服务器(mail server)和简单邮件传输协议（Simple Mail Transfer Protocol， SMTP)。
   - 邮件服务器形成了电子邮件体系结构的核心。  每个接收方（如Bob) 在其中的某个邮件服务器上有一个邮箱 (mailbox) .邮箱管理和维护着发送给他的报文。
   - 如果A 的服务器不能将邮件交付给B 的服务器，A的邮件服务器在一个报文队列 (message queue) 中保持该报文并在以后尝试再次发送。如果几天后仍不能成功，服务器就删除该报文并以电子邮件的形式通知发送方 (A) 。
+  - ![image-20230720114320467](Computer Internet.assets/image-20230720114320467.png)
 - SMTP是因特网电子邮件中主要的应用层协议。  它使用TCP 可靠数据传输服务，从发送方的邮件服务器向接收方的邮件服务器发送邮件。
 - 使用TCP在客户端和服务器之间传送报文，端口 号为25
 - 直接传输：从发送方服务器到接收方服务器 
@@ -545,8 +563,8 @@
   4. SMTP客户端通过TCP连接发送Alice的邮件
   5. Bob的邮件服务器将邮件放到Bob的邮箱
   6. Bob调用他的用户代理阅读邮件
-- ![image-20220607181654982](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607181654982.png)
-- ![image-20220607183456399](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607183456399.png)
+- ![image-20220607181654982](Computer Internet.assets\image-20220607181654982.png)
+- ![image-20220607183456399](Computer Internet.assets\image-20220607183456399.png)
 
 ### SMTP与HTTP 的对比
 
@@ -581,25 +599,28 @@
 
 - 端口110 
 
-- ![image-20220607183623386](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607183623386.png)
+- ![image-20220607183623386](Computer Internet.assets\image-20220607183623386.png)
 
 #### IMAP
 
-![image-20220607183924458](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607183924458.png)
+![image-20220607183924458](Computer Internet.assets\image-20220607183924458.png)
 
 #### 基千Web 的电子邮件
 
-![image-20220607184003658](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607184003658.png)
+![image-20220607184003658](Computer Internet.assets\image-20220607184003658.png)
 
 ## DNS
 
-- 域名系统（英文：Domain Name System，缩写：DNS）是互联网的一项服务。它作为将域名和IP地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS使用UDP端口53。当前，对于每一级域名长度的限制是63个字符，域名总长度则不能超过253个字符。
+- 域名系统（英文：Domain Name System，缩写：DNS）是互联网的一项服务。它作为将域名和IP地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS 协议运行在UDP 之上，使用53 号端口。当前，对于每一级域名长度的限制是63个字符，域名总长度则不能超过253个字符。
+  1. 一个由分层的DNS 服务器( DNS server) 实现的分布式数据库；
+
+  2. 一个使得主机能够查询分布式数据库的应用层协议。
 
 - 主机别名 ( host aliasing儿 有着复杂主机名的主机能拥有一个或者多个别名。 例 如， 一台名为relayl. west- coast. enterprise. com 的主机，可能还有两个别名为enter­prise. com 和www. enterprise. com。 在这种情况下， relay1. west- coast enterprise. com也称为规范主机名 (canonical hoslname) 。  主机别名（当存在时）比主机规范名更加容易记忆。 应用程序可以调用DNS 来获得主机别名对应的规范主机名以及主机的IP 地址。
 - 邮件服务器别名 (（mail server aliasing)。显而易见，人们也非常希望电子邮件地址好记忆。例如，如果Bob在雅虎邮件上有一个账户，Bob 的邮件地址就像bob@ ya-hoo. com这样简单。然而，雅虎邮件服务器的主机名可能更为复杂，不像 ya-hoo.com那样简单好记（例如，规范主机名可能像relayl. west- coast. hotmail. com.那样)。电子邮件应用程序可以调用DNS，对提供的主机名别名进行解析，以获得该主机的规范主机名及其IP地址。
 - 负载分配(（ load distribution)。DNS也用于在冗余的服务器（如冗余的Web服务器等)之间进行负载分配。繁忙的站点（如cnn.com）被冗余分布在多台服务器上，每台服务器均运行在不同的端系统上，每个都有看不同的地址。田丁这些几尔的Web服务器，一个IP地址集合因此与同一个规范主机名相联系。DNS数据库中存储着这些IP地址集合。当客户对映射到某地址集合的名字发出一个 DNS请求时，该服务器用IP地址的整个集合进行响应，但在每个回答中循环这些地址次序。因为客户通常总是向IP地址排在最前面的服务器发送HTTP请求报文，所以DNS就在所有这些冗余的 Web服务器之间循环分配了负载。DNS 的循环同样可以用于邮件服务器，因此，多个邮件服务器可以具有相同的别名。
 
-- ![image-20220607184903291](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607184903291.png)
+- ![image-20220607184903291](Computer Internet.assets\image-20220607184903291.png)
 
 ## FTP
 

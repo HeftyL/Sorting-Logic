@@ -274,11 +274,11 @@
          - 当链表设头结点时,无论链表是否为空，头指针都是指向头结点的非空指针，判空条件都是`L->nxet==null`
   - 头指针是指指向链表的第一结点的指正。若链表设有头结点，则头指针所指结点为线性表的头结点；若链表不设头结点，则头指针所指结点为该线性表的首元结点
 
-![image-20220508210700977](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508210700977.png)
+![image-20220508210700977](Data Structure.assets\image-20220508210700977.png)
 
 #### 定义
 
-![image-20220508210754968](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508210754968.png)
+![image-20220508210754968](Data Structure.assets\image-20220508210754968.png)
 
 ![image-20220508210856980](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508210856980.png)
 

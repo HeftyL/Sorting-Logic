@@ -501,7 +501,7 @@
 - 关系：Android应用的所有UI组件都继承了View类
 
 - ==问题==：view和子类的继承关系是什么样的？
-  - ![View继承关系](D:\Sorting-Logic\Computer_Science\Android.assets\SouthEast.jpeg)
+  - ![View继承关系](D:\Sorting-Logic\Computer Science\Android.assets\SouthEast.jpeg)
 
 - Android开发API：https://developer.android.com/reference/packages?hl=zh-cn
 
