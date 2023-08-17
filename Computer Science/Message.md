@@ -5378,9 +5378,16 @@
      Inst Measured RSRP = -118.06 dBm (可参考这个值，取上面两根天线中信号较好的)                                                                                                     
   3. RSRP（Reference Singal Receiving Power）：参考信号接收功率，用于衡量某扇区的参考信号的强度，在一定频域和时域上进行测量并滤波。可以用来估计UE离扇区的大概路损，LTE系统中测量的关键对象。在小区选择中起决定作用
 
-# JIRA Workflow
+# JIRA
 
-## 配置类的问题
+## textile 标记语言
+
+- 转义字符：`\`
+  - `\*#\*#`->`*#*#`
+
+## Workflow
+
+### 配置类的问题
 
 1. 先确定项目的carriers，再确定jira的运营商。
 
@@ -5511,6 +5518,7 @@ Qualcomm
 - DialerVoicemailStatusQuery
 - vmail count
 - setVoiceMessageCount
+- VvmSmsFilter
 
 ## MMS
 
@@ -5530,6 +5538,11 @@ Qualcomm
 - BugleRcsEngine
 - BugleRcsProvisioning
 - RCS_TAG
+
+## LTE
+
+- UNSOL_RESPONSE_NETWORK_STATE_CHANGED
+- ImsRegister
 
 # 刷机
 
@@ -5570,7 +5583,7 @@ Qualcomm
      -  adb root
      - adb remount
 
-## SN Writer（废弃）
+## SN Writer（Obsolete）
 
 - imei：353587400014311 
 - SN：PRVGNZHQ8H8PHM6X 
@@ -5604,9 +5617,10 @@ Qualcomm
 
 - adb shell dumpsys activity activities：查看activity栈
 - adb shell pm path com.android.messaging：查看包的位置
-- adb logcat -b all |Select-String androidruntime：查看开机 androidruntime log
+- adb logcat -b all |Select-String androidruntime：查看开机 androidruntime log(windows,linux请手动将Select-String替换为grep等命令)
 - PCAP log 抓取:adb shell tcpdump -i any -vv -s 0 -w /cache/tcpdump.pcap
   - 导出：adb pull /cache/tcpdump.pcap.
+- adb pull /data/user_de/0/com.android.phone/files/ ./ ：导出carrierconfig
 
 
 # 版本控制
