@@ -5358,6 +5358,30 @@
   |        To         | 接收者地址                               | 0x17 |
   |  Transaction-ld   | 传输ID(用于网络控制，识别不同的传输)     | 0x18 |
 
+## 架构
+
+- ![undefined](Message.assets/MMSCNA.png)
+  - The MMS Architecture is the set of standards used by the Multimedia Messaging Service in mobile networks. The standards are prepared by 3GPP.The standard consists of a number of interfaces between components found in the mobile network
+    1. MM1: the interface between MMS User Agent and MMS Center (MMSC, the combination of the MMS Relay & Server). Delivered as HTTP over a packet switched data session.
+       - MM1 is used in the following actions:
+         1. The sender subscriber sends an MMS to the MMSC
+         2. The MMSC notifies the recipient subscriber that they have an MMS waiting for retrieval
+         3. The recipient subscriber retrieves the MMS from the MMSC
+         4. The MMSC notifies the sender that the recipient has retrieved the message
+         5. The recipient subscriber manages their mailbox in the MMSC (uploads MMS, deletes MMS, ...)
+    2. MM2: the interface between MMS Relay and MMS Server.
+    3. MM3: the interface between MMSC and other messaging systems. Using SMTP.
+    4. MM4: the interface between MMSC and foreign network providers. Using SMTP.
+    5. MM5: the interface between MMSC and HLR.
+    6. MM6: the interface between MMSC and user databases.
+    7. MM7: the interface between MMS Value-added service applications and MMSC. Typically Content Providers using HTTP / SOAP for delivery.
+    8. MM8: the interface between MMSC and the billing systems.
+    9. MM9: the interface between MMSC and an online charging system.
+    10. MM10: the interface between MMSC and a message service control function.
+    11. MM11: the interface between MMSC and an external transcoder.
+
+​	
+
 # Setting
 
 ## google message
@@ -5378,9 +5402,16 @@
      Inst Measured RSRP = -118.06 dBm (可参考这个值，取上面两根天线中信号较好的)                                                                                                     
   3. RSRP（Reference Singal Receiving Power）：参考信号接收功率，用于衡量某扇区的参考信号的强度，在一定频域和时域上进行测量并滤波。可以用来估计UE离扇区的大概路损，LTE系统中测量的关键对象。在小区选择中起决定作用
 
-# JIRA Workflow
+# JIRA
 
-## 配置类的问题
+## textile 标记语言
+
+- 转义字符：`\`
+  - `\*#\*#`->`*#*#`
+
+## Workflow
+
+### 配置类的问题
 
 1. 先确定项目的carriers，再确定jira的运营商。
 
@@ -5454,7 +5485,7 @@
 - mainline 查看 ：home/project2/liaohaifei/share/U5690/LA.QSSI.12.0.r1/LINUX/android/vendor/partner_modules/build（使用gitk查看记录）
 - gms的messages查看：/home/project2/liaohaifei/share/P800AE/LA.QSSI.12.0.r1/LINUX/android/vendor/gms/apps/Messages
 
-### log抓取操作步骤
+## log抓取操作步骤
 
 MTK
 
@@ -5467,13 +5498,14 @@ Qualcomm
   - ticket id填入任意的8位都可以
     - 选择想要抓取的log
 
-### common
+## common
 
 - fail、failure、unsupported、error、Androidruntime
 
-### WEA
+## WEA
 
 - GsmCellBroadcastHandler
+- AT+ECSCBCFG
 
 ## SMS
 
@@ -5511,6 +5543,7 @@ Qualcomm
 - DialerVoicemailStatusQuery
 - vmail count
 - setVoiceMessageCount
+- VvmSmsFilter
 
 ## MMS
 
@@ -5530,6 +5563,11 @@ Qualcomm
 - BugleRcsEngine
 - BugleRcsProvisioning
 - RCS_TAG
+
+## LTE
+
+- UNSOL_RESPONSE_NETWORK_STATE_CHANGED
+- ImsRegister
 
 # 刷机
 
@@ -5570,7 +5608,7 @@ Qualcomm
      -  adb root
      - adb remount
 
-## SN Writer（废弃）
+## SN Writer（Obsolete）
 
 - imei：353587400014311 
 - SN：PRVGNZHQ8H8PHM6X 
@@ -5603,10 +5641,12 @@ Qualcomm
 # ADB指令
 
 - adb shell dumpsys activity activities：查看activity栈
+- adb shell dumpsys activity broadcasts：查看广播堆栈
 - adb shell pm path com.android.messaging：查看包的位置
-- adb logcat -b all |Select-String androidruntime：查看开机 androidruntime log
+- adb logcat -b all |Select-String androidruntime：查看开机 androidruntime log(windows,linux请手动将Select-String替换为grep等命令)
 - PCAP log 抓取:adb shell tcpdump -i any -vv -s 0 -w /cache/tcpdump.pcap
   - 导出：adb pull /cache/tcpdump.pcap.
+- adb pull /data/user_de/0/com.android.phone/files/ ./ ：导出carrierconfig
 
 
 # 版本控制
