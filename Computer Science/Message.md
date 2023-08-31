@@ -5495,8 +5495,13 @@ MTK
 Qualcomm
 
 - `*#*#5644464#*#*`进入logcollector
+
   - ticket id填入任意的8位都可以
     - 选择想要抓取的log
+
+- MMS协议需要查看tcp dump log，请按以下复测建议抓取tcp dump log
+
+  *#*#5644464#*#*进入logcollector->ticket id填入任意的8位，点击submit->开启tcpdump开关->滑到底，点击start抓取log
 
 ## common
 
@@ -5528,9 +5533,10 @@ Qualcomm
 ## APN
 
 - apnsetting
-- setup_data
+- setup_data、setupdatacall、setup_data_call
 - data_registration
 - getGroupIdLevel1_gid
+- RmmDcEvent
 
 ## VM&VVM
 
@@ -5549,6 +5555,7 @@ Qualcomm
 
 - WAP_PUSH_DELIVER
 - MmsService
+- MmsSender
 - RCS_TAG
 
 ## RCS
@@ -5647,7 +5654,7 @@ Qualcomm
 - PCAP log 抓取:adb shell tcpdump -i any -vv -s 0 -w /cache/tcpdump.pcap
   - 导出：adb pull /cache/tcpdump.pcap.
 - adb pull /data/user_de/0/com.android.phone/files/ ./ ：导出carrierconfig
-
+- adb shell setprop log.tag.MessagingApp V ：设置fontdo的messaging应用的debug log
 
 # 版本控制
 

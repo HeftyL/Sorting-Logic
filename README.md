@@ -42,7 +42,7 @@
 - 当你的目标是只专注于自己现在正在做的事情时，那么，只要你在做，你便时时刻刻都在实现着目标。
 - 一个人容易受到伤害的地方，就是他自我怀疑的地方。只有说到他自我怀疑的伤口，批评才会让他疼痛。
 - you can love someone and still choose to say goodbye to them
-- you can miss a person everyday and still be glad that they're no longe  in your life
+- you can miss a person everyday and still be glad that they're no longer  in your life
 
 ## 梳理中的感悟
 
@@ -56,4 +56,3 @@
 7. 不给自己留暧昧的地方。
 8. 自己的知识整体是一张网，在局部可能是树，线性表。学习新知识时，刚开始是几个零散的知识点，慢慢变成线性结构，再变成树和图。学习的好坏，受度的多少和权的大小的影响，分在作用在广度和深度上。
    1. ..............
-   

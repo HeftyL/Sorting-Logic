@@ -1,4 +1,4 @@
-# 初高中衔接
+# 衔接
 
 ## 十字相乘法
 
@@ -214,3 +214,14 @@
   - 充要条件
     - ![image-20220711000003327](senior high school.assets/image-20220711000003327.png)
     - ![image-20220711000025997](senior high school.assets/image-20220711000025997.png)
+
+# 微积分
+
+1. 导数（x->0）
+   - ![image-20230919112854513](senior high school.assets/image-20230919112854513.png)
+2. 等价无穷小
+   1. ![高数常见坑点：等价无穷小](senior high school.assets/v2-0b9b50889edb01fc3f5467a071a323fa_1440w.jpeg)
+   2. ![image-20230919113033717](senior high school.assets/image-20230919113033717.png)
+   3. ![image-20230919113753263](senior high school.assets/image-20230919113753263.png)
+3. 泰勒公式
+   - <img src="senior high school.assets/image-20230921154340473.png" alt="image-20230921154340473"  />
