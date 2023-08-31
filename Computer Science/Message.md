@@ -5647,7 +5647,7 @@ Qualcomm
 - PCAP log 抓取:adb shell tcpdump -i any -vv -s 0 -w /cache/tcpdump.pcap
   - 导出：adb pull /cache/tcpdump.pcap.
 - adb pull /data/user_de/0/com.android.phone/files/ ./ ：导出carrierconfig
-
+- adb shell setprop log.tag.MessagingApp V ：设置fontdo的messaging应用的debug log
 
 # 版本控制
 
