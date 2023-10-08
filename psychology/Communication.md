@@ -1,3 +1,105 @@
+# NVC
+
+1. observing feeling needing requesting 
+2. blocks compassion： moralistic judgment、comparison、responsibility、demand
+3. observing VS evaluation
+4. feelings  VS thoughts, assessments, and interpretations.  
+5. need VS Judgments, criticisms, diagnoses, and interpretations  
+   - When someone communicates negatively, we have four options as to how to receive the message
+     1. blame ourselves, 
+     2. blame others,
+     3. sense our own feelings and needs, 
+     4. sense the feelings and needs hidden in the other person’s negative message.  
+   - developing emotional responsibility  
+     1. “emotional slavery”—believing ourselves responsible for the feelings of others, 
+     2.  “the obnoxious stage”—in which we refuse to admit to caring what anyone else feels or needs,
+     3.  “emotional liberation”—in which we accept full responsibility for our own feelings but not the feelings of others, while being aware that we can never meet our own needs at the expense of others.  
+6. requesting VS vague, abstract, or ambiguous phrasing。demand 。what we are requesting rather than what we are not  
+   1. Since the message we send is not always the message that’s received, we need to learn how to nd out if our message has been accurately heard.   
+   2. Requests are received as demands when listeners believe that they will be blamed or punished if they do not comply
+   3. The objective of NVC is not to change people and their behavior in order to get our way; it is to establish relationships based on honesty and empathy that will eventually fulll everyone’s needs.    
+7. Empathy  VS to give advice or reassurance and to explain our own position or feeling  
+   1. Empathy, calls upon us to empty our mind and listen to others with our whole being.  
+   2. In NVC, no matter what words others may use to express themselves, we simply listen for their observations, feelings, needs, and requests. Then we may wish to reflect back, paraphrasing what we have understood. We stay with empathy and allow others the opportunity to fully express themselves before we turn our attention to solutions or requests for relief.  
+   3. We need empathy to give empathy. When we sense ourselves being defensive or unable to empathize, we need to 
+      1. stop, breathe, give ourselves empathy;
+      2. scream nonviolently; or 
+      3. take time out.  
+8. ego NVC VS  moralistic self-judgments、shame, guilt, anger, duty  ，or depression
+   1. When we make mistakes, instead of getting caught up in moralistic self-judgments, we can use the process of NVC mourning and self-forgiveness to show us where we can grow 
+   2. By assessing our behaviors in terms of our own unmet needs, the impetus for change comes not out of shame, guilt, anger, or depression, but out of the genuine desire to contribute to our own and others’ well-being.  
+   3. We also cultivate self-compassion by consciously choosing in daily life to act only in service to our own needs and values rather than out of duty, for extrinsic rewards, or to avoid guilt, shame, and punishment. If we review the joyless acts to which we currently subject ourselves and make the translation from “have to” to “choose to,” we will discover more play and integrity in our lives.  
+   4. NVC enhances inner communication by helping us translate negative internal messages into feelings and needs. Our ability to distinguish our own feelings and needs and to empathize with them can free us from depression. By showing us how to focus on what we truly want rather than on what is wrong with others or ourselves, NVC gives us the tools and understanding to create a more peaceful state of mind.  
+9. anger  Expression
+   1. If we wish to fully express anger, the rst step is to divorce the other person from any responsibility for our anger. Instead we shine the light of consciousness on our own feelings and needs.   
+   2. Steps
+      1. stop and breathe, 
+      2.  identify our judgmental thoughts,
+      3.   connect with our needs（may also choose to empathize with the other person）
+      4.  express our feelings and unmet needs.   
+   3. We need to take our time both in learning and in applying the process of NVC.  
+10. appreciation Expression VS to manipulate the behavior of others  
+    1. Steps
+       1. the action that has contributed to our well-being, 
+       2. the particular need of ours that has been fullled
+       3. the feelings of pleasure engendered as a result.  
+    2. When we receive appreciation expressed in this way, we can do so without any feeling of superiority or false humility—instead we can celebrate along with the person who is offering the appreciation.  
+    3. judgments—both positive and negative—as life-alienating communication.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # 沟通的艺术
 
 ## 序言

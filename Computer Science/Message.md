@@ -5515,7 +5515,7 @@ Qualcomm
 ## SMS
 
 - smsdispatch
-- smssender
+- smssender/SendMessageAction
 - ims_sms
 - dispatchwapPdu()
 - gid
@@ -5529,6 +5529,7 @@ Qualcomm
 - RCS_TAG
 - MessagingApp
 - BlockedNumbers
+- ReceiveMmsMessageAction/ReceiveSmsMessageAction
 
 ## APN
 
@@ -5537,6 +5538,9 @@ Qualcomm
 - data_registration
 - getGroupIdLevel1_gid
 - RmmDcEvent
+- ifconfig
+- Poll ServiceState
+- vendor.xml:http://192.168.160.28:8000/source/xref/MT6761_U_NA_DEV/androidu/device/mediatek/system/common/overlay/CarrierConfig/packages/apps/CarrierConfig/res/xml/vendor.xml
 
 ## VM&VVM
 
@@ -5557,6 +5561,7 @@ Qualcomm
 - MmsService
 - MmsSender
 - RCS_TAG
+- MmsManager
 
 ## RCS
 
