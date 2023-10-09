@@ -634,9 +634,9 @@
 - 依照FTP协议提供服务，进行文件传送的计算机就是FTP服务器。
 - 连接FTP服务器，遵循FTP协议与服务器传送文件的电脑就是FTP客户端。
 
-- ![image-20220607185636115](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607185636115.png)
+- ![image-20220607185636115](Computer Internet.assets\image-20220607185636115.png)
 
-![image-20220607185711198](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607185711198.png)
+![image-20220607185711198](Computer Internet.assets\image-20220607185711198.png)
 
 - FTP传输模式
   - 文本模式︰ASCII模式，以文本序列传输数据﹔
@@ -669,23 +669,42 @@
 
 ## 多路复用与多路分解
 
-- 将运输层报文段中的数据交付到正确的套接字的工作称为多路分解 (demulti plexing)
-
+- 将主机间交付扩展到进程间交付被称为运输层的多路复用( transport-layer multiplexing)与多路分解（demultiplexing)。将运输层报文段中的数据交付到正确的套接字的工作称为多路分解 (demulti plexing)
 - 在源主机从不同套接字中收集数据块，并为每个数据块封装上首部信息（这将在以后用于分解）从而生成报文段，然后将报文段传递到网络层，所有这些工作称为多路复用 ( multiplexing) 。  
+- 主机怎样将一个到达的运输层报文段定向到适当的套接字：为此目的，每个运输层报文段中具有几个字段。在接收端，运输层检查这些字段，标识出接收套接字，进而将报文段定向到该套接字。将运输层报文段中的数据交付到正确的套接字的工作称为多路分解( demultiplexing)。
+- 在源主机从不同套接字中收集数据块，并为每个数据块封装上首部信息（这将在以后用于分解）从而生成报文段，然后将报文段传递到网络层，所有这些工作称为多路复用( multiplexing)。
+  - 它们与在某层（在运输层或别处)的单一协议何时被位于接下来的较高层的多个协议使用有关。
+  - 运输层多路复用要求:①套接字有唯一标识符;②每个报文段有特殊字段来指示该报文段所要交付到的套接字
 
-- ![image-20220607221821003](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607221821003.png)
+- ![image-20220607221821003](Computer Internet.assets\image-20220607221821003.png)
 
   - 特殊字段是源端口号字段 (source port number field) 和目的端口号字段 ( destination port number field ) 。 (UDP 报文段和TCP报文段还有其他的一些字段）
-  - ![image-20220607222030482](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607222030482.png)
+  - 端口号是一个16比特的数,其大小在0~65535之间。0 ~1023范围的端口号称为周知端口号( well-known portnumber)，是受限制的,这是指它们保留给诸如HTTP(它使用端口号80)和FTP(它使用端口号21)之类的周知应用层协议来使用。
+  - ![image-20220607222030482](Computer Internet.assets\image-20220607222030482.png)
 
-  - ![image-20220607222059627](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607222059627.png)
+  - ![image-20220607222059627](Computer Internet.assets\image-20220607222059627.png)
 
 ### 无连接的多路复用与多路分解
 
-![image-20220607222259730](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607222259730.png)
+![image-20220607222259730](Computer Internet.assets\image-20220607222259730.png)
 
 - 一个UDP 套接字是由一个二元组全面标识的，该二元组包含一个目的IP 地址和一个目的端口号。  
 
-![image-20220607222453637](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607222453637.png)
+![image-20220607222453637](Computer Internet.assets\image-20220607222453637.png)
 
-![image-20220607222532537](E:\My Documents\xmind\Computer_Science\Computer Internet.assets\image-20220607222532537.png)
+![image-20220607222532537](Computer Internet.assets\image-20220607222532537.png)
+
+- 在接收主机中的运输层实际上并没有直接将数据交付给进程，而是将数据交给了一个中间的套接字。由于在任一时刻，在接收主机上可能有不止一个套接字，所以每个套接字都有唯一的标识符。标识符的格式取决于它是UDP还是TCP套接字
+
+### 面对链接的多路复用与多路分解
+
+- TCP 套接字是由 一个四元组（源 1P 地址，源端口号，目的 IP 地址．目的端口号）来标识的。因此 ． 当一个 TCP 报文段从网络到达  一台主机时， 该主机使用全部 4 个值来将报文段定向（分解）到相应的套接字。特别与UDP 不同的是，两个具有不同源 IP 地址或源端口号的到达 TCP 报 文段将被定向 到两个不同的套接字 ，除非 TCP 报文段携带了初始创建连接的请求 。
+  - 所有后续到达的报文段，如果它们的源端口号、源主机 IP 地址 、 目的端口号和目的 IP 地址都与创立套接字时的4个值匹配，则被分解到这个套接字 。 
+- 端口扫描：一个服务器进程潜在地在一个打开的端口等待远程客户的接触 ，通过扫描可以得知在主机上运行的服务。
+
+### 无链接运输：UDP
+
+- 由 [ RFC 768 ] 定 义的 UDP 只是做了运输协议能够做的最少 工作 。 除了复用／分解功能及少量 的差错检测外，它几乎没有对 IP 增加别的东西 。
+- 在发送报文段之前，发送方和接收方的运输层实体之间没有握手 J 正因为如此， UDP 被称为是无连接的 。、
+- UDP和TCP各自有各自的用武之地
+  - 

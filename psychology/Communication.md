@@ -46,43 +46,118 @@
     2. When we receive appreciation expressed in this way, we can do so without any feeling of superiority or false humility—instead we can celebrate along with the person who is offering the appreciation.  
     3. judgments—both positive and negative—as life-alienating communication.  
 
+# Procrastination
+
+- procrastination is not primarily a time management problem or a moral failing but a complex psychological issue  
+  - self-worth is rooted in the capacity for acceptance, which includes acceptance of our biology, our history, our circumstances, and our many human limits  
+  - low confidence in succeeding, task aversiveness, distractibility and impulsiveness, and having goals and rewards be too far off in the future.  
+
+## UNDERSTANDING PROCRASTINATION
+
+- The emotional roots of procrastination involve inner feelings, fears, hopes, memories, dreams, doubts, and pressures. But many procrastinators don’t recognize all that’s going on under the surface, because they use procrastination to avoid uncomfortable feelings.   
+  - fear of failure, fear of success, fear of being controlled, and fear of intimacy or separation in relationships  
+  - the procrastinator’s complicated relationship to time  
+  - The biological roots  :your body, your brain, and your genetic inheritance  
+  - The interpersonal roots :your family history, your social relationships, and your place in your current culture  
+
+### introduction
+
+- THE CYCLE OF PROCRASTINATION  
+  1. “I’ll start early this time.”  
+  2. “I’ve got to start soon.”  
+  3. “What if I don’t start?”  
+     1. “I should have started sooner.”  
+     2. “I’m doing everything but . . .”  
+     3. “I can’t enjoy anything.”  
+     4. “I hope no one finds out.”  
+  4. “There’s still time.”  
+  5. “There’s something wrong with me.”  
+  6. The Final Choice: To Do or Not to Do.  
+     1. Not to Do  ：“I can’t stand this!”   、“Why bother?”  
+     2. To Do—On to the Bitter End:“I can’t wait any longer.”  、“This isn’t so bad. Why didn’t I start sooner?”  、“Just get it done!”  
+  7. “I’ll never procrastinate again!”  
+
+### Causes
+
+1. fear of failure
+2. fear of success
+3. The Procrastinator in Combat：fear of being controlled
+4. The Comfort Zone：fear of intimacy or separation in relationships
+
+# Atomic Habit
+
+- you will be able to harness the positive change created and see it reverberate throughout many aspects of your life. For some, the honest answers may create self criticism. Take heart, know that you are not alone, and that by just the mere act of acknowledgement of mistakes made in the past, that itself is a very important step forward  
+
+## Fundamentals
+
+### TINY CHANGES MAKE A BIG DIFFERENCE
+
+1. Think of a habit that you find difficult to develop. List down the challenges that you experienced or are currently experiencing while developing it.
+2. Break down the habit into small components. For example, if you wish to develop healthy eating habits, you may want to consider how frequently you eat in a day, who eats with you, where you eat, who cooks the food for you, what kind of food you enjoy eating, etc.
+3. For each component, identify small changes you need to make to ensure success. Decide which of these are easily doable.
+4. Monitor your progress.
+
+### Habits Shape Your Identity (and Vice Versa)
+
+- you will discover that it is easy to keep bad habits than building the good ones, regardless of your motivation. One reason is this: we are trying to change the wrong things.
+- three levels at which change can happen
+  1. Outcomes. This level is about changing the consequences of your action. You focus on what you want to achieve, e.g., your goals. It is concerned about what you get in the end. A lot of people would opt to begin their change at this level.
+  2. Processes. The change at this level is centered on your habits and systems. It pertains to what you do.
+  3. Identity. This level is the deepest layer, where you change your beliefs about yourself and others. You can start your change at this level, as you establish who you wish to become
+- Identity change requires two major steps  
+  - Decide who you want to be.   
+  - Gather pieces of evidence to bolster the identity.  
+  - Your habits form your identity just as your identity forms your habits  
+
+### Build Better Habits in 4 Simple Steps  
+
+1. Cue
+   - The cue triggers our brain to start a behavior. Your mind is continually looking for internal and external sources of rewards; the cue predicts a reward.
+2. Cravings
+   1. Cravings motivate a habit. You do not crave for the habit itself, but you crave the change you experience when you form a habit. When you do not crave a change, you will not see the need to develop a habit. For example, you do not crave watching TV for the sake of looking at the television itself, but you desire to be entertained by what you see on screen.  
+   2. Cravings are subjective, which means that given the same cue, two people may react differently. For example, a pair of leather shoes on sale may be a compelling trigger for someone who is often in a suit or corporate attire but will not attract a track and field athlete.  
+3. Response  
+   - This step refers to the habit you perform. It depends on your level of motivation, the amount of effort you are willing to apply, and your ability to execute the action.  
+4. Reward 
+   - A reward has a two-pronged purpose. The first is to satisfy your craving, and the second is to teach us which actions are helpful and worth remembering.  
+
+- ![image-20231009171314718](Communication.assets/image-20231009171314718.png)
 
 
 
+## Four Steps
 
+### MAKE IT OBVIOUS
 
+- avoid problems caused by acting on autopilot  
+- action
+  1. Prepare a Habit Scorecard to keep track of your daily habits.  
+  2. List down other ideas on how you can keep yourself aware of your habits and how each affects you and your relationship with others.
+  3. Think of ways which you can utilize the Habit Scorecard practically in your daily life.
+  4. How can you boost your mindfulness about your habits and maintain that mindfulness?
 
+#### Start a New Habit  
 
+- An implementation intention is a habit formation strategy that uses the two most common triggers: time and location.
 
+  - ```
+    I will [Behavior] on [Date] at [Time] in [Place]
+    ```
 
+- Habit stacking is another strategy where a new habit piggybacks on a current habit.
 
+  - ```
+    “After I [Current habit], I will [New habit]
+    ```
 
+- stacking habits  
 
+  - Timing. Insert it a time when you are more likely to succeed.  
+  - Frequency . The new and current habits must have the same frequency.  
 
+- Add in your desired identity into the mix whilst you are working on the habits. Keep reminding yourself of that desired identity so that it becomes tied in to your selected new habits.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- Motivation is Overrated; Environment Often Matters More  
 
 
 
