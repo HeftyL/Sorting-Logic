@@ -127,6 +127,9 @@
 
 ## Four Steps
 
+- ![image-20231009205401345](Communication.assets/image-20231009205401345.png)
+- ![image-20231009205441882](Communication.assets/image-20231009205441882.png)
+
 ### MAKE IT OBVIOUS
 
 - avoid problems caused by acting on autopilot  
@@ -158,6 +161,58 @@
 - Add in your desired identity into the mix whilst you are working on the habits. Keep reminding yourself of that desired identity so that it becomes tied in to your selected new habits.
 
 - Motivation is Overrated; Environment Often Matters More  
+
+  - 每⼀个习惯都是由提⽰引发的。我们更容易注意到鲜明的提⽰  
+  - 渐渐地，你的习惯不再与单⼀的触发因素相关联，⽽是与这种⾏为周围的整个环境相关联。情境变成了提⽰。  
+  - 在新的环境中培养新的习惯更容易，因为你不会受到与旧习惯相关联的提⽰的⼲扰  
+
+- ⾃我控制的秘密  
+
+  - ⾏为转变的第⼀定律的反⾯是让它脱离视线。  
+  - 习惯⼀旦养成，就不太可能被忘记。  ⾃我控制只是权宜之计，⽽⾮⻓远良策。  
+
+
+### 让它有吸引⼒  
+
+1. 使习惯不可抗拒  
+   1. 习惯叠加+绑定喜好公式  ：超常刺激，就是提⾼了我们⾏动欲望的强化现实版。喜好绑定其实是创建任何习惯的强化版本的⽅法之⼀，具体做法是将它与你本想要的东⻄相关联。  
+      1. 继[当前习惯]之后，我将[我需要的习惯]  
+      2. 继[我需要的习惯]之后，我将[我想要的习惯]  
+   2. 习惯是多巴胺驱动的反馈回路。当多巴胺浓度上升时，我们采取⾏动的动机也会变得更强烈。 
+   3. 正是对奖励的期待，⽽不是奖励本⾝，促使我们采取⾏动。预期越⾼，多巴胺峰值越⼤。   
+   4. 社会规范的吸引⼒ ：⼈类是群居动物。我们渴望融⼊社会，与他⼈建⽴密切联系，并赢得同侪的尊重和认可。这类倾向对我们的⽣存⾄关重要。
+      - 模仿亲近的⼈  
+      - 模仿群体中的多数⼈  
+      - 有权势的⼈
+2. 消除你坏习惯的根源  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
