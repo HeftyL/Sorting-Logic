@@ -5534,7 +5534,7 @@ Qualcomm
 ## APN
 
 - apnsetting
-- setup_data、setupdatacall、setup_data_call
+- setup_data、setupdatacall、setup_data_call、DEACTIVATE_DATA_CALL
 - data_registration
 - getGroupIdLevel1_gid
 - RmmDcEvent
@@ -5708,7 +5708,6 @@ Qualcomm
   - 可以查看 .repo/manifest.xml 拉取一部分代码。
 
 - repo forall -c "git clean -fd;git reset --hard" ：清除所有的改动。在repo sync出现问题的时候，请先使用这个命令进行清楚，确保自己本地的环境被回退到没有改动的状态。
-
 
 # Case提交
 

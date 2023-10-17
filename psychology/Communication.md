@@ -157,7 +157,9 @@
 
 - Add in your desired identity into the mix whilst you are working on the habits. Keep reminding yourself of that desired identity so that it becomes tied in to your selected new habits.
 
-- Motivation is Overrated; Environment Often Matters More  
+- Motivation is Overrated; Environment Often Matters More
+
+- 
 
 
 
