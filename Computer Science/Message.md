@@ -5530,16 +5530,18 @@ Qualcomm
 - MessagingApp
 - BlockedNumbers
 - ReceiveMmsMessageAction/ReceiveSmsMessageAction
+- SmsService
 
 ## APN
 
 - apnsetting
-- setup_data、setupdatacall、setup_data_call
+- setup_data、setupdatacall、setup_data_call、DEACTIVATE_DATA_CALL
 - data_registration
 - getGroupIdLevel1_gid
 - RmmDcEvent
 - ifconfig
 - Poll ServiceState
+- REGISTRATION_STATE
 - vendor.xml:http://192.168.160.28:8000/source/xref/MT6761_U_NA_DEV/androidu/device/mediatek/system/common/overlay/CarrierConfig/packages/apps/CarrierConfig/res/xml/vendor.xml
 
 ## VM&VVM
@@ -5580,8 +5582,11 @@ Qualcomm
 
 - UNSOL_RESPONSE_NETWORK_STATE_CHANGED
 - ImsRegister
+- REGISTRATION_STATE
 
 # 刷机
+
+## Command
 
 - Platform
   - mtk
@@ -5599,26 +5604,28 @@ Qualcomm
 - `*#*#8#*#*`：进入硬件调试模式
   - ITEM TEST->Receiver : 测试扬声器
 
-- remount
-  1. enter Settings->System->About phone
-  2. Press "Build number" several times to enable Developer options
 
-  3. Enter Settings->System->Developer options and turn on OEM unlocking
+## remount
 
-  4. adb reboot bootloader
+1. enter Settings->System->About phone
+2. Press "Build number" several times to enable Developer options
 
-  5. wait device reboot to bootloader ,then run the cmd "sudo $(which fastboot) flashing unlock" or “fastboot flashing unlock” —— 有时候这个步骤需要执行两次才可以生效
+3. Enter Settings->System->Developer options and turn on OEM unlocking
 
-  6. Press volume up key to continue and then run "fastboot reboot" —— 有时候这个步骤需要执行volume down key才能生效
+4. adb reboot bootloader
 
-  7. Wait for the handset to boot up and run cmds below:
-    - adb root 
-    - adb disable-verity
-  8. run cmds below to reboot the device:
-    - adb reboot
-  9. Wait for the handset to boot up and run cmds below:
-     -  adb root
-     - adb remount
+5. wait device reboot to bootloader ,then run the cmd "sudo $(which fastboot) flashing unlock" or “fastboot flashing unlock” —— 有时候这个步骤需要执行两次才可以生效
+
+6. Press volume up key to continue and then run "fastboot reboot" —— 有时候这个步骤需要执行volume down key才能生效
+
+7. Wait for the handset to boot up and run cmds below:
+  - adb root 
+  - adb disable-verity
+8. run cmds below to reboot the device:
+  - adb reboot
+9. Wait for the handset to boot up and run cmds below:
+   -  adb root
+   - adb remount
 
 ## SN Writer（Obsolete）
 
@@ -5654,6 +5661,7 @@ Qualcomm
 
 - adb shell dumpsys activity activities：查看activity栈
 - adb shell dumpsys activity broadcasts：查看广播堆栈
+- adb shell dumpsys package com.android.messaging：查看应用的信息
 - adb shell pm path com.android.messaging：查看包的位置
 - adb logcat -b all |Select-String androidruntime：查看开机 androidruntime log(windows,linux请手动将Select-String替换为grep等命令)
 - PCAP log 抓取:adb shell tcpdump -i any -vv -s 0 -w /cache/tcpdump.pcap
@@ -5708,7 +5716,6 @@ Qualcomm
   - 可以查看 .repo/manifest.xml 拉取一部分代码。
 
 - repo forall -c "git clean -fd;git reset --hard" ：清除所有的改动。在repo sync出现问题的时候，请先使用这个命令进行清楚，确保自己本地的环境被回退到没有改动的状态。
-
 
 # Case提交
 

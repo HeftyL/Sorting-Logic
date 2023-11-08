@@ -217,6 +217,8 @@
 
 # 微积分
 
+## 微分
+
 1. 导数（x->0）
    - ![image-20230919112854513](senior high school.assets/image-20230919112854513.png)
 2. 等价无穷小
@@ -225,3 +227,9 @@
    3. ![image-20230919113753263](senior high school.assets/image-20230919113753263.png)
 3. 泰勒公式
    - <img src="senior high school.assets/image-20230921154340473.png" alt="image-20230921154340473"  />
+
+## 积分
+
+- 基本积分表
+  - ![image-20231106111637449](senior high school.assets/image-20231106111637449.png)
+  - ![image-20231106111701520](senior high school.assets/image-20231106111701520.png)

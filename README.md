@@ -44,6 +44,8 @@
 - 一个人容易受到伤害的地方，就是他自我怀疑的地方。只有说到他自我怀疑的伤口，批评才会让他疼痛。
 - you can love someone and still choose to say goodbye to them
 - you can miss a person everyday and still be glad that they're no longer  in your life
+- 意外感、优越感、宣泄感、熟悉感：setup->1st story->assumption->target assumption->connector->reinterpretation->2nd story->punch
+- Everybody is ignorant, only on different subjects.
 
 ## 梳理中的感悟
 

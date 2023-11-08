@@ -160,7 +160,9 @@
 
 - Add in your desired identity into the mix whilst you are working on the habits. Keep reminding yourself of that desired identity so that it becomes tied in to your selected new habits.
 
-- Motivation is Overrated; Environment Often Matters More  
+- Motivation is Overrated; Environment Often Matters More
+
+- 
 
   - 每⼀个习惯都是由提⽰引发的。我们更容易注意到鲜明的提⽰  
   - 渐渐地，你的习惯不再与单⼀的触发因素相关联，⽽是与这种⾏为周围的整个环境相关联。情境变成了提⽰。  
