@@ -1555,4 +1555,12 @@ prim VS kruskal
 
 ## 散列表的查找
 
- 
+#  基础操作
+
+## 线性表
+
+- ![image-20231110162402034](Data Structure.assets/image-20231110162402034.png)
+
+## 栈
+
+- ![image-20231110162458990](Data Structure.assets/image-20231110162458990.png)

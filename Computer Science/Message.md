@@ -5556,6 +5556,7 @@ Qualcomm
 - vmail count
 - setVoiceMessageCount
 - VvmSmsFilter
+- VoicemailSettingsActivity
 
 ## MMS
 
@@ -5668,6 +5669,7 @@ Qualcomm
   - 导出：adb pull /cache/tcpdump.pcap.
 - adb pull /data/user_de/0/com.android.phone/files/ ./ ：导出carrierconfig
 - adb shell setprop log.tag.MessagingApp V ：设置fontdo的messaging应用的debug log
+- adb shell am start com.google.android.apps.messaging/.startchat.StartChatActivity:打开某个Activity
 
 # 版本控制
 
