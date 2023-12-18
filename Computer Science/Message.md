@@ -5568,7 +5568,7 @@ Qualcomm
 
 ## RCS
 
-- bugle
+- bugle/BugleDataModel
 - carrierservices
 - capabilityCacheExpiration
 - onConfigurationStatusChanged
@@ -5578,6 +5578,8 @@ Qualcomm
 - BugleRcsEngine
 - BugleRcsProvisioning
 - RCS_TAG
+- DUAL_REG
+- 
 
 ## LTE
 
@@ -5670,6 +5672,9 @@ Qualcomm
 - adb pull /data/user_de/0/com.android.phone/files/ ./ ：导出carrierconfig
 - adb shell setprop log.tag.MessagingApp V ：设置fontdo的messaging应用的debug log
 - adb shell am start com.google.android.apps.messaging/.startchat.StartChatActivity:打开某个Activity
+- adb shell screenrecord /sdcard/test.mp4：抓取MP4
+- adb shell bugreportz：抓取bugreport
+- adb logcat -v time -b all > log.txt：抓取整体log
 
 # 版本控制
 
