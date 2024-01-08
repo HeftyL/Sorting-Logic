@@ -5380,72 +5380,613 @@
 
 # RCS
 
-- RCS (Rich Communication Suite) provides a framework for discoverable and interoperable advanced communication services and detailed specifications for a basic set of such advanced communication services.
-- 3GPP第7版中定义的TS 24.173中规定的 MMTel=IMS MultiMedia Telephony Service=IMS多媒体电话服务标准
-- RCS extensions：Applications adding functionality to native devices utilising RCS APIs
-- RCS Provisioning
-  - Provisioning =  开通 =开通服务
-    - 开通RCS服务，需要各种条件
-    - 需要进⾏各种参数配置，才能开通RCS服务
-- Configuration Provisioning
-  - 获取配置
-  - 是⼀个过程
-  - ⽤于让⽀持了RCS的设备，发现和知道相关服务提供⽅的对应的配置信息
-  - 目的：RCS设备，获取了配置参数（configuration parameters）后，才⽅便访问IMS core和RCS的服务
-  - 何时、次数：在⽤户注册到IMS core之前，有且要做1次Configuration Provisioning
-- capability discovery ：three types of response
-  - The  contact  is  registered  for  service  resulting  in  the  contact’s  current  service capabilities being received and logged.
-  - The contact is not registered (they are provisioned but not registered).
-  - The contact is not found (they are not provisioned for service).
-  - 重要性：This discovery mechanism is important since it ensures User A can determine what servicesare available before communicating and allows Service Providers to roll out new agreedservices based on their own deployment schedule. These same mechanisms can be used to initially discover the service capabilities of all the contacts within an address book when the user first registers for the service.
+- 为可发现和互操作的高级通信服务提供了框架，并提供了一套此类高级通信服务的基础集合的详细规范。
+- OMA CPM:Open Mobile Aliance Converged lP(Internet Protocol) Messaging 
+- SIMPLE: Session Initiation Protocol for Instant Messaging and Presence Leveraging Extensions
+- MSRP: Message Session Relay Protocol
 
-## RCS基础流程
+## RCS基础功能
 
 ### RCS架构
 
-- For RCS, the base network element is the IMS core system which enables peer-to-peer communication between RCS clients. Other network nodes can be deployed by the Service Provider to provide additional parts of the RCS feature set.
+- 对于RCS来说，基础网络元素是IMS核心系统，其实现了RCS客户端之间的点对点通信。服务提供商可以部署其他网络节点，以提供RCS功能集的其他部分。
 - ![image-20230423110206706](Communication Technology.assets/image-20230423110206706.png)
-  1. The PS/CS gateway (GW) is used for interworking between Circuit Switched (CS) and Packet Switched (PS) voice, for example, Voice over Long Term Evolution (VoLTE).
+  1. PS/CS网关用于电路交换（CS）和分组交换（PS）语音之间的互操作，如基于VoLTE的语音
   2. MSG Store relates to the CPM (Converged IP Messaging) Message Store Server
   3. Legacy Msg refers to the Short Message Service (SMS)/Multimedia Message Service (MMS) services that may be utilized via an IWF (Interworking Function) located in the group of Application Servers (ASs) which in addition to these IWF node(s) may also include various other nodes used by the RCS services, for example:
      1. Presence Server
      2. Messaging Server
-     3. ASs for the support of Chatbot Functionality 
-        - An Autoconfiguration Server is used to provide the clients with the configuration to support RCS services.
+     3. XML (Extensible Markup Language) Document Management (XDM) Server (XDMS)
+     4. Multimedia Telephony (MMTEL) Application Server
+     5. Video Share Application Server, as utilized in [PRD-IR.84]
   4. two RCS Service Providers exchanging traffic with each other using the standard NNI mechanisms (IPX, IP Packet Exchange)
-  5. RCS also provides support for Chatbot communications through the integration of Chatbot Platforms in the overall architecture. These platforms can either connect through the interconnect infrastructure or connect directly to an RCS Service Provider’s network.
+  5. RCS还通过将Chatbot平台整合到总体架构中，为Chatbot通信提供支持。这些平台可以通过互联互通基础设施连接，也可以直接连接到RCS服务提供商的网络。
 
 ### RCS 设备和客户端类型
 
 - **Primary device**：a device carrying a Subscriber Identity Module (SIM) that is associated with the identity (i.e. IMPU/MSISDN) used for RCS. 
   - Two types of RCS clients exist for such a device that connect directly to the IMS
-    - **RCS embedded client**: This is the client that is provided as part of the handset implementation and it is fully integrated with the native applications (address book, gallery/file browser application, calling application, etc.).
-    - **RCS downloadable client**: This is a client providing its own IMS connectivity that may be preinstalled or that has to be downloaded by the user. However, it is not part of the device base software, (i.e. it has no access to internal Application Programming Interfaces [APIs] and advanced Operating System [OS] functionality). The level of integration with the native applications is limited to the possibilities permitted by the corresponding mobile OS or OS platform API.
-    - 注意：there may also be downloadable clients that use terminal APIs to access the RCS functionality that is provided by a device’s RCS embedded client. This type of client is not considered in this document because it does not alter the UNI which is handled by the device’s RCS embedded client.
-- **Secondary device**: a device that does not carry a SIM that is associated to the identity used for RCS、
-  - It may happen that a secondary device carries a SIM (e.g. a tablet or PC providing cellular data connectivity). That SIM will be associated to a
-    different identity than the one used for RCS though.
+    - RCS embedded client
+    - RCS downloadable client
+- **Secondary device**: a device that does not carry a SIM that is associated to the identity used for RCS。
+  - 注意：还可能存在使用终端API（例如[PRD-RCC.53]）的可下载客户端，以访问由设备的RCS嵌入式客户端提供的RCS功能。由于这种类型的客户端不会改变由设备的RCS嵌入式客户端处理的UNI（用户网络接口），因此rrc.7文档不考虑此类客户端。
+
 
 ### 配置流程
 
 #### 客户端配置参数（Client configuration parameters）
 
-- The client shall offer individual RCS services to the user only if the Service Provider has authorised the use via the relevant client configuration parameters. In addition, the Service Provider need to provide IMS Core network configuration data to the client. RCS clients shall support the procedures for client configuration
-- Some IMS Core network related configuration parameters are not applicable if the device registers services via the IMS well-known APN as defined in [PRD-RCC.15].
-- If the configuration data resulting from the client provisioning authorises the client to use RCS services, then the RCS client shall register with the network in accordance with definitions for the services described in this document. Once this registration process has successfully completed, the user is able to make use of the RCS services.
-- Client configuration parameters could also be updated and withdrawn by the Service Provider using the mechanism described in this section.
-- All the RCS client configuration parameters must be restricted from being modified by the user.
+- 仅当服务提供商通过相关客户端配置参数授权使用时，客户端才能向用户提供个别RCS服务。此外，服务提供商需要向客户端提供IMS核心网络配置数据。RCS客户端应支持客户端配置的相关流程。
+- 如果设备通过在[PRD-RCC.15]中定义的IMS公共APN注册服务，则某些与IMS核心网络相关的配置参数不适用。
+- 如果客户端配置授权客户端使用RCS服务的配置数据，那么RCS客户端应根据对应的方式向网络注册。一旦注册过程成功完成，用户就能够使用RCS服务。
+- 服务提供商可以使用相应的机制更新和撤销客户端配置参数。
+- 所有的RCS客户端配置参数必须限制用户的修改。
 
-#### RCS客户端autoconfiguration机制
+#### RCS服务
+
+- ![image-20231229000838150](Communication Technology.assets/image-20231229000838150.png)
+
+- ![image-20231228172554211](Communication Technology.assets/image-20231228172554211.png)
+
+####ACS
 
 - rcc.14、rcc.15、rcc.20
-- If supported, the RCS client shall indicate the support of the Non-Access Stratum Management Object defined [3GPP TS 24.368] by inclusion of an "app" HTTP GET request configuration parameter as defined in [PRD-RCC.14] with the value set to "urn:oma:mo:ext-3gpp-nas-config:1.0".
+- ACS是一种终端设备从远程服务器检索其RCS配置，并为RCS 操作进行自我配置的机制。RCS配置高度依赖于终端设备的RCS堆栈实现和网络运营商的要求。在RCS实施的早期阶段，大多数终端设备提供了一个特殊的图形用户界面，通过该界面可以手动配置RCS操作，或者将一个特殊的配置文件放置在终端设备上。然而，随着RCS实施的成熟和网络运营商开始在真实网络（或至少在实验网络）中部署RCS，这种情况发生了变化。
+- 流程上终端设备通过HTTP（非安全协议）和HTTPS（安全协议）与核心网络中的自动配置服务器进行通信。它是一个包含4个步骤的协商过程。前两个步骤只是为了检查服务器是否可用。真正的配置过程只在第3步和第4步中完成。
+  - ![image-20231228165725815](Communication Technology.assets/image-20231228165725815.png)
 
-### IMS 注册
 
-- The device and IMS core network must follow the SIP registration procedures defined in [3GPP TS 24.229], complemented with the modifications described in this document (e.g. non-registration of some feature tags).
-- As specified in [3GPP TS 24.229], the SIP REGISTER request shall be sent to the IP address and port obtained via the discovery procedure (see section 2.4.5). If the device was unable to obtain a specific port, then the default port as specified in [RFC3261] shall be used.
-- The client shall send subsequent SIP REGISTER and non-REGISTER requests to the IP address and port that is used for the initial REGISTER, unless the security mechanism requires the use of negotiated ports for the exchange of protected messages.
+##### 解密ssl后的流程
+
+- ![image-20231228165912692](Communication Technology.assets/image-20231228165912692.png)
+
+- ```http
+  (1) HTTP GET Request
+  
+      GET / HTTP/1.1
+  
+      Cache-Control: max-age=0
+  
+      Host: config.rcs.mnc001.mcc001.pub.3gppnetwork.org
+  
+      User-Agent: 3gpp-gba
+  
+      Connection: Keep-Alive
+  
+      Accept-Language: en-US
+  
+  ```
+
+- ```http
+  (2) HTTP 200 OK  
+  
+      HTTP/1.1 200 OK
+  
+      Cache-Control: private
+  
+      Transfer-Encoding: chunked
+  
+      Content-Type: text/html
+  
+      Expires: Mon, 07 Nov 2016 04:05:20 GMT
+  
+      Server: Microsoft-IIS/7.5
+  
+      X-AspNet-Version: 4.0.30319
+  
+      Set-Cookie: PHPSESSID=dv+z7IckAiXiBX+aFEJh+g==; path=/
+  
+      X-Powered-By: ASP.NET
+  
+      Date: Mon, 07 Nov 2016 05:05:20 GMT
+  ```
+
+- ```
+  (3) HTTPS GET
+  
+   
+  
+      GET /?IMEI=353756074161860
+  
+           &terminal_vendor=testVendor
+  
+           &rcs_version=5.1B
+  
+           &terminal_model=SM-N920T
+  
+           &client_version=RCSAndr-5.0
+  
+           &IMSI=001001123456789
+  
+           &terminal_sw_version=N920TUVS2COKC
+  
+           &client_vendor=SEC
+  
+           &vers=20160401
+  
+           &rcs_profile=joyn_blackbird HTTP/1.1
+  
+      Cookie: PHPSESSID=dv+z7IckAiXiBX+aFEJh+g==; path=/
+  
+      Cache-Control: max-age=0
+  
+      Host: config.rcs.mnc001.mcc001.pub.3gppnetwork.org
+  
+      User-Agent: IM-client/OMA1.0 testVendor/SM-N920T-OKC testVendor-RCS/5.0 3gpp-gba
+  
+      Connection: Keep-Alive
+  
+      Accept-Language: en-US
+  ```
+
+  - ![image-20231228170551662](Communication Technology.assets/image-20231228170551662.png)
+
+- ```
+  (4) HTTPS 200 OK
+  
+  
+  
+      HTTP/1.1 200 OK
+  
+      Cache-Control: private
+  
+      Content-Type: text/xml; charset=utf-8
+  
+      Server: Microsoft-IIS/7.5
+  
+      X-AspNet-Version: 4.0.30319
+  
+      X-Powered-By: ASP.NET
+  
+      Date: Mon, 07 Nov 2016 05:05:20 GMT
+  
+      Content-Length: 8687
+  
+  
+  
+      <?xml version="1.0" encoding="utf-8"?>
+  
+      <wap-provisioningdoc version="1.1">
+  
+      <characteristic type="VERS">
+  
+      <parm name="version" value="20160401" />
+  
+      <parm name="validity" value="300" />
+  
+      </characteristic>
+  
+      <characteristic type="APPLICATION">
+  
+      <parm name="AppID" value="ap2001" />
+  
+      <parm name="Name" value="IMS Settings" />
+  
+      <parm name="AppRef" value="ims" />
+  
+      <characteristic type="ConRefs">
+  
+      <parm name="ConRef" value="0" />
+  
+      </characteristic>
+  
+      <parm name="PDP_ContextOperPref" value="0" />
+  
+      <parm name="Timer_T1" value="500" />
+  
+      <parm name="Timer_T2" value="4000" />
+  
+      <parm name="Timer_T4" value="5000" />
+  
+      <parm name="Private_User_Identity" value="001001123456789@ims.mnc001.mcc001.pub.3gppnetwork.org" />
+  
+      <characteristic type="Public_User_Identity_List">
+  
+      <parm name="Public_User_Identity" value="sip:001010123456789@ims.mnc001.mcc001.3gppnetwork.org" />
+  
+      </characteristic>
+  
+      <parm name="Home_network_domain_name" value="msg.testnet.com" />
+  
+      <characteristic type="Ext">
+  
+      <parm name="NatUrlFmt" value="0" />
+  
+      <parm name="IntUrlFmt" value="1" />
+  
+      <parm name="Q-Value" value="0.5" />
+  
+      <characteristic type="SecondaryDevicePar">
+  
+      <parm name="VoiceCall" value="0" />
+  
+      <parm name="Chat" value="0" />
+  
+      <parm name="SendSms" value="0" />
+  
+      <parm name="SendMms" value="0" />
+  
+      <parm name="FileTransfer" value="0" />
+  
+      <parm name="VideoShare" value="0" />
+  
+      <parm name="ImageShare" value="0" />
+  
+      <parm name="VideoCall" value="0" />
+  
+      <parm name="GeoLocPush" value="0" />
+  
+      </characteristic>
+  
+      <parm name="MaxSizeImageShare" value="5242880" />
+  
+      <parm name="MaxTimeVideoShare" value="300" />
+  
+      <characteristic type="Ext" />
+  
+      </characteristic>
+  
+      <characteristic type="ICSI_List">
+  
+      <parm name="ICSI" value="" />
+  
+      <parm name="ICSI_Resource_Allocation_Mode" value="" />
+  
+      </characteristic><characteristic type="LBO_P-CSCF_Address">
+  
+      <parm name="Address" value="ss.epdg.epc.mnc001.mcc001.pub.3gppnetwork.org" />
+  
+      <parm name="AddressType" value="FQDN" />
+  
+      </characteristic><parm name="Voice_Domain_Preference_E_UTRAN" value="1" />
+  
+      <parm name="SMS_Over_IP_Networks_Indication" value="1" />
+  
+      <parm name="Keep_Alive_Enabled" value="0" />
+  
+      <parm name="Voice_Domain_Preference_UTRAN" value="1" />
+  
+      <parm name="Mobility_Management_IMS_Voice_Termination" value="1" />
+  
+      <parm name="RegRetryBaseTime" value="300" />
+  
+      <parm name="RegRetryMaxTime" value="3600" />
+  
+      <characteristic type="PhoneContext_List">
+  
+      <parm name="PhoneContext" value="0" />
+  
+      <parm name="Public_User_Identity" value="sip:+14448880000@msg.testnet.com" />
+  
+      </characteristic><characteristic type="APPAUTH"><parm name="AuthType" value="AKA" />
+  
+      <parm name="Realm" value="msg.testnet.com" />
+  
+      <parm name="UserName" value="001001123456789@ims.mnc001.mcc001.pub.3gppnetwork.org" />
+  
+      <parm name="UserPwd" value="ims*1234" />
+  
+      </characteristic>
+  
+      </characteristic>
+  
+      <characteristic type="APPLICATION">
+  
+      <parm name="AppID" value="ap2002" />
+  
+      <parm name="Name" value="RCS Settings" />
+  
+      <parm name="AppRef" value="rcs" />
+  
+      <characteristic type="IMS">
+  
+      <parm name="To-AppRef" value="ims" />
+  
+      <characteristic type="Ext">
+  
+      <parm name="rcsVolteSingleRegistration" value="1" />
+  
+      </characteristic>
+  
+      </characteristic>
+  
+      <characteristic type="SERVICES">
+  
+      <parm name="presencePrfl" value="1" />
+  
+      <parm name="ChatAuth" value="1" />
+  
+      <parm name="GroupChatAuth" value="1" />
+  
+      <parm name="ftAuth" value="1" />
+  
+      <parm name="standaloneMsgAuth" value="1" />
+  
+      <parm name="geolocPushAuth" value="0" />
+  
+      <parm name="geolocPullAuth" value="0" />
+  
+      <parm name="VSAuth" value="0" />
+  
+      <parm name="ISAuth" value="0" />
+  
+      <parm name="rcsIPVoiceCallAuth" value="1" />
+  
+      <parm name="rcsIPVideoCallAuth" value="1" />
+  
+      <characteristic type="Ext" />
+  
+      </characteristic>
+  
+      <characteristic type="PRESENCE">
+  
+      <parm name="AvailabilityAuth" value="1" />
+  
+      <characteristic type="FAVLINK">
+  
+      <parm name="AutMa" value="Auto" />
+  
+      <characteristic type="LINKS">
+  
+      <parm name="OpFavUrl1" value="" />
+  
+      <parm name="OpFavUrl2" value="" />
+  
+      <parm name="OpFavUrl3" value="" />
+  
+      </characteristic>
+  
+      <parm name="LabelMaxLength" value="200" />
+  
+      </characteristic>
+  
+      <parm name="IconMaxSize" value="204800" />
+  
+      <parm name="NoteMaxSize" value="200" />
+  
+      <characteristic type="VIPCONTACTS">
+  
+      <parm name="NonVipPollPeriodSetting" value="200" />
+  
+      <parm name="NonVipMaxPollPerPeriod" value="1" />
+  
+      </characteristic>
+  
+      <parm name="PublishTimer" value="3600" />
+  
+      <parm name="NickNameLength" value="200" />
+  
+      <characteristic type="Location">
+  
+      <parm name="TextMaxLength" value="200" />
+  
+      <parm name="LocInfoMaxValidTime" value="86400" />
+  
+      </characteristic><characteristic type="Ext" />
+  
+      <parm name="client-obj-datalimit" value="4096" />
+  
+      <parm name="content-serveruri" value="" />
+  
+      <parm name="source-throttlepublish" value="30" />
+  
+      <parm name="max-number-ofsubscriptions-inpresence-list" value="100" />
+  
+      <parm name="service-uritemplate" value="rcs" />
+  
+      <parm name="RLS-URI" value="" />
+  
+      </characteristic><characteristic type="XDMS">
+  
+      <parm name="RevokeTimer" value="86400" />
+  
+      <parm name="enablePNBManagement" value="0" />
+  
+      <parm name="enableXDMSubscribe" value="0" />
+  
+      <characteristic type="Ext" />
+  
+      <parm name="XCAPRootURI" value="xcap.ims.mnc001.mcc001.pub.3gppnetwork.org" />
+  
+      <parm name="XCAPAuthenticationUserName" value="GBA" />
+  
+      <parm name="XCAPAuthenticationSecret" value="GBA" />
+  
+      <parm name="XCAPAuthenticationType" value="GBA" />
+  
+      </characteristic><characteristic type="SUPL">
+  
+      <parm name="TextMaxLength" value="200" />
+  
+      <parm name="LocInfoMaxValidTime" value="43200" />
+  
+      <parm name="geolocPullOpen" value="0" />
+  
+      <parm name="geolocPullApiGwAddress" value="" />
+  
+      <parm name="geolocPullBlockTimer" value="0" />
+  
+      <characteristic type="Ext" />
+  
+      <parm name="Addr" value="" />
+  
+      <parm name="AddrType" value="" />
+  
+      </characteristic><characteristic type="IM">
+  
+      <parm name="imMsgTech" value="1" />
+  
+      <parm name="imCapAlwaysON" value="1" />
+  
+      <parm name="GroupChatFullStandFwd" value="1" />
+  
+      <parm name="GroupChatOnlyFStandFwd" value="1" />
+  
+      <parm name="imWarnSF" value="0" />
+  
+      <parm name="SmsFallBackAuth" value="1" />
+  
+      <parm name="imCapNonRCS" value="1" />
+  
+      <parm name="imWarnIW" value="0" />
+  
+      <parm name="AutAccept" value="1" />
+  
+      <parm name="AutAcceptGroupChat" value="1" />
+  
+      <parm name="imSessionStart" value="0" />
+  
+      <parm name="firstMessageInvite" value="0" />
+  
+      <parm name="TimerIdle" value="210" />
+  
+      <parm name="MaxConcurrentSession" value="10" />
+  
+      <parm name="multiMediaChat" value="1" />
+  
+      <parm name="MaxSize1to1" value="1000" />
+  
+      <parm name="MaxSize1toM" value="1000" />
+  
+      <parm name="ftWarnSize" value="9999999" />
+  
+      <parm name="MaxSizeFileTr" value="10240" />
+  
+      <parm name="ftThumb" value="1" />
+  
+      <parm name="ftStAndFwEnabled" value="0" />
+  
+      <parm name="ftCapAlwaysON" value="0" />
+  
+      <parm name="ftAutAccept" value="1" />
+  
+      <parm name="ftHTTPCSURI" value="" />
+  
+      <parm name="ftHTTPCSUser" value="" />
+  
+      <parm name="ftHTTPCSPwd" value="" />
+  
+      <parm name="ftDefaultMech" value="MSRP" />
+  
+      <characteristic type="Ext" />
+  
+      <parm name="pres-srv-cap" value="1" />
+  
+      <parm name="deferred-msg-func-uri" value="sip:CPMDeferredMsgMgmt@msg.testnet.com" />
+  
+      <parm name="max_adhoc_group_size" value="21" />
+  
+      <parm name="conf-fcty-uri" value="sip:adhoc@msg.testnet.com" />
+  
+      <parm name="exploder-uri" value="sip:adhoc@msg.testnet.com" />
+  
+      <parm name="CPMControllingFuncUri" value="sip:adhoc@msg.testnet.com" />
+  
+      </characteristic>
+  
+      <characteristic type="CPM">
+  
+      <characteristic type="StandaloneMsg">
+  
+      <parm name="MaxSizeStandalone" value="600" />
+  
+      </characteristic>
+  
+      <characteristic type="MessageStore">
+  
+      <parm name="Url" value="" />
+  
+      <parm name="AuthProt" value="0" />
+  
+      <parm name="UserName" value="" />
+  
+      <parm name="UserPwd" value="" />
+  
+      </characteristic>
+  
+      <characteristic type="Ext" />
+  
+      </characteristic>
+  
+      <characteristic type="CAPDISCOVERY">
+  
+      <parm name="pollingPeriod" value="300" />
+  
+      <parm name="pollingRate" value="20" />
+  
+      <parm name="pollingRatePeriod" value="1" />
+  
+      <parm name="capInfoExpiry" value="300" />
+  
+      <parm name="defaultDisc" value="1" />
+  
+      <parm name="capDiscCommonStack" value="0" />
+  
+      <characteristic type="Ext" />
+  
+      </characteristic>
+  
+      <characteristic type="APN">
+  
+      <parm name="rcseOnlyAPN" value="ims" />
+  
+      <parm name="enableRcseSwitch" value="-1" />
+  
+      <parm name="alwaysUseIMSAPN" value="1" />
+  
+      <characteristic type="Ext" />
+  
+      </characteristic>
+  
+      <characteristic type="OTHER">
+  
+      <parm name="endUserConfReqId" value="sip:1234567890@msg.testnet.com" />
+  
+      <parm name="allowVSSave" value="1" />
+  
+      <characteristic type=" transportProto">
+  
+      <parm name="psSignalling" value="SIPoUDP" />
+  
+      <parm name="psMedia" value="MSRP" />
+  
+      <parm name="psRTMedia" value="RTP" />
+  
+      <parm name="wifiSignalling" value="SIPoUDP" />
+  
+      <parm name="wifiMedia" value="MSRP" />
+  
+      <parm name="wifiRTMedia" value="RTP" />
+  
+      </characteristic><parm name="uuid_Value" value="0" />
+  
+      <parm name="IPCallBreakOut" value="0" />
+  
+      <parm name="IPCallBreakOutCS" value="0" />
+  
+      <parm name="rcsIPVideoCallUpgradeFromCS" value="0" />
+  
+      <parm name="rcsIPVideoCallUpgradeOnCapError" value="0" />
+  
+      <parm name="rcsIPVideoCallUpgradeAttemptEarly" value="0" />
+  
+      <characteristic type="Ext" />
+  
+      </characteristic>
+  
+      <characteristic type="SERVICEPROVIDEREXT" />
+  
+      </characteristic>
+  
+      </wap-provisioningdoc>
+  ```
+
+  - ![image-20231228170927250](Communication Technology.assets/image-20231228170927250.png)
+
+
+### rcs 注册
+
+- RCS并没有特殊的注册流程，它只是在IMS之上提供的一项额外服务。然而，通常情况下，启用RCS的用户设备在IMS注册过程中需要经历一些额外步骤。这些额外步骤可能会因用户设备实现和运营商要求而有所不同。在IMS注册期间，RCS最常见的额外步骤是SUBCRIBE/NOTIFY 和 PUBLISCH。比如注册时事件为'reg'的SUBCRIBE。但这里的事件是'presence'。
 
 #### Telephony feature tag
 
@@ -5459,7 +6000,276 @@
   - ![image-20230423160638760](Communication Technology.assets/image-20230423160638760.png)
     - CPIM：Common Profile for Instant Messaging
 
-### 能力及新用户发现机制
+#### rcs注册流程
+
+- | Step | Direction  | Protocol | Message                                                  |
+  | ---- | ---------- | -------- | -------------------------------------------------------- |
+  | 1    | UA1 --> NW | SIP      | `REGISTER sip:test-rcs.com`                              |
+  | 2    | UA1 <-- NW | SIP      | 200 OK                                                   |
+  | 3    | UA1 --> NW | SIP      | `SUBSCRIBE sip:+339012341234@test-rcs.com;pres-list=rcs` |
+  | 4    | UA1 <-- NW | SIP      | 200 OK                                                   |
+  | 5    | UA1 --> NW | SIP/XML  | `PUBLISH sip:+339012341234@test-rcs.com`                 |
+  | 6    | UA1 <-- NW | SIP      | 200 OK                                                   |
+  | 7    | UA1 <-- NW | SIP      | `NOTIFY sip:192.168.1.1:5060;transport=udp`              |
+  | 8    | UA1 --> NW | SIP      | 200 OK                                                   |
+
+- ```
+  （1) REGISTER sip:test-rcs.com
+  
+  REGISTER sip:test-rcs.com SIP/2.0
+  
+  Call-ID: 3Ag0yaUAAA@192.168.1.1
+  
+  CSeq: 1 REGISTER
+  
+  From: <sip:+339012341234@test-rcs.com>;tag=PBg0yaUCAA
+  
+  To: <sip:+339012341234@test-rcs.com>
+  
+  Via: SIP/2.0/UDP 192.168.1.1:5060;keep;branch=z9hG4bKbf994bf8ba37e52882a1ac4ba748f008383138;rport
+  
+  Max-Forwards: 70
+  
+  Contact: <sip:192.168.1.1:5060;transport=UDP>;+sip.instance="<urn:gsma:imei:356432059050620>";
+  
+               +g.oma.sip-im;
+  
+               +g.3gpp.cs-voice;
+  
+               +g.gsma.rcs.ipcall;
+  
+               +g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel";video;automata;
+  
+               +g.3gpp.iari-ref="urn%3Aurn-7%3A3gpp-application.ims.iari.gsma-is,
+  
+                                      urn%3Aurn-7%3A3gpp-application.ims.iari.rcs.fthttp"
+  
+  Supported: path, gruu
+  
+  Allow: INVITE,UPDATE,ACK,CANCEL,BYE,NOTIFY,OPTIONS,MESSAGE,REFER
+  
+  Route: <sip:192.168.1.2:5060;transport=udp;lr>
+  
+  Expires: 600000
+  
+  User-Agent: IM-client/OMA1.0 Test-RCS-client/2.5.13
+  
+  Authorization: Digest username="X",uri="sip:test-rcs.com",algorithm=MD5,realm="X",nonce="",response=""
+  
+  Content-Length: 0
+  ```
+
+  - Contact中携带了rcs feature tag
+
+- ```
+  3) SUBSCRIBE sip:+339012341234@test-rcs.com;pres-list=rcs
+  
+  SUBSCRIBE sip:+339012341234@test-rcs.com;pres-list=rcs SIP/2.0
+  
+  Call-ID: 8Ih0yaUFAA@192.168.1.1
+  
+  CSeq: 1 SUBSCRIBE
+  
+  From: "test user" <sip:+339012341234@test-rcs.com>;tag=8Ih0yaUGAA
+  
+  To: <sip:+339012341234@test-rcs.com;pres-list=rcs>
+  
+  Via: SIP/2.0/UDP 192.168.1.1:5060;branch=z9hG4bKcad78c485b12e9ff2a8410e4d375722f383138;rport
+  
+  Max-Forwards: 70
+  
+  Route: <sip:192.168.1.2:5060;transport=udp;lr>
+  
+  Expires: 3600
+  
+  User-Agent: IM-client/OMA1.0 Test-RCS-client/2.5.13
+  
+  Contact: <sip:192.168.1.1:5060;transport=UDP>;+sip.instance="<urn:gsma:imei:356432059050620>"
+  
+  Allow: INVITE,UPDATE,ACK,CANCEL,BYE,NOTIFY,OPTIONS,MESSAGE,REFER
+  
+  Event: presence
+  
+  Supported: eventlist
+  
+  Content-Length: 0
+  ```
+
+  - Event: presence
+  - Supported: eventlist
+
+- ```
+  5) PUBLISH sip:+339012341234@test-rcs.com
+  
+   
+  
+  PUBLISH sip:+339012341234@test-rcs.com SIP/2.0
+  
+  Call-ID: xSh0yaUHAA@192.168.1.1
+  
+  CSeq: 1 PUBLISH
+  
+  From: <sip:+339012341234@test-rcs.com>;tag=xSh0yaUIAA
+  
+  To: <sip:+339012341234@test-rcs.com>
+  
+  Via: SIP/2.0/UDP 192.168.1.1:5060;branch=z9hG4bK84da5f074a2ba56ea1c0d63f7fa45a54383138;rport
+  
+  Max-Forwards: 70
+  
+  Route: <sip:192.168.1.2:5060;transport=udp;lr>
+  
+  Expires: 3600
+  
+  SIP-If-Match: ac63be7e9042439dad76da16904cf48d
+  
+  User-Agent: IM-client/OMA1.0 Test-RCS-client/2.5.13
+  
+  Event: presence
+  
+  Content-Type: application/pidf+xml
+  
+  Content-Length: 2122
+  
+   
+  
+  
+  <presence xmlns="urn:ietf:params:xml:ns:pidf" xmlns:op="urn:oma:xml:prs:pidf:oma-pres" xmlns:opd="urn:oma:xml:pde:pidf:ext" xmlns:pdm="urn:ietf:params:xml:ns:pidf:data-model" xmlns:ci="urn:ietf:params:xml:ns:pidf:cipid" xmlns:rpid="urn:ietf:params:xml:ns:pidf:rpid" xmlns:gp="urn:ietf:params:xml:ns:pidf:geopriv10" xmlns:gml="urn:opengis:specification:gml:schema-xsd:feature:v3.0" entity="sip:+339012341234@test-rcs.com">
+  
+  <tuple id="t1">
+  
+    <status><basic>open</basic></status>
+  
+    <op:service-description>
+  
+      <op:service-id>org.openmobilealliance:File-Transfer</op:service-id>
+  
+      <op:version>1.0</op:version>
+  
+    </op:service-description>
+  
+    <contact>sip:+339012341234@test-rcs.com</contact>
+  
+    <timestamp>2014-06-19T06:30:45.000Z</timestamp>
+  
+  </tuple>
+  
+  <tuple id="t2">
+  
+    <status><basic>open</basic></status>
+  
+    <op:service-description>
+  
+      <op:service-id>org.gsma.imageshare</op:service-id>
+  
+      <op:version>1.0</op:version>
+  
+    </op:service-description>
+  
+    <contact>sip:+339012341234@test-rcs.com</contact>
+  
+    <timestamp>2014-06-19T06:30:45.000Z</timestamp>
+  
+  </tuple>
+  
+  <tuple id="t3">
+  
+    <status><basic>open</basic></status>
+  
+    <op:service-description>
+  
+      <op:service-id>org.gsma.videoshare</op:service-id>
+  
+      <op:version>1.0</op:version>
+  
+    </op:service-description>
+  
+    <contact>sip:+339012341234@test-rcs.com</contact>
+  
+    <timestamp>2014-06-19T06:30:45.000Z</timestamp>
+  
+  </tuple>
+  
+  <tuple id="t4">
+  
+    <status><basic>open</basic></status>
+  
+    <op:service-description>
+  
+      <op:service-id>org.openmobilealliance:IM-session</op:service-id>
+  
+      <op:version>1.0</op:version>
+  
+    </op:service-description>
+  
+    <contact>sip:+339012341234@test-rcs.com</contact>
+  
+    <timestamp>2014-06-19T06:30:45.000Z</timestamp>
+  
+  </tuple>
+  
+  <tuple id="t5">
+  
+    <status><basic>open</basic></status>
+  
+    <op:service-description>
+  
+      <op:service-id>org.3gpp.cs-videotelephony</op:service-id>
+  
+      <op:version>1.0</op:version>
+  
+    </op:service-description>
+  
+    <contact>sip:+339012341234@test-rcs.com</contact>
+  
+    <timestamp>2014-06-19T06:30:45.000Z</timestamp>
+  
+  </tuple>
+  
+  </presence>
+  ```
+
+  - Event: presence
+  - Content-Type: application/pidf+xml
+
+- ```
+  7)  NOTIFY sip:192.168.1.1:5060;transport=udp
+  
+   
+  
+  NOTIFY sip:192.168.1.1:5060;transport=udp SIP/2.0
+  
+  Via: SIP/2.0/UDP 192.168.1.2:51417;branch=z9hG4bKb7a8715cd9d04e019149483fac110bee93;rport;transport=udp
+  
+  Via: SIP/2.0/TCP 192.168.1.2:6061;branch=z9hG4bK299ad82d0390455982d5f305d9d68a43;rport=49793
+  
+  Max-Forwards: 69
+  
+  From: <sip:presence@test-rcs.com>;tag=9ab957cb0149442b9e4a6d99d93f3d21
+  
+  To: <sip:+339012341234@test-rcs.com>;tag=8Ih0yaUGAA
+  
+  Event: presence
+  
+  Contact: <sip:presence@test-rcs.com>
+  
+  Content-Type: application/pidf+xml
+  
+  Subscription-State: active
+  
+  Content-Length: 0
+  
+  CSeq: 1 NOTIFY
+  
+  Call-ID: 8Ih0yaUFAA@192.168.1.1
+  
+  Record-Route: <sip:192.168.1.2;lr>
+  ```
+
+  - Event: presence
+  - Content-Type: application/pidf+xml
+
+### UCE
 
 #### Capability discovery
 
@@ -5468,18 +6278,14 @@
   - SIP OPTIONS exchange：SIP OPTIONS端到端消息被用来查询目标联系人的能力（其他用户可用的服务），并传递关于请求者支持哪些能力的信息。使用这种方法，两个用户都能在一次事务中得到更新的信息。
   - Presence：不是执行端到端的事务，而是使用标准的开放移动联盟（OMA）SIP即时通讯和Presence扩展（SIMPLE）Presence程序对服务器进行查询
   - The discovery mechanism that is to be used by the device is by using the configuration parameter CAPABILITY DISCOVERY MECHANISM
-- When a SIP OPTIONS message is sent from User A to User B, User A shall handle the response as described in the following table:
+
+- option流程
+  - ![image-20231228193801004](Communication Technology.assets/image-20231228193801004.png)
+  - ![image-20231228194323188](Communication Technology.assets/image-20231228194323188.png)
+
+- SIP OPTIONS response
   - ![image-20230423174204791](Communication Technology.assets/image-20230423174204791.png)
   - ![image-20230423174257411](Communication Technology.assets/image-20230423174257411.png)
-
-- Capability discovery via presence
-  - The capabilities are announced in a Presence document that is published by using the SIP PUBLISH method as defined in [Presence]. When the terminal is started, the client then sends a SIP PUBLISH request containing the capabilities. This SIP PUBLISH request shall not include an Expires header field. Service capabilities publication through OMA Presence Enabler [Presence2.0_TS] or [Presence] must follow [PDE_14] rules.
-  - If changes are required in the published capabilities (for example, due to the behaviour specified), a presence modify request is sent using the ‘Sip-If-Match’ header according to [Presence]. When the client/device is switched off, it shall remove the published capabilities before unregistering according to the procedure defined in [RFC3903]
-- Service Capabilities Retrieval
-  - Service capabilities of an RCS user can be retrieved by another RCS user via a presence subscription issued by their client, providing the pertaining Presence Authorisation rules allow him to do so.
-  - When using Presence as the enabler for Capability exchange, RCS clients shall retrieve the service capability information of contacts by means of Anonymous Fetch operations
-  - This will result in a single NOTIFY request indicating the service capabilities of that contact. The contact shall be considered as an RCS user only if the response includes one of the service-IDs
-  - Authorisation for capabilities retrieval：为了提供使用匿名获取请求检索能力的授权，支持使用presence的能力交换的RCS服务提供商应在presence服务器上提供允许匿名订阅检索能力的服务提供商策略，或者在presence XDMS中为每个RCS用户设置提供这种授权的presence规则文档。
 
 - Service part of the presence Data Model
 
@@ -5576,11 +6382,12 @@
   - ![image-20230424102546390](Communication Technology.assets/image-20230424102546390.png)
 
 - Service/capability indicators
-  - The RCS capabilities represent the list of services that an RCS user/client can access at a certain point in time. The capabilities depend on four factors:
-    - User Service Provider provisioning status: A Service Provider may choose to limit service to customers depending on subscription status (e.g. chat and file share, but not video).
-    - The terminal hardware (HW): A terminal with limited HW (i.e. no capability to process video) may not be able to access all the RCS Services.
-    - The terminal status: Even if a terminal HW supports all the services, it could be that the device status introduces a limitation (e.g. receiving files is not possible when the file storage is full).
-    - Connectivity status: Some services may require a certain level of network Quality of Service (QoS). For example, streaming video over a 2G General Packet Radio Service (GPRS) is not possible with the used enablers.
+  - RCS能力表示RCS用户/客户在特定时间点可以访问的服务列表。这些能力取决于以下四个因素：
+    - 用户服务提供商的配置状态：服务提供商可以根据订阅状态限制服务范围（例如，提供聊天和文件共享，但不包括视频）。
+    - 终端硬件（HW）：具有受限硬件的终端（即无法处理视频的能力）可能无法访问所有RCS服务。
+    - 终端状态：即使终端硬件支持所有服务，设备状态可能引入限制（例如，当文件存储已满时，无法接收文件）。
+    - 连接状态：某些服务可能需要一定水平的网络服务质量（QoS）。例如，所使用的设备在2G通用分组无线电服务（GPRS）上无法进行视频流媒体。
+
 - feature tags and Service IDs that are used for indicating that a specific RCS service is available:
   - <img src="Communication Technology.assets/image-20230424105147780.png" alt="image-20230424105147780" style="zoom:150%;" />
   - <img src="Communication Technology.assets/image-20230424105323845.png" alt="image-20230424105323845" style="zoom:150%;" />
@@ -5589,6 +6396,25 @@
   - A Service Provider (or group of Service Providers) to deploy additional services which can benefit from the RCS discovery mechanism, an additional tag and Service ID format is defined.
     - ![image-20230424111045328](Communication Technology.assets/image-20230424111045328.png)
     - ![image-20230424111748037](Communication Technology.assets/image-20230424111748037.png)
+
+#### Presence
+
+- Capability discovery via presence
+  - 具体的capabilities信息在SIP PUBLISH方法的Presence 文档中进行显示。终端启动后，客户端会发送一个包含能力信息的SIP PUBLISH请求。该SIP PUBLISH请求不应包含Expires头字段。通过OMA Presence Enabler [Presence2.0_TS]或[Presence]进行的服务能力发布必须遵循[PDE_14]规则。
+  - 如果需要对已发布的能力进行更改（例如，基于指定行为的需求），则会使用"Sip-If-Match"头字段发送一个存在修改请求。此外，当客户端或设备关闭时，应在注销之前移除已发布的能力，按照[RFC3903]中定义的流程进行操作。
+- Service Capabilities Retrieval
+  - 另一个RCS用户可以通过其客户端发出的订阅请求，以及相应的授权规则允许的情况下，获取RCS用户的服务能力信息。
+  - 在使用Presence作为能力交换的手段时，RCS客户端应通过匿名获取操作来检索联系人的服务能力信息。
+  - Authorisation for capabilities retrieval：为了提供使用匿名获取请求检索能力的授权，支持使用presence的能力交换的RCS服务提供商应在presence服务器上提供允许匿名订阅检索能力的服务提供商策略，或者在presence XDMS中为每个RCS用户设置提供这种授权的presence规则文档。
+
+##### Presence流程图
+
+- ![image-20231228200937881](Communication Technology.assets/image-20231228200937881.png)
+- ![image-20231228201006421](Communication Technology.assets/image-20231228201006421.png)
+
+##### uce sip流程
+
+- rcs注册流程
 
 ### RCS 协议
 
@@ -5627,95 +6453,981 @@ End User Confirmation Requests
 #### Standalone messaging
 
 - configuration parameter STANDALONE MSG AUTH is set to "1" or "2"
-- The SDP of the SIP INVITE request and response in Large Message Mode should not be compressed even if SIP Content-Compression is supported by the client.
+- 使用OMA CPM Standalone messaging，包括文本和多媒体消息服务，消除了基于SMS和MMS服务的消息服务部署所带来的一些限制，例如160个字符的消息大小限制，内容类型限制，对文本消息缺乏显示通知以及对使用多设备的服务用户的支持。
+- Standalone messaging服务支持与SMS和MMS的互通
+- Standalone messaging采用了OMA CPM的基于SIP的独立消息传递（详见[RCS5-CPM-CONVFUNC-ENDORS]）。它将两种独立的文本和多媒体消息机制发展成一个统一的消息框架。这种融合的消息机制使用了Pager模式消息机制和Large Message模式消息机制的组合。根据消息的大小选择不同的模式。较小的消息通过Pager模式发送，较大的消息通过Large Message模式发送。Standalone messaging的这种内置能力通过使选择对用户透明化来增强用户体验：用户不需要根据媒体类型或人为设定的大小限制来选择消息技术。此外，Standalone messaging进一步促进了从当前独立的SMS和MMS消息服务向单一的全IP消息服务的过渡。
+
+##### Feature description
+
 - Delivery and Display Notifications
-  - The disposition status notifications for a sent Standalone Message will follow the reverse path of the sent message. The disposition notifications for Standalone Messaging could be used for the 1-to-1 or 1-to-Many messaging and for two types of notifications, delivery and display
+  - 在发送包含消息处理状态请求的Standalone Message  时，发送方将收到送达通知，并可能收到显示通知。
+- Support for multiple devices per user
+  - Standalone Message支持使用多个设备的用户。对于用户的所有兼容设备/客户端，Standalone Message服务应该可用。更具体地说，对于在线并能够处理Standalone Message服务的所有用户客户端，传入的消息应该被送达到这些客户端。如果当一条消息需要被送达时，用户的所有客户端都处于离线状态，那么如果消息在此期间未过期，它将会在第一个上线的客户端上被送达。
 - Deferred Messaging
-  - The terminating Participating Function, amongst other procedures, performs the procedure for deferring messages if none of the RCS capable devices of the recipient is online.
-  - When no RCS target recipient client is registered, the terminating Participating Function holding the message for delivery may decide to defer the standalone message for delivery at a later time. For the delivery of a deferred standalone message, the Participating Function shall, as specified in [RCS-CPM-CONVFUNC-ENDORS], push the deferred standalone messages once one of the clients of the target recipient RCS user becomes available.
-  - If a deferred Standalone Message expires before it is delivered, the terminating Participating Function shall handle the deferred message by discarding it.
-- mutidevice
-  - RCS supports delivering of Standalone Messages to multiple devices, the delivery of Standalone Messages will be done to all the user’s RCS devices that are online. Also, when applicable, the message is delivered to a single non-RCS device of the user through interworking with either SMS or MMS 
-- Standalone Message Delivery Assurance
-  - Interworking with Legacy Messaging services
-    - 发端和终端网络都将提供与xMS的互通，前者用于向非RCS用户或没有提供stand alone信息互通协议的运营商的用户发送stand alone信息。后者将用于主要设备处于离线状态，但可以到达的RCS用户。这被认为是为stand alone消息提供了交付保证，但SIP MESSAGE请求与聊天机器人IARI除外。
-  - Standalone Message Revocation
-    - Standalone Message Revocation is currently only used for SIP MESSAGE request with the Chatbot IARI
+  - 将消息暂时保存在Participating Function  中，并在以后的某个时间进行传递。此外，延迟消息是在终止的RCS用户设备未注册或不可用以接收消息时，推迟独立消息的传递。在这种情况下，未传递的消息会保留在RCS Participating Function  中，直到它们被传递到用户设备、被删除或过期为止。
+- Central Message Storage
+  - 支持将存储对象与所有注册的RCS设备中的本地存储进行同步。存储始终受到运营商控制的消息大小和存储配额限制的限制。
+
+- The SDP of the SIP INVITE request and response in Large Message Mode should not be compressed even if SIP Content-Compression is supported by the client.
+
+##### Technical Realization
+
+- 无论是CPM Pager Mode还是Large Message Mode独立消息机制，都基于使用IETF SIP协议。Pager Mode消息使用SIP MESSAGE方法，对最大消息大小有限制，而Large Message Mode消息使用专用的SIP/MSRP会话进行传递，不限制消息大小。
+- 使用Pager Mode消息进行传递的RCS独立消息的最大大小不能超过1300字节。大小超过此阈值的消息将由Large Message Mode消息处理。因此，Standalone Message将根据消息的大小使用Pager Mode或Large Message Mode进行发送和传递。这个过程对用户来说是透明的，即用户不会决定使用Pager Mode还是Large Message Mode消息，也不会看到服务行为上的差异。
+
+###### Pager Mode Messaging
+
+- ![image-20231228234707861](Communication Technology.assets/image-20231228234707861.png)
+  - 如果提供了基于网络的公共消息存储，任何发送或接收的独立消息都将按照对应要求存储在相应的RCS用户的消息存储中。
+
+###### Large Message Mode Messaging 
+
+- 来自RCS客户端的大型文本或多媒体消息通过[RCS5-CPMCONVFUNC-ENDORS]中描述的大型消息模式传递机制发送，并通过成功的SIP INVITE建立的MSRP会话传递到目标客户端，以便通过起始和终止方的Participating Function达到预期的接收者。SIP INVITE包括独立消息的大小和消息中使用的内容类型。
+
+###### Flows
+
+- | Step | Direction         | Protocol | Message | Comments                      |
+  | ---- | ----------------- | -------- | ------- | ----------------------------- |
+  | (1)  | UA1 --> Proxy/UA2 | SIP      | MESSAGE | Send a text '123456789abcdef' |
+  | (2)  | UA1 <-- Proxy/UA2 | SIP      | 200 OK  |                               |
+  | (3)  | UA1 <-- Proxy/UA2 | SIP      | MESSAGE | Delivery Notification         |
+  | (4)  | UA1 --> Proxy/UA2 | SIP      | 200 OK  |                               |
+  | (5)  | UA1 <-- Proxy/UA2 | SIP      | MESSAGE | Display Notification          |
+  | (6)  | UA1 --> Proxy/UA2 | SIP      | 200 OK  |                               |
+
+- ```
+  (1) MESSAGE
+  
+   
+  
+  MESSAGE sip:+14448880011@sharetechnote.com;user=phone SIP/2.0
+  
+  P-Preferred-Service: urn:urn-7:3gpp-service.ims.icsi.oma.cpm.msg
+  
+  Contribution-ID: 477b66ae9662e3ad18549bf5dabf9d26d5e707ca
+  
+  Conversation-ID: 1710887c7ca47dc2c1274c11673eb0df5a604fd3
+  
+  P-Preferred-Identity: <sip:310410123456789@sharetechnote.com>
+  
+  Request-Disposition: no-fork
+  
+  User-Agent: TEST IMS 5.0
+  
+  CSeq: 1 MESSAGE
+  
+  Max-Forwards: 70
+  
+  P-Access-Network-Info: 3GPP-E-UTRAN-FDD;utran-cell-id-3gpp=31041000010000000
+  
+  Route: <sip:[2001:0:0:1::2]:5060;lr>
+  
+  a: *;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.msg"
+  
+  c: message/cpim
+  
+  f: <sip:310410123456789@sharetechnote.com>;tag=1384874566
+  
+  i: 3712948749@2001::1:88fe:fccf:2870:5dee
+  
+  l: 322
+  
+  m: <sip:310410123456789@[2001::1:88fe:fccf:2870:5dee]:5060>;
+  
+      +sip.instance="<urn:gsma:imei:35469106-056673-0>"
+  
+  t: <sip:+14448880011@sharetechnote.com;user=phone>
+  
+  v: SIP/2.0/TCP [2001::1:88fe:fccf:2870:5dee]:5060;branch=z9hG4bK2629405539smg;transport=TCP
+  
+   
+  
+  From: <sip:310410123456789@sharetechnote.com>
+  
+  To: <sip:+14448880011@sharetechnote.com;user=phone>
+  
+  DateTime: 2015-02-17T06:54:27Z
+  
+  NS: imdn <urn:ietf:params:imdn>
+  
+  imdn.Message-ID: PH7qAIV8cgH5
+  
+  imdn.Disposition-Notification: positive-delivery, display
+  
+   
+  
+  Content-type: text/plain;charset=UTF-8
+  
+  Content-Length: 15
+  
+   
+  
+  123456789abcdef
+  ```
+
+  - a: *;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.msg"
+  - c: message/cpim
+
+- ```
+  (2) 200 OK
+  
+   
+  
+  SIP/2.0 200 OK
+  
+  Max-Forwards: 70
+  
+  Via: SIP/2.0/TCP [2001::1:88fe:fccf:2870:5dee]:5060;branch=z9hG4bK2629405539smg;transport=TCP
+  
+  From: <sip:310410123456789@sharetechnote.com>;tag=1384874566
+  
+  To: <sip:+14448880011@sharetechnote.com;user=phone>;tag=73335cbb32b744baaaf5097a34431c92
+  
+  Call-ID: 3712948749@2001::1:88fe:fccf:2870:5dee
+  
+  CSeq: 1 MESSAGE
+  
+  Server: TEST-RCS-serv/OMA1.0
+  
+  Content-Length: 0
+  ```
+
+- ```
+  (3) MESSAGE
+  
+   
+  
+  MESSAGE sip:310410123456789@[2001::1:88fe:fccf:2870:5dee]:5060 SIP/2.0
+  
+  Via: SIP/2.0/UDP [2001:0:0:1::2]:5060;
+  
+        branch=z9hG4bK4b0eb0c6ab9d4ef7bac858d430ea63cc18a;rport;transport=udp
+  
+  Via: SIP/2.0/TCP [2001:0:0:1::2]:6062;branch=z9hG4bKe7c0830f56394c91985b32740e324dbf
+  
+  Max-Forwards: 68
+  
+  From: <sip:+14448880011@sharetechnote.com>;tag=d1d79837cb9140e0a4b75cba91f40178
+  
+  To: <sip:310410123456789@sharetechnote.com>
+  
+  P-Asserted-Identity: <sip:+14448880011@sharetechnote.com>
+  
+  Accept-Contact: *;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.msg"
+  
+  Contribution-ID: f415972d55
+  
+  Conversation-ID: 1710887c7ca47dc2c1274c11673eb0df5a604fd3
+  
+  Content-Type: message/cpim
+  
+  Content-Length: 490
+  
+  CSeq: 1 MESSAGE
+  
+  Call-ID: fb87fae7ea0f4eaebdd51c7bce64ccf8
+  
+  Record-Route: <sip:[2001:0:0:1::2]:5060;lr>
+  
+   
+  
+  From: <sip:anonymous@anonymous.invalid>
+  
+  To: <sip:310410123456789@sharetechnote.com>
+  
+  DateTime: 2015-02-17T06:54:27.8730740Z
+  
+  NS: imdn <urn:ietf:params:imdn>
+  
+  imdn.Message-ID: 92c65678d0
+  
+   
+  
+  Content-Disposition: notification
+  
+  Content-Type: message/imdn+xml
+  
+   
+  
+  <?xml version="1.0" encoding="utf-8"?>
+  
+  <imdn xmlns="urn:ietf:params:xml:ns:imdn">
+  
+    <message-id>PH7qAIV8cgH5</message-id>
+  
+    <delivery-notification>
+  
+      <status>
+  
+        <delivered />
+  
+      </status>
+  
+    </delivery-notification>
+  
+  </imdn>
+  ```
+
+- ```
+  (4) 200 OK
+  
+   
+  
+  SIP/2.0 200 OK
+  
+  Contribution-ID: f415972d55
+  
+  Conversation-ID: 1710887c7ca47dc2c1274c11673eb0df5a604fd3
+  
+  CSeq: 1 MESSAGE
+  
+  P-Access-Network-Info: 3GPP-E-UTRAN-FDD;utran-cell-id-3gpp=31041000010000000
+  
+  f: <sip:+14448880011@sharetechnote.com>;tag=d1d79837cb9140e0a4b75cba91f40178
+  
+  i: fb87fae7ea0f4eaebdd51c7bce64ccf8
+  
+  l: 0
+  
+  t: <sip:310410123456789@sharetechnote.com>;tag=1310629065
+  
+  v: SIP/2.0/UDP [2001:0:0:1::2]:5060;
+  
+      branch=z9hG4bK4b0eb0c6ab9d4ef7bac858d430ea63cc18a;rport=5060;
+  
+      received=2001:0:0:1::2;transport=udp,SIP/2.0/TCP [2001:0:0:1::2]:6062;
+  
+      branch=z9hG4bKe7c0830f56394c91985b32740e324dbf
+  ```
+
+- ```
+  (5) MESSAGE
+  
+   
+  
+  MESSAGE sip:310410123456789@[2001::1:88fe:fccf:2870:5dee]:5060 SIP/2.0
+  
+  Via: SIP/2.0/UDP [2001:0:0:1::2]:5060;
+  
+         branch=z9hG4bK4b0eb0c6ab9d4ef7bac858d430ea63cc18c;rport;transport=udp
+  
+  Via: SIP/2.0/TCP [2001:0:0:1::2]:6062;branch=z9hG4bK266a90b1785b4b659ea8d0911bf4f48b
+  
+  Max-Forwards: 68
+  
+  From: <sip:+14448880011@sharetechnote.com>;tag=c5305ca476f3456a904ca1a31cf2b091
+  
+  To: <sip:310410123456789@sharetechnote.com>
+  
+  P-Asserted-Identity: <sip:+14448880011@sharetechnote.com>
+  
+  Accept-Contact: *;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.msg"
+  
+  Contribution-ID: 70e1ec50d6
+  
+  Conversation-ID: 1710887c7ca47dc2c1274c11673eb0df5a604fd3
+  
+  Content-Type: message/cpim
+  
+  Content-Length: 495
+  
+  CSeq: 1 MESSAGE
+  
+  Call-ID: 30210a9d7df84045a75c8b040d6395af
+  
+  Record-Route: <sip:[2001:0:0:1::2]:5060;lr>
+  
+   
+  
+  From: "No Chat" <sip:+14448880011@sharetechnote.com>
+  
+  To: <sip:310410123456789@sharetechnote.com>
+  
+  DateTime: 2015-02-17T06:54:45.1650631Z
+  
+  NS: imdn <urn:ietf:params:imdn>
+  
+  imdn.Message-ID: cef6f7fe6d
+  
+   
+  
+  Content-Disposition: notification
+  
+  Content-Type: message/imdn+xml
+  
+   
+  
+  <?xml version="1.0" encoding="utf-8"?>
+  
+  <imdn xmlns="urn:ietf:params:xml:ns:imdn">
+  
+    <message-id>PH7qAIV8cgH5</message-id>
+  
+    <display-notification>
+  
+      <status>
+  
+        <displayed />
+  
+      </status>
+  
+    </display-notification>
+  
+  </imdn>
+  ```
+
+- ```
+  (6) 200 OK
+  
+   
+  
+  SIP/2.0 200 OK
+  
+  Contribution-ID: 70e1ec50d6
+  
+  Conversation-ID: 1710887c7ca47dc2c1274c11673eb0df5a604fd3
+  
+  CSeq: 1 MESSAGE
+  
+  P-Access-Network-Info: 3GPP-E-UTRAN-FDD;utran-cell-id-3gpp=31041000010000000
+  
+  f: <sip:+14448880011@sharetechnote.com>;tag=c5305ca476f3456a904ca1a31cf2b091
+  
+  i: 30210a9d7df84045a75c8b040d6395af
+  
+  l: 0
+  
+  t: <sip:310410123456789@sharetechnote.com>;tag=2700955583
+  
+  v: SIP/2.0/UDP [2001:0:0:1::2]:5060;
+  
+      branch=z9hG4bK4b0eb0c6ab9d4ef7bac858d430ea63cc18c;rport=5060;
+  
+      received=2001:0:0:1::2;transport=udp,SIP/2.0/TCP [2001:0:0:1::2]:6062;
+  
+      branch=z9hG4bK266a90b1785b4b659ea8d0911bf4f48b
+  ```
+
+  
 
 #### 1-to-1 Chat
 
-1. SIP procedures for the setup of sessions using MSRP for the message exchange;
-2. In the SDP of the SIP INVITE request and response, the a=accept-types attribute shall include only message/cpim and application/im-iscomposing+xml, i.e., “a=accept-types:message/cpim application/im-iscomposing+xml”.
-3. The SDP of the SIP INVITE request and response shall not be compressed even if SIP Content-Compression is supported by the client.
-4. In normal circumstances, between two users at most only a single session is active at a time. A client shall, therefore, not initiate a new Chat session towards a user with whom there is already an established Chat session.
-5. Multimedia content within a Chat session is not permitted. Therefore, in the SDP of the SIP INVITE request and response, the a=accept-wrapped-types attribute shall only include text/plain and message/imdn+xml and if File Transfer using HTTP or Geolocation PUSH is supported application/vnd.gsma.rcs-ft-http+xml and application/vnd.gsma.rcspushlocation+xml respectively, e.g., a=accept-wrapped-types:text/plain message/imdn+xml.
+- The Chat service 使用户能够实时地在两个用户之间交换消息。
 
-##### Store and Forward Mode
+##### Feature description
 
-##### Interworking towards SMS/MMS
+1.  存储和转发：此功能要求消息服务器在目标用户离线时存储消息和通知（投递和显示），并在用户再次上线时将其传递给用户（即存储和转发）。
+2. chat与短信/彩信的互通：此功能要求Messaging Server 将消息与短信或彩信进行互通。
+3. "已送达"消息通知：发送方在消息传递给接收方后可以收到通知。
+4. "已显示"消息通知：发送方在其消息在接收方设备上显示后可以收到通知。请注意，此通知无法证明接收方实际已阅读消息，只能表明消息已在接收方终端的用户界面（UI）上显示。
+5. 在会话外投递通知（已送达和已显示）：无论是否建立了一对一的聊天，都应该可以独立发送通知。
+6. 正在输入指示：聊天对话中的用户可以看到另一个用户正在输入新消息/反馈。
+7. 本地黑名单：终端/客户端可以支持本地存储的黑名单来处理传入的聊天请求。允许用户将不需要的传入聊天标记为垃圾邮件。这将阻止来自这些发起者的后续消息显示或甚至通知用户。此外，这些不需要的通信也不会被确认为已阅读。黑名单行为不仅适用于聊天，还适用于文件传输。
+8. PNB：网络中存储的由RCS用户设置的PNB包含了RCS用户用于屏蔽目的的联系人（或列表）的URI列表。BPEF使用PNB列表来阻止聊天的传入和传出流量。
+   1. PNB：Personal Network Blacklist
+   2. BPEF： Blacklist Policy Enforcement Function
 
-##### Multidevice handling
+9. 本地对话历史：终端/客户端支持本地存储的对话历史。
+10. 基于网络的公共消息存储：聊天会话的基于网络的公共消息存储可用于在设备之间同步消息。它还允许用户在网络中备份重要的对话。设备中，本地对话历史与基于网络的公共消息存储的同步预期是一致的。如何实现此对齐由设备实现确定。
+11. 用户别名（显示名称）：在与其他用户发起通信时，可以发送用户定义的显示名称。
+12. 灵活性以允许在聊天对话中发送多媒体消息：聊天会话中支持多媒体消息交换。然而，是否允许在聊天会话中发送多媒体消息取决于服务提供商，并由配置参数控制。
 
-##### Emoticons
+##### Interaction with other RCS features
 
-- Selected emoticons are displayed graphically but sent and received as text.
+###### Switching to Group Chat  
 
-##### Chat message size limitations
+- 只有在部署了消息服务器的服务提供商的用户才能发起群聊。提供群聊功能是可选的，因此从终端的角度来看，如果配置参数CONFFCTY-URI（见表76）未配置或配置为虚拟值，则终端不应允许用户向聊天中添加其他参与者或开始群聊。
 
-- The maximum size of a text Chat message in bytes that a user can enter is controlled through the MAX SIZE IM configuration parameter
+- 通过向其中添加新用户，一对一聊天可以由用户A或用户B将其转换为群聊。用户A和用户B在其用户界面中有选项来添加一个或多个聊天伙伴到对话中。用户可能仅限于其设备上已知的RCS用户联系人。否则，发起用户的消息服务器需要准备好通过短信或彩信与非RCS用户进行消息交互。
 
-##### 1-to-1 Chat Delivery Assurance
+###### File Transfer within 1-to-1 chat and interaction with the blacklist 
 
-- ![image-20230427101716744](Communication Technology.assets/image-20230427101716744.png)
-  - The indication and the support of a network fallback mechanism is mandatory. This includes service provider deployments supporting termination of 1-to-1 Chat sessions only.
+- 在一对一聊天过程中，任何一方用户都可以从聊天编辑窗口向另一方用户发起文件传输。文件传输是通过一个新的SIP会话建立的，并在与聊天会话不同的MSRP会话中进行。
+- 在参与聊天的设备上，接收用户将在与发送用户的聊天窗口中收到文件传输邀请，并可以从该窗口接受或拒绝邀请。在多设备环境中，文件传输邀请还会显示在用户的其他设备上，使其也可以从这些设备上接受或拒绝邀请。
+- 如果用户接受文件传输，终端设备将要求用户选择存储文件的位置或使用默认目录。一旦接收到文件，用户可以从聊天编辑窗口中打开文件。
+- 请注意，垃圾邮件/黑名单行为适用于文件传输，而不仅仅适用于聊天消息。如果从黑名单用户接收到接收文件的邀请，客户端/设备实现在用户界面上不应通知用户收到来自黑名单发送者的文件传输邀请。而是应将事件记录在垃圾邮件文件夹中
 
-###### Generating Chat MessageRevoke Requests
+##### Technical Realization
 
-- When a message is to be revoked, the client shall send a SIP MESSAGE request according to the rules and procedures of [RCS-CPM-CONVFUNC-ENDORS] with the clarifications listed here. In this SIP MESSAGE request
-  - shall include an Accept-Contact header field with the CPM ICSI for Session Mode Messaging, similarly to the case for IMDNs carried in SIP MESSAGE requests;
-  - shall add a dedicated Accept-Contact header field carrying the Message Revoke feature tag  along with the require and explicit parameters;
-  - shall include the Content-Type header field with the value set to the message revocation content-type application/vnd.gsma.rcsrevoke+xml
+###### Two different technical realizations  
+
+- OMA SIMPLE IM 
+  1. 对于OMA SIMPLE IM，首条消息始终包含在SIP INVITE请求中的CPIM/IMDN wrapper   中。因此，在表77中定义的配置参数FIRST MSG IN INVITE始终设置为1。客户端应始终在该消息的Disposition-Notification头字段的值中包含"positive-delivery"。这意味着该头字段的值要么是"positive-delivery"，要么是"positive-delivery,display"，具体取决于是否请求了显示通知。在RCS的一对一聊天中，不使用"negativedelivery"的值。如果SIP INVITE请求中携带了CPIM/IMDN封装的消息，并且没有至少包含"positive-delivery"的Disposition-Notification头字段，服务器将拒绝该请求。
+  2. 收到的聊天会话邀请包含请求“delivery”通知的IMDN。因此，每个接收设备都会向A发送包含IMDN的SIP MESSAGE请求，指示原始消息成功送达。
+  3. 当来自同一用户的新INVITE请求到达时，接收客户端会向未处理的INVITE发送486 BUSY HERE响应，以确保来自同一用户的未处理INVITE请求不超过一个。请求“delivery”通知的IMDN的发送方式与第一次会话邀请类似。
+  4. 不支持在聊天中交换多媒体内容，因此在表77中定义的配置参数MULTIMEDIA IN CHAT始终设置为0，以减少与存储转发功能相关的复杂性。因此，在SIP INVITE请求和响应的SDP中，a=accept-wrapped-types属性仅包括text/plain和message/imdn+xml。如果支持使用HTTP进行文件传输，那么a=accept-wrapped-types属性还应包括application/vnd.gsma.rcs-ft-http+xml。如果支持位置推送（Geolocation PUSH），那么a=accept-wrapped-types属性还应包括application/vnd.gsma.rcspushlocation+xml。在聊天过程中传输多媒体内容时，使用文件传输。
+- OMA CPM  
+  - 如果服务提供商希望在会话建立后发送第一条聊天消息，则在附件A中的配置参数FIRST MSG IN INVITE设置为禁用。
+    - 请注意，在使用OMA CPM时，这是推荐的方法，因为它确保与现有标准的兼容性。
+  - 如果服务提供商希望将第一条消息放在SIP INVITE请求的CPIM/IMDN wrapper  中，则在表77中定义的配置参数FIRST MSG IN INVITE设置为1。客户端应始终在该消息的Disposition-Notification头字段的值中包含"positive-delivery"。这意味着头字段的值要么是"positive-delivery"，要么是"positive-delivery,display"，具体取决于是否请求了显示通知。在RCS的1对1聊天中，不使用"negative-delivery"的值。如果SIP INVITE请求携带了一个CPIM/IMDN包装器中的消息，并且没有至少包含"positive-delivery"的Disposition-Notification头，则服务器将拒绝该请求。
+  - 如果第一条消息在SIP INVITE请求的CPIM/IMDN包装器中，客户端应将该包装器的CPIM From和CPIM To头字段都设置为sip:[anonymous@anonymous.invalid](mailto:anonymous@anonymous.invalid)，以防止在传输过程中泄露用户的身份信息。因此，在接收到一个对话的CPIM消息时，客户端应忽略CPIM头中指示的身份信息。
+  - 当允许用户使用多个设备，并且这些设备被配置为自动接受（IM SESSION AUTO ACCEPT设置为1）时，消息服务器需要能够将传入的1对1聊天会话请求分发到接收用户的每个设备，以与每个设备建立MSRP会话。
+  - 当从同一用户接收到新的INVITE请求时，接收客户端（或其参与功能）会对未完成的INVITE请求发送486 BUSY HERE响应，以确保来自同一用户的未完成的INVITE请求不超过一个。
+  - 如果允许在聊天会话中使用多媒体内容，则在表77中定义的配置参数MULTIMEDIA IN CHAT设置为1。因此，在SIP INVITE请求和响应的SDP中，a=accept-wrapped-types属性应只包括`*`，或者包括聊天会话期间支持的所有内容类型的完整列表（至少包括text/plain和message/imdn+xml），例如，a=accept-wrapped-types:`*`
+- common to both OMA SIMPLE IM and OMA CPM  
+  - 在建立使用MSRP进行消息交换的会话时，使用SIP协议的过程。
+  - 在SIP INVITE请求和响应的SDP中，a=accept-types属性应只包括message/cpim和application/im-iscomposing+xml，即“a=accepttypes:message/cpim application/im-iscomposing+xml”。
+  - 如果启动或接受此聊天会话将使并发聊天会话数量超过服务提供商配置的最大限制（请参阅表77中的MAX CONCURRENT SESSIONS），设备将在启动新会话之前关闭其他活动的聊天会话之一（例如，最长时间未使用的聊天会话）。
+  - 当会话建立时，消息通过MSRP会话进行传输。每个MSRP SEND请求都包含一个请求以接收即时消息传递通知（IMDN）的“delivery”通知，并可能包含一个请求以接收IMDN“display”通知。因此，客户端应始终在CPIM/IMDN Disposition-Notification头字段的值中包含“positive-delivery”。这意味着头字段的值为“positive-delivery”或“positive-delivery,display”，具体取决于是否请求了显示通知。在RCS中，不使用“negative-delivery”的值进行1对1聊天。
+  - 当用户消息被传递时，接收设备必须生成一个包含IMDN状态的MSRP SEND请求，并在请求时，如果被要求，再生成另一个MSRP SEND请求以表示消息已被显示。
+    - 注意：如果发送方和接收方之间尚未建立MSRP会话，则使用Pager Mode（即SIP MESSAGE）来传输IMDN（传递通知、显示通知）。
+
+- Chat message size limitations  
+  - 消息的最大大小通过在表77中定义的MAX SIZE 1-to-1 IM配置参数进行控制。超过MAX SIZE 1-to-1 IM配置参数中指定的最大大小的消息可以通过文件传输或大消息模式独立消息来传递。
+
+##### Flows
+
+- | Step | Direction         | Protocol | Message              | Comments              |
+  | ---- | ----------------- | -------- | -------------------- | --------------------- |
+  | (1)  | UA1 --> Proxy/UA2 | SIP/SDP  | INVITE               |                       |
+  | (2)  | UA1 <-- Proxy/UA2 | SIP      | 100 Trying           |                       |
+  | (3)  | UA1 <-- Proxy/UA2 | SIP      | 183 Session Progress |                       |
+  | (4)  | UA1 <-- Proxy/UA2 | SIP/SDP  | 200 OK               |                       |
+  | (5)  | UA1 --> Proxy/UA2 | SIP      | ACK                  |                       |
+  | (6)  | UA1 --> Proxy/UA2 | MSRP     | SEND                 |                       |
+  | (7)  | UA1 <-- Proxy/UA2 | MSRP     | 200 OK               |                       |
+  | (8)  | UA1 --> Proxy/UA2 | MSRP     | SEND                 | Send Text 'Hello'     |
+  | (9)  | UA1 <-- Proxy/UA2 | MSRP     | 200 OK               |                       |
+  | (10) | UA1 <-- Proxy/UA2 | MSRP     | SEND                 | Delivery Notification |
+  | (11) | UA1 --> Proxy/UA2 | MSRP     | 200 OK               |                       |
+
+- ```
+  (1) INVITE
+  
+   
+  
+  INVITE sip:+14448880000@sharetechnote.com;user=phone SIP/2.0
+  
+  Conversation-ID: 6b79b8bc937e4985b1dffd062b687bd7
+  
+  Contribution-ID: d5e4121aeec2cc59546ebaef8966ef185a2f37f0
+  
+  P-Preferred-Service: urn:urn-7:3gpp-service.ims.icsi.oma.cpm.session
+  
+  P-Preferred-Identity: <sip:310410123456789@sharetechnote.com>
+  
+  P-Early-Media: supported
+  
+  Allow: INVITE,ACK,OPTIONS,CANCEL,BYE,UPDATE,INFO,REFER,NOTIFY,MESSAGE,PRACK
+  
+  User-Agent: Test IMS 5.0
+  
+  CSeq: 1 INVITE
+  
+  Max-Forwards: 70
+  
+  P-Access-Network-Info: 3GPP-E-UTRAN-FDD;utran-cell-id-3gpp=31041000010000000
+  
+  Route: <sip:[2001:0:0:1::2]:5060;lr>
+  
+  a: *;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.session"
+  
+  c: application/sdp
+  
+  f: <sip:310410123456789@sharetechnote.com>;tag=284849603
+  
+  i: 508868544@2001::1:4c16:9c0f:4986:9e6d
+  
+  k: timer
+  
+  l: 363
+  
+  m: <sip:310410123456789@[2001::1:4c16:9c0f:4986:9e6d]:5060;transport=UDP>;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.oma.cpm.session"
+  
+  t: <sip:+14448880000@sharetechnote.com;user=phone>
+  
+  v: SIP/2.0/TCP [2001::1:4c16:9c0f:4986:9e6d]:5060;branch=z9hG4bK2563646430smg;transport=TCP
+  
+   
+  
+  v=0
+  
+  o=TEST-IMS-UE 1234562 0 IN IP6 2001::1:4c16:9c0f:4986:9e6d
+  
+  s=SS VOIP
+  
+  c=IN IP6 2001::1:4c16:9c0f:4986:9e6d
+  
+  t=0 0
+  
+  m=message 8880 TCP/MSRP *
+  
+  a=accept-types:message/cpim application/im-iscomposing+xml // See Ref [2]
+  
+  a=accept-wrapped-types:text/plain message/imdn+xml
+  
+  a=setup:active
+  
+  a=path:msrp://[2001::1:4c16:9c0f:4986:9e6d]:8880/FmnP;tcp
+  
+  a=msrp-cema
+  
+  a=sendrecv
+  
+   
+  
+   
+  
+  (2) 100 Trying
+  
+   
+  
+  SIP/2.0 100 Trying
+  
+  Via: SIP/2.0/TCP [2001::1:4c16:9c0f:4986:9e6d]:5060;branch=z9hG4bK2563646430smg;transport=TCP
+  
+  Max-Forwards: 70
+  
+  From: <sip:310410123456789@sharetechnote.com>;tag=284849603
+  
+  To: <sip:+14448880000@sharetechnote.com;user=phone>
+  
+  Call-ID: 508868544@2001::1:4c16:9c0f:4986:9e6d
+  
+  CSeq: 1 INVITE
+  
+  Content-Length: 0
+  
+   
+  
+  (3) 183 Session Progress
+  
+   
+  
+  SIP/2.0 183 Session Progress
+  
+  Max-Forwards: 70
+  
+  Via: SIP/2.0/TCP [2001::1:4c16:9c0f:4986:9e6d]:5060;branch=z9hG4bK2563646430smg;transport=TCP
+  
+  From: <sip:310410123456789@sharetechnote.com>;tag=284849603
+  
+  To: <sip:+14448880000@sharetechnote.com;user=phone>;tag=b2fbe90a8c2e488ba04ad6d0c0956a6c
+  
+  Call-ID: 508868544@2001::1:4c16:9c0f:4986:9e6d
+  
+  CSeq: 1 INVITE
+  
+  Contact: <sip:+14448880000@sharetechnote.com>
+  
+  Record-Route: <sip:[2001:0:0:1::2]:5060;lr>
+  
+  Content-Length: 0
+  
+   
+  
+  (4) 200 OK
+  
+   
+  
+  Via: SIP/2.0/TCP [2001::1:4c16:9c0f:4986:9e6d]:5060;branch=z9hG4bK2563646430smg;transport=TCP
+  
+  From: <sip:310410123456789@sharetechnote.com>;tag=284849603
+  
+  To: <sip:+14448880000@sharetechnote.com;user=phone>;tag=b2fbe90a8c2e488ba04ad6d0c0956a6c
+  
+  Call-ID: 508868544@2001::1:4c16:9c0f:4986:9e6d
+  
+  CSeq: 1 INVITE
+  
+  Allow: INVITE, ACK, CANCEL, BYE, MESSAGE
+  
+  Contact: <sip:[2001:0:0:1::2]:49466;transport=tcp>
+  
+  Content-Type: application/sdp
+  
+  Record-Route: <sip:[2001:0:0:1::2]:5060;lr>
+  
+  Content-Length: 292
+  
+   
+  
+  v=0
+  
+  o=- 1192 5963 IN IP6 2001:0:0:1::2
+  
+  s=-
+  
+  c=IN IP6 2001:0:0:1::2
+  
+  m=message 16000 TCP/MSRP *
+  
+  a=accept-types:message/cpim application/im-iscomposing+xml
+  
+  a=accept-wrapped-types:*
+  
+  a=path:msrp://[2001:0000:0000:0001:0000:0000:0000:0002]:16000/558f02b9d0;tcp
+  
+  a=msrp-cema
+  
+  a=setup:passive
+  
+   
+  
+   
+  
+  (5) ACK
+  
+   
+  
+  SIP/2.0 200 OK
+  
+  Max-Forwards: 70
+  
+  ACK sip:[2001:0:0:1::2]:49466;transport=UDP SIP/2.0
+  
+  CSeq: 1 ACK
+  
+  Max-Forwards: 70
+  
+  Route: <sip:[2001:0:0:1::2]:5060;lr>
+  
+  f: <sip:310410123456789@sharetechnote.com>;tag=284849603
+  
+  i: 508868544@2001::1:4c16:9c0f:4986:9e6d
+  
+  l: 0
+  
+  m: <sip:310410123456789@[2001::1:4c16:9c0f:4986:9e6d]:5060;transport=UDP>
+  
+  t: <sip:+14448880000@sharetechnote.com;user=phone>;tag=b2fbe90a8c2e488ba04ad6d0c0956a6c
+  
+  v: SIP/2.0/UDP [2001::1:4c16:9c0f:4986:9e6d]:5060;branch=z9hG4bK1597981393smg;transport=UDP
+  
+   
+  
+  (6) SEND
+  
+   
+  
+  MSRP kePLNmnn6eCcn7lB9X SEND
+  
+  To-Path: msrp://[2001:0000:0000:0001:0000:0000:0000:0002]:16000/558f02b9d0;tcp
+  
+  From-Path: msrp://[2001::1:4c16:9c0f:4986:9e6d]:8880/FmnP;tcp
+  
+  Message-ID: IeGt4q5QsCmzD
+  
+  Success-Report: no
+  
+  Failure-Report: yes
+  
+  -------kePLNmnn6eCcn7lB9X$
+  
+   
+  
+  (7) 200 OK
+  
+   
+  
+  MSRP kePLNmnn6eCcn7lB9X 200 OK
+  
+  To-Path: msrp://[2001::1:4c16:9c0f:4986:9e6d]:8880/FmnP;tcp
+  
+  From-Path: msrp://[2001:0000:0000:0001:0000:0000:0000:0002]:16000/558f02b9d0;tcp
+  
+  -------kePLNmnn6eCcn7lB9X$
+  
+   
+  
+  (8) SEND
+  
+   
+  
+  MSRP RgGcYXJW2nHr SEND
+  
+  To-Path: msrp://[2001:0000:0000:0001:0000:0000:0000:0002]:16000/558f02b9d0;tcp
+  
+  From-Path: msrp://[2001::1:4c16:9c0f:4986:9e6d]:8880/FmnP;tcp
+  
+  Message-ID: ZNsPlykpMApIABRrejarbO37ADMMae
+  
+  Success-Report: no
+  
+  Failure-Report: yes
+  
+  Byte-Range: 1-430/430
+  
+  Content-Type: message/cpim
+  
+   
+  
+  From: <sip:anonymous@anonymous.invalid>   
+  
+  To: <sip:anonymous@anonymous.invalid>
+  
+  DateTime: 2015-02-24T06:48:09Z
+  
+  NS: imdn <urn:ietf:params:imdn>
+  
+  NS: MyFeatures <mailto:RCSFeatures@test.com>
+  
+  MyFeatures.PANI: 3GPP-E-UTRAN-FDD;utran-cell-id-3gpp=31041000010000000
+  
+  imdn.Message-ID: wYcJuXBbGOfCtBqIPQqz0I
+  
+  imdn.Disposition-Notification: positive-delivery, display
+  
+   
+  
+  Content-type: text/plain;charset=UTF-8
+  
+  Content-Length: 5
+  
+   
+  
+  Hello
+  
+  -------RgGcYXJW2nHr$
+  
+   
+  
+   
+  
+  (9) 200 OK
+  
+   
+  
+  MSRP RgGcYXJW2nHr 200
+  
+  To-Path: msrp://[2001::1:4c16:9c0f:4986:9e6d]:8880/FmnP;tcp
+  
+  From-Path: msrp://[2001:0000:0000:0001:0000:0000:0000:0002]:16000/558f02b9d0;tcp
+  
+  -------RgGcYXJW2nHr$
+  
+   
+  
+  (10) SEND
+  
+   
+  
+  MSRP 69172e29 SEND
+  
+  To-Path: msrp://[2001:0000:0000:0001:4C16:9C0F:4986:9E6D]:8880/FmnP;tcp
+  
+  From-Path: msrp://[2001:0000:0000:0001:0000:0000:0000:0002]:16000/558f02b9d0;tcp
+  
+  Message-ID: fd2f8f3e7c
+  
+  Byte-Range: 1-500/500
+  
+  Content-Type: message/cpim
+  
+   
+  
+  From: <sip:anonymous@anonymous.invalid>
+  
+  To: <sip:anonymous@anonymous.invalid>
+  
+  DateTime: 2015-02-24T06:48:10.7749079Z
+  
+  NS: imdn <urn:ietf:params:imdn>
+  
+  imdn.Message-ID: 2252a2757d
+  
+   
+  
+  Content-Type: message/imdn+xml
+  
+  Content-Disposition: notification
+  
+   
+  
+  
+  <imdn xmlns="urn:ietf:params:xml:ns:imdn">
+  
+    <message-id>wYcJuXBbGOfCtBqIPQqz0I</message-id>
+  
+    <delivery-notification>
+  
+      <status>
+  
+        <delivered />
+  
+      </status>
+  
+    </delivery-notification>
+  
+  </imdn>
+  
+  -------69172e29$
+  
+   
+  
+   
+  
+  (11) 200 OK
+  
+   
+  
+  MSRP 69172e29 200 OK
+  
+  To-Path: msrp://[2001:0000:0000:0001:0000:0000:0000:0002]:16000/558f02b9d0;tcp
+  
+  From-Path: msrp://[2001::1:4c16:9c0f:4986:9e6d]:8880/FmnP;tcp
+  
+  Message-ID: fd2f8f3e7c
+  
+  -------69172e29$
+  ```
 
 #### Group Chat
 
+- 群聊服务使用户能够即时地在多个用户之间交换消息。
+
+##### Feature description
+
+- 长期有效的群聊对参与者仍然可用:一旦用户发起群聊，即使群聊因长时间不活动而被消息服务器终止，任何剩余的参与者仍可以重新启动它。
+- 基本的存储与转发功能:加入群聊后因连接问题而错过的消息将被存储在消息服务器中，并在参与者重新加入群聊时进行传递。
+- 完整的存储与转发功能:对于尚未加入群聊或在群聊开始时处于离线状态的参与者错过的消息将被存储，并在参与者重新可用或加入时进行传递。
+- 封闭群聊:发起群聊的用户或消息服务器可以指定群聊为封闭状态，意味着任何人都无法将参与者添加到群聊中。
+- 离开群聊:对于封闭群聊，明确离开的用户不能重新加入。对于常规群聊，一旦群聊因不活动而终止，明确离开的参与者除非被其他参与者添加，否则不能重新加入或重新启动，因为他们不再在最新的参与者列表中。如果群聊会话仍在进行中，用户即使明确离开后也可以重新加入。
+
+##### Technical Realization
+
+- roup Chat的技术实现基于《RCS5-SIMPLEIM-ENDORS》和《RCS5-CPM-CONVFUNC-ENDORS》中描述的“Ad-Hoc Session Mode messaging”（取决于在附录A的表77中定义的CHAT MESSAGING TECHNOLOGY设置）。对于OMA CPM，还添加了在Group Chat中支持发送“IsComposing”消息的功能。关闭的Group Chat功能由消息服务器提供，并且所有参与者都知道它是关闭状态。每个Group Chat参与者自己的消息服务器提供了Group Chat的存储和转发功能。
+  - Ad-hoc:Ad hoc 是一个拉丁文常用短语。这个短语的意思是“特设的、特定目的的、即席的、临时的、将就的、专案的”。
+- 在正常情况下，对于给定的RCS Group Chat ID，对于一个RCS用户，最多只有一个会话处于活动状态。
+
+##### Flows
+
+- 群组消息就是多人一对一聊天。所有参与者将建立一个以“focus”为中心的 1:1 聊天。此逻辑角色作为 RCS (CPM/SIMPLE) 服务器功能的一部分来实现。
+
+  - ![image-20231229094055402](Communication Technology.assets/image-20231229094055402.png)
+
+- 如果 Karin 想要创建群聊，她会将 SIP INVITE 发送到 RCS 服务器。RCS 将通过 Request-URI 将此 INVITE 请求识别为创建新的临时会议的请求。INVITE 通常还包含正文中的参与者列表：
+
+  - ```
+    INVITE sip:conf-factory@operator.com SIP/2.0
+        To: "Conf Factory" <sip:conf-factory@operator.com>
+       Require: recipient-list-invite
+       Content-Type: multipart/mixed;boundary="boundary1"
+       Content-Disposition: recipient-list
+       
+       <?xml version="1.0" encoding="UTF-8"?>
+       <resource-lists xmlns="urn:ietf:params:xml:ns:resource-lists"
+                 xmlns:cp="urn:ietf:params:xml:ns:copyControl">
+         <list>
+           <entry uri="sip:Johan@operator.com" cp:copyControl="to" />
+           <entry uri="sip:Rory@operator.com" cp:copyControl="to" />
+           <entry uri="sip:Eric@operator.com" cp:copyControl="cc"/>
+         </list>
+       </resource-lists>
+    ```
+
+- 对于“Ad-hoc”会议。这意味着会议不需要安排或预订，而是“即时”创建。这种方法的好处是用户不需要知道会议 URI；相反，由focus （RCS 服务器）创建并被参与者的 UA 使用。
+
+  - ![image-20231229094906679](Communication Technology.assets/image-20231229094906679.png)
+
 #### File Transfer
 
-- This section describes the File Transfer mechanism that is based on
-  - the originating client uploading a file and optionally a thumbnail file to the HTTPContent Server,
-  - the HTTP Content Server returning a HTTP Content Server response body to the client containing the file meta data,
-  - the originating client processing the received HTTP Content Server response body to create the File Transfer message body, use of Standalone Messaging, 1-to-1 Chat and Group Chat procedures
-  - the terminating client extracting the file meta data from the File Transfer message body and downloading the file(s) from the HTTP Content Server, optionally via a Localisation Function.
-- ![image-20230428171709292](Communication Technology.assets/image-20230428171709292.png)
+- 文件传输是用户在进行中的会话或没有进行中的会话时，交换不同类型内容（文件）的能力。
+
+##### Feature description
+
+- 在发送方的角度，在将请求发送给预定接收者之前，需要选择要传输的文件和接收者。
+- 对于图片或视频剪辑而言，如果接收者在接受或拒绝传输之前能够收到文件的预览，则具有显著的附加价值。因此，只要可能，文件的发送方应在文件传输邀请中包含文件的缩略图。接收到带有缩略图的文件传输请求的客户端应在弹出的文件传输invite窗口中显示缩略图。
+- 文件传输请求将发送到所有接收者的设备。当未进行自动接受时，这将触发一个弹窗，提示用户某个联系人希望向其发送所示文件。接收者可以通过在该设备上接受或拒绝文件传输邀请来选择将文件传输到哪个设备。
+- 在实际传输文件之前显示的这个弹窗中，预期的接收者有机会了解所提议的文件传输（大小、名称、预览和文件类型，以及发送方的身份），然后根据这些信息接受或拒绝文件传输。
+- 如果文件传输因任何原因中断，接收者可以请求恢复文件传输，而无需重新开始。
+- 用户可以将不需要的传入文件传输请求标记为垃圾邮件。为此，客户端可以支持本地存储的黑名单来处理传入的文件传输请求。这个黑名单与用于传入聊天请求的黑名单相同。如果从黑名单用户接收到接收文件的邀请，客户端应拒绝文件传输请求，并且在用户体验上不通知用户。而是可以将事件记录在垃圾邮件文件夹中（例如，“用户A于时间/日期尝试发送文件”）。
+- 文件传输功能有以下限制：
+  - 与一组用户共享文件仅在群组聊天会话中考虑。在群组聊天会话之外，设备界面可以启动多个一对一文件传输会话，将文件传输给多个用户。
+  - 每个文件传输会话只能发送一个文件。
+
+##### Interaction with other RCS features
+
+- 在进行中的一对一聊天会话中，任何文件传输的过程都是作为一个独立的会话与正在进行的一对一聊天同时进行的，因此与启动文件传输的独立会话的过程相同。
+- 不同类型的内容（文件）可以在进行中的会话期间或没有进行中的会话时进行交换，即在通话或一对一聊天会话期间或之外。
+  当在不存在现有会话时传输文件（即与要共享文件的联系人不在通话或聊天会话中），并且在传输开始后（即接收用户接受了传入文件），文件传输以聊天上下文的形式呈现给接收者。这为传输建立了通信上下文，因为接收者可能想知道发送者为什么要共享该文件。在文件呈现时，聊天会话未启动。只有在接收者向文件传输的发送者发送聊天消息时，聊天会话才会启动。
+  - ![image-20231229100435097](Communication Technology.assets/image-20231229100435097.png)
+- 当通话中启动文件传输时，文件传输将持续直至完成或取消，即使通话结束，文件传输也不会被终止。
+- 在群聊中可以进行文件传输。在这种情况下，文件将发送给所有能够接收文件的参与者。
+
+##### Technical Realization  
+
+- 文件传输基于[RCS5-SIMPLEIM-ENDORS]和[RCS5-CPM-CONVFUNCENDORS]，以及[RFC5547]中描述的扩展。技术选择由配置参数CHAT MESSAGING TECHNOLOGY控制
+- 文件传输的SIP INVITE请求将被分发到所有接收者的设备上。如果接收者在一台设备上接受邀请，相应的客户端将回复200 OK响应。如果接收者拒绝会话，客户端将回复603响应。在这两种情况下，他的服务提供商的IMS网络将取消发送到他其他设备的邀请。
+- 如果发起者包含在设备的本地黑名单中,SIP 603 Decline响应应用于自动拒绝传入的文件传输邀请
+- 据客户端配置参数FT AUT ACCEPT，接收方的客户端可能会自动接受来自未包含在设备本地黑名单中的用户的文件传输邀请，前提是SDP中指示的大小低于文件传输警告大小（FT WARN SIZE）。请注意，在漫游场景中，默认情况下禁用自动接受，并且如果设置了FT AUT ACCEPT参数，RCS客户端应提供一个配置设置给用户，以便启用它。
+- 如果FT AUT ACCEPT设置为禁用自动接受（即设置为0），文件传输将永远不会自动接受。
+
+##### Flows
+
+- ![image-20231229102306778](Communication Technology.assets/image-20231229102306778.png)
+  - 客户端在传输下一个文件块之前，不需等待MSRP 200 OK响应，将文件以不同的MSRP块发送。
+  - 为了成功地传输文件，客户端应在接收到文件的所有块的MSRP 200 OK响应之后，才发送SIP BYE。
+- ![image-20231229102555561](Communication Technology.assets/image-20231229102555561.png)
 
 #### Geolocation Push services
 
-- The geolocation information shall be sent directly as a message in a Chat session provided the intended recipient (for a 1-to-1 Chat) or the Controlling Function (for a Group Chat) supports Geolocation Push.
-- That allows potentially reusing an already established 1-to-1 or Group Chat session for Geolocation PUSH.
+##### Feature description
+
+- Geolocation services 包括以下两个特性：
+  1. "Geolocation PUSH"服务允许RCS用户将位置信息（可以是用户位置或建议的会面地点的位置）推送给另一个RCS用户。
+  2. "Geolocation PULL"服务允许RCS用户获取另一个RCS用户的位置信息。
+- 值得注意的是，类似的服务可以通过与地理位置存在信息交互的SPI来提供。引入这些服务的原因是，当SPI地理位置信息无法使用时，RCS 5.1用户可能有兴趣共享地理位置信息：
+  - SPI: Social Presence Information
+  - 因为服务提供商不提供SPI服务（如果这两个用户属于同一服务提供商），或者其中一个服务提供商不提供SPI服务（如果这两个用户不属于同一服务提供商）。
+  - 因为服务提供商提供SPI服务（或者两个服务提供商都提供SPI服务，如果这两个用户不属于同一服务提供商），但这两个用户不想共享社交信息。
+
+##### Interaction with other RCS features
+
+- 在已建立的语音/视频通话（单点或多点）或已建立的RCS聊天的情境下，可以使用该功能交互。
+
+##### Technical Realization
+
+- RCS File Transfer服务被用于传递地理位置信息。在群聊中分享位置时，基于群聊的File Transfer是其基础
+- 在语音或视频通话中（假设用户希望将位置发送给通话中的对方），使用的是RCS File Transfer 服务来传递地理位置信息。
+
 - ![image-20230505133610401](Communication Technology.assets/image-20230505133610401.png)
 - ![image-20230505133626507](Communication Technology.assets/image-20230505133626507.png)
+  - ![image-20231229104939074](Communication Technology.assets/image-20231229104939074.png)
 
-#### Audio Messaging
+##### Flows
 
-- An RCS client shall encode the audio message using the Adaptive Multi-Rate (AMR) codec.
-- The RCS Recorded Audio Message (RRAM) shall be formatted in the file format defined in [RFC4867].
-- The transport of RRAM uses the File Transfer as defined in section 3.2.5. The following features are applicable for Audio Messaging:
-  - disposition notifications of the File Transfer transport services
-  - store and forward of the File Transfer transport services
-  - auto-acceptance rules for File Transfer
-- The duration of the RRAM shall be limited to a maximum duration of 10 minutes. The Client shall automatically stop the recording when this limit is reached.
-- When sending a RRAM to a contact, the RRAM is transported via the File Transfer service. The File Disposition shall be set to ‘render’.
-  - ‘render’ means that the content of the file can be played directly from the Chat application upon user action.
+- ![image-20231229111130655](Communication Technology.assets/image-20231229111130655.png)
+- PULL
+  - ![image-20231229111544122](Communication Technology.assets/image-20231229111544122.png)
+  - ![image-20231229111427161](Communication Technology.assets/image-20231229111427161.png)
+  - ![image-20231229111639885](Communication Technology.assets/image-20231229111639885.png)
 
-### Content sharing
+## RCS 服务部署
 
-#### In-Call services
+- 来源：NG.125-v1.0-1 MMTEL RCS NNI Overview
+  - NNI：Network-to-Network Interface
+- 由于历史原因，MMTEL和RCS服务的部署独立进行，并且在设备端使用不同的IMS客户端和不同的IMS核心网络来提供服务。
+  随后，出现了一个旨在通过单一的IMS客户端提供MMTEL和RCS服务的倡议，以实现所谓的融合IP通信设备。这一倡议在GSMA PRD NG.102 [1]中有所描述。这样的设备可以部署在以下任一环境中：
+  - 在单注册模式下，设备将注册到一个融合的IMS核心网络，以提供所有（MMTEL和RCS）服务。
+  - 在双注册模式下，设备将进行两次注册。一次注册是向提供仅MMTEL服务的IMS核心网络注册，而第二次注册是向提供仅RCS服务的IMS核心网络注册。
+    - 在实践中，也有可能将两个IMS注册都注册到同一个IMS核心。然而，这只是一个特殊情况。从NNI互通的角度来看，这样的部署可以暴露一个NNI，与单一融合的IMS核心网络完全相同，也可以同时暴露两个独立的NNI。
+    - 设备上的配置可以控制注册模式。
 
-- rcc.20
+#### RCS Deployment Architectures
 
-  - Shared Map
+- 不同RCS部署方式的基本区别在于是使用单一IMS注册还是使用双重IMS注册，但在双重注册的情况下还存在一些其他差异，导致存在5种已确定的RCS部署架构
+  - 所有服务都在单一融合的IMS核心网络上。通常使用单一IMS注册，但也适用于向同一IMS核心网络进行双重IMS注册。这样的融合IMS核心网络由移动网络运营商拥有。
+  - 双重IMS核心网络（一个用于MMTEL服务，一个用于RCS服务），两个核心网络都由移动网络运营商拥有。
+  - 双重IMS核心网络（一个用于MMTEL服务，一个用于RCS服务），其中MMTEL IMS核心网络由移动网络运营商拥有，RCS IMS核心网络由第三方拥有，并遵守移动网络运营商的条款和条件。
+  - 双重IMS核心网络（一个用于MMTEL服务，一个用于RCS服务），其中MMTEL IMS核心网络由移动网络运营商拥有，RCS IMS核心网络由第三方提供托管的RCS解决方案，并获得移动网络运营商的同意（即使用第三方的条款和条件，但使用基于移动国家代码/移动网络代码（MCC/MNC）的域名进行配置）。
+  - 双重IMS核心网络（一个用于MMTEL服务，一个用于RCS服务），其中MMTEL IMS核心网络由移动网络运营商拥有，RCS IMS核心网络由第三方提供未经移动网络运营商同意的托管RCS解决方案（即使用第三方的条款和条件，并使用专有的域名进行配置）
 
-  - Shared Sketch
+#### Different RCS Deployment Options  
 
-- Interaction of In-Call services with voice Call
-
-- From RCS services perspective, the Shared Map and Shared Sketch services are not available during a multiparty call
+- 建议采用基于ENUM的解决方案，向请求者返回一个或多个SIP URI。建议定义一些附加的URI字符串，以涵盖已经确定的所有不同部署选项。此外，使用推荐的结构来创建新的URI，并与当前在GSMA PRD NG.105 [3]中记录的内容保持一致并进一步完善。
+- 根据已确定的部署选项，可以使用以下URI字符串：
+  - Single IMS core network (MMTEL-only or MMTEL/RCS)
+    - `“ims.mncXXX.mccXXX.3gppnetwork.org”`
+  - Dual IMS core networks (both core networks are owned by the MNO).  
+    - `“ims.mncXXX.mccXXX.3gppnetwork.org”` 
+    - `“rcs.mncXXX.mccXXX.3gppnetwork.org”`
+  - Dual IMS core networks (MMTEL IMS core network is owned by the MNO and the RCS IMS core network is owned by a 3rd party on behalf of the MNO.)
+    - `“ims.mncXXX.mccXXX.3gppnetwork.org”` 
+    - `“<provider id>.rcs.mncXXX.mccXXX.3gppnetwork.org”`
+  - Dual IMS core networks (MMTEL IMS core network is owned by the MNO and the RCS IMS core network is owned by a 3rd party providing a hosted RCS solution with MNO consent).
+    - `“ims.mncXXX.mccXXX.3gppnetwork.org”` 
+    -  `“<provider id>.rcs.mncXXX.mccXXX.3gppnetwork.org”`
+  - Dual IMS core networks (MMTEL IMS core network is owned by the MNO and the RCS IMS core network is owned by a 3rd party providing a hosted RCS solution without MNO consent).
+    - `“ims.mncXXX.mccXXX.3gppnetwork.org”` 
+    - `“<provider id>.rcs.3gppnetwork.org”`

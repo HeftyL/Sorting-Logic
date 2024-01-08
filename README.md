@@ -48,6 +48,7 @@
 - 意外感、优越感、宣泄感、熟悉感：setup->1st story->assumption->target assumption->connector->reinterpretation->2nd story->punch
 - Everybody is ignorant, only on different subjects.
 - 真正的死亡是被所有人遗忘，真正的失败是自己都认输（2023.12.18）
+- 读书使我自由
 
 ## 梳理中的感悟
 

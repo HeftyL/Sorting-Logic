@@ -3978,7 +3978,6 @@
 
     - vm为0：一般来讲server会发来count为0的通知这时候DUT才会真正清理
 
-
 ## VVM
 
 - vvm sms with port 5499
@@ -5531,6 +5530,7 @@ Qualcomm
 - BlockedNumbers
 - ReceiveMmsMessageAction/ReceiveSmsMessageAction
 - SmsService
+- Done sending SMS message/Done sending MMS message
 
 ## APN
 
@@ -5565,6 +5565,7 @@ Qualcomm
 - MmsSender
 - RCS_TAG
 - MmsManager
+- Done sending SMS message/Done sending MMS message
 
 ## RCS
 
@@ -5579,7 +5580,6 @@ Qualcomm
 - BugleRcsProvisioning
 - RCS_TAG
 - DUAL_REG
-- 
 
 ## LTE
 
