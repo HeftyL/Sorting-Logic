@@ -38,7 +38,6 @@
 - 人的一生中，与你共度时光最多的还是你自己，尽量让自己成为一个有趣的人。
 - Is life always this hard？Or is it when you're a kid？
 - observations、feelings、needs、requests
-
 - 基因为了更有效地达到其自私的目的，在某些特殊情况下，也会滋长一种有限的利他主义。
 - 耐心与自律的问题是，要培养它们中的任何一个，需要同时具备它们两个。
 - 当你的目标是只专注于自己现在正在做的事情时，那么，只要你在做，你便时时刻刻都在实现着目标。
@@ -49,6 +48,8 @@
 - Everybody is ignorant, only on different subjects.
 - 真正的死亡是被所有人遗忘，真正的失败是自己都认输（2023.12.18）
 - 读书使我自由
+- Heft，grant me the serenity to accept the things I cannot change,the courage to change the things I can,and the wisdom to know the difference.
+- 一个人经历多少失败才会觉悟
 
 ## 梳理中的感悟
 
