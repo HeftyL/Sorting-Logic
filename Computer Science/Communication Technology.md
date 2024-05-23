@@ -7431,3 +7431,289 @@ End User Confirmation Requests
   - Dual IMS core networks (MMTEL IMS core network is owned by the MNO and the RCS IMS core network is owned by a 3rd party providing a hosted RCS solution without MNO consent).
     - `“ims.mncXXX.mccXXX.3gppnetwork.org”` 
     - `“<provider id>.rcs.3gppnetwork.org”`
+
+# OMA DM
+
+- protocol
+  - OMA-TS-DM_Protocol-V2_0-20160209-A
+  - OMA-TS-PushOTA-V2_3-20111122-A
+  - OMA-TS-DM_Notification-V1_3-20101207-C
+
+- 设备管理（Device Management）指的是从DM Authorities的角度，管理设备配置和其他受管理对象的过程。DM包括但不限于在设备中设置初始配置信息，对设备进行持久信息的后续更新，从设备中检索管理信息，对设备执行基本操作，以及处理设备生成的事件和警报。
+- 设备管理（Device Management，DM）允许网络运营商、服务提供商或企业信息管理部门代表最终用户（Customer）执行设备配置的流程。
+- 设备管理用于描述允许第三方代表终端用户（客户）进行设备配置的技术。第三方通常可以是运营商、服务提供商或企业信息管理部门。
+  - 通过设备管理，外部方可以远程设置参数、进行故障排除、安装或升级软件。从广义上讲，设备管理包括三个部分：
+    - 协议和机制：管理服务器与设备之间使用的协议。
+    - 数据模型：用于远程操作的可用数据，例如浏览器和邮件设置。
+    - 策略：策略决定谁可以操作特定参数或更新设备中的特定对象。
+- 架构设计遵循OMA体系结构原则，通过将与传输中立要求与传输特定绑定分离，实现网络技术独立性。所描述的架构还可以预见到其他传输和代理类型的出现，而无需重新制定先前发布的文档。这样可以保护供应商和客户的投资，同时支持未来创新所需的扩展性。
+  - 设备管理机构可以：
+    - 针对适用于所有实现的通用需求。
+    - 关注给定网络环境的传输特定特性。
+    - 通过调整供应商特定参数来激活终端特定行为。
+
+## Overview
+
+### Transaction Model
+
+- OMA DM 协议运行在DM session的context中。DM session始终由DM客户端发起。
+- DM服务器可以通过向DM客户端发送DM notification的方式来触发DM客户端发起DM会话。
+- 一旦建立了DM会话，DM服务器向DM客户端发送DM命令并接收来自DM客户端的响应。DM客户端还通过通用警报（Generic Alerts）通知DM服务器设备上发生的事件。
+- 只有DM服务器向DM客户端发送DM命令，DM客户端不能发送任何DM命令。DM服务器通过向DM客户端发送END命令来终止DM会话。
+- OMA DM 2.0支持DM Packages 的概念。DM包的发起者应在发送另一个DM包之前等待接收者的响应。由于处理DM包可能需要不可预测的时间，OMA DM协议没有指定DM包之间的任何超时时间。
+- DM包只能在兼容HTTP的协议之上传输。
+
+### Security Considerations
+
+- 设备管理是一项敏感的操作，涉及到机密和保密数据（例如密码），因此建议在安全和认证的环境中执行设备管理操作。OMA DM规范并未提供完整的安全功能，但可以利用底层机制来实现安全管理操作
+
+### Management Data Delivery using HTTP
+
+## Package Flow
+
+- ![image-20240129112306345](Communication Technology.assets/image-20240129112306345.png)
+  - 步骤0（Package＃0）：DM服务器通过发送DM通知请求DM客户端启动DM会话。此DM通知称为“Package＃0”。这是一个可选的包流程，因为在客户端发起的情况下不需要DM通知。
+  - 步骤1（Package＃1）：DM客户端通过发送“Package＃1”发起DM会话：该包可以包含DM客户端支持的MO的信息，DM服务器可以利用这些信息进行管理操作。
+  - 步骤2（Package＃2）：在接收到Package＃1或Package＃3之后，DM服务器向DM客户端发送管理命令：包含DM命令的包被称为“Package＃2”。
+  - 步骤3（Command Processing）：DM客户端按顺序处理在Package＃2中收到的DM命令；它可能与DM服务器以外的外部组件进行交互（例如，在SHOW命令的情况下是Web浏览器组件，在HGET / HPOST / HPUT命令的情况下是数据存储库）。
+  - 步骤4（Package＃3）：如果Package＃2中不包含END命令，则DM会话继续，DM客户端通过发送“Package＃3”响应DM服务器，其中包含DM命令执行的结果。在Package＃3之后，包流程回到步骤2，由DM服务器发送Package＃2。
+  - DM会话由Package＃1到Package＃3的流程定义；Package＃0和由DM客户端发起的HTTP事务来执行提供的DM命令不是DM会话的正式组成部分。
+
+### Package#0: DM Notification
+
+- 许多设备由于安全原因，无法持续监听管理服务器的连接请求，而且有些设备也不愿意开放端口以接受连接。然而，大多数设备可以接收主动通知，有时也被称为“notifications ”。例如，某些手机可以接收短信通知，其他设备可能具备接收类似数据报的消息的能力。DM服务器可以利用这种通知能力要求DM客户端启动DM会话。
+- DM通知包括一些强制性参数，称为头部（Headers），以及一些可选参数，称为选项（Options）：选项的数量由头部确定。此数据包的格式在第7.1节中有明确规定。
+- DM服务器必须支持Package#0。如果DM客户端至少支持附录中描述的一种传输机制，则必须支持Package#0。
+
+#### Package Headers
+
+- 在DM通知中，所有的头部都必须存在：DM服务器和DM客户端必须支持Package头部。
+  - 版本（Version ，VER）：VER字段指定了DM服务器发送的DM通知的版本。本规范的值必须为0x02。请注意，这不是DM协议的版本，而是DM通知的版本。
+  - 选项计数（Options Count，OC）：OC字段指定了DM通知中选项的数量。
+
+#### Package Options
+
+- Standard Options  
+
+- | Option No | Name               | Value Format | DM Client Support | DM Server Support | Occurrence |
+  | --------- | ------------------ | ------------ | ----------------- | ----------------- | ---------- |
+  | 1         | SERVER-ID          | String       | Mandatory         | Mandatory         | ZeroOrOne  |
+  | 2         | PREFERRED-CON-TYPE | Opaque       | Mandatory         | Mandatory         | ZeroOrOne  |
+  | 3         | NOTIFICATION-ID    | Uint         | Optional          | Mandatory         | ZeroOrOne  |
+  | 4         | SHA256-DIGEST      | Opaque       | Optional          | Mandatory         | ZeroOrOne  |
+  | 5         | TIMESTAMP          | Opaque       | Optional          | Mandatory         | ZeroOrOne  |
+  | 6         | REQ-MOS            | Null         | Mandatory         | Mandatory         | ZeroOrOne  |
+
+  - 选项的值的格式必须是以下格式之一：
+    - Uint：一个非负整数，使用Option Length决定的字节数以网络字节顺序表示。Option Value的取值范围由2的Option Length次方计算得出，以位为单位。例如，如果Option Length为2，则Option Value的取值范围为0-65535。
+    - String：一个Unicode字符串，使用UTF-8[RFC3629]以Net-Unicode形式[RFC5198]进行编码。请注意，ASCII字符串（不使用特殊控制字符）始终是有效的UTF-8 Net-Unicode字符串。
+    - Opaque：一个不透明的字节序列。当需要除Uint或String之外的其他类型时，可以使用此类型。如何处理此类型取决于使用此类型的选项。
+    - Null：该选项不携带任何值。
+
+##### 字段说明
+
+- 服务器标识选项（SERVER-ID）：服务器标识选项指定了DM服务器的服务器标识符。这与DM账户MO中的标识符相同。如果DM客户端能够发现发送DM通知的DM服务器的服务器标识符，则此选项可能不存在。
+
+- 首选连接类型选项（PREFERRED-CON-TYPE）：首选连接类型选项指定了DM客户端被要求使用的首选连接类型来连接到DM服务器。如果指定了多个首选连接，则出现在第一位的连接优先级高于其他可用的传输介质。如果可用，DM客户端应该首先使用优先级较高的首选连接。如果没有任何指定的首选连接可用，DM客户端应该等待，直到其中一个可用，除非使用了"ANY_AVAILABLE"。如果使用了"ANY_AVAILABLE"，它必须放在首选连接的末尾，并且如果所有优先级较高的连接当前不可用，DM客户端应该选择当前可用的任何连接类型。
+
+  - 此选项的值必须是以下之一：
+
+    - | Value | Semantics     | Description                                                  |
+      | ----- | ------------- | ------------------------------------------------------------ |
+      | 0x00  | ANY_AVAILABLE | Indicates the preferred connection is anything currently available |
+      | 0x01  | CELLULAR      | Indicates the preferred connection is cellular, e.g. GSM/CDMA/UMTS/LTE |
+      | 0x02  | WLAN          | Indicates the preferred connection is WLAN. e.g. IEEE 802.11 a/b/g/n/ac |
+      | 0x03  | WIRELINE      | Indicates the preferred connection is wireline               |
+
+- 通知标识选项（NOTIFICATION-ID）
+  - 通知标识选项用于指定用于检测DM通知的重复的16位无符号整数。如果底层传输提供了丢弃重复DM通知的功能，该选项可能不会被呈现。该选项的长度必须为2个字节。
+  - DM客户端可能会多次接收相同的DM通知，并且可以通过该选项和发送DM通知的DM服务器的服务器标识符来检测重复。DM客户端必须丢弃重复的DM通知。
+  - DM服务器必须正确设置该选项，以便DM客户端能够检测到重复。例如，DM服务器可以为每个单独的DM通知逐步增加该字段。
+- SHA256摘要选项（SHA256-DIGEST）：SHA256摘要选项用于指定DM通知的摘要。该选项的长度必须为32个字节。DM服务器必须按以下方式设置该选项：
+  - 步骤1：DM服务器使用该选项准备DM通知。该选项的初始值必须设置为全零（零摘要），并且所有其他选项必须适当设置。
+  - 步骤2：DM服务器根据[RFC6234]计算SHA256摘要。哈希函数的输入必须是DM服务器密钥和DM通知的串联（即Digest=Hash(server-secret|notification-message|auth-data)）。请注意，在此步骤中，DM通知的摘要（零摘要）值为全零。
+  - 步骤3：DM服务器用计算得到的摘要替换零摘要。
+- 时间戳选项（TIMESTAMP）
+  - 时间戳选项用于指定DM服务器发送DM通知的时间。此时间信息可用于防止回复攻击。该选项的值必须是POSIX格式[POSIX]中的时间。当接收到带有该选项的DM通知时，如果该选项指示的时间过旧（具体实现决定），DM客户端可以选择忽略该DM通知。
+- 请求MOS选项（REQ-MOS）
+  - REQ-MOS选项要求在第1个软件包中按照规定发送MOS数组。该选项不携带任何值。
+
+### Package#1: DM Session Initiation by DM Client
+
+- DM会话由DM客户端发起，它将Package#1发送给DM服务器。
+  DM服务器和DM客户端必须支持此包。
+  该包必须被实现为HTTP POST请求，OMADM-DevID HTTP头必须包含DevInfo MO中DevInfo/DevID节点的值。
+
+### Package#2: DM Commands from DM Server to DM Client
+
+- DM服务器作为对Package#1或Package#3的响应，向DM客户端发送Package#2，以发送DM命令。可以列出多个DM命令，并且DM命令必须按顺序排列，因为DM客户端必须按照此顺序依次处理DM命令。同一个DM命令也可以多次列出。
+- DM服务器和DM客户端必须支持此包。
+- 该包必须作为HTTP响应实现，以携带Package#1的HTTP请求。
+- Package#2由DM服务器用于将有序的DM命令列表发送给DM客户端执行；列表的每个项包含：
+  - DM命令
+  - DM命令的参数列表
+
+### Package#3: Response Package from DM Client to DM Server
+
+- DM客户端将Package#3作为对Package#2的响应发送给DM服务器。如果Package#2包含END命令，则不得发送此Package#3。
+- DM服务器和DM客户端必须支持此包。
+- 该包必须被实现为HTTP POST请求，OMADM-DevID HTTP头必须包含DevInfo MO中DevInfo/DevID节点的值。
+
+## DM Commands
+
+- | Command | Description                                                  | DM Server support | DM Client support |
+  | ------- | ------------------------------------------------------------ | ----------------- | ----------------- |
+  | HGET    | The DM Server uses this command to requests the DM Client to retrieve data from the Data Repository using HTTP GET, and add or replace the received data into the DM Tree | MUST              | MUST              |
+  | HPUT    | The DM Server uses this command to request the DM Client to send data to the Data Repository using HTTP PUT | MUST              | MUST              |
+  | HPOST   | The DM Server uses this command to request the DM Client to send data to the Data Repository using HTTP POST | MUST              | MUST              |
+  | DELETE  | The DM Server uses this command to delete data in the DM Tree | MUST              | MUST              |
+  | EXEC    | The DM Server uses this command to execute an executable node in the DM Tree | MUST              | MUST              |
+  | GET     | The DM Server uses this command to retrieve data from the DM Tree. The DM Client sends the data within the current DM Session | MUST              | SHOULD            |
+  | SHOW    | The DM Server uses this command to initiate a UI Session between the Web Browser Component and the Web Server Component | MUST              | SHOULD            |
+  | CONT    | The DM Server uses this command for the DM Client to continue the DM Session with the specified DM Server URI | MUST              | MUST              |
+  | END     | This command is used by the DM Server to terminate the DM session | MUST              | MUST              |
+  | DEFAULT | Configure the DM Client to use a specific address to capture configuration if that is missing in the device for an specific MOID | MUST              | SHOULD            |
+  | SUB     | The DM Server uses this command to request to the DM Client to report (subscribe) changes in the DM Tree part identified by the provided ClientURI | SHOULD            | SHOULD            |
+  | UNSUB   | The DM Server uses this command to request to the DM Client to revoke previous subscription to notification for changes in the DM Tree part identified by the provided ClientURI | SHOULD            | SHOULD            |
+
+## Generic Alert
+
+- DM服务器和DM客户端必须支持通用警报机制。
+
+- 协议定义了一个通用警报消息，用于由DM客户端生成的与MO相关的警报：在这种情况下，SourceURI属性必须标识MO的地址。
+
+- 通用警报生成后，DM客户端可以随时使用Package#1或Package#3向DM服务器发送通用警报消息。通用警报消息只能从DM客户端发送到DM服务器。
+
+- 通用警报可能对Data属性的格式和内容有额外的要求：如果接收到无法识别的AlertType或无法识别的Data属性，则DM服务器必须默默忽略通用警报。无论DM服务器是否成功处理通用警报，都不得向DM客户端发送任何通用警报的状态码。
+
+- 以下表格总结了通用警报支持的属性：
+
+  - | Property  | Description                                                  | Occurrence |
+    | --------- | ------------------------------------------------------------ | ---------- |
+    | AlertType | The type of the Generic Alert                                | One        |
+    | SourceURI | The address to the node in the MO that is related to this Generic Alert | ZeroOrOne  |
+    | TargetURI | The additional address related to the Generic Alert. This MUST be a ClientURI as specified in the section 6.1. The usage of the TargetURI is not specified in this specification. | ZeroOrOne  |
+    | Mark      | The importance level. The following values are defined: "fatal", "critical", "minor", "warning", "informational", "harmless" and "indeterminate". If the parameter is omitted then the default importance level "informational" is assumed. | ZeroOrOne  |
+    | DataType  | The Media Type of the Data content. This property MUST be present if the Data property exists. | ZeroOrOne  |
+    | Data      | The additional data for the Generic Alert. The format and the content of the Data are not specified in this specification | ZeroOrOne  |
+
+## HTTP Error handling  
+
+- 如果DM客户端收到对HTTP请求的"4XX"响应代码，并且无法从中恢复，则必须将DM会话视为中止；DM客户端不得重试连接到DM服务器。
+- 如果DM客户端收到对HTTP请求的"5XX"响应代码，或者HTTP请求超时（由于连接问题），则必须将DM会话视为中止；DM客户端不得重试连接到DM服务器。
+
+## Push Over The Air
+
+### Introduction
+
+- OMA Push Over-the-Air (Push-OTA)是一组协议及其与各种网络承载的绑定，通过这些协议和绑定，Push代理网关（PPG）或其他推送服务器与推送客户端进行交互，以实现网络发起内容传递到由推送客户端提供的客户端应用程序。OMA推送启用器的架构模型和启用器实体（PPG和推送客户端）在[PushArch]中引入。
+  - ![image-20240129150134042](Communication Technology.assets/image-20240129150134042.png)
+
+- Push-OTA支持各种协议变体和承载绑定
+  - Push-OTA协议提供了“无连接”和“面向连接”的服务。面向连接的服务是指推送客户端与PPG建立了特定的传输层“连接”，用于接收基于推送的服务。面向连接的服务通过WAP1无线会话协议（WSP）作为OTA-WSP推送协议、通过基于WAP2的OTA-HTTP推送协议和基于SIP的OTA-SIP推送协议来支持。无连接的服务不依赖于推送客户端和PPG之间预先建立/特定的连接，并且通过OTA-WSP、OTA-SIP和OTA-PTM支持。
+  - OTA-PTM是点对多点推送（PTM-Push）中使用的协议变体，指的是在点对多点承载之间进行的推送操作，其中包括MBMS、CBS和BCAST。OTA-PTM被认为支持无连接的服务。虽然推送客户端主动监听OTA-PTM承载上的推送事件，但推送客户端和PPG之间没有创建特定的对话。
+    与面向连接的服务相关的重要补充是会话初始化应用程序（SIA），通过该应用程序可以通过无连接推送服务上交付的会话初始化请求（SIR）来初始化连接。
+    - 架构实体：推送客户端和推送代理网关
+    - 接口
+      - Push Over-the-Air协议变体
+        - OTA-WSP：基于WAP1传输协议的点对点传递
+        - OTA-HTTP：基于WAP2传输协议的点对点传递
+        - OTA-SIP：基于SIP传输协议的点对点传递
+        - OTA-PTM是基于MBMS、OMA BCAST和Cell Broadcast Service(CBS)作为传输协议的点对多点传输方法。
+    - 以下外部实体提供Push客户端和/或Push服务器使用的功能和接口，用于适应Push-OTA协议的变种
+      - 在网络端：
+        - 通过短信息服务中心（Short Message Service Centers  ，SMSC）提供OTA-WSP/SMS
+        - 通过蜂窝广播中心（Cell Broadcast Centers  ，CBC）提供OTA-PTM/CBS
+        - 通过SIP/IP核心网络提供OTA-SIP
+        - 通过MBMS广播组播服务中心（Broadcast Multicast Service Centers  ，BM-SC）提供OTA-PTM/MBMS
+        - 通过OMA BCAST服务分发/适配提供OTA-PTM/BCAST
+      - 在客户端：
+        - 通过短信客户端（SMS Clients）提供OTA-WSP/SMS和OTA-PTM/CBS
+        - 通过OMA BCAST客户端提供OTA-PTM/BCAST
+        - 通过MBMS客户端提供OTA-PTM/MBMS
+
+- ![image-20240129151133426](Communication Technology.assets/image-20240129151133426.png)
+
+### Protocol Variants
+
+- ![image-20240129151319594](Communication Technology.assets/image-20240129151319594.png)
+  - “OTA-WSP”是WSP协议的一种变体，它提供了面向连接和无连接的推送功能。面向连接的OTA-WSP通过WTP/IP进行操作，而无连接的OTA-WSP则通过WDP/SMS或WDP/IP进行操作。
+  - “OTA-HTTP”是HTTP协议的一种变体，仅提供面向连接的推送功能，并通过TCP/IP进行操作。如果在OTA-HTTP中实现TLS 以提供逐跳传输层安全性，则将此协议变体称为“OTA-HTTP-TLS”。
+  - “OTA-SIP”是SIP协议的一种变体，提供面向连接和无连接的推送功能。OTA-SIP的安全性由底层的SIP/IP核心网络提供，如[SIPPush]中所述。面向连接的OTA-SIP通过SIP/(UDP或TCP)控制平面和MSRP/TCP/IP用户平面进行操作，而无连接的OTA-SIP则通过SIP/(UDP或TCP)控制平面进行操作。
+  - “OTA-PTM”是PTM协议的一种变体，提供无连接的推送服务。这三种变体分别通过BCAST/FLUTE/IP、MBMS/TCP/IP和WSP/CBS进行操作。通过OTA-PTM传输的内容的安全性由底层的承载传输协议提供。
+  - 终端在实现面向连接的推送时，必须支持OTA-WSP、OTA-HTTP或OTA-SIP中的一种连接导向服务，并且可以支持多种。推送代理网关可以实现所有变体，以支持各种移动终端。推送代理网关可以支持OTA-WSP、OTA-SIP或OTA-PTM提供的无连接服务。支持无连接承载（例如SMS）的终端必须支持OTA-WSP、OTA-SIP或OTA-PTM中的一种无连接服务。
+  - 
+
+### Push OTA Protocol over WSP (OTA-WSP)
+
+- 描述了OTA-WSP的实现方式。该变体在WSP [W-TCP]的基础上运行，适用于不支持TCP/IP或SIP的低带宽传输介质，例如短信。
+
+#### Overview
+
+- 定义的原语包括推送操作原语和推送管理原语。推送操作原语用于从服务器（也称为“PPG”）向客户端（也称为“终端”）传递内容，而推送管理原语用于建立和管理推送会话。
+  - ![image-20240129152613909](Communication Technology.assets/image-20240129152613909.png)
+
+##### Push Operational Primitives
+
+###### Po-Push  
+
+- 该原语用于通过面向连接的服务，在推送会话中以非确认方式从服务器发送信息。
+
+- | Primitive Parameter | Po-Push |      |
+  | ------------------- | ------- | ---- |
+  |                     | req     | ind  |
+  | Push Headers        | O       | C(=) |
+  | Authenticated       | O       | C(=) |
+  | Trusted             | O       | C(=) |
+  | Last                | O       | C(=) |
+  | Push Body           | O       | C(=) |
+
+  - 推送头部在[PushMsg]中被定义。
+  - 通过Authenticated参数，指示发起者URI是否通过服务器进行身份验证。
+  - 通过Trusted参数，指示推送内容是否被服务器信任。这为客户端提供了一种将信任策略委托给服务器（例如PPG）的机制。
+  - 通过Last参数，向客户端暗示这是服务器最后一条消息。客户端可以在这之后终止网络传输。
+  - 推送正文是推送中的内容，语义上相当于HTTP实体正文。如果推送正文为空，则必须先检查和使用其他参数（例如，传输或缓存控制），然后忽略空的推送正文。
+
+###### Po-ConfirmedPush  
+
+- 这个原语被用于通过面向连接的服务，在推送会话中以确认的方式从服务器发送信息。服务用户（例如客户端推送应用程序）通过调用Po-ConfirmedPush.res原语来确认推送，当服务用户对推送消息负责时。如果服务用户无法对推送消息负责，必须通过调用Po-PushAbort.req原语来中止推送操作。服务提供者可以根据自己的判断代表服务用户中止推送（例如，如果服务用户不做出响应）。
+
+###### Po-PushAbort  
+
+- 用于拒绝推送操作，它是ConfirmedPush机制的一部分。它直接映射到[W-TCP]中的S-PushAbort原语。
+
+###### Po-Unit-Push  
+
+- 用于在无连接会话服务[W-TCP]中以不确认的方式从服务器向客户端发送信息。
+
+##### Push Management Primitives  
+
+###### Pom-Connect  
+
+- 用于按照客户端的请求创建推送会话。它被映射到WSP [WTCP]中的S-Connect原语，并带有附加参数。
+
+###### Pom-Suspend  
+
+- 用于请求暂停推送会话，以确保不允许任何活动。该原语直接映射到WSP [W-TCP]中的S-Suspend原语。
+
+#### Protocol Description
+
+- OTA-WSP提供了描述的无连接和面向连接的推送功能。
+
+##### Connectionless Push
+
+- 传输无连接的推送必须通过WSP S-Unit-Push [W-TCP]来执行，它是WSP无连接会话服务原语之一。每个支持无连接推送的客户端都保留了两个已注册的WDP端口[WDP]，分别是安全端口和非安全端口。客户端必须支持非安全端口，可以选择支持安全端口。如果支持安全端口，则必须在该端口上支持WTLS。为了适应服务器发起的WTLS连接，支持安全无连接推送的客户端必须能够作为收到Hello Request消息[WTLS]后发起WTLS协商过程。在这样做时，客户端必须使用Hello Request消息来源的地址四元组。为了防止欺骗，客户端应通过将Hello Request消息的源地址与可信服务器的预先存在的联系点列表进行比较来验证Hello Request。如果验证失败，客户端应忽略Hello Request消息。
+
+##### Connectionless Push over SMS
+
+- 在使用短信承载类型[WDP]执行无连接推送时，需要注意推送的有效负载大小。如果要使用该承载推送较大的有效负载，它将会自动分段成多个较小的协议PDU[WDP]。
+- 如果存在大量这些较小的PDU的情况下，可能会出现操作困难（如消息量大、传输延迟等）以及移动设备上的串接问题（缓冲、超时等）。
+- 因此，建议将整体有效负载大小限制在不超过4条短信的范围内。最有效的使用短信承载类型的方式是限制消息有效负载，使其能够封装在单条短信中。服务器必须支持至少4条短信的分段。
+- 客户端必须支持至少4条短信的重组。
+- 有效负载大小的限制不适用于实验性内容类型或服务。
+- 推送内容有效负载的限制应由PPG进行管理，并取决于承载类型、服务和推送发起方。
+
+##### Connection-orientated Push  
+
+- 连接导向的推送必须通过WSP会话服务原语中的S-Push（例如未确认的推送）或S-ConfirmedPush来执行。必须建立一个推送会话来执行这些原语。推送会话是一个启用了已确认、未确认或二者都启用的推送能力的WSP会话[W-TCP]。
+  推送会话可以使用安全或非安全的传输服务。服务器端口号在[WDP]中为这两种选项保留。如果需要安全传输服务，则必须使用WTLS。如果联系点中的端口号是已注册的安全端口[WDP]，或者在PPG的预先存在的联系点列表中指示了安全传输，则需要安全传输服务。

@@ -5510,6 +5510,8 @@ Qualcomm
 
 - GsmCellBroadcastHandler
 - AT+ECSCBCFG
+- IccSmsInterfaceManager
+- CellBroadcastReceiver
 
 ## SMS
 
@@ -5531,6 +5533,7 @@ Qualcomm
 - ReceiveMmsMessageAction/ReceiveSmsMessageAction
 - SmsService
 - Done sending SMS message/Done sending MMS message
+- SmsMessage
 
 ## APN
 
@@ -5580,6 +5583,9 @@ Qualcomm
 - BugleRcsProvisioning
 - RCS_TAG
 - DUAL_REG
+- SIPTX-IO
+- [PRESENCE]
+- AcsEventCallback:  errorCode[403],errorString[Forbidden]
 
 ## LTE
 
@@ -5675,6 +5681,9 @@ Qualcomm
 - adb shell screenrecord /sdcard/test.mp4：抓取MP4
 - adb shell bugreportz：抓取bugreport
 - adb logcat -v time -b all > log.txt：抓取整体log
+- adb shell am start -n com.android.browser/com.android.browser.BrowserActivity﻿﻿ ：启动Activity
+- adb shell am startservice -n com.android.traffic/com.android.traffic.maniservice﻿﻿：启动service
+- adb shell am broadcast -a android.net.conn.CONNECTIVITY_CHANGE﻿﻿：发送广播
 
 # 版本控制
 
@@ -5722,7 +5731,7 @@ Qualcomm
   - `-j <num>`：设定并发数。默认 4 个并发。
   - 可以查看 .repo/manifest.xml 拉取一部分代码。
 
-- repo forall -c "git clean -fd;git reset --hard" ：清除所有的改动。在repo sync出现问题的时候，请先使用这个命令进行清楚，确保自己本地的环境被回退到没有改动的状态。
+- repo forall -c "git clean -fd;git reset --hard" ：清除所有的改动。在repo sync出现问题的时候，请先使用这个命令进行清除，确保自己本地的环境被回退到没有改动的状态。
 
 # Case提交
 

@@ -42,14 +42,14 @@
 - 耐心与自律的问题是，要培养它们中的任何一个，需要同时具备它们两个。
 - 当你的目标是只专注于自己现在正在做的事情时，那么，只要你在做，你便时时刻刻都在实现着目标。
 - 一个人容易受到伤害的地方，就是他自我怀疑的地方。只有说到他自我怀疑的伤口，批评才会让他疼痛。
-- you can love someone and still choose to say goodbye to them
-- you can miss a person everyday and still be glad that they're no longer  in your life
+- you can love someone and still choose to say goodbye to them，you can miss a person everyday and still be glad that they're no longer  in your life
 - 意外感、优越感、宣泄感、熟悉感：setup->1st story->assumption->target assumption->connector->reinterpretation->2nd story->punch
 - Everybody is ignorant, only on different subjects.
 - 真正的死亡是被所有人遗忘，真正的失败是自己都认输（2023.12.18）
 - 读书使我自由
 - Heft，grant me the serenity to accept the things I cannot change,the courage to change the things I can,and the wisdom to know the difference.
 - 一个人经历多少失败才会觉悟
+- The Farmer and the Donkey  
 
 ## 梳理中的感悟
 
