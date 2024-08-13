@@ -38,19 +38,19 @@
 - 人的一生中，与你共度时光最多的还是你自己，尽量让自己成为一个有趣的人。
 - Is life always this hard？Or is it when you're a kid？
 - observations、feelings、needs、requests
-
 - 基因为了更有效地达到其自私的目的，在某些特殊情况下，也会滋长一种有限的利他主义。
 - 耐心与自律的问题是，要培养它们中的任何一个，需要同时具备它们两个。
 - 当你的目标是只专注于自己现在正在做的事情时，那么，只要你在做，你便时时刻刻都在实现着目标。
 - 一个人容易受到伤害的地方，就是他自我怀疑的地方。只有说到他自我怀疑的伤口，批评才会让他疼痛。
-- you can love someone and still choose to say goodbye to them
-- you can miss a person everyday and still be glad that they're no longer  in your life
+- you can love someone and still choose to say goodbye to them，you can miss a person everyday and still be glad that they're no longer  in your life
 - 意外感、优越感、宣泄感、熟悉感：setup->1st story->assumption->target assumption->connector->reinterpretation->2nd story->punch
 - Everybody is ignorant, only on different subjects.
 - 真正的死亡是被所有人遗忘，真正的失败是自己都认输（2023.12.18）
 - 不把别人的好当成天经地义，不把别人的坏当成天崩地裂
 - 不要因为过度咀嚼自己小小的悲伤，而忘记身后一个诺大的世界
-
+- Heft，grant me the serenity to accept the things I cannot change,the courage to change the things I can,and the wisdom to know the difference.
+- 一个人经历多少失败才会觉悟
+- The voyage of discovery is not in seeking new landscapes but in having new eyes.  
 ## 梳理中的感悟
 
 1. 不一定有用
