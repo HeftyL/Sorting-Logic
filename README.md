@@ -49,7 +49,7 @@
 - 读书使我自由
 - Heft，grant me the serenity to accept the things I cannot change,the courage to change the things I can,and the wisdom to know the difference.
 - 一个人经历多少失败才会觉悟
-- The Farmer and the Donkey  
+- The voyage of discovery is not in seeking new landscapes but in having new eyes.  
 
 ## 梳理中的感悟
 

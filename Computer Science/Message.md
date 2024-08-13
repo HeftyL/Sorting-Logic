@@ -5488,7 +5488,7 @@
 
 MTK
 
-- `*##873733284#*#*`:进入engineering mode
+- `*#*#873733284#*#*`:进入engineering mode
   1. Log and Debugging->DebugLoggerUI
 
 Qualcomm
@@ -5607,9 +5607,21 @@ Qualcomm
     - QFIL 
     - qstn
 - *89#：跳过刷机后的引导
-- `*#*#873733284#*#*`:进入调试模式
-  1. Log and Debugging
-  2. DebugLoggerUI
+- 1. MTK
+  
+     - `*##873733284#*#*`:进入engineering mode
+       1. Log and Debugging->DebugLoggerUI
+  
+     Qualcomm
+  
+     - `*#*#5644464#*#*`进入logcollector
+  
+       - ticket id填入任意的8位都可以
+         - 选择想要抓取的log
+  
+     - MMS协议需要查看tcp dump log，请按以下复测建议抓取tcp dump log
+  
+       *#*#5644464#*#*进入logcollector->ticket id填入任意的8位，点击submit->开启tcpdump开关->滑到底，点击start抓取log
 - `*#*#8#*#*`：进入硬件调试模式
   - ITEM TEST->Receiver : 测试扬声器
 
@@ -5674,7 +5686,7 @@ Qualcomm
 - adb shell pm path com.android.messaging：查看包的位置
 - adb logcat -b all |Select-String androidruntime：查看开机 androidruntime log(windows,linux请手动将Select-String替换为grep等命令)
 - PCAP log 抓取:adb shell tcpdump -i any -vv -s 0 -w /cache/tcpdump.pcap
-  - 导出：adb pull /cache/tcpdump.pcap.
+  - 导出：adb pull /cache/tcpdump.pcap .
 - adb pull /data/user_de/0/com.android.phone/files/ ./ ：导出carrierconfig
 - adb shell setprop log.tag.MessagingApp V ：设置fontdo的messaging应用的debug log
 - adb shell am start com.google.android.apps.messaging/.startchat.StartChatActivity:打开某个Activity
@@ -5732,6 +5744,9 @@ Qualcomm
   - 可以查看 .repo/manifest.xml 拉取一部分代码。
 
 - repo forall -c "git clean -fd;git reset --hard" ：清除所有的改动。在repo sync出现问题的时候，请先使用这个命令进行清除，确保自己本地的环境被回退到没有改动的状态。
+
+
+##git
 
 # Case提交
 
