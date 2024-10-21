@@ -5593,6 +5593,10 @@ Qualcomm
 - ImsRegister
 - REGISTRATION_STATE
 
+## Call
+
+- advancedCallEnabled、Volte
+
 # 刷机
 
 ## Command
@@ -5608,22 +5612,25 @@ Qualcomm
     - qstn
 - *89#：跳过刷机后的引导
 - 1. MTK
-  
+
      - `*##873733284#*#*`:进入engineering mode
        1. Log and Debugging->DebugLoggerUI
-  
+
      Qualcomm
-  
+
      - `*#*#5644464#*#*`进入logcollector
-  
+
        - ticket id填入任意的8位都可以
          - 选择想要抓取的log
-  
+
      - MMS协议需要查看tcp dump log，请按以下复测建议抓取tcp dump log
-  
+
        *#*#5644464#*#*进入logcollector->ticket id填入任意的8位，点击submit->开启tcpdump开关->滑到底，点击start抓取log
 - `*#*#8#*#*`：进入硬件调试模式
+
   - ITEM TEST->Receiver : 测试扬声器
+
+- `*#*#86436#*#*`:查看version information
 
 
 ## remount
