@@ -46,11 +46,11 @@
 - 意外感、优越感、宣泄感、熟悉感：setup->1st story->assumption->target assumption->connector->reinterpretation->2nd story->punch
 - Everybody is ignorant, only on different subjects.
 - 真正的死亡是被所有人遗忘，真正的失败是自己都认输（2023.12.18）
-- 读书使我自由
+- 不把别人的好当成天经地义，不把别人的坏当成天崩地裂
+- 不要因为过度咀嚼自己小小的悲伤，而忘记身后一个诺大的世界
 - Heft，grant me the serenity to accept the things I cannot change,the courage to change the things I can,and the wisdom to know the difference.
 - 一个人经历多少失败才会觉悟
 - The voyage of discovery is not in seeking new landscapes but in having new eyes.  
-
 ## 梳理中的感悟
 
 1. 不一定有用
