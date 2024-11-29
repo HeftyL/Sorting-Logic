@@ -51,6 +51,8 @@
 - Heft，grant me the serenity to accept the things I cannot change,the courage to change the things I can,and the wisdom to know the difference.
 - 一个人经历多少失败才会觉悟
 - The voyage of discovery is not in seeking new landscapes but in having new eyes.  
+- 允许自己的不完美，原谅自己的不完美，改变自己的不完美
+- 不要让你爱的东西,成为将来恨自己的理由
 ## 梳理中的感悟
 
 1. 不一定有用
