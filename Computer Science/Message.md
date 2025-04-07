@@ -1711,7 +1711,7 @@
    - SmsSender
 
      - Class that sends chat message via SMS
-   
+     
      - The interface emulates a blocking sending similar to making an HTTP request. It calls the SmsManager to send a (potentially multipart) message and waits on the sent status on each part. The waiting has a timeout so it won't wait forever. Once the sent status of all parts received, the call returns.A successful sending requires success status for all parts. Otherwise, we pick the highest level of failure as the error for the whole message, which is used to determine if we need to retry the sending.
    
    - ```java
@@ -5640,13 +5640,32 @@ Qualcomm
 
 3. Enter Settings->System->Developer options and turn on OEM unlocking
 
-4. adb reboot bootloader
+   - OEM 解锁 是存储在系统的设置数据库中的，因此理论上，可以通过 ADB 命令来修改 Settings 数据库，从而启用该选项。
 
-5. wait device reboot to bootloader ,then run the cmd "sudo $(which fastboot) flashing unlock" or “fastboot flashing unlock” —— 有时候这个步骤需要执行两次才可以生效
+     1. ```
+        //启用开发者选项
+        adb shell settings put global development_settings_enabled 1
+        
+        //启用 OEM 解锁选项
+        adb shell settings put global oem_unlock_allowed 1
+        
+        //确认设置是否成功
+        adb shell settings get global oem_unlock_allowed
+        ```
 
-6. Press volume up key to continue and then run "fastboot reboot" —— 有时候这个步骤需要执行volume down key才能生效
+        
 
-7. Wait for the handset to boot up and run cmds below:
+        
+
+4. adb shell settings put global oem_unlock_allowed 1(直接使用命令将oem unlock打开)
+
+5. adb reboot bootloader
+
+6. wait device reboot to bootloader ,then run the cmd "sudo $(which fastboot) flashing unlock" or “fastboot flashing unlock” —— 有时候这个步骤需要执行两次才可以生效
+
+7. Press volume up key to continue and then run "fastboot reboot" —— 有时候这个步骤需要执行volume down key才能生效
+
+8. Wait for the handset to boot up and run cmds below:
   - adb root 
   - adb disable-verity
 8. run cmds below to reboot the device:
@@ -5658,7 +5677,7 @@ Qualcomm
 ## SN Writer（Obsolete）
 
 - imei：353587400014311 
-- SN：PRVGNZHQ8H8PHM6X 
+- SN：PRVGNZHQ8H8PHM6X
 - Barcode：MTKO00220830151117000037
 
 1. SN_Setup.ini的Write Serial No. = True
@@ -5700,9 +5719,53 @@ Qualcomm
 - adb shell screenrecord /sdcard/test.mp4：抓取MP4
 - adb shell bugreportz：抓取bugreport
 - adb logcat -v time -b all > log.txt：抓取整体log
-- adb shell am start -n com.android.browser/com.android.browser.BrowserActivity﻿﻿ ：启动Activity
 - adb shell am startservice -n com.android.traffic/com.android.traffic.maniservice﻿﻿：启动service
-- adb shell am broadcast -a android.net.conn.CONNECTIVITY_CHANGE﻿﻿：发送广播
+- adb shell am broadcast -a android.intent.action.BOOT_COMPLETED﻿﻿：发送广播
+
+# iptables指令
+
+- iptables -t nat -nvL 查看nat表
+
+- 参数
+
+  - | 选项                                                         | 说明                                                         |
+    | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | -t, --table                                                  | table 对指定的表 table 进行操作， table 必须是 raw， nat，filter，mangle 中的一个。如果不指定此选项，默认的是 filter 表。 |
+    | -p                                                           | 指定要匹配的数据包协议类型                                   |
+    | -s, --source [!] address[/mask]                              | 把指定的一个／一组地址作为源地址，按此规则进行过滤。当后面没有 mask 时，address 是一个地址，比如：192.168.1.1；当 mask 指定时，可以表示一组范围内的地址，比如：192.168.1.0/255.255.255.0   ,"!" 表示取反 |
+    | -d, --destination [!] address[/mask]                         | 地址格式同上，但这里是指定地址为目的地址，按此进行过滤       |
+    | -i, --in-interface [!] <网络接口name>                        | 指定数据包的来自来自网络接口，比如最常见的 eth0 。注意：它只对 INPUT，FORWARD，PREROUTING 这三个链起作用。如果没有指定此选项， 说明可以来自任何一个网络接口。同前面类似，"!" 表示取反 |
+    | -o, --out-interface [!] <网络接口name>                       | 指定数据包出去的网络接口。只对 OUTPUT，FORWARD，POSTROUTING 三个链起作用 |
+    | -L, --list [chain]                                           | 列出链 chain 上面的所有规则，如果没有指定链，列出表上所有链的所有规则 |
+    | -A, --append chain rule-specification                        | 在指定链 chain 的末尾插入指定的规则，也就是说，这条规则会被放到最后，最后才会被执行。规则是由后面的匹配来指定 |
+    | -I, --insert chain [rulenum] rule-specification              | 在链 chain 中的指定位置插入一条或多条规则。如果指定的规则号是1，则在链的头部插入。这也是默认的情况，如果没有指定规则号 |
+    | -D, --delete chain rule-specification -D, --delete chain rulenum | 在指定的链 chain 中删除一个或多个指定规则                    |
+    | -P, --policy chain target                                    | 为指定的链 chain 设置策略 target。注意，只有内置的链才允许有策略，用户自定义的是不允许的。 |
+    | -F, --flush [chain]                                          | 清空指定链 chain 上面的所有规则。如果没有指定链，清空该表上所有链的所有规则。 |
+    | -N, --new-chain chain                                        | 用指定的名字创建一个新的链。                                 |
+    | -X, --delete-chain [chain]                                   | 删除指定的链，这个链必须没有被其它任何规则引用，而且这条上必须没有任何规则。如果没有指定链名，则会删除该表中所有非内置的链。 |
+    | -E, --rename-chain old-chain new-chain                       | 用指定的新名字去重命名指定的链。这并不会对链内部造成任何影响。 |
+    | -Z, --zero [chain]                                           | 把指定链，或者表中的所有链上的所有计数器清零。               |
+    | -j, --jump target <指定目标>                                 | 即满足某条件时该执行什么样的动作。target 可以是内置的目标，比如 ACCEPT，也可以是用户自定义的链。 |
+    |                                                              | ETC                                                          |
+    
+    
+
+
+
+# ETC
+
+- mifi密码查看
+  - 目前WiFi AP 默认是打开的，如果大家要连接AP，可以这样查询密码 如这个密码是4pbtn47yxc5j4f6
+    adb root
+    adb shell cat /data/misc/apexdata/com.android.wifi/WifiConfigStoreSoftAp.xml
+    - ![企业微信截图_17356123437630](Message.assets/企业微信截图_17356123437630.png)
+- ifconfig -s eth0 static 172.24.62.189 255.255.255.0 172.24.63.254
+- 删除 androidt/out/target/product/B321MH/resign
+  - ![image-20250313214410814](Message.assets/image-20250313214410814.png)
+
+
+
 
 # 版本控制
 
