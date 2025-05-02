@@ -53,6 +53,7 @@
 - The voyage of discovery is not in seeking new landscapes but in having new eyes.  
 - 允许自己的不完美，原谅自己的不完美，改变自己的不完美
 - 不要让你爱的东西,成为将来恨自己的理由
+- 我对你无条件的爱,因为我有无条件的爱
 ## 梳理中的感悟
 
 1. 不一定有用
