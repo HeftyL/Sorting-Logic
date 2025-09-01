@@ -5666,13 +5666,27 @@ Qualcomm
 7. Press volume up key to continue and then run "fastboot reboot" —— 有时候这个步骤需要执行volume down key才能生效
 
 8. Wait for the handset to boot up and run cmds below:
-  - adb root 
-  - adb disable-verity
+
+     - ```
+       adb root 
+       adb disable-verity
+       ```
+
+       
 8. run cmds below to reboot the device:
-  - adb reboot
+
+     - ```
+       adb reboot
+       ```
+
+       
 9. Wait for the handset to boot up and run cmds below:
-   -  adb root
-   - adb remount
+   -  ```
+      adb root
+      adb remount
+      ```
+   
+      
 
 ## SN Writer（Obsolete）
 
@@ -5721,6 +5735,38 @@ Qualcomm
 - adb logcat -v time -b all > log.txt：抓取整体log
 - adb shell am startservice -n com.android.traffic/com.android.traffic.maniservice﻿﻿：启动service
 - adb shell am broadcast -a android.intent.action.BOOT_COMPLETED﻿﻿：发送广播
+- adb开启debuglogger
+
+  1. Clear the old logs
+
+     - ```
+       adb shell am broadcast -a com.debug.loggerui.ADB_CMD --es cmd_name clear_all_logs -n com.debug.loggerui/.framework.LogReceiver
+       ```
+
+  2. Open the logs
+
+     - ```
+       adb shell am broadcast -a com.debug.loggerui.ADB_CMD --es cmd_name start --ei cmd_target 119 -n com.debug.loggerui/.framework.LogReceiver
+       ```
+
+  3. Restart device and run the case
+
+  4. Close the logs
+
+     - ```
+       adb shell am broadcast -a com.debug.loggerui.ADB_CMD --es cmd_name stop --ei cmd_target 119 -n com.debug.loggerui/.framework.LogReceiver
+       ```
+
+  5. Pull out the log
+
+     - ```
+       adb pull data/debuglogger
+       ```
+
+       
+
+     
+
 
 # iptables指令
 
