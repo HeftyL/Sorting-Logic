@@ -5632,7 +5632,6 @@ Qualcomm
 
 - `*#*#86436#*#*`:查看version information
 
-
 ## remount
 
 1. enter Settings->System->About phone
@@ -5672,14 +5671,12 @@ Qualcomm
        adb disable-verity
        ```
 
-       
 8. run cmds below to reboot the device:
 
      - ```
        adb reboot
        ```
 
-       
 9. Wait for the handset to boot up and run cmds below:
    -  ```
       adb root
@@ -5810,7 +5807,8 @@ Qualcomm
 - 删除 androidt/out/target/product/B321MH/resign
   - ![image-20250313214410814](Message.assets/image-20250313214410814.png)
 
-
+- 服务器命令
+  - 查看服务器的cpu占用:
 
 
 # 版本控制
