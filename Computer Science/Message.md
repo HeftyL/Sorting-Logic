@@ -5758,10 +5758,11 @@ Qualcomm
 
      - ```
        adb pull data/debuglogger
+       adb pull data/debuglogger/mobilelog
        ```
-
        
-
+       
+     
      
 
 
@@ -5808,7 +5809,8 @@ Qualcomm
   - ![image-20250313214410814](Message.assets/image-20250313214410814.png)
 
 - 服务器命令
-  - 查看服务器的cpu占用:
+  - 查看服务器的cpu占用:mpstat -P ALL 1
+- 强行写入只读文件:`:w !sudo tee %`
 
 
 # 版本控制
@@ -5858,7 +5860,6 @@ Qualcomm
   - 可以查看 .repo/manifest.xml 拉取一部分代码。
 
 - repo forall -c "git clean -fd;git reset --hard" ：清除所有的改动。在repo sync出现问题的时候，请先使用这个命令进行清除，确保自己本地的环境被回退到没有改动的状态。
-
 
 ##git
 
