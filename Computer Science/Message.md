@@ -1,4 +1,4 @@
-# SMS
+﻿# SMS
 
 - 简介：Short Message Service，简称SMS，是用户通过手机或其他电信终端直接发送或接收的文字或数字信息，内容以文本、数字或二进制非文本数据为主，目前，这种短消息的长度被限定在 140 byte之内 用户每次能接收和发送短信的字符数，是 160 个英文（7BIT）或数字字符，或者 70 个中文(16BIT)字符。
 
@@ -11,18 +11,19 @@
     - 无线紧急警报 WEA.
 
   - 点对点短消息业务
-    - | **缩写** | **全称**                              | **说明**                                                     |
-      | -------- | ------------------------------------- | ------------------------------------------------------------ |
-      | SMS MO   | Short Message Mobile Originated       | MS->SC。是 由 移动 终 端 (MT)发 起 的短 消 息 ,描 述 GSM 系 统 中 MT 通 过 短消 息 中 心 (SMC, Short Message Center)向一个短消息实体(SME, Short Message Entity)发送短消息的能力。SME 可以是 MT,也可以是固网用户, 联网 PC 等. |
-      | SMS MT   | Short Message Mobile Terminated       | SC->MS。SMSC向MS发送短信的业务;<br/>到达移动终端的短消息,描述GSM系统从SMC 向被呼移动终端转发短消息的能力。 |
-      | MS       | Mobile-Station                        | 移动站台 负责系统交换管理，控制来自或发往其他电话或数据系统的通信 |
-      | SME      | Short-Message-Entity                  | 短消息实体 负责接收和发送短消息。可以位于固话系统、移动基站或其他服务中心内 |
-      | SMSC     | Short Message Service Center          | 短消息服务中心 负责在移动基站和SME之间中继、存储或转发短消息 |
-      | DCS      | Data Coding Scheme                    | 数据编码方案                                                 |
-      | SCTS     | Service Center Time Stamp             | 服务中心的时间戳                                             |
-      | MSC      | Mobile-services Switching Centre      | exchange which performs switching functions for mobile stations located in a geographical area designated as the MSC area |
-      | SMS-GMSC | Gateway MSC For Short Message Service | function of an MSC capable of receiving a short message from an SC, interrogating an HLR for routing information and SMS info, and delivering the short message to the VMSC or the SGSN of the recipient MS |
-      | SMR      |                                       | Short Message Relay (entity)                                 |
+
+| **缩写** | **全称**                              | **说明**                                                     |
+| -------- | ------------------------------------- | ------------------------------------------------------------ |
+| SMS MO   | Short Message Mobile Originated       | MS->SC。是 由 移动 终 端 (MT)发 起 的短 消 息 ,描 述 GSM 系 统 中 MT 通 过 短消 息 中 心 (SMC, Short Message Center)向一个短消息实体(SME, Short Message Entity)发送短消息的能力。SME 可以是 MT,也可以是固网用户, 联网 PC 等. |
+| SMS MT   | Short Message Mobile Terminated       | SC->MS。SMSC向MS发送短信的业务;<br/>到达移动终端的短消息,描述GSM系统从SMC 向被呼移动终端转发短消息的能力。 |
+| MS       | Mobile-Station                        | 移动站台 负责系统交换管理，控制来自或发往其他电话或数据系统的通信 |
+| SME      | Short-Message-Entity                  | 短消息实体 负责接收和发送短消息。可以位于固话系统、移动基站或其他服务中心内 |
+| SMSC     | Short Message Service Center          | 短消息服务中心 负责在移动基站和SME之间中继、存储或转发短消息 |
+| DCS      | Data Coding Scheme                    | 数据编码方案                                                 |
+| SCTS     | Service Center Time Stamp             | 服务中心的时间戳                                             |
+| MSC      | Mobile-services Switching Centre      | exchange which performs switching functions for mobile stations located in a geographical area designated as the MSC area |
+| SMS-GMSC | Gateway MSC For Short Message Service | function of an MSC capable of receiving a short message from an SC, interrogating an HLR for routing information and SMS info, and delivering the short message to the VMSC or the SGSN of the recipient MS |
+| SMR      |                                       | Short Message Relay (entity)                                 |
       
     - ![[image-20230322163101973.png]]
 
@@ -109,23 +110,24 @@
 
   1. SMS-SUBMIT
 
-     - | SCA          | PDU Type | MR   | DA   | PID  | DCS  | VP    | UDL  | UD    |
-       | ------------ | -------- | ---- | ---- | ---- | ---- | ----- | ---- | ----- |
-       | 1-12(octets) | 1        | 1    | 2-12 | 1    | 1    | 0,1,7 | 1    | 0-140 |
+| SCA          | PDU Type | MR   | DA   | PID  | DCS  | VP    | UDL  | UD    |
+| ------------ | -------- | ---- | ---- | ---- | ---- | ----- | ---- | ----- |
+| 1-12(octets) | 1        | 1    | 2-12 | 1    | 1    | 0,1,7 | 1    | 0-140 |
 
   2. SMS-DELIVER
 
-     - | SCA  | PDUType | OA   | PID  | DCS  | SCTs | UDL  | UD    |
-       | ---- | ------- | ---- | ---- | ---- | ---- | ---- | ----- |
-       | 1-12 | 1       | 2-12 | 1    | 1    | 7    | 1    | 0-140 |
+| SCA  | PDUType | OA   | PID  | DCS  | SCTs | UDL  | UD    |
+| ---- | ------- | ---- | ---- | ---- | ---- | ---- | ----- |
+| 1-12 | 1       | 2-12 | 1    | 1    | 7    | 1    | 0-140 |
 
 #### SCA(DA or OA)
 
 - | 长度 | 1 Octet                                         | 1Octet  | 0~10 Octets          |
-  | ---- | ----------------------------------------------- | ------- | -------------------- |
-  | 定义 | Len                                             | Type    | Addr                 |
-  | 说明 | SCA长度(不包括自身len，表示的是type+addr的长度) | SCA类型 | SCA地址              |
-  | 举例 | 08                                              | 91      | 68 31 08 20 05 05 FO |
+
+| ---- | ----------------------------------------------- | ------- | -------------------- |
+| 定义 | Len                                             | Type    | Addr                 |
+| 说明 | SCA长度(不包括自身len，表示的是type+addr的长度) | SCA类型 | SCA地址              |
+| 举例 | 08                                              | 91      | 68 31 08 20 05 05 FO |
   
   - Each address field of the SM-TL consists of the following subfields: An AddressLength field of one octet, a TypeofAddress field of one octet, and one AddressValue field of variable length; 
 
@@ -135,22 +137,22 @@
 
   - Basic elements of the SMS-SUBMIT type:
 
-  - | Abbr.   | Reference                     | p1)  | P2)   | Description                                                  |
-    | ------- | ----------------------------- | ---- | ----- | ------------------------------------------------------------ |
-    | TP-MTI  | TP-Message-Type-Indicator     | M    | 2b    | Parameter describing the message type.                       |
-    | TP-RD   | TP-Reject-Duplicates          | M    | b     | Parameter indicating whether or not the SC shall accept an SMSSUBMIT for an SM still held in the SC which has the same TPMR and the same TPDA as a previously submitted SM from the same OA |
-    | TP-VPF  | TP-Validity-Period-Format     | M    | 2b    | Parameter indicating whether or not the TPVP field is present. |
-    | TP-RP   | TP-ReplyPath                  | M    | b     | Parameter indicating the request for Reply Path.             |
-    | TP-UDHI | TP-User-Data-Header-Indicator | O    | b     | Parameter indicating that the TPUD field contains a Header.  |
-    | TP-SRR  | TP-Status-Report-Request      | O    | b     | Parameter indicating if the MS is requesting a status report. |
-    |         |                               |      |       |                                                              |
-    | TP-MR   | TP-Message-Reference          | M    | I     | Parameter identifying the SMSSUBMIT.                         |
-    | TP-DA   | TP-Destination-Address        | M    | 2~12o | Address of the destination SME.                              |
-    | TP-PID  | TP-Protocol-Identifier        | M    | o     | Parameter identifying the above layer protocol, if any.      |
-    | TP-DCS  | TP-Data-Coding-Scheme         | M    | o     | Parameter identifying the coding scheme within the TPUserData. |
-    | TP-VP   | TP-Validity-Period            | O    | o/7o  | Parameter identifying the time from where the message is no longer valid. |
-    | TP-UDL  | TP-User-Data-Length           | M    | I     | Parameter indicating the length of the TP User Data field to follow. |
-    | TP-UD   | TP-User-Data                  | O    | 3)    |                                                              |
+| Abbr.   | Reference                     | p1)  | P2)   | Description                                                  |
+| ------- | ----------------------------- | ---- | ----- | ------------------------------------------------------------ |
+| TP-MTI  | TP-Message-Type-Indicator     | M    | 2b    | Parameter describing the message type.                       |
+| TP-RD   | TP-Reject-Duplicates          | M    | b     | Parameter indicating whether or not the SC shall accept an SMSSUBMIT for an SM still held in the SC which has the same TPMR and the same TPDA as a previously submitted SM from the same OA |
+| TP-VPF  | TP-Validity-Period-Format     | M    | 2b    | Parameter indicating whether or not the TPVP field is present. |
+| TP-RP   | TP-ReplyPath                  | M    | b     | Parameter indicating the request for Reply Path.             |
+| TP-UDHI | TP-User-Data-Header-Indicator | O    | b     | Parameter indicating that the TPUD field contains a Header.  |
+| TP-SRR  | TP-Status-Report-Request      | O    | b     | Parameter indicating if the MS is requesting a status report. |
+|         |                               |      |       |                                                              |
+| TP-MR   | TP-Message-Reference          | M    | I     | Parameter identifying the SMSSUBMIT.                         |
+| TP-DA   | TP-Destination-Address        | M    | 2~12o | Address of the destination SME.                              |
+| TP-PID  | TP-Protocol-Identifier        | M    | o     | Parameter identifying the above layer protocol, if any.      |
+| TP-DCS  | TP-Data-Coding-Scheme         | M    | o     | Parameter identifying the coding scheme within the TPUserData. |
+| TP-VP   | TP-Validity-Period            | O    | o/7o  | Parameter identifying the time from where the message is no longer valid. |
+| TP-UDL  | TP-User-Data-Length           | M    | I     | Parameter indicating the length of the TP User Data field to follow. |
+| TP-UD   | TP-User-Data                  | O    | 3)    |                                                              |
 
     - 1)Provision;	Mandatory (M) or Optional (O).
     - 2)Representation;	Integer (I), bit (b), 2 bits (2b), Octet (o), 7 octets (7o), 212 octets (212o).
@@ -159,20 +161,20 @@
 
 - SMS-DELIVER type
 
-  - | Abbr.   | Reference                     | p1)  | R2)  | Description                                                  |
-    | ------- | ----------------------------- | ---- | ---- | ------------------------------------------------------------ |
-    | TP-MTI  | TP-Message-Type-Indicator     | M    | 2b   | Parameter describing the message type.                       |
-    | TP-MMS  | TP-More-Messages-to-Send      | M    | b    | Parameter indicating whether or not there are more messages to send |
-    | TP-LP   | TP-Loop-Prevention            | O    | b    | Parameter indicating that SMS applications should inhibit forwarding or automatic message generation that could cause infinite looping. |
-    | TP-RP   | TP-Reply-Path                 | M    | b    | Parameter indicating that Reply Path exists.                 |
-    | TP-UDHI | TP-User-Data-Header-Indicator | O    | b    | Parameter indicating that the TPUD field contains a Header   |
-    | TP-SRI  | TP-Status-Report-Indication   | O    | b    | Parameter indicating if the SME has requested a status report. |
-    | TP-OA   | TP-Originating-Address        | M    | 212o | Address of the originating SME.                              |
-    | TP-PID  | TP-Protocol-Identifier        | M    | o    | Parameter identifying the above layer protocol, if any.      |
-    | TP-DCS  | TP-Data-Coding-Scheme         | M    | o    | Parameter identifying the coding scheme within the TP-User-Data. |
-    | TP-SCTS | TP-Service-Centre-Time-Stamp  | M    | 7o   | Parameter identifying time when the SC received the message. |
-    | TP-UDL  | TP-User-Data-Length           | M    | I    | Parameter indicating the length of the TPUserData field to follow. |
-    | TP-UD   | TP-User-Data                  | O    | 3)   |                                                              |
+| Abbr.   | Reference                     | p1)  | R2)  | Description                                                  |
+| ------- | ----------------------------- | ---- | ---- | ------------------------------------------------------------ |
+| TP-MTI  | TP-Message-Type-Indicator     | M    | 2b   | Parameter describing the message type.                       |
+| TP-MMS  | TP-More-Messages-to-Send      | M    | b    | Parameter indicating whether or not there are more messages to send |
+| TP-LP   | TP-Loop-Prevention            | O    | b    | Parameter indicating that SMS applications should inhibit forwarding or automatic message generation that could cause infinite looping. |
+| TP-RP   | TP-Reply-Path                 | M    | b    | Parameter indicating that Reply Path exists.                 |
+| TP-UDHI | TP-User-Data-Header-Indicator | O    | b    | Parameter indicating that the TPUD field contains a Header   |
+| TP-SRI  | TP-Status-Report-Indication   | O    | b    | Parameter indicating if the SME has requested a status report. |
+| TP-OA   | TP-Originating-Address        | M    | 212o | Address of the originating SME.                              |
+| TP-PID  | TP-Protocol-Identifier        | M    | o    | Parameter identifying the above layer protocol, if any.      |
+| TP-DCS  | TP-Data-Coding-Scheme         | M    | o    | Parameter identifying the coding scheme within the TP-User-Data. |
+| TP-SCTS | TP-Service-Centre-Time-Stamp  | M    | 7o   | Parameter identifying time when the SC received the message. |
+| TP-UDL  | TP-User-Data-Length           | M    | I    | Parameter indicating the length of the TPUserData field to follow. |
+| TP-UD   | TP-User-Data                  | O    | 3)   |                                                              |
 
     1. Provision;      Mandatory (M) or Optional (O).
     2. Representation; Integer (I), bit (b), 2 bits (2b), Octet (o), 7 octets (7o), 2- 12 octets (2- 12o).
@@ -180,37 +182,37 @@
 
 - SMS-DELIVER-REPORT for RP-ERROR
 
-  - | Abbr.   | Reference                      | P1)  | P2)   | Description                                                  |
-    | ------- | ------------------------------ | ---- | ----- | ------------------------------------------------------------ |
-    | TP-MTI  | TPMessageTypeIndicator         | M    | 2b    | Parameter describing the message type                        |
-    | TP-UDHI | TP-User-Data-Header-Indication | O    | b     | Parameter indicating that the TP-UD field contains a Header  |
-    | TP-FCS  | TP-Failure-Cause               | M    | I     | Parameter indicating the reason for SMSDELIVER failure       |
-    | TP-PI   | TP-Parameter-Indicator         | M    | o     | Parameter indicating the presence of any of the optional parameters which follow |
-    | TP-PID  | TP-Protocol-Identifier         | O    | o     | see clause 9.2.3.9                                           |
-    | TP-DCS  | TP-Data-Coding-Scheme          | O    | o     | see clause 9.2.3.10                                          |
-    | TP-UDL  | TP-User-Data-Length            | O    | o     | see clause 9.2.3.16                                          |
-    | TP-UD   | TP-User-Data                   | O    | 3) 4) | see clause 9.2.3.24                                          |
+| Abbr.   | Reference                      | P1)  | P2)   | Description                                                  |
+| ------- | ------------------------------ | ---- | ----- | ------------------------------------------------------------ |
+| TP-MTI  | TPMessageTypeIndicator         | M    | 2b    | Parameter describing the message type                        |
+| TP-UDHI | TP-User-Data-Header-Indication | O    | b     | Parameter indicating that the TP-UD field contains a Header  |
+| TP-FCS  | TP-Failure-Cause               | M    | I     | Parameter indicating the reason for SMSDELIVER failure       |
+| TP-PI   | TP-Parameter-Indicator         | M    | o     | Parameter indicating the presence of any of the optional parameters which follow |
+| TP-PID  | TP-Protocol-Identifier         | O    | o     | see clause 9.2.3.9                                           |
+| TP-DCS  | TP-Data-Coding-Scheme          | O    | o     | see clause 9.2.3.10                                          |
+| TP-UDL  | TP-User-Data-Length            | O    | o     | see clause 9.2.3.16                                          |
+| TP-UD   | TP-User-Data                   | O    | 3) 4) | see clause 9.2.3.24                                          |
 
     - 4) The TPUserData field in the SMS-DELIVE-RREPORT is only available for use by the MT.
 
 - SMS-DELIVER-REPORT for RPACK
 
-  - | Abbr    | Reference                      | P1)  | p2)   | Description                                                  |
-    | ------- | ------------------------------ | ---- | ----- | ------------------------------------------------------------ |
-    | TPMTI   | TP-Message-Type-Indicator      | M    | 2b    | Parameter describing the message type                        |
-    | TP-UDHI | TP-User-Data-Header-Indication | O    | b     | Parameter indicating that the TP-UD field contains a Header  |
-    | TP-PI   | TP-Parameter-Indicator         | M    | o     | Parameter indicating the presence of any of the optional parameters which follow |
-    | TP-PID  | TP-Protocol-Identifier         | O    | o     | see clause 9.2.3.9                                           |
-    | TP-DCS  | TP-Data-Coding-Scheme          | O    | o     | see clause 9.2.3.10                                          |
-    | TP-UDL  | TP-User-Data-Length            | O    | o     | see clause 9.2.3.16                                          |
-    | TP-UD   | TP-User-Data                   | O    | 3) 4) | see clause 9.2.3.24                                          |
+| Abbr    | Reference                      | P1)  | p2)   | Description                                                  |
+| ------- | ------------------------------ | ---- | ----- | ------------------------------------------------------------ |
+| TPMTI   | TP-Message-Type-Indicator      | M    | 2b    | Parameter describing the message type                        |
+| TP-UDHI | TP-User-Data-Header-Indication | O    | b     | Parameter indicating that the TP-UD field contains a Header  |
+| TP-PI   | TP-Parameter-Indicator         | M    | o     | Parameter indicating the presence of any of the optional parameters which follow |
+| TP-PID  | TP-Protocol-Identifier         | O    | o     | see clause 9.2.3.9                                           |
+| TP-DCS  | TP-Data-Coding-Scheme          | O    | o     | see clause 9.2.3.10                                          |
+| TP-UDL  | TP-User-Data-Length            | O    | o     | see clause 9.2.3.16                                          |
+| TP-UD   | TP-User-Data                   | O    | 3) 4) | see clause 9.2.3.24                                          |
 
     - 4)	The TPUserData field in the SMSDELIVERREPORT is only available for use by the MT.
 
-  - | Bit No. | 7    | 6    | 5    | 4    | 3    | 2    | 1    | 0    |
-    | ------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-    | 发送方  | RP   | UDHI | SRR  | VPF  | VPF  | RD   | MTI  | MTI  |
-    | 接收方  | RP   | UDHI | SRI  | \    | \    | MMS  | MTI  | MTI  |
+| Bit No. | 7    | 6    | 5    | 4    | 3    | 2    | 1    | 0    |
+| ------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| 发送方  | RP   | UDHI | SRR  | VPF  | VPF  | RD   | MTI  | MTI  |
+| 接收方  | RP   | UDHI | SRI  | \    | \    | MMS  | MTI  | MTI  |
 
 - 参数说明
 
@@ -288,18 +290,19 @@
   是由一组相互独立的不超过普通短信长度的子短信组成，在网络传输中被视为多条普通短信，而在终端上被合并显示。
 
 - | PDU-Type | 普通短信       | 长短信                                  |
-  | -------- | -------------- | --------------------------------------- |
-  | TP-UDHI  | 0              | 1                                       |
-  | TP-MMS   | 1              | 最后一条为1其余为0                      |
-  | TP-UDL   | 短信内容长度   | UDH用户数据头长度＋SM拆分后短信内容长度 |
-  | TP-UD    | 全部为短信内容 | UDH用户数据头＋SM拆分后短信内容         |
+
+| -------- | -------------- | --------------------------------------- |
+| TP-UDHI  | 0              | 1                                       |
+| TP-MMS   | 1              | 最后一条为1其余为0                      |
+| TP-UDL   | 短信内容长度   | UDH用户数据头长度＋SM拆分后短信内容长度 |
+| TP-UD    | 全部为短信内容 | UDH用户数据头＋SM拆分后短信内容         |
 
 - UDH = UDHL+IE
 
-  - | UDHL | IEl  | IEDL | IED           |             |            |
-    | ---- | ---- | ---- | ------------- | ----------- | ---------- |
-    |      |      |      | Reference No. | Maximum No. | curent No. |
-    | 05   | 00   | 03   | C6            | 02          | 01         |
+| UDHL | IEl  | IEDL | IED           |             |            |
+| ---- | ---- | ---- | ------------- | ----------- | ---------- |
+|      |      |      | Reference No. | Maximum No. | curent No. |
+| 05   | 00   | 03   | C6            | 02          | 01         |
 
     1. IE用户数据头信息单元（Information    Element）
 
@@ -320,11 +323,11 @@
 
     5. 信息单元数据（Information Element   Data）,IEI为  00  或  08  时:
 
-       - | 字段                              | 说明                       |
-         | --------------------------------- | -------------------------- |
-         | 参考编号（Reference    Number）   | 参考编号相同的为同一长短信 |
-         | 总条数（Maximum   number）        | 长短信拆分后的总条数       |
-         | 当前短信序号（Current    number） | 当前短信是长短信中的第几条 |
+| 字段                              | 说明                       |
+| --------------------------------- | -------------------------- |
+| 参考编号（Reference    Number）   | 参考编号相同的为同一长短信 |
+| 总条数（Maximum   number）        | 长短信拆分后的总条数       |
+| 当前短信序号（Current    number） | 当前短信是长短信中的第几条 |
 
 ### SM‐RL服务
 
@@ -349,32 +352,32 @@
 
     - RP‐DATA (Mobile Station to Network).This message is sent in MS ‑> MSC direction. The message is used to relay the TPDUs
 
-    - | Information element    | Reference         | Presence | Format | Length        |
-      | ---------------------- | ----------------- | -------- | ------ | ------------- |
-      | RP Message Type        | Subclause 8.2.2   | M        | V      | 3 bits        |
-      | RP Message Reference   | Subclause 8.2.3   | M        | V      | 1 octet       |
-      | RP Originator Address  | Subclause 8.2.5.1 | M        | LV     | 1-12 octets   |
-      | RP Destination Address | Subclause 8.2.5.2 | M        | LV     | 1 octet       |
-      | RP User Data           | Subclause 8.2.5.3 | M        | LV     | <= 233 octets |
+| Information element    | Reference         | Presence | Format | Length        |
+| ---------------------- | ----------------- | -------- | ------ | ------------- |
+| RP Message Type        | Subclause 8.2.2   | M        | V      | 3 bits        |
+| RP Message Reference   | Subclause 8.2.3   | M        | V      | 1 octet       |
+| RP Originator Address  | Subclause 8.2.5.1 | M        | LV     | 1-12 octets   |
+| RP Destination Address | Subclause 8.2.5.2 | M        | LV     | 1 octet       |
+| RP User Data           | Subclause 8.2.5.3 | M        | LV     | <= 233 octets |
 
   - RP-SMMA:This message is sent by the mobile station to relay a notification to the network that the mobile has memory available to receive one or more short messages. 
 
   - RP-ACK:This message is sent between the MSC and the mobile station in both directions and used to relay the acknowledgement of a RPDATA or RPSMMA message reception. 
 
-    - | IEI  | Information element  | Reference         | Presence | Format | Length        |
-      | ---- | -------------------- | ----------------- | -------- | ------ | ------------- |
-      |      | RP Message Type      | Subclause 8.2.2   | M        | V      | 3 bits        |
-      |      | RP Message Reference | Subclause 8.2.3   | M        | V      | 1 octet       |
-      | 41   | RP-User Data         | Subclause 8.2.5.3 | O        | TLV    | <= 234 octets |
+| IEI  | Information element  | Reference         | Presence | Format | Length        |
+| ---- | -------------------- | ----------------- | -------- | ------ | ------------- |
+|      | RP Message Type      | Subclause 8.2.2   | M        | V      | 3 bits        |
+|      | RP Message Reference | Subclause 8.2.3   | M        | V      | 1 octet       |
+| 41   | RP-User Data         | Subclause 8.2.5.3 | O        | TLV    | <= 234 octets |
 
   - RP-ERROR:This message is sent between the MSC and the mobile station in both directions and used to relay an error cause from an erroneous short message or notification transfer attempt.
 
-    - | IEI  | Information element  | Reference         | Presence | Format | Length        |
-      | ---- | -------------------- | ----------------- | -------- | ------ | ------------- |
-      |      | RP Message Type      | Subclause 8.2.2   | M        | V      | 3 bits        |
-      |      | RP Message Reference | Subclause 8.2.3   | M        | V      | 1 octet       |
-      |      | RP Cause             | Subclause 8.2.5.4 | M        | LV     | 2 - 3 octets  |
-      | 41   | RP User Data         | Subclause 8.2.5.3 | O        | TLV    | <= 234 octets |
+| IEI  | Information element  | Reference         | Presence | Format | Length        |
+| ---- | -------------------- | ----------------- | -------- | ------ | ------------- |
+|      | RP Message Type      | Subclause 8.2.2   | M        | V      | 3 bits        |
+|      | RP Message Reference | Subclause 8.2.3   | M        | V      | 1 octet       |
+|      | RP Cause             | Subclause 8.2.5.4 | M        | LV     | 2 - 3 octets  |
+| 41   | RP User Data         | Subclause 8.2.5.3 | O        | TLV    | <= 234 octets |
 
 ## 发送流程
 
@@ -3387,9 +3390,11 @@
          intent.addFlags(Intent.FLAG_RECEIVER_NO_ABORT);
          final String action = intent.getAction();
          if (Intents.SMS_DELIVER_ACTION.equals(action)
-                 || Intents.SMS_RECEIVED_ACTION.equals(action)
-                 || Intents.WAP_PUSH_DELIVER_ACTION.equals(action)
-                 || Intents.WAP_PUSH_RECEIVED_ACTION.equals(action)) {
+
+| Intents.SMS_RECEIVED_ACTION.equals(action)
+| Intents.WAP_PUSH_DELIVER_ACTION.equals(action)
+| Intents.WAP_PUSH_RECEIVED_ACTION.equals(action)) {
+
              // Some intents need to be delivered with high priority:
              // SMS_DELIVER, SMS_RECEIVED, WAP_PUSH_DELIVER, WAP_PUSH_RECEIVED
              // In some situations, like after boot up or system under load, normal
@@ -3781,7 +3786,9 @@
          // already in the conversation.
          if (!OsUtil.isSecondaryUser()) {
              final boolean read = messageValues.getAsBoolean(Sms.Inbox.READ)
-                     || messageInFocusedConversation;
+
+| messageInFocusedConversation;
+
              // If you have read it you have seen it
              final boolean seen = read || messageInObservableConversation || blocked;
              messageValues.put(Sms.Inbox.READ, read ? Integer.valueOf(1) : Integer.valueOf(0));
@@ -4674,7 +4681,9 @@
                       if (CellBroadcastSettings.getResources(mContext, message.getSubscriptionId())
                               .getBoolean(R.bool.enable_write_alerts_to_sms_inbox)) {
                           if (CellBroadcastReceiver.isTestingMode(getApplicationContext())
-                                  || (range != null && range.mWriteToSmsInbox)) {
+
+| (range != null && range.mWriteToSmsInbox)) {
+
                               provider.writeMessageToSmsInbox(message, mContext);
                           }
                       }
@@ -5222,7 +5231,9 @@
                       // TODO: Do we care about overriding in this case.
                       // If the NUMERIC field isn't valid use PROPERTY_CDMA_HOME_OPERATOR_NUMERIC
                       if ((opNames[2] == null) || (opNames[2].length() < 5)
-                              || ("00000".equals(opNames[2]))) {
+
+| ("00000".equals(opNames[2]))) {
+
                           opNames[2] = SystemProperties.get(
                                   GsmCdmaPhone.PROPERTY_CDMA_HOME_OPERATOR_NUMERIC, "00000");
                           if (DBG) {
@@ -5331,31 +5342,32 @@
     - 大多数MMS PDU只含有MMS头，它们起到建立和维持通信的作用，只有在M-Send.req和M-Retrieve.conf PDU中才有消息体。
 
 - |       域名        | 说明                                     | 编码 |
-  | :---------------: | ---------------------------------------- | ---- |
-  |        Bcc        | 密送者地址                               | 0x01 |
-  |        Cc         | 抄送者地址                               | 0x02 |
-  | Content-Location  | 短息通知时用于存放MM所在服务器的Uri地 址 | 0x03 |
-  |   Content-Type    | 内容类型                                 | 0x04 |
-  |       Date        | 日期                                     | 0x05 |
-  |  Delivery-Report  | 状态报告（默认为不需要)                  | 0x06 |
-  |   Delivery-Time   | 报告时间                                 | 0x07 |
-  |      Expiry       | 有效期                                   | 0x08 |
-  |       From        | 发送者信息                               | 0x09 |
-  |   Message-Class   | 信息的类型(个人·广告·信息还是自动)       | 0x0A |
-  |    Message-ID     | 信息ID，识别不同的彩信                   | 0x0B |
-  |   Message-Type    | PDU类型                                  | 0x0c |
-  |    MMs-Version    | 使用MMS协议的版本                        | 0x0D |
-  |   Message-Size    | MM的大小                                 | 0x0E |
-  |     Priority      | 优先级                                   | 0x0F |
-  |    Read-Reply     | 是否需要阅读报告                         | 0x10 |
-  |  Report-Allowed   | 是否允许报告                             | 0x11 |
-  |  Response-Status  | 回复状态                                 | 0x12 |
-  |   Response-Text   | 回复文本                                 | 0x13 |
-  | Sender-Visibility | 发送者是否可见(即是否匿名发送)           | 0x14 |
-  |      status       | 信息状态（是否立即接收，拒绝还是不支 持) | 0x15 |
-  |      Subject      | 主题                                     | 0x16 |
-  |        To         | 接收者地址                               | 0x17 |
-  |  Transaction-ld   | 传输ID(用于网络控制，识别不同的传输)     | 0x18 |
+
+| :---------------: | ---------------------------------------- | ---- |
+|        Bcc        | 密送者地址                               | 0x01 |
+|        Cc         | 抄送者地址                               | 0x02 |
+| Content-Location  | 短息通知时用于存放MM所在服务器的Uri地 址 | 0x03 |
+|   Content-Type    | 内容类型                                 | 0x04 |
+|       Date        | 日期                                     | 0x05 |
+|  Delivery-Report  | 状态报告（默认为不需要)                  | 0x06 |
+|   Delivery-Time   | 报告时间                                 | 0x07 |
+|      Expiry       | 有效期                                   | 0x08 |
+|       From        | 发送者信息                               | 0x09 |
+|   Message-Class   | 信息的类型(个人·广告·信息还是自动)       | 0x0A |
+|    Message-ID     | 信息ID，识别不同的彩信                   | 0x0B |
+|   Message-Type    | PDU类型                                  | 0x0c |
+|    MMs-Version    | 使用MMS协议的版本                        | 0x0D |
+|   Message-Size    | MM的大小                                 | 0x0E |
+|     Priority      | 优先级                                   | 0x0F |
+|    Read-Reply     | 是否需要阅读报告                         | 0x10 |
+|  Report-Allowed   | 是否允许报告                             | 0x11 |
+|  Response-Status  | 回复状态                                 | 0x12 |
+|   Response-Text   | 回复文本                                 | 0x13 |
+| Sender-Visibility | 发送者是否可见(即是否匿名发送)           | 0x14 |
+|      status       | 信息状态（是否立即接收，拒绝还是不支 持) | 0x15 |
+|      Subject      | 主题                                     | 0x16 |
+|        To         | 接收者地址                               | 0x17 |
+|  Transaction-ld   | 传输ID(用于网络控制，识别不同的传输)     | 0x18 |
 
 ## 架构
 
@@ -5772,26 +5784,26 @@ Qualcomm
 
 - 参数
 
-  - | 选项                                                         | 说明                                                         |
-    | ------------------------------------------------------------ | ------------------------------------------------------------ |
-    | -t, --table                                                  | table 对指定的表 table 进行操作， table 必须是 raw， nat，filter，mangle 中的一个。如果不指定此选项，默认的是 filter 表。 |
-    | -p                                                           | 指定要匹配的数据包协议类型                                   |
-    | -s, --source [!] address[/mask]                              | 把指定的一个／一组地址作为源地址，按此规则进行过滤。当后面没有 mask 时，address 是一个地址，比如：192.168.1.1；当 mask 指定时，可以表示一组范围内的地址，比如：192.168.1.0/255.255.255.0   ,"!" 表示取反 |
-    | -d, --destination [!] address[/mask]                         | 地址格式同上，但这里是指定地址为目的地址，按此进行过滤       |
-    | -i, --in-interface [!] <网络接口name>                        | 指定数据包的来自来自网络接口，比如最常见的 eth0 。注意：它只对 INPUT，FORWARD，PREROUTING 这三个链起作用。如果没有指定此选项， 说明可以来自任何一个网络接口。同前面类似，"!" 表示取反 |
-    | -o, --out-interface [!] <网络接口name>                       | 指定数据包出去的网络接口。只对 OUTPUT，FORWARD，POSTROUTING 三个链起作用 |
-    | -L, --list [chain]                                           | 列出链 chain 上面的所有规则，如果没有指定链，列出表上所有链的所有规则 |
-    | -A, --append chain rule-specification                        | 在指定链 chain 的末尾插入指定的规则，也就是说，这条规则会被放到最后，最后才会被执行。规则是由后面的匹配来指定 |
-    | -I, --insert chain [rulenum] rule-specification              | 在链 chain 中的指定位置插入一条或多条规则。如果指定的规则号是1，则在链的头部插入。这也是默认的情况，如果没有指定规则号 |
-    | -D, --delete chain rule-specification -D, --delete chain rulenum | 在指定的链 chain 中删除一个或多个指定规则                    |
-    | -P, --policy chain target                                    | 为指定的链 chain 设置策略 target。注意，只有内置的链才允许有策略，用户自定义的是不允许的。 |
-    | -F, --flush [chain]                                          | 清空指定链 chain 上面的所有规则。如果没有指定链，清空该表上所有链的所有规则。 |
-    | -N, --new-chain chain                                        | 用指定的名字创建一个新的链。                                 |
-    | -X, --delete-chain [chain]                                   | 删除指定的链，这个链必须没有被其它任何规则引用，而且这条上必须没有任何规则。如果没有指定链名，则会删除该表中所有非内置的链。 |
-    | -E, --rename-chain old-chain new-chain                       | 用指定的新名字去重命名指定的链。这并不会对链内部造成任何影响。 |
-    | -Z, --zero [chain]                                           | 把指定链，或者表中的所有链上的所有计数器清零。               |
-    | -j, --jump target <指定目标>                                 | 即满足某条件时该执行什么样的动作。target 可以是内置的目标，比如 ACCEPT，也可以是用户自定义的链。 |
-    |                                                              | ETC                                                          |
+| 选项                                                         | 说明                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| -t, --table                                                  | table 对指定的表 table 进行操作， table 必须是 raw， nat，filter，mangle 中的一个。如果不指定此选项，默认的是 filter 表。 |
+| -p                                                           | 指定要匹配的数据包协议类型                                   |
+| -s, --source [!] address[/mask]                              | 把指定的一个／一组地址作为源地址，按此规则进行过滤。当后面没有 mask 时，address 是一个地址，比如：192.168.1.1；当 mask 指定时，可以表示一组范围内的地址，比如：192.168.1.0/255.255.255.0   ,"!" 表示取反 |
+| -d, --destination [!] address[/mask]                         | 地址格式同上，但这里是指定地址为目的地址，按此进行过滤       |
+| -i, --in-interface [!] <网络接口name>                        | 指定数据包的来自来自网络接口，比如最常见的 eth0 。注意：它只对 INPUT，FORWARD，PREROUTING 这三个链起作用。如果没有指定此选项， 说明可以来自任何一个网络接口。同前面类似，"!" 表示取反 |
+| -o, --out-interface [!] <网络接口name>                       | 指定数据包出去的网络接口。只对 OUTPUT，FORWARD，POSTROUTING 三个链起作用 |
+| -L, --list [chain]                                           | 列出链 chain 上面的所有规则，如果没有指定链，列出表上所有链的所有规则 |
+| -A, --append chain rule-specification                        | 在指定链 chain 的末尾插入指定的规则，也就是说，这条规则会被放到最后，最后才会被执行。规则是由后面的匹配来指定 |
+| -I, --insert chain [rulenum] rule-specification              | 在链 chain 中的指定位置插入一条或多条规则。如果指定的规则号是1，则在链的头部插入。这也是默认的情况，如果没有指定规则号 |
+| -D, --delete chain rule-specification -D, --delete chain rulenum | 在指定的链 chain 中删除一个或多个指定规则                    |
+| -P, --policy chain target                                    | 为指定的链 chain 设置策略 target。注意，只有内置的链才允许有策略，用户自定义的是不允许的。 |
+| -F, --flush [chain]                                          | 清空指定链 chain 上面的所有规则。如果没有指定链，清空该表上所有链的所有规则。 |
+| -N, --new-chain chain                                        | 用指定的名字创建一个新的链。                                 |
+| -X, --delete-chain [chain]                                   | 删除指定的链，这个链必须没有被其它任何规则引用，而且这条上必须没有任何规则。如果没有指定链名，则会删除该表中所有非内置的链。 |
+| -E, --rename-chain old-chain new-chain                       | 用指定的新名字去重命名指定的链。这并不会对链内部造成任何影响。 |
+| -Z, --zero [chain]                                           | 把指定链，或者表中的所有链上的所有计数器清零。               |
+| -j, --jump target <指定目标>                                 | 即满足某条件时该执行什么样的动作。target 可以是内置的目标，比如 ACCEPT，也可以是用户自定义的链。 |
+|                                                              | ETC                                                          |
     
     
 
@@ -5891,6 +5903,13 @@ Qualcomm
 - bugreport/bugreport***.txt
 
 - 关键词：build.version
+
+# 仪表log查看
+
+- CMWmarsViewer
+  - 文件类型：msglog、rsmsglog
+  - 选择verdicts
+
 
 # 仪表log查看
 

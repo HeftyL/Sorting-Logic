@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Computer Science/Message.md",
+                "file": "Computer Science/Android.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Message"
+              "title": "Android"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Computer Science/Message.md",
+                "file": "Computer Science/Android.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Message 的反向链接列表"
+              "title": "Android 的反向链接列表"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Computer Science/Message.md",
+                "file": "Computer Science/Android.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Message 的出链列表"
+              "title": "Android 的出链列表"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Computer Science/Message.md",
+                "file": "Computer Science/Android.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Message 的大纲"
+              "title": "Android 的大纲"
             }
           }
         ]
@@ -185,11 +185,31 @@
   },
   "active": "5ac7ed9ce394f837",
   "lastOpenFiles": [
+    "fix_table_lines_678.py",
+    "fix_table_force_669.py",
+    "fix_table_direct_669.py",
+    "fix_all_tables_comprehensive.py",
+    "fix_table_669.py",
+    "fix_table_direct.py",
+    "fix_specific_table.py",
+    "fix_table_final.py",
+    "fix_android_table.py",
+    "fix_double_pipes.py",
+    "analyze_and_fix_tables.py",
+    "Computer Science/Docker.md",
+    "Computer Science/DISH WFC流程学习.md",
+    "Computer Science/Android.md",
+    "Computer Science/Data Structure.md",
+    "Computer Science/IPv6 概念、技术与实践.md",
     "Computer Science/Android Telephony.md",
+    "Mathematics/Elementary mathematics.md",
+    "Psychology/ACT.md",
+    "Art/Perspective.md",
+    "README.md",
+    "Computer Science/Message.md",
     "Politics/考研政治.md",
     "Mathematics/Probability theory.md",
     "Mathematics/Linear algebra.md",
-    "Mathematics/Elementary mathematics.md",
     "Mathematics/Calculus.md",
     "Entertainment/Rubik's Cube.md",
     "Entertainment/Art of game.md",
@@ -200,20 +220,6 @@
     "Computer Science/SpringBoot.md",
     "Computer Science/Redis.md",
     "Computer Science/Operation system.md",
-    "Computer Science/Message.md",
-    "Computer Science/Linux.md",
-    "Computer Science/Java.md",
-    "Computer Science/Java Web.md",
-    "Computer Science/IPv6 概念、技术与实践.md",
-    "Computer Science/Gradle.md",
-    "Computer Science/Git.md",
-    "Computer Science/Docker.md",
-    "Computer Science/DISH WFC流程学习.md",
-    "Computer Science/Database.md",
-    "Computer Science/Data Structure.md",
-    "Log/Communication Technology.pdf",
-    "Log/Android Telephony.pdf",
-    "Log/Android.pdf",
-    "Log/上海大极通讯SMI：补充医疗保障福利服务手册.pdf"
+    "Computer Science/Linux.md"
   ]
 }

@@ -1,4 +1,4 @@
-# DISH WFC流程学习
+﻿# DISH WFC流程学习
 
 ## 概述
 
@@ -1319,7 +1319,9 @@ serverDataMissing()：需要注册
     public boolean serverDataMissing() {
         return entitlementStatus() == EntitlementStatus.DISABLED
                 && (tcStatus() == TcStatus.NOT_AVAILABLE
-                || addrStatus() == AddrStatus.NOT_AVAILABLE);
+
+| addrStatus() == AddrStatus.NOT_AVAILABLE);
+
     }
 优先显示条款页面（如有 TermsAndConditionsWebUrl）
 否则显示 E911 地址页面（EmergencyAddressWebUrl + EmergencyAddressWebData）

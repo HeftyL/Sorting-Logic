@@ -1,4 +1,4 @@
-# NVC
+﻿# NVC
 
 1. observing feeling needing requesting 
 2. blocks compassion： moralistic judgment、comparison、responsibility、demand

@@ -1,4 +1,4 @@
-# 预训练语言模型的前世今生 - 从Word Embedding到BERT
+﻿# 预训练语言模型的前世今生 - 从Word Embedding到BERT
 
 本篇文章共 25027 个词，一个字一个字手码的不容易，转载请标明出处：
 [预训练语言模型的前世今生 - 从Word Embedding到BERT - 二十三岁的有德](https://www.cnblogs.com/nickchen121/p/15105048.html)
@@ -74,7 +74,6 @@ DeepMind 的计算机科学家 Sebastian Ruder 给出了 21 世纪以来，从�
 | 年份 | 2013 年  | 2014 年 | 2015 年        | 2016 年        | 2017 年     |
 | :--- | :------- | :------ | :------------- | :------------- | :---------- |
 | 技术 | word2vec | GloVe   | LSTM/Attention | Self-Attention | Transformer |
-
 | 年份 | 2018 年           | 2019 年                      | 2020 年              |
 | :--- | :---------------- | :--------------------------- | :------------------- |
 | 技术 | GPT/ELMo/BERT/GNN | XLNet/BoBERTa/GPT-2/ERNIE/T5 | GPT-3/ELECTRA/ALBERT |

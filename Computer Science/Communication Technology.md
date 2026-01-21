@@ -1,4 +1,4 @@
-# 大话通信
+﻿# 大话通信
 
 ## 通信基础
 
@@ -729,15 +729,15 @@
 
 - 波段
 
-  - | 波段   | 频率      | 说明                                                         |
-    | ------ | --------- | ------------------------------------------------------------ |
-    | L波段  | 1～2GHz   | 常用于移动通信                                               |
-    | S波段  | 2～4GHz   | 主要应用于微波接力通信和地球站之间的卫星通信。               |
-    | C波段  | 4～8GHz   | 主要应用于微波接力通信和地球站之间的卫星通信，C波段是其中应用最多的。 |
-    | X波段  | 8～13GHz  | 主要应用于微波接力通信和地球站之间的卫星通信。               |
-    | Ku波段 | 13～18GHz | 主要应用于微波接力通信和地球站之间的卫星通信。               |
-    | K波段  | 18～28GHz | 主要应用于空间通信和近距离的地面通信。                       |
-    | Ka波段 | 28～40GHz | 主要应用于地球站与空间站之间的通信。                         |
+| 波段   | 频率      | 说明                                                         |
+| ------ | --------- | ------------------------------------------------------------ |
+| L波段  | 1～2GHz   | 常用于移动通信                                               |
+| S波段  | 2～4GHz   | 主要应用于微波接力通信和地球站之间的卫星通信。               |
+| C波段  | 4～8GHz   | 主要应用于微波接力通信和地球站之间的卫星通信，C波段是其中应用最多的。 |
+| X波段  | 8～13GHz  | 主要应用于微波接力通信和地球站之间的卫星通信。               |
+| Ku波段 | 13～18GHz | 主要应用于微波接力通信和地球站之间的卫星通信。               |
+| K波段  | 18～28GHz | 主要应用于空间通信和近距离的地面通信。                       |
+| Ka波段 | 28～40GHz | 主要应用于地球站与空间站之间的通信。                         |
 
     - 我国的3G、4G网络运行在L和S波段
     - 我国的5G将采用S和C波段。当前工业和信息化部向三大电信运营商发放了5G系统中低频段试验频率使用许可
@@ -1961,17 +1961,17 @@
     - SIB调度信息；
     - TDD配置参数：包含上下行比例和特殊子帧格式等信息。
 
-  - | 类型 | 内容                      | 特点 |
-    | ---- | ------------------------- | ---- |
-    | MIB  | 系统基本信息              | 必备 |
-    | SIB1 | 小区选择参数、SIB调度信息 | 必备 |
-    | SIB2 | 随机接入参数、信道配置    | 必备 |
-    | SIB3 | 小区重选参数              | 必备 |
-    | SIB4 | 同频邻区信息              | 必备 |
-    | SIB5 | 异频邻区信息              | 可选 |
-    | SIB6 | WCDMA/TD-SCDMA邻区信息    | 可选 |
-    | SIB7 | GSM邻区信息               | 可选 |
-    | SIB8 | cdma2000邻区信息          | 可选 |
+| 类型 | 内容                      | 特点 |
+| ---- | ------------------------- | ---- |
+| MIB  | 系统基本信息              | 必备 |
+| SIB1 | 小区选择参数、SIB调度信息 | 必备 |
+| SIB2 | 随机接入参数、信道配置    | 必备 |
+| SIB3 | 小区重选参数              | 必备 |
+| SIB4 | 同频邻区信息              | 必备 |
+| SIB5 | 异频邻区信息              | 可选 |
+| SIB6 | WCDMA/TD-SCDMA邻区信息    | 可选 |
+| SIB7 | GSM邻区信息               | 可选 |
+| SIB8 | cdma2000邻区信息          | 可选 |
 
 #### 位置登记与寻呼机制
 
@@ -2225,21 +2225,21 @@
 
     - 
 
-    - | 信令                                    | 主要用途              | 内容                      |
-      | --------------------------------------- | --------------------- | ------------------------- |
-      | RRC Connection Request                  | 建立RRC连接           | 终端的ID，建 立连接的原因 |
-      | RRC Connection Setup                    | 建立RRC连接           | SRB1的信道配 置信息       |
-      | RRC Connection Setup Complete           | 建立RRC连接           | PLMN标识以 及MME标识      |
-      | RRC Connection Reconfiguration          | 建立SRB与RB           | SRB和RB的信 道配置信息    |
-      |                                         | 测量配置              | 测量配置信息              |
-      |                                         | 切换                  | 切换信息                  |
-      | RRC Connection Reconfiguration Complete | 反馈执行完毕          | 无                        |
-      | Measurement Report                      | 测量报告              | 测量报告                  |
-      | Security Mode Command                   | 加密                  | 加密算法和完 整性保护算法 |
-      | Security Mode Complete                  | 加密                  | 无                        |
-      | Paging                                  | 寻呼                  | 终端D                     |
-      | DLInformation Transfer                  | 承载来自MME 的NAS信令 | NAS信令                   |
-      | ULInformation Transfer                  | 承载来自UE的 NAS信令  | NAS信令                   |
+| 信令                                    | 主要用途              | 内容                      |
+| --------------------------------------- | --------------------- | ------------------------- |
+| RRC Connection Request                  | 建立RRC连接           | 终端的ID，建 立连接的原因 |
+| RRC Connection Setup                    | 建立RRC连接           | SRB1的信道配 置信息       |
+| RRC Connection Setup Complete           | 建立RRC连接           | PLMN标识以 及MME标识      |
+| RRC Connection Reconfiguration          | 建立SRB与RB           | SRB和RB的信 道配置信息    |
+|                                         | 测量配置              | 测量配置信息              |
+|                                         | 切换                  | 切换信息                  |
+| RRC Connection Reconfiguration Complete | 反馈执行完毕          | 无                        |
+| Measurement Report                      | 测量报告              | 测量报告                  |
+| Security Mode Command                   | 加密                  | 加密算法和完 整性保护算法 |
+| Security Mode Complete                  | 加密                  | 无                        |
+| Paging                                  | 寻呼                  | 终端D                     |
+| DLInformation Transfer                  | 承载来自MME 的NAS信令 | NAS信令                   |
+| ULInformation Transfer                  | 承载来自UE的 NAS信令  | NAS信令                   |
 
 ##### PDCP
 
@@ -2334,21 +2334,21 @@
 
 - TAU Request的主要内容
 
-  - | 项目                                                         | 说明                           |
-    | ------------------------------------------------------------ | ------------------------------ |
-    | Security info                                                | 安全相关的信息                 |
-    | Active Flag                                                  | 位置更新后是否进入联机 状态    |
-    | EPS Update Type                                              | 位置更新方式（如联合位置更新） |
-    | EPS Mobile Identity - o1d GUTI                               | 终端的原GUTI标识               |
-    | UE Network Capability                                        | 终端的能力                     |
-    | Tracking Area Identity - Last visited Registered TAI         | 终端原来的TAI                  |
-    | DRX Parameter                                                | DRX参数                        |
-    | EPS Bearer Context Status                                    | 承载的状态                     |
-    | MS Network Capability                                        | GSM终端的能力                  |
-    | Location Area Identification - old location Area Identification | GSM终端原来的LAI               |
-    | Mobile Station Classmark 2                                   | GSM终端的能力2                 |
-    | Mobile Station Classmark 3                                   | GSM终端的能力3                 |
-    | GUTI Type - old GUTI Type                                    | 终端原GUTI的类型               |
+| 项目                                                         | 说明                           |
+| ------------------------------------------------------------ | ------------------------------ |
+| Security info                                                | 安全相关的信息                 |
+| Active Flag                                                  | 位置更新后是否进入联机 状态    |
+| EPS Update Type                                              | 位置更新方式（如联合位置更新） |
+| EPS Mobile Identity - o1d GUTI                               | 终端的原GUTI标识               |
+| UE Network Capability                                        | 终端的能力                     |
+| Tracking Area Identity - Last visited Registered TAI         | 终端原来的TAI                  |
+| DRX Parameter                                                | DRX参数                        |
+| EPS Bearer Context Status                                    | 承载的状态                     |
+| MS Network Capability                                        | GSM终端的能力                  |
+| Location Area Identification - old location Area Identification | GSM终端原来的LAI               |
+| Mobile Station Classmark 2                                   | GSM终端的能力2                 |
+| Mobile Station Classmark 3                                   | GSM终端的能力3                 |
+| GUTI Type - old GUTI Type                                    | 终端原GUTI的类型               |
 
 - 鉴权
 
@@ -2365,15 +2365,15 @@
 
 - TAU Accept的主要内容
 
-  - | 项目                        | 说明                          |
-    | --------------------------- | ----------------------------- |
-    | Security Info               | 安全相关的信息                |
-    | EPS Update Result Value     | 位置更新方式（联合位置 更新） |
-    | EPS Mobile Identity - GUTI  | 终端的标识GUTI                |
-    | GPRS Timer - T3412 Value    | 周期性位置更新参数            |
-    | Tracking Area Identity List | TA列表                        |
-    | EPS Bearer Context Status   | 承载的状态                    |
-    | EPS Network Feature Support | 网络的业务能力（含 VoLTE）    |
+| 项目                        | 说明                          |
+| --------------------------- | ----------------------------- |
+| Security Info               | 安全相关的信息                |
+| EPS Update Result Value     | 位置更新方式（联合位置 更新） |
+| EPS Mobile Identity - GUTI  | 终端的标识GUTI                |
+| GPRS Timer - T3412 Value    | 周期性位置更新参数            |
+| Tracking Area Identity List | TA列表                        |
+| EPS Bearer Context Status   | 承载的状态                    |
+| EPS Network Feature Support | 网络的业务能力（含 VoLTE）    |
 
 - 完成位置更新
 
@@ -2776,33 +2776,34 @@
 - 
 
 - | 参考点名称 | 与之相关实体                                            | 目的                                                         | 协议      |
-  | ---------- | ------------------------------------------------------- | ------------------------------------------------------------ | --------- |
-  | Gm         | UE，P-CSCF                                              | 该参考点用于在UE和CSCF之间交 互消息                          | SIP       |
-  | Mw         | P-CSCF，I-CSCF，s-CSCF,                                 | 该参考点用于在不同CSCF 之间交 互消息                         | SIP       |
-  | ISc        | s-CSCF，AS                                              | 该参考点用于在S-CSCF与AS之间 交互消息                        | sIP       |
-  | Ma         | 1-CSCF，AS                                              | 该参考点用于在I-CSCF 与 AS之间 交互消息                      | SIP       |
-  | Cx         | 1-CSCF，s-CSCF，HSS                                     | 该参考点用于1-CSCF/S-CSCF和 HSS之间的通信                    | Diameter  |
-  | Dx         | l-CSCF，s-CSCF，SLF                                     | 该参考点用于在多HSS环境下选择 合适的HSS                      | Diameter  |
-  | Sh         | SIP AS，OSA sCs，HSS                                    | 该参考点用于在SIP AS/OSA SCS和 HSS之间进行通信               | Diameter  |
-  | si         | IM-SSF，HSS                                             | 该参考点用于在IM-SSF 和 HSS之 间交互消息                     | MAP       |
-  | Dh         | SIP AS，OSA，SCF, IM-SSF，HSS                           | 该参考点用于在多HSS环境下AS 找到合适的HSS                    | Diarmeter |
-  | Mm         | I-CSCF，s-CSCr, IBCF，外部IP网                          | 该参考点用于在IMS和外部IP网之 间交互消息                     | sIP       |
-  | Mg         | MGCF一1-CSCF                                            | 该参考点用于在MGCF和I-CSCF之 间呼叫消息                      | SIP       |
-  | Mi         | s-CSCF BCCF                                             | 该参考点用于在S-CSCF与 BCCF之 间交互消息                     | sIP       |
-  | Mj         | BGCFMGCF                                                | 该参考点用于在相同IMS网络中的 BGCF与 MGCF之间的交互          | SIP       |
-  | Mk         | BGCF→BGCF                                               | 该参考点用于不同IMS网络中的 BGCF之间的交互                   | SIP       |
-  | Mr         | s-CsCF，MRFC                                            | 该参考点用于在S-CSCF与MRFC之 间交互消息                      | SIP       |
-  | Mp         | MRFC，MRFP                                              | 该参考点允许MRFP的用户平面资 源控制                          | H248      |
-  | Mn         | MGCF，IMS-MGw                                           | 该参考点允许IMS-MGW的用户平 面资源控制                       | H.248     |
-  | Ut         | UE，AS ( SIP AS, OSASCS，IM-SSF)                        | 该参考点使得UE可以管理与它的 业务相关的信息                  | HTTP      |
-  | Cx         | PCRF，接人网关                                          | 该参考点用于将策略和计费规则推 人接人网关，获得传输平面事件通知， 交换计费标识符 | Diameter  |
-  | Rx         | P-CSCF，PCRF                                            | 该参考点用于向PCRF传递注册和 会话信息，获得传输层事件通知，并 交换计费标识符 | Diameter  |
-  | Ro         | As，MRCF，S-CSCF，oCs                                   | AS/MRFC/s-CSCF用该参考点来向 OCS执行在线计费。备注:在S-CSCF 与OCS之间可能需要一个进行协同的 逻辑功能 | Diameter  |
-  | Rf         | P-CSCF，s-CSCF, 1-CSCF，BGCF，MGCF, AS，MRFC，IBCF，CDF | IMS实体用该参考点来向CDF执行 离线计费                        | Diameter  |
-  | Ml         | E-CSCF，LRF                                             | 该参考点用于为去往紧急呼叫中心 的路由请求交换必要的信息      | 未定义    |
-  | Mx         | CSCF，BGCF，IBCF                                        | 当与不同运营商进行通信时，用该 参考点来使用IBCF的能力        | 未定义    |
-  | lx         | IBCF，TrGw                                              | 该参考点允许进行trGW资源控制                                 | 未定义    |
-  | lq         | P-CSCF，IMS接人网关                                     | 该参考点允许进行IMS接人网关 控制                             | 未定义    |
+
+| ---------- | ------------------------------------------------------- | ------------------------------------------------------------ | --------- |
+| Gm         | UE，P-CSCF                                              | 该参考点用于在UE和CSCF之间交 互消息                          | SIP       |
+| Mw         | P-CSCF，I-CSCF，s-CSCF,                                 | 该参考点用于在不同CSCF 之间交 互消息                         | SIP       |
+| ISc        | s-CSCF，AS                                              | 该参考点用于在S-CSCF与AS之间 交互消息                        | sIP       |
+| Ma         | 1-CSCF，AS                                              | 该参考点用于在I-CSCF 与 AS之间 交互消息                      | SIP       |
+| Cx         | 1-CSCF，s-CSCF，HSS                                     | 该参考点用于1-CSCF/S-CSCF和 HSS之间的通信                    | Diameter  |
+| Dx         | l-CSCF，s-CSCF，SLF                                     | 该参考点用于在多HSS环境下选择 合适的HSS                      | Diameter  |
+| Sh         | SIP AS，OSA sCs，HSS                                    | 该参考点用于在SIP AS/OSA SCS和 HSS之间进行通信               | Diameter  |
+| si         | IM-SSF，HSS                                             | 该参考点用于在IM-SSF 和 HSS之 间交互消息                     | MAP       |
+| Dh         | SIP AS，OSA，SCF, IM-SSF，HSS                           | 该参考点用于在多HSS环境下AS 找到合适的HSS                    | Diarmeter |
+| Mm         | I-CSCF，s-CSCr, IBCF，外部IP网                          | 该参考点用于在IMS和外部IP网之 间交互消息                     | sIP       |
+| Mg         | MGCF一1-CSCF                                            | 该参考点用于在MGCF和I-CSCF之 间呼叫消息                      | SIP       |
+| Mi         | s-CSCF BCCF                                             | 该参考点用于在S-CSCF与 BCCF之 间交互消息                     | sIP       |
+| Mj         | BGCFMGCF                                                | 该参考点用于在相同IMS网络中的 BGCF与 MGCF之间的交互          | SIP       |
+| Mk         | BGCF→BGCF                                               | 该参考点用于不同IMS网络中的 BGCF之间的交互                   | SIP       |
+| Mr         | s-CsCF，MRFC                                            | 该参考点用于在S-CSCF与MRFC之 间交互消息                      | SIP       |
+| Mp         | MRFC，MRFP                                              | 该参考点允许MRFP的用户平面资 源控制                          | H248      |
+| Mn         | MGCF，IMS-MGw                                           | 该参考点允许IMS-MGW的用户平 面资源控制                       | H.248     |
+| Ut         | UE，AS ( SIP AS, OSASCS，IM-SSF)                        | 该参考点使得UE可以管理与它的 业务相关的信息                  | HTTP      |
+| Cx         | PCRF，接人网关                                          | 该参考点用于将策略和计费规则推 人接人网关，获得传输平面事件通知， 交换计费标识符 | Diameter  |
+| Rx         | P-CSCF，PCRF                                            | 该参考点用于向PCRF传递注册和 会话信息，获得传输层事件通知，并 交换计费标识符 | Diameter  |
+| Ro         | As，MRCF，S-CSCF，oCs                                   | AS/MRFC/s-CSCF用该参考点来向 OCS执行在线计费。备注:在S-CSCF 与OCS之间可能需要一个进行协同的 逻辑功能 | Diameter  |
+| Rf         | P-CSCF，s-CSCF, 1-CSCF，BGCF，MGCF, AS，MRFC，IBCF，CDF | IMS实体用该参考点来向CDF执行 离线计费                        | Diameter  |
+| Ml         | E-CSCF，LRF                                             | 该参考点用于为去往紧急呼叫中心 的路由请求交换必要的信息      | 未定义    |
+| Mx         | CSCF，BGCF，IBCF                                        | 当与不同运营商进行通信时，用该 参考点来使用IBCF的能力        | 未定义    |
+| lx         | IBCF，TrGw                                              | 该参考点允许进行trGW资源控制                                 | 未定义    |
+| lq         | P-CSCF，IMS接人网关                                     | 该参考点允许进行IMS接人网关 控制                             | 未定义    |
 
 ## 概念
 
@@ -2998,11 +2999,12 @@
   - 在线计费：与离线计费不同，只有三个IMS实体(AS、MRFC和S-CSCF)被用于在线计费。而且，由于版本5时间帧上设计不佳，S-CSCF不能直接与OCS通信。IMS网关功能(IMS-GWF)用于执行必要的协议转换。OCS支持来自其他网络实体的两个参考点。SGSN使用CAMEL应用部分（CAP)，其他实体使用基于Diameter的Ro参考点。就像离线计费中的CGF一样，OCS除了信用( credit)控制处理（实时地认可资源）之外，也能够创建CDR。
 
 - | 离线计费功能       | 关键过程                                                     |
-  | ------------------ | ------------------------------------------------------------ |
-  | 计费触发功能（CTF) | 监测SIP信令 检测触发器条件 从SIP信令中提取信息并且重组计费信息 发送计费信息给CDF |
-  | 计费数据功能（CDF) | 构建CDR 传送CDR给CGF                                         |
-  | 计费网关功能（CCF) | 关联、合并、过滤不必要的域并且在接收到的账户信息中增 加运营商特定的信息 CDR错误处理和存储 传送CDR给计费系统 预处理CDR |
-  | 计费系统           | 创建实际的账单                                               |
+
+| ------------------ | ------------------------------------------------------------ |
+| 计费触发功能（CTF) | 监测SIP信令 检测触发器条件 从SIP信令中提取信息并且重组计费信息 发送计费信息给CDF |
+| 计费数据功能（CDF) | 构建CDR 传送CDR给CGF                                         |
+| 计费网关功能（CCF) | 关联、合并、过滤不必要的域并且在接收到的账户信息中增 加运营商特定的信息 CDR错误处理和存储 传送CDR给计费系统 预处理CDR |
+| 计费系统           | 创建实际的账单                                               |
 
 ### 用户配置
 
@@ -3569,13 +3571,13 @@
 
 1. 与路由有关的消息头
 
-   - | 消息头        | 功能                                                         | 设置                                                         |
-     | ------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-     | Via           | 对请求消息进行路由转发                                       | 在请求的路由转发过程中，每个途经的SHIP实体都来 设置，将其地址写入 Via消息头 |
-     | Route         | 对请求消息进行路由转发                                       | 初始请求:由发起请求的UE来设置，它将填人P- CSCF（出站代理）地址和Service-Route消息头的条目 初始请求:由CSCF来设置，它们从请求URI中的公 共用户身份（通过查询DNS和HSS）或者收到的Path 消息头中发现下一跳 后续请求:由发起请求的UE来设置，它根据初始请 求路由过程中由Record-Route消息头所采集的条目放入 Route消息头 |
-     | Record-Route  | 为一个会话中的后续请求 记录Route消息头中的条目               | 由CSCF来设置，如果它们希望收到对话中的后续请 求，就将其地址放入Record-Route消息头 |
-     | Service-Route | 指示初始请求的Route消息 头条目，初始请求由UE发往 用户的S-CSCF(用户发起) | 由S-CSCF来设置，它在对REGISTER请求的200 ( OK）响应中返回本消息头 |
-     | Path          | 收集Route消息头条目，用 于从S-CSCF向用户P-CSCF 发出初始请求（用户终结) | 由P-CSCF来设置，它将自己的地址放人REGISTER 请求的Path消息头中，并将其发往S-CSCF |
+| 消息头        | 功能                                                         | 设置                                                         |
+| ------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Via           | 对请求消息进行路由转发                                       | 在请求的路由转发过程中，每个途经的SHIP实体都来 设置，将其地址写入 Via消息头 |
+| Route         | 对请求消息进行路由转发                                       | 初始请求:由发起请求的UE来设置，它将填人P- CSCF（出站代理）地址和Service-Route消息头的条目 初始请求:由CSCF来设置，它们从请求URI中的公 共用户身份（通过查询DNS和HSS）或者收到的Path 消息头中发现下一跳 后续请求:由发起请求的UE来设置，它根据初始请 求路由过程中由Record-Route消息头所采集的条目放入 Route消息头 |
+| Record-Route  | 为一个会话中的后续请求 记录Route消息头中的条目               | 由CSCF来设置，如果它们希望收到对话中的后续请 求，就将其地址放入Record-Route消息头 |
+| Service-Route | 指示初始请求的Route消息 头条目，初始请求由UE发往 用户的S-CSCF(用户发起) | 由S-CSCF来设置，它在对REGISTER请求的200 ( OK）响应中返回本消息头 |
+| Path          | 收集Route消息头条目，用 于从S-CSCF向用户P-CSCF 发出初始请求（用户终结) | 由P-CSCF来设置，它将自己的地址放人REGISTER 请求的Path消息头中，并将其发往S-CSCF |
 
 2. Tobias的UE首先会生成一个REGISTER请求，发往 Tobias运营商的归属域。相关信息将从Tobias的 USIM模块（通用用户标识模块）上的IP多媒体服务标识模块(ISIM)应用中获得。该请求将经过P-CSCF和 I-CSCF，如果没有事先指定S-CSCF，I-CSCF将为Tobias选择一个S-CSCF。
 
@@ -4741,15 +4743,15 @@
 
 - Some   headers   are   mandatory   in   every   SIP   request   and   response
 
-  - | header              | example                                               |
-    | ------------------- | ----------------------------------------------------- |
-    | To header           | To:SIP-URI(;parameters)                               |
-    | From header         | From: SIP-URI(;parameters)                            |
-    | Call-ID header      | Call-ID: unique-id                                    |
-    | CSeq header         | CSeq: digit method                                    |
-    | Via header          | Via: SIP/2.0/[transport-protocol] sent-by(parameters) |
-    | Max-Forwards header | Max-Forwards: digit                                   |
-    | Contact header      | Contact: SIP-URI(;parameters)                         |
+| header              | example                                               |
+| ------------------- | ----------------------------------------------------- |
+| To header           | To:SIP-URI(;parameters)                               |
+| From header         | From: SIP-URI(;parameters)                            |
+| Call-ID header      | Call-ID: unique-id                                    |
+| CSeq header         | CSeq: digit method                                    |
+| Via header          | Via: SIP/2.0/[transport-protocol] sent-by(parameters) |
+| Max-Forwards header | Max-Forwards: digit                                   |
+| Contact header      | Contact: SIP-URI(;parameters)                         |
 
     - that the brackets around parameters indicate that they are optional
 
@@ -6003,15 +6005,16 @@
 #### rcs注册流程
 
 - | Step | Direction  | Protocol | Message                                                  |
-  | ---- | ---------- | -------- | -------------------------------------------------------- |
-  | 1    | UA1 --> NW | SIP      | `REGISTER sip:test-rcs.com`                              |
-  | 2    | UA1 <-- NW | SIP      | 200 OK                                                   |
-  | 3    | UA1 --> NW | SIP      | `SUBSCRIBE sip:+339012341234@test-rcs.com;pres-list=rcs` |
-  | 4    | UA1 <-- NW | SIP      | 200 OK                                                   |
-  | 5    | UA1 --> NW | SIP/XML  | `PUBLISH sip:+339012341234@test-rcs.com`                 |
-  | 6    | UA1 <-- NW | SIP      | 200 OK                                                   |
-  | 7    | UA1 <-- NW | SIP      | `NOTIFY sip:192.168.1.1:5060;transport=udp`              |
-  | 8    | UA1 --> NW | SIP      | 200 OK                                                   |
+
+| ---- | ---------- | -------- | -------------------------------------------------------- |
+| 1    | UA1 --> NW | SIP      | `REGISTER sip:test-rcs.com`                              |
+| 2    | UA1 <-- NW | SIP      | 200 OK                                                   |
+| 3    | UA1 --> NW | SIP      | `SUBSCRIBE sip:+339012341234@test-rcs.com;pres-list=rcs` |
+| 4    | UA1 <-- NW | SIP      | 200 OK                                                   |
+| 5    | UA1 --> NW | SIP/XML  | `PUBLISH sip:+339012341234@test-rcs.com`                 |
+| 6    | UA1 <-- NW | SIP      | 200 OK                                                   |
+| 7    | UA1 <-- NW | SIP      | `NOTIFY sip:192.168.1.1:5060;transport=udp`              |
+| 8    | UA1 --> NW | SIP      | 200 OK                                                   |
 
 - ```
   （1) REGISTER sip:test-rcs.com
@@ -6487,13 +6490,14 @@ End User Confirmation Requests
 ###### Flows
 
 - | Step | Direction         | Protocol | Message | Comments                      |
-  | ---- | ----------------- | -------- | ------- | ----------------------------- |
-  | (1)  | UA1 --> Proxy/UA2 | SIP      | MESSAGE | Send a text '123456789abcdef' |
-  | (2)  | UA1 <-- Proxy/UA2 | SIP      | 200 OK  |                               |
-  | (3)  | UA1 <-- Proxy/UA2 | SIP      | MESSAGE | Delivery Notification         |
-  | (4)  | UA1 --> Proxy/UA2 | SIP      | 200 OK  |                               |
-  | (5)  | UA1 <-- Proxy/UA2 | SIP      | MESSAGE | Display Notification          |
-  | (6)  | UA1 --> Proxy/UA2 | SIP      | 200 OK  |                               |
+
+| ---- | ----------------- | -------- | ------- | ----------------------------- |
+| (1)  | UA1 --> Proxy/UA2 | SIP      | MESSAGE | Send a text '123456789abcdef' |
+| (2)  | UA1 <-- Proxy/UA2 | SIP      | 200 OK  |                               |
+| (3)  | UA1 <-- Proxy/UA2 | SIP      | MESSAGE | Delivery Notification         |
+| (4)  | UA1 --> Proxy/UA2 | SIP      | 200 OK  |                               |
+| (5)  | UA1 <-- Proxy/UA2 | SIP      | MESSAGE | Display Notification          |
+| (6)  | UA1 --> Proxy/UA2 | SIP      | 200 OK  |                               |
 
 - ```
   (1) MESSAGE
@@ -6878,18 +6882,19 @@ End User Confirmation Requests
 ##### Flows
 
 - | Step | Direction         | Protocol | Message              | Comments              |
-  | ---- | ----------------- | -------- | -------------------- | --------------------- |
-  | (1)  | UA1 --> Proxy/UA2 | SIP/SDP  | INVITE               |                       |
-  | (2)  | UA1 <-- Proxy/UA2 | SIP      | 100 Trying           |                       |
-  | (3)  | UA1 <-- Proxy/UA2 | SIP      | 183 Session Progress |                       |
-  | (4)  | UA1 <-- Proxy/UA2 | SIP/SDP  | 200 OK               |                       |
-  | (5)  | UA1 --> Proxy/UA2 | SIP      | ACK                  |                       |
-  | (6)  | UA1 --> Proxy/UA2 | MSRP     | SEND                 |                       |
-  | (7)  | UA1 <-- Proxy/UA2 | MSRP     | 200 OK               |                       |
-  | (8)  | UA1 --> Proxy/UA2 | MSRP     | SEND                 | Send Text 'Hello'     |
-  | (9)  | UA1 <-- Proxy/UA2 | MSRP     | 200 OK               |                       |
-  | (10) | UA1 <-- Proxy/UA2 | MSRP     | SEND                 | Delivery Notification |
-  | (11) | UA1 --> Proxy/UA2 | MSRP     | 200 OK               |                       |
+
+| ---- | ----------------- | -------- | -------------------- | --------------------- |
+| (1)  | UA1 --> Proxy/UA2 | SIP/SDP  | INVITE               |                       |
+| (2)  | UA1 <-- Proxy/UA2 | SIP      | 100 Trying           |                       |
+| (3)  | UA1 <-- Proxy/UA2 | SIP      | 183 Session Progress |                       |
+| (4)  | UA1 <-- Proxy/UA2 | SIP/SDP  | 200 OK               |                       |
+| (5)  | UA1 --> Proxy/UA2 | SIP      | ACK                  |                       |
+| (6)  | UA1 --> Proxy/UA2 | MSRP     | SEND                 |                       |
+| (7)  | UA1 <-- Proxy/UA2 | MSRP     | 200 OK               |                       |
+| (8)  | UA1 --> Proxy/UA2 | MSRP     | SEND                 | Send Text 'Hello'     |
+| (9)  | UA1 <-- Proxy/UA2 | MSRP     | 200 OK               |                       |
+| (10) | UA1 <-- Proxy/UA2 | MSRP     | SEND                 | Delivery Notification |
+| (11) | UA1 --> Proxy/UA2 | MSRP     | 200 OK               |                       |
 
 - ```
   (1) INVITE
@@ -7496,13 +7501,14 @@ End User Confirmation Requests
 - Standard Options  
 
 - | Option No | Name               | Value Format | DM Client Support | DM Server Support | Occurrence |
-  | --------- | ------------------ | ------------ | ----------------- | ----------------- | ---------- |
-  | 1         | SERVER-ID          | String       | Mandatory         | Mandatory         | ZeroOrOne  |
-  | 2         | PREFERRED-CON-TYPE | Opaque       | Mandatory         | Mandatory         | ZeroOrOne  |
-  | 3         | NOTIFICATION-ID    | Uint         | Optional          | Mandatory         | ZeroOrOne  |
-  | 4         | SHA256-DIGEST      | Opaque       | Optional          | Mandatory         | ZeroOrOne  |
-  | 5         | TIMESTAMP          | Opaque       | Optional          | Mandatory         | ZeroOrOne  |
-  | 6         | REQ-MOS            | Null         | Mandatory         | Mandatory         | ZeroOrOne  |
+
+| --------- | ------------------ | ------------ | ----------------- | ----------------- | ---------- |
+| 1         | SERVER-ID          | String       | Mandatory         | Mandatory         | ZeroOrOne  |
+| 2         | PREFERRED-CON-TYPE | Opaque       | Mandatory         | Mandatory         | ZeroOrOne  |
+| 3         | NOTIFICATION-ID    | Uint         | Optional          | Mandatory         | ZeroOrOne  |
+| 4         | SHA256-DIGEST      | Opaque       | Optional          | Mandatory         | ZeroOrOne  |
+| 5         | TIMESTAMP          | Opaque       | Optional          | Mandatory         | ZeroOrOne  |
+| 6         | REQ-MOS            | Null         | Mandatory         | Mandatory         | ZeroOrOne  |
 
   - 选项的值的格式必须是以下格式之一：
     - Uint：一个非负整数，使用Option Length决定的字节数以网络字节顺序表示。Option Value的取值范围由2的Option Length次方计算得出，以位为单位。例如，如果Option Length为2，则Option Value的取值范围为0-65535。
@@ -7518,12 +7524,12 @@ End User Confirmation Requests
 
   - 此选项的值必须是以下之一：
 
-    - | Value | Semantics     | Description                                                  |
-      | ----- | ------------- | ------------------------------------------------------------ |
-      | 0x00  | ANY_AVAILABLE | Indicates the preferred connection is anything currently available |
-      | 0x01  | CELLULAR      | Indicates the preferred connection is cellular, e.g. GSM/CDMA/UMTS/LTE |
-      | 0x02  | WLAN          | Indicates the preferred connection is WLAN. e.g. IEEE 802.11 a/b/g/n/ac |
-      | 0x03  | WIRELINE      | Indicates the preferred connection is wireline               |
+| Value | Semantics     | Description                                                  |
+| ----- | ------------- | ------------------------------------------------------------ |
+| 0x00  | ANY_AVAILABLE | Indicates the preferred connection is anything currently available |
+| 0x01  | CELLULAR      | Indicates the preferred connection is cellular, e.g. GSM/CDMA/UMTS/LTE |
+| 0x02  | WLAN          | Indicates the preferred connection is WLAN. e.g. IEEE 802.11 a/b/g/n/ac |
+| 0x03  | WIRELINE      | Indicates the preferred connection is wireline               |
 
 - 通知标识选项（NOTIFICATION-ID）
   - 通知标识选项用于指定用于检测DM通知的重复的16位无符号整数。如果底层传输提供了丢弃重复DM通知的功能，该选项可能不会被呈现。该选项的长度必须为2个字节。
@@ -7562,19 +7568,20 @@ End User Confirmation Requests
 ## DM Commands
 
 - | Command | Description                                                  | DM Server support | DM Client support |
-  | ------- | ------------------------------------------------------------ | ----------------- | ----------------- |
-  | HGET    | The DM Server uses this command to requests the DM Client to retrieve data from the Data Repository using HTTP GET, and add or replace the received data into the DM Tree | MUST              | MUST              |
-  | HPUT    | The DM Server uses this command to request the DM Client to send data to the Data Repository using HTTP PUT | MUST              | MUST              |
-  | HPOST   | The DM Server uses this command to request the DM Client to send data to the Data Repository using HTTP POST | MUST              | MUST              |
-  | DELETE  | The DM Server uses this command to delete data in the DM Tree | MUST              | MUST              |
-  | EXEC    | The DM Server uses this command to execute an executable node in the DM Tree | MUST              | MUST              |
-  | GET     | The DM Server uses this command to retrieve data from the DM Tree. The DM Client sends the data within the current DM Session | MUST              | SHOULD            |
-  | SHOW    | The DM Server uses this command to initiate a UI Session between the Web Browser Component and the Web Server Component | MUST              | SHOULD            |
-  | CONT    | The DM Server uses this command for the DM Client to continue the DM Session with the specified DM Server URI | MUST              | MUST              |
-  | END     | This command is used by the DM Server to terminate the DM session | MUST              | MUST              |
-  | DEFAULT | Configure the DM Client to use a specific address to capture configuration if that is missing in the device for an specific MOID | MUST              | SHOULD            |
-  | SUB     | The DM Server uses this command to request to the DM Client to report (subscribe) changes in the DM Tree part identified by the provided ClientURI | SHOULD            | SHOULD            |
-  | UNSUB   | The DM Server uses this command to request to the DM Client to revoke previous subscription to notification for changes in the DM Tree part identified by the provided ClientURI | SHOULD            | SHOULD            |
+
+| ------- | ------------------------------------------------------------ | ----------------- | ----------------- |
+| HGET    | The DM Server uses this command to requests the DM Client to retrieve data from the Data Repository using HTTP GET, and add or replace the received data into the DM Tree | MUST              | MUST              |
+| HPUT    | The DM Server uses this command to request the DM Client to send data to the Data Repository using HTTP PUT | MUST              | MUST              |
+| HPOST   | The DM Server uses this command to request the DM Client to send data to the Data Repository using HTTP POST | MUST              | MUST              |
+| DELETE  | The DM Server uses this command to delete data in the DM Tree | MUST              | MUST              |
+| EXEC    | The DM Server uses this command to execute an executable node in the DM Tree | MUST              | MUST              |
+| GET     | The DM Server uses this command to retrieve data from the DM Tree. The DM Client sends the data within the current DM Session | MUST              | SHOULD            |
+| SHOW    | The DM Server uses this command to initiate a UI Session between the Web Browser Component and the Web Server Component | MUST              | SHOULD            |
+| CONT    | The DM Server uses this command for the DM Client to continue the DM Session with the specified DM Server URI | MUST              | MUST              |
+| END     | This command is used by the DM Server to terminate the DM session | MUST              | MUST              |
+| DEFAULT | Configure the DM Client to use a specific address to capture configuration if that is missing in the device for an specific MOID | MUST              | SHOULD            |
+| SUB     | The DM Server uses this command to request to the DM Client to report (subscribe) changes in the DM Tree part identified by the provided ClientURI | SHOULD            | SHOULD            |
+| UNSUB   | The DM Server uses this command to request to the DM Client to revoke previous subscription to notification for changes in the DM Tree part identified by the provided ClientURI | SHOULD            | SHOULD            |
 
 ## Generic Alert
 
@@ -7588,14 +7595,14 @@ End User Confirmation Requests
 
 - 以下表格总结了通用警报支持的属性：
 
-  - | Property  | Description                                                  | Occurrence |
-    | --------- | ------------------------------------------------------------ | ---------- |
-    | AlertType | The type of the Generic Alert                                | One        |
-    | SourceURI | The address to the node in the MO that is related to this Generic Alert | ZeroOrOne  |
-    | TargetURI | The additional address related to the Generic Alert. This MUST be a ClientURI as specified in the section 6.1. The usage of the TargetURI is not specified in this specification. | ZeroOrOne  |
-    | Mark      | The importance level. The following values are defined: "fatal", "critical", "minor", "warning", "informational", "harmless" and "indeterminate". If the parameter is omitted then the default importance level "informational" is assumed. | ZeroOrOne  |
-    | DataType  | The Media Type of the Data content. This property MUST be present if the Data property exists. | ZeroOrOne  |
-    | Data      | The additional data for the Generic Alert. The format and the content of the Data are not specified in this specification | ZeroOrOne  |
+| Property  | Description                                                  | Occurrence |
+| --------- | ------------------------------------------------------------ | ---------- |
+| AlertType | The type of the Generic Alert                                | One        |
+| SourceURI | The address to the node in the MO that is related to this Generic Alert | ZeroOrOne  |
+| TargetURI | The additional address related to the Generic Alert. This MUST be a ClientURI as specified in the section 6.1. The usage of the TargetURI is not specified in this specification. | ZeroOrOne  |
+| Mark      | The importance level. The following values are defined: "fatal", "critical", "minor", "warning", "informational", "harmless" and "indeterminate". If the parameter is omitted then the default importance level "informational" is assumed. | ZeroOrOne  |
+| DataType  | The Media Type of the Data content. This property MUST be present if the Data property exists. | ZeroOrOne  |
+| Data      | The additional data for the Generic Alert. The format and the content of the Data are not specified in this specification | ZeroOrOne  |
 
 ## HTTP Error handling  
 
@@ -7660,13 +7667,14 @@ End User Confirmation Requests
 - 该原语用于通过面向连接的服务，在推送会话中以非确认方式从服务器发送信息。
 
 - | Primitive Parameter | Po-Push |      |
-  | ------------------- | ------- | ---- |
-  |                     | req     | ind  |
-  | Push Headers        | O       | C(=) |
-  | Authenticated       | O       | C(=) |
-  | Trusted             | O       | C(=) |
-  | Last                | O       | C(=) |
-  | Push Body           | O       | C(=) |
+
+| ------------------- | ------- | ---- |
+|                     | req     | ind  |
+| Push Headers        | O       | C(=) |
+| Authenticated       | O       | C(=) |
+| Trusted             | O       | C(=) |
+| Last                | O       | C(=) |
+| Push Body           | O       | C(=) |
 
   - 推送头部在[PushMsg]中被定义。
   - 通过Authenticated参数，指示发起者URI是否通过服务器进行身份验证。
@@ -7716,4 +7724,4 @@ End User Confirmation Requests
 ##### Connection-orientated Push  
 
 - 连接导向的推送必须通过WSP会话服务原语中的S-Push（例如未确认的推送）或S-ConfirmedPush来执行。必须建立一个推送会话来执行这些原语。推送会话是一个启用了已确认、未确认或二者都启用的推送能力的WSP会话[W-TCP]。
-  推送会话可以使用安全或非安全的传输服务。服务器端口号在[WDP]中为这两种选项保留。如果需要安全传输服务，则必须使用WTLS。如果联系点中的端口号是已注册的安全端口[WDP]，或者在PPG的预先存在的联系点列表中指示了安全传输，则需要安全传输服务。
+  推送会话可以使用安全或非安全的传输服务。服务器端口号在[WDP]中为这两种选项保留。如果需要安全传输服务，则必须使用WTLS。如果联系点中的端口号是已注册的安全端口[WDP]，或者在PPG的预先存在的联系点列表中指示了安全传输，则需要安全传输服务。全传输服务。

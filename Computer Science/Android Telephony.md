@@ -1,4 +1,4 @@
-# 概述
+﻿# 概述
 
 - 背景：Android Telephone作为Android手机中的核心模块，为手机提供了基础的通信能力，其逻辑处理、运行效率和稳定性是Android手机定制开发过程中的重点和难点
 - Telephony模块作为一个智能手机的核心部件, 是区别移动OS与桌面OS的重要标志。
@@ -32,7 +32,7 @@
 
 ## Android Telephony框架结构
 
-- ![[webp.webp]]
+- ![[Database/Android.assets/webp.webp]]
   - Android Telephony的业务应用跨越AP和BP，AP与BP相互通信，符合前面介绍的智能手机的硬件基本结构。
   - Android系统在AP上运行，而Telephony运行在Linux Kernel之上的用户空间。
   - Android Telephony也采用了分层结构的设计,共跨越了三层:应用层、应用框架层和系统运行库层，与Android操作系统整体分层结构保持一致;
@@ -80,17 +80,18 @@
   - **服务器**：用于管理客户端与守护程序之间的通信。服务器在开发机器上作为后台进程运行。
 
 - | 命令                                    | 说明                                 |
-  | --------------------------------------- | ------------------------------------ |
-  | adb logcat -vthreadtime                 | 查看main日志的命令                   |
-  | adb logcat -vtime -b radio              | 查看radio日志的命令                  |
-  | adb logcat -vtime -b events             | 查看event日志的命令                  |
-  | adb pull 手机目录 电脑目录              | 拷贝手机的目录或文件到电脑的指定目录 |
-  | adb push 电脑目录 手机目录              | 拷贝电脑的目录或文件到手机的指定目录 |
-  | adb install xxx.apk                     | 安装apk                              |
-  | adb root                                | 以root启动adb                        |
-  | adb shell pm uninstall -k --user 0 包名 | 删除系统预装应用                     |
-  | adb shell pm list packages              | 显示所有的包                         |
-  | adb shell ps -ef                        | 显示                                 |
+
+| --------------------------------------- | ------------------------------------ |
+| adb logcat -vthreadtime                 | 查看main日志的命令                   |
+| adb logcat -vtime -b radio              | 查看radio日志的命令                  |
+| adb logcat -vtime -b events             | 查看event日志的命令                  |
+| adb pull 手机目录 电脑目录              | 拷贝手机的目录或文件到电脑的指定目录 |
+| adb push 电脑目录 手机目录              | 拷贝电脑的目录或文件到手机的指定目录 |
+| adb install xxx.apk                     | 安装apk                              |
+| adb root                                | 以root启动adb                        |
+| adb shell pm uninstall -k --user 0 包名 | 删除系统预装应用                     |
+| adb shell pm list packages              | 显示所有的包                         |
+| adb shell ps -ef                        | 显示                                 |
 
 # 通话流程
 
@@ -133,22 +134,24 @@
   
 
 - | 代码库                       | Android.mk核心配置                                           | 说明                                      |
-  | ---------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
-  | packages/apps/Dialer         | LOCAL_PACKAGE_NAME:=Dialer<br /> include $(BUILD_PACKAGE)    | 编译出 Dialer.apk应用                     |
-  | packages/services/ Telecomm  | LOCAL_JAVA_LIBRARIES := telephony-common LOCAL_PACKAGE_NAME:=Telecom <br />LOCAL_CERTIFICATE:= <br />platform $(BUILD_PACKAGE) | 编译出Telecom.apk应用，并使 用平台签名    |
-  | packages/services/ Telephony | LOCAL_JAVA_LIBRARIES:= telephony-common <br />LOCAL_PACKAGE_NAME:= TeleService <br />LOCAL_CERTIFICATE:= platform<br />$(BUILD_PACKAGE) | 编译出TeleService.apk应用，并使用平台签名 |
-  | frameworks/base/telecomm     |                                                              | 编译出framework.jar                       |
-  | frameworks/opt/telephony     | LOCAL_MODULE:= telephony-common <br />include $(BUILD_JAVA_LIBRARY) | 编译出telephony-common.jar                |
+
+| ---------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| packages/apps/Dialer         | LOCAL_PACKAGE_NAME:=Dialer<br /> include $(BUILD_PACKAGE)    | 编译出 Dialer.apk应用                     |
+| packages/services/ Telecomm  | LOCAL_JAVA_LIBRARIES := telephony-common LOCAL_PACKAGE_NAME:=Telecom <br />LOCAL_CERTIFICATE:= <br />platform $(BUILD_PACKAGE) | 编译出Telecom.apk应用，并使 用平台签名    |
+| packages/services/ Telephony | LOCAL_JAVA_LIBRARIES:= telephony-common <br />LOCAL_PACKAGE_NAME:= TeleService <br />LOCAL_CERTIFICATE:= platform<br />$(BUILD_PACKAGE) | 编译出TeleService.apk应用，并使用平台签名 |
+| frameworks/base/telecomm     |                                                              | 编译出framework.jar                       |
+| frameworks/opt/telephony     | LOCAL_MODULE:= telephony-common <br />include $(BUILD_JAVA_LIBRARY) | 编译出telephony-common.jar                |
 
 - 
 
 - | 代码库                      | 名称        | 进程                            |
-  | --------------------------- | ----------- | ------------------------------- |
-  | packages/apps/Dialer        | Dialer      | com.android.dialer              |
-  | packages/services/Telecomm  | Telecom     | system_server                   |
-  | packages/services/Telephony | TeleService | com.android.phone               |
-  | frameworks/base/telecomm    | framework   |                                 |
-  | frameworks/opt/telephony    | Telephony   | system_server&com.android.phone |
+
+| --------------------------- | ----------- | ------------------------------- |
+| packages/apps/Dialer        | Dialer      | com.android.dialer              |
+| packages/services/Telecomm  | Telecom     | system_server                   |
+| packages/services/Telephony | TeleService | com.android.phone               |
+| frameworks/base/telecomm    | framework   |                                 |
+| frameworks/opt/telephony    | Telephony   | system_server&com.android.phone |
 
 ### 拨号流程分析
 
@@ -586,35 +589,35 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
   - CallsManagerlistenerBase子类
 
-    - | 类名                                                         | 重写父类方法           | 关键业务                                                     |
-      | ------------------------------------------------------------ | ---------------------- | ------------------------------------------------------------ |
-      | IncomingCallNotifier                                         | onCallAdded            | 手机状态栏显示来电信息，并附加了接听和拒接操作入口           |
-      |                                                              | onCallRemoved          |                                                              |
-      |                                                              | onCallStateChanged     |                                                              |
-      | RespondViaSmsManager                                         | onIncomingCallRejected | 拒接来电后，发送短信                                         |
-      | CallAudioManager                                             | onCallStateChanged     | 根据通话状态设置Audio音频策略                                |
-      |                                                              | onCallAdded            |                                                              |
-      |                                                              | onCallRemoved          |                                                              |
-      | HeadsetMediaButton                                           | onCallAdded            | 耳机按钮控制事件的响应，根据通话状态进行接听或是挂断电话操作 |
-      |                                                              | onCallRemoved          |                                                              |
-      |                                                              | onExternalCallChanged  |                                                              |
-      | CalLogManager                                                | onCallStateChanged     | 记录通话曰志                                                 |
-      | PhoneStateBroadcaster                                        | onCallStateChanged     | 根据telephony.registry 服务发起通话状态改变的注册消息回调和广播的发送 |
-      |                                                              | onCallRemoved          |                                                              |
-      |                                                              | onExternalCallChanged  |                                                              |
-      |                                                              | onCallAdded            |                                                              |
-      | MissedCallNotifierlmpl                                       |                        | 未重写父类CallsManagerListenerBase的任何方法，通过对象方法调用的方式在通知栏增加未接电话的提示 |
-      | ProximitySensorManager                                       | onCallRemoved          | 距离感应器处理                                               |
-      | StatusBarNotifier                                            | onCallRemoved          | 状态栏静音、扬声器状态同步                                   |
-      | InCallWakeLockController                                     | onCallAdded            | 电源管理                                                     |
-      |                                                              | onCallRemoved          |                                                              |
-      |                                                              | onCallStateChanged     |                                                              |
-      | InCallController                                             | onCallAdded            | 根据通话状态调用updateCall方法，创建ParcelableCall对象，通过InCallService服务传递给Dialer应用 |
-      |                                                              | onCallRemoved          |                                                              |
-      |                                                              | onCallStateChanged     |                                                              |
-      | Anonymous in mCallsManagerListener in BluetoothPhoneServicelmpl | onCallAdded            | 蓝牙耳机的交互                                               |
-      |                                                              | onCallStateChanged     |                                                              |
-      |                                                              | onCallRemoved          |                                                              |
+| 类名                                                         | 重写父类方法           | 关键业务                                                     |
+| ------------------------------------------------------------ | ---------------------- | ------------------------------------------------------------ |
+| IncomingCallNotifier                                         | onCallAdded            | 手机状态栏显示来电信息，并附加了接听和拒接操作入口           |
+|                                                              | onCallRemoved          |                                                              |
+|                                                              | onCallStateChanged     |                                                              |
+| RespondViaSmsManager                                         | onIncomingCallRejected | 拒接来电后，发送短信                                         |
+| CallAudioManager                                             | onCallStateChanged     | 根据通话状态设置Audio音频策略                                |
+|                                                              | onCallAdded            |                                                              |
+|                                                              | onCallRemoved          |                                                              |
+| HeadsetMediaButton                                           | onCallAdded            | 耳机按钮控制事件的响应，根据通话状态进行接听或是挂断电话操作 |
+|                                                              | onCallRemoved          |                                                              |
+|                                                              | onExternalCallChanged  |                                                              |
+| CalLogManager                                                | onCallStateChanged     | 记录通话曰志                                                 |
+| PhoneStateBroadcaster                                        | onCallStateChanged     | 根据telephony.registry 服务发起通话状态改变的注册消息回调和广播的发送 |
+|                                                              | onCallRemoved          |                                                              |
+|                                                              | onExternalCallChanged  |                                                              |
+|                                                              | onCallAdded            |                                                              |
+| MissedCallNotifierlmpl                                       |                        | 未重写父类CallsManagerListenerBase的任何方法，通过对象方法调用的方式在通知栏增加未接电话的提示 |
+| ProximitySensorManager                                       | onCallRemoved          | 距离感应器处理                                               |
+| StatusBarNotifier                                            | onCallRemoved          | 状态栏静音、扬声器状态同步                                   |
+| InCallWakeLockController                                     | onCallAdded            | 电源管理                                                     |
+|                                                              | onCallRemoved          |                                                              |
+|                                                              | onCallStateChanged     |                                                              |
+| InCallController                                             | onCallAdded            | 根据通话状态调用updateCall方法，创建ParcelableCall对象，通过InCallService服务传递给Dialer应用 |
+|                                                              | onCallRemoved          |                                                              |
+|                                                              | onCallStateChanged     |                                                              |
+| Anonymous in mCallsManagerListener in BluetoothPhoneServicelmpl | onCallAdded            | 蓝牙耳机的交互                                               |
+|                                                              | onCallStateChanged     |                                                              |
+|                                                              | onCallRemoved          |                                                              |
 
 ### Call.Listener
 
@@ -740,32 +743,32 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 - GsmCdmaPhone对象关键属性
 
-  - | 属性            | 类型                | 说明                   |
-    | --------------- | ------------------- | ---------------------- |
-    | mRilVersion     | int                 | RIL版本号              |
-    | mImei           | String              | IMEI串号               |
-    | mlmeiSv         | String              | IMEI串号的软件版本     |
-    | mVmNumber       | String              | 语音信箱( Voice Mail ) |
-    | mCi             | RIL                 | RIL的Java服务对象      |
-    | mSST            | ServiceStateTracker | 服务状态跟踪者         |
-    | mCT             | GsmCdmaCallTracker  | 通话跟踪者             |
-    | mDcTracker      | DcTracker           | 移动数据跟踪者         |
-    | mXXXRegistrants | RegistrantList      | 14个Observer列表       |
-    | mNotifier       | PhoneNotifier       | 通知Phone状态变化      |
+| 属性            | 类型                | 说明                   |
+| --------------- | ------------------- | ---------------------- |
+| mRilVersion     | int                 | RIL版本号              |
+| mImei           | String              | IMEI串号               |
+| mlmeiSv         | String              | IMEI串号的软件版本     |
+| mVmNumber       | String              | 语音信箱( Voice Mail ) |
+| mCi             | RIL                 | RIL的Java服务对象      |
+| mSST            | ServiceStateTracker | 服务状态跟踪者         |
+| mCT             | GsmCdmaCallTracker  | 通话跟踪者             |
+| mDcTracker      | DcTracker           | 移动数据跟踪者         |
+| mXXXRegistrants | RegistrantList      | 14个Observer列表       |
+| mNotifier       | PhoneNotifier       | 通知Phone状态变化      |
 
 - GsmCdmaPhone对象关键方法
 
-  - | 分类             | 方法/接口                                                    | 说明                                        |
-    | ---------------- | ------------------------------------------------------------ | ------------------------------------------- |
-    | 消息处理         | registerForXXX                                               | Handler消息注册                             |
-    |                  | unregisterForXXX                                             | 取消Handler消息注册                         |
-    |                  | notifyXXX                                                    | 发出Handler消息通知                         |
-    | 通话控制相关接口 | dial、acceptCall、rejectCal..                                | 拨号、接听来电、拒接来电等控制和管理接口    |
-    |                  | setRadioPower、updateServiceLocation、disableLocationUpdates | 开关飞行模式、设置位置服务                  |
-    |                  | setDataRoamingEnabled、setDataEnabled                        | 漫游移动数据设置接口和移动数据开关接口      |
-    | 获取信息接口     | getForegroundCall、getBackgroundCall、getRingingCall         | 获取Call通话管理对象                        |
-    |                  | getServiceState、getCellLocation                             | 获取ServiceState 驻网服务管理对象和小区信息 |
-    |                  | getDataActivityState、getDataRoamingEnabled、getDataEnabled、getActiveApnTypes... | 获取移动数据状态、APN等信息                 |
+| 分类             | 方法/接口                                                    | 说明                                        |
+| ---------------- | ------------------------------------------------------------ | ------------------------------------------- |
+| 消息处理         | registerForXXX                                               | Handler消息注册                             |
+|                  | unregisterForXXX                                             | 取消Handler消息注册                         |
+|                  | notifyXXX                                                    | 发出Handler消息通知                         |
+| 通话控制相关接口 | dial、acceptCall、rejectCal..                                | 拨号、接听来电、拒接来电等控制和管理接口    |
+|                  | setRadioPower、updateServiceLocation、disableLocationUpdates | 开关飞行模式、设置位置服务                  |
+|                  | setDataRoamingEnabled、setDataEnabled                        | 漫游移动数据设置接口和移动数据开关接口      |
+| 获取信息接口     | getForegroundCall、getBackgroundCall、getRingingCall         | 获取Call通话管理对象                        |
+|                  | getServiceState、getCellLocation                             | 获取ServiceState 驻网服务管理对象和小区信息 |
+|                  | getDataActivityState、getDataRoamingEnabled、getDataEnabled、getActiveApnTypes... | 获取移动数据状态、APN等信息                 |
 
 ### Composition (组合)关系
 
@@ -799,22 +802,22 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
     - 在GsmCdmaPhone对象中，这些RegistrantList 对象发出消息通知的方法的实现逻辑在Phone抽象类和GsmCdmaPhone类中均有不同程度的实现。notifyXXXP 消息通知方法，它们的名称最后都有一个大写的P字母作为方法名称的结尾，P是Parent的首字母。这些方法调用时，都是由其子类调用其父类的super.notifyXXXP对应的方法。notifyXXX通知消息的调用是在GsmCdmaPhone对象提供的通信管理和控制的方法中，调用notifyXXX方法来发出Handler消息的通知。比如，MMI拨号请求、输入PIN码、请求USSD码等一系列主动请求的处理逻辑。
 
-    - | RegistrantList列表                 | 说明                           |
-      | ---------------------------------- | ------------------------------ |
-      | mPreciseCallStateRegistrants       | 通话状态变化消息通知           |
-      | mHandoverRegistrants               | SRVCC通话切换消息通知          |
-      | mNewRingingConnectionRegistrants   | 接收到新来电请求的消息通知     |
-      | mIncomingRingRegistrants           | 来电响铃消息通知               |
-      | mDisconnectRegistrants             | 通话连接断开消息通知           |
-      | mServiceStateRegistrants           | 服务状态变化消息通知           |
-      | mMmiCompleteRegistrants            | MMI执行完毕消息通知            |
-      | mMmiRegistrants                    | 执行MMI消息通知                |
-      | mUnknownConnectionRegistrants      | 出现未知连接消息通知           |
-      | mSuppServiceFailedRegistrants      | 附加服务请求失败消息通知       |
-      | mRadioOffOrNotAvailableRegistrants | Radio状态不可用消息通知        |
-      | mSimRecordsL oadedRegistrants      | SIM卡加载完成消息通知          |
-      | mVideoCapabilityChangedRegistrants | 视频通话能力变化消息通知       |
-      | mEmergencyCallToggledRegistrants   | Emergency callcallback消息通知 |
+| RegistrantList列表                 | 说明                           |
+| ---------------------------------- | ------------------------------ |
+| mPreciseCallStateRegistrants       | 通话状态变化消息通知           |
+| mHandoverRegistrants               | SRVCC通话切换消息通知          |
+| mNewRingingConnectionRegistrants   | 接收到新来电请求的消息通知     |
+| mIncomingRingRegistrants           | 来电响铃消息通知               |
+| mDisconnectRegistrants             | 通话连接断开消息通知           |
+| mServiceStateRegistrants           | 服务状态变化消息通知           |
+| mMmiCompleteRegistrants            | MMI执行完毕消息通知            |
+| mMmiRegistrants                    | 执行MMI消息通知                |
+| mUnknownConnectionRegistrants      | 出现未知连接消息通知           |
+| mSuppServiceFailedRegistrants      | 附加服务请求失败消息通知       |
+| mRadioOffOrNotAvailableRegistrants | Radio状态不可用消息通知        |
+| mSimRecordsL oadedRegistrants      | SIM卡加载完成消息通知          |
+| mVideoCapabilityChangedRegistrants | 视频通话能力变化消息通知       |
+| mEmergencyCallToggledRegistrants   | Emergency callcallback消息通知 |
 
       - SIM卡:用户身份模块（Subscriber Identity Module，SIM），通常称为“SIM卡”或“电话卡”，是主要用于存储用户身份识别数据、短信数据和电话号码的智能卡，ICCID：Integrate circuit card identity 集成电路卡识别码即SIM卡卡号，相当于手机号码的身份证。
       - MMI是指Man Machine Interface即人机界面,MMI是进行移动通信的人与提供移动通信服务的手机之间交往的界面。包括硬件和软件。
@@ -1050,13 +1053,13 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
      - 通话连接断开
      - 通话连接断开并且有新的来电
      - 通话状态发生变化
-   
-   - | 条件                                                         | 说明                                              |
-     | ------------------------------------------------------------ | ------------------------------------------------- |
-     | conn == null && dc != null                                   | 主动拨号后第一次查询到此通话连接 和接收到来电请求 |
-     | conn != null && dc== null                                    | 通话连接已经断开                                  |
-     | conn!= null && dc != null && !conn.compareTo(dc)&& isPhoneTypeGsm() | GSM网络下，通话连接断开的同时,接收到新的来电请求  |
-     | conn != null && dc != null                                   | 通话状态发生了变化                                |
+
+| 条件                                                         | 说明                                              |
+| ------------------------------------------------------------ | ------------------------------------------------- |
+| conn == null && dc != null                                   | 主动拨号后第一次查询到此通话连接 和接收到来电请求 |
+| conn != null && dc== null                                    | 通话连接已经断开                                  |
+| conn!= null && dc != null && !conn.compareTo(dc)&& isPhoneTypeGsm() | GSM网络下，通话连接断开的同时,接收到新的来电请求  |
+| conn != null && dc != null                                   | 通话状态发生了变化                                |
    
 
 ### 发出通知
@@ -1096,11 +1099,11 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 - 关键属性
 
-  - | 属性         | 类型                    | 说明                     |
-    | ------------ | ----------------------- | ------------------------ |
-    | mState       | State                   | 当前通话的状态           |
-    | mConnections | `ArrayList<Connection>` | 通话的连接对象列表       |
-    | mOwner       | GsmCdmaCallTracker      | 所有者是GsmCdmalITracker |
+| 属性         | 类型                    | 说明                     |
+| ------------ | ----------------------- | ------------------------ |
+| mState       | State                   | 当前通话的状态           |
+| mConnections | `ArrayList<Connection>` | 通话的连接对象列表       |
+| mOwner       | GsmCdmaCallTracker      | 所有者是GsmCdmalITracker |
 
 - 关键方法
 
@@ -1148,11 +1151,11 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
   - 注意：在这个过程中不会创建新的GsmCdmaCall对象，只会在GsmCdmaCallTracker对象的三个GsmCdmaCall对象之间进行切换，其处理逻辑在parentFromDCState方法中可体现出来
 
-  - | GsmCdmaConnection对象的mParent取值 | DriverCall.State          | 说明                                                         |
-    | ---------------------------------- | ------------------------- | ------------------------------------------------------------ |
-    | mForegroundCall                    | ACTIVE、DIALING、ALERTING | 第一路通话包含ACTIVE、DIALING和ALERTING三种状态的通话连接    |
-    | mBackgroundCall                    | HOLDING                   | 第二路通话仅包含HOLDING状态的通话连接，即第二路通话的状态只能是HOLDING |
-    | mRingingCall                       | INCOMING、WAITING         | 来电仅包含INCOMING和WAITING这两种状态的通话连接，在有一路或两路通话的情况下接收到来电，此时DriverCall.State的状态为WAITING |
+| GsmCdmaConnection对象的mParent取值 | DriverCall.State          | 说明                                                         |
+| ---------------------------------- | ------------------------- | ------------------------------------------------------------ |
+| mForegroundCall                    | ACTIVE、DIALING、ALERTING | 第一路通话包含ACTIVE、DIALING和ALERTING三种状态的通话连接    |
+| mBackgroundCall                    | HOLDING                   | 第二路通话仅包含HOLDING状态的通话连接，即第二路通话的状态只能是HOLDING |
+| mRingingCall                       | INCOMING、WAITING         | 来电仅包含INCOMING和WAITING这两种状态的通话连接，在有一路或两路通话的情况下接收到来电，此时DriverCall.State的状态为WAITING |
 
     1. GsmCdmaCallITracker对象接收到新的来电请求消息后，首先会创建一个GsmCdmaConnection 对象，此对象的mParent 属性为mRingingCall对象。
     2. 然后，接听此来电请求，进入正在通话中状态，此时GsmCdmaCallTracker对象会更新之前创建的GsmCdmaConnection 对象。在更新过程中，mParent 的引用会更改为mForegroundCall对象，同时将mRingingCall 对象中的mConnections中的GsmCdmaConnection对象删除，完成GsmCdmaConnection对象的mParent的切换和更新。
@@ -1299,29 +1302,31 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 ### 关键常量
 
 - | 分类             | 定义                     | 描述                               |
-  | ---------------- | ------------------------ | ---------------------------------- |
-  | 网络服务状态     | STATE_IN_SERVICE         | 服务状态正常                       |
-  |                  | STATE_OUT_OF_SERVICE     | 不在服务中                         |
-  |                  | STATE_EMERGENCY_ONLY     | 只能呼叫紧急号码                   |
-  |                  | STATE_POWER_OFF          | 无线通信模块已经关闭               |
-  | 网络注册信息     | RIL_REG_STATE_XXX        | （网络未注册、注册本地网络......） |
-  | 无线通信网络类型 | RIL_RADIO_TECHNOLOGY_XXX | (2G、3G、4G......)                 |
+
+| ---------------- | ------------------------ | ---------------------------------- |
+| 网络服务状态     | STATE_IN_SERVICE         | 服务状态正常                       |
+|                  | STATE_OUT_OF_SERVICE     | 不在服务中                         |
+|                  | STATE_EMERGENCY_ONLY     | 只能呼叫紧急号码                   |
+|                  | STATE_POWER_OFF          | 无线通信模块已经关闭               |
+| 网络注册信息     | RIL_REG_STATE_XXX        | （网络未注册、注册本地网络......） |
+| 无线通信网络类型 | RIL_RADIO_TECHNOLOGY_XXX | (2G、3G、4G......)                 |
 
   - ServiceState类中共定义了4种网络服务状态、10 个网络注册信息和19种无线通信网络类型。
 
 ### 关键属性
 
 - | 属性                                              | 类型    | 描述                 |
-  | ------------------------------------------------- | ------- | -------------------- |
-  | mVoiceRegState                                    | int     | 网络服务状态(语音)   |
-  | mDataRegState                                     | int     | 移动数据服务状态     |
-  | mVoiceRoamingType                                 | int     | 语音漫游类型         |
-  | mDataRoamingType                                  | int     | 移动数据漫游类型     |
-  | mViceOperatorAlphaLong、mDataOperatorAlphaLong    | String  | 运营商名称           |
-  | mDataOperatorAlphaShort、mVoiceOperatorAlphaShort | String  | 运营商名称           |
-  | MVoiceOperatorNumeric、mDataOperatorNumeric       | String  | 运营商编号           |
-  | mlsManualNetworkSelection                         | boolean | 手动选择运营商标志   |
-  | mlsEmergencyOnly                                  | boolean | 仅有紧急呼救状态标志 |
+
+| ------------------------------------------------- | ------- | -------------------- |
+| mVoiceRegState                                    | int     | 网络服务状态(语音)   |
+| mDataRegState                                     | int     | 移动数据服务状态     |
+| mVoiceRoamingType                                 | int     | 语音漫游类型         |
+| mDataRoamingType                                  | int     | 移动数据漫游类型     |
+| mViceOperatorAlphaLong、mDataOperatorAlphaLong    | String  | 运营商名称           |
+| mDataOperatorAlphaShort、mVoiceOperatorAlphaShort | String  | 运营商名称           |
+| MVoiceOperatorNumeric、mDataOperatorNumeric       | String  | 运营商编号           |
+| mlsManualNetworkSelection                         | boolean | 手动选择运营商标志   |
+| mlsEmergencyOnly                                  | boolean | 仅有紧急呼救状态标志 |
 
   - ServiceState实体类主要从Voice Call语音通话业务和Data Call移动数据业务两个方面，保存运营商网络服务状态以及运营商的基本信息。
 
@@ -1354,17 +1359,18 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 ### 关键方法
 
 - | 分类             | 方法名                            | 描述                                                         |
-  | ---------------- | --------------------------------- | ------------------------------------------------------------ |
-  | Handler消息处理  | handleMessage                     | 响应RILJ发出的消息回调                                       |
-  |                  | handlePollStateResult             | 四个查询网络服务的消息响应方法EVENT_POLL_STATE_XXX ;         |
-  | 更新网络服务信息 | pollState/modemTriggeredPollState | 查询基本网络服务信息,包括getOperator查询电信运营商信息、getDataRegistrationState 查询移动数据注册状态、getVoiceRegistrationState查询语音注册状态、getNetworkSelectionMode 查询网络模式 |
-  |                  | pollStateDone                     | 根据pollState的查询结果，完成mSS信息的更新并发出ServiceState变化的消息通知 |
-  | 更新网络服务信息 | updateSpnDisplay                  | 更新网络运营商显示名称，SPN：Service Provider Name           |
-  |                  | queueNextSignalStrengthPoll       | 查询当前无线信号                                             |
-  |                  | onSignalStrengthResult            | 根据queueNextSignalStrengthPoll的查询结果，更新信号          |
-  | 网络服务控制     | setRadioPower                     | 开关Radio无线通信模块                                        |
-  |                  | enableLocationUpdates             | 开启位置更新消息上报                                         |
-  |                  | disableLocationUpdates            | 关闭位置更新消息上报                                         |
+
+| ---------------- | --------------------------------- | ------------------------------------------------------------ |
+| Handler消息处理  | handleMessage                     | 响应RILJ发出的消息回调                                       |
+|                  | handlePollStateResult             | 四个查询网络服务的消息响应方法EVENT_POLL_STATE_XXX ;         |
+| 更新网络服务信息 | pollState/modemTriggeredPollState | 查询基本网络服务信息,包括getOperator查询电信运营商信息、getDataRegistrationState 查询移动数据注册状态、getVoiceRegistrationState查询语音注册状态、getNetworkSelectionMode 查询网络模式 |
+|                  | pollStateDone                     | 根据pollState的查询结果，完成mSS信息的更新并发出ServiceState变化的消息通知 |
+| 更新网络服务信息 | updateSpnDisplay                  | 更新网络运营商显示名称，SPN：Service Provider Name           |
+|                  | queueNextSignalStrengthPoll       | 查询当前无线信号                                             |
+|                  | onSignalStrengthResult            | 根据queueNextSignalStrengthPoll的查询结果，更新信号          |
+| 网络服务控制     | setRadioPower                     | 开关Radio无线通信模块                                        |
+|                  | enableLocationUpdates             | 开启位置更新消息上报                                         |
+|                  | disableLocationUpdates            | 关闭位置更新消息上报                                         |
 
   - pollStateDone方法根据查询网络服务的结果,更新mSS和mSignalStrength对象来完成网络服务信息的更新，主要处理逻辑与GsmCdmaCallTracker 对象的处理方式非常相似，handlePollCalls与handlePollStateResult方法相对应，都是处理RILJ对象返回的查询信息。
   - 网络服务的控制由GsmCdmaPhone对外提供统一的方法， 通过ServiceStateTracker mSST对象调用对应的方法来实现
@@ -1605,17 +1611,17 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 - 配置关键字段
 
-  - | 字段     | 说明                            |
-    | -------- | ------------------------------- |
-    | name     | APN配置名称                     |
-    | numeric  | 运营商编号                      |
-    | apn      | APN接入点，中国移动cmwap和cmnet |
-    | Proxy    | 代理服务器地址                  |
-    | port     | 端口号                          |
-    | mmsproxy | 彩信代理服务器地址              |
-    | mmsport  | 彩信代理服务器端口号            |
-    | mmsc     | 彩信接入服务地址                |
-    | type     | APN接入类型                     |
+| 字段     | 说明                            |
+| -------- | ------------------------------- |
+| name     | APN配置名称                     |
+| numeric  | 运营商编号                      |
+| apn      | APN接入点，中国移动cmwap和cmnet |
+| Proxy    | 代理服务器地址                  |
+| port     | 端口号                          |
+| mmsproxy | 彩信代理服务器地址              |
+| mmsport  | 彩信代理服务器端口号            |
+| mmsc     | 彩信接入服务地址                |
+| type     | APN接入类型                     |
 
 #### 增加APN配置
 
@@ -1997,16 +2003,17 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 ### RIL类的关键属性
 
 - | 属性             | 类型                      | 描述                                   |
-  | ---------------- | ------------------------- | -------------------------------------- |
-  | mPhoneld         | Integer                   | Phoneld                                |
-  | mRilVersion      | int                       | RIL版本号                              |
-  | mState           | RadioState                | RADIO_UNAVAILABLE、RADIO_OFF、RADIO_ON |
-  | mXXXRegistrants  | RegistrantList            | 39个mXXXRegistrants                    |
-  | mXXXRegistrant   | Registrant                | 20个Registrant                         |
-  | mRequestList     | `SparseArray<RILRequest>` | RILRequest RIL请求对象列表             |
-  | mRadioProxy      | IRadio                    | IRadio服务Client                       |
-  | mRadioResponse   | RadioResponse             | RadioResponse服务对象                  |
-  | mRadioIndication | RadioIndication           | RadioResponse服务对象                  |
+
+| ---------------- | ------------------------- | -------------------------------------- |
+| mPhoneld         | Integer                   | Phoneld                                |
+| mRilVersion      | int                       | RIL版本号                              |
+| mState           | RadioState                | RADIO_UNAVAILABLE、RADIO_OFF、RADIO_ON |
+| mXXXRegistrants  | RegistrantList            | 39个mXXXRegistrants                    |
+| mXXXRegistrant   | Registrant                | 20个Registrant                         |
+| mRequestList     | `SparseArray<RILRequest>` | RILRequest RIL请求对象列表             |
+| mRadioProxy      | IRadio                    | IRadio服务Client                       |
+| mRadioResponse   | RadioResponse             | RadioResponse服务对象                  |
+| mRadioIndication | RadioIndication           | RadioResponse服务对象                  |
 
   - mRequestL ist列表保存内部类RILRequest对象。
   - RILJ的消息处理主要集中在39个RegistrantList对象和20个Registrant对象，其实现逻辑在父类BaseCommands中; RILJ 对象在接收到RILC发出的消息后，上述对象负责发出相应的Handler消息通知。
@@ -2032,12 +2039,12 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 - 关键属性
 
-  - | 属性             | 说明                      |
-    | ---------------- | ------------------------- |
-    | int mSerial      | RILRequest对象唯一编号    |
-    | int mRequest     | RIL请求类型               |
-    | Message mResult  | RIL请求回调的Message对象  |
-    | RILRequest mNext | 下一个 RILRequest处理对象 |
+| 属性             | 说明                      |
+| ---------------- | ------------------------- |
+| int mSerial      | RILRequest对象唯一编号    |
+| int mRequest     | RIL请求类型               |
+| Message mResult  | RIL请求回调的Message对象  |
+| RILRequest mNext | 下一个 RILRequest处理对象 |
 
     - Message对象保存了请求参数，RIL 处理完RIL请求后，使用此对象发出Message消息通知，RIL请求方即可接收到发出请求的响应结果。
 
@@ -2241,3 +2248,4 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 ## TelephonyManager
 
 - TelephonyManager本身会注册成为系统服务供第三方应用使用，但提供的接口实现逻辑全部通过获取PhoneInterfaceManager和TelephonyRegistry服务对象实现具体的逻辑处理。
+�的逻辑处理。
