@@ -1251,7 +1251,7 @@ Bean标签
 
 ### SpringMVC组件解析
 
-![image-20220430192222854](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220430192222854.png)
+![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220430192222854.png]]
 
 #### SpringMVC的执行流程
 
@@ -1742,7 +1742,7 @@ Bean标签
 
 - 系统中异常包括两类：预期异常和运行时异常RuntimeException，前者通过捕获异常从而获取异常信息，后 者主要通过规范代码开发、测试等手段减少运行时异常的发生。
 - 系统的Dao、Service、Controller出现都通过throws Exception向上抛出，最后由SpringMVC前端控制器交 由异常处理器进行异常处理
-  - ![image-20220430224825045](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220430224825045.png)
+  - ![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220430224825045.png]]
 
 - 方式
 
@@ -1977,7 +1977,7 @@ Bean标签
   - 2、Mapper接口方法名和Mapper.xml中定义的每个statement的id相同
   - 3、Mapper接口方法的输入参数类型和mapper.xml中定义的每个sql的parameterType的类型相同
   - 4、Mapper接口方法的输出参数类型和mapper.xml中定义的每个sql的resultType的类型相同
-  - ![image-20220502230652929](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220502230652929.png)
+  - ![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220502230652929.png]]
 
 - ```java
   @Test
@@ -2298,7 +2298,7 @@ Mybatis 的映射文件中，前面我们的  SQL 都是比较简单的，有些
 
 - 无论是  MyBatis 在预处理语句（PreparedStatement）中设置一个参数时，还是从结果集中取出一个值时，  都会用 类型处理器将获取的值以合适的方式转换成  Java 类型。
 - 默认的类型处理器（截取部分）。
-  - ![image-20220502232158668](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220502232158668.png)
+  - ![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220502232158668.png]]
 - 使用方法：实现org.apache.ibatis.type.TypeHandler 接口，  或继承一个很便利的类  org.apache.ibatis.type.BaseTypeHandler，  然 后可以选择性地将它映射到一个JDBC类型。
 
 ##### 步骤
@@ -2520,17 +2520,17 @@ List<User> all = mapper. f indAl1();
 
 #### 一对一
 
-![image-20220503002855304](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503002855304.png)
+![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503002855304.png]]
 
 #### 一对多
 
-![image-20220503003005128](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503003005128.png)
+![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503003005128.png]]
 
 
 
 #### 多对多
 
-![image-20220503003037432](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503003037432.png)
+![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503003037432.png]]
 
 ### 缓存机制
 

@@ -428,7 +428,7 @@ IPv6数据包由基本包头（Base Header）和可选的扩展头（Extension H
 
 IPv6基本包头固定为40字节，比IPv4的可变长度包头（20-60字节）更加简洁。IPv6基本包头的结构如下：
 
-- ![image-20251212153746781](C:\Users\haifei.liao\AppData\Roaming\Typora\typora-user-images\image-20251212153746781.png)
+- ![[C:\Users\haifei.liao\AppData\Roaming\Typora\typora-user-images\image-20251212153746781.png]]
 
 #### 包头字段详解
 

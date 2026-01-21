@@ -7,7 +7,7 @@
 
 ## Android9.x平台特性
 
-- ![Android 软件堆栈](Android.assets/android-stack_2x.png)
+- ![[android-stack_2x.png]]
 
 - Android的底层建立在linux之上，主要由操作系统、中间件、用户界面和应用软件4层组成
   - 设计思路：采用一种被称为软件叠层(Software Stack)的方式进行构建。
@@ -501,7 +501,7 @@
 - 关系：Android应用的所有UI组件都继承了View类
 
 - ==问题==：view和子类的继承关系是什么样的？
-  - ![View继承关系](D:\Sorting-Logic\Computer Science\Android.assets\SouthEast.jpeg)
+  - ![[D:\Sorting-Logic\Computer Science\Android.assets\SouthEast.jpeg]]
 
 - Android开发API：https://developer.android.com/reference/packages?hl=zh-cn
 
@@ -829,7 +829,7 @@
 
 - Adapter本身只是一个接口，它派生了ListAdapter 和SpinnerAdapter 两个子接口，其中ListAdapter为AbsListView**提供列表项**，而SpinnerAdapter为AbsSpinner提供列表项。几乎所有的Adapter都继承了BaseAdapter, 而BaseAdapter同时实现了ListAdapter、SpinnerAdapter两个接口，因此BaseAdapter及其子类可以同时为AbsListView、AbsSpinner 提供列表项。
 
-- ![image-20220616110542625](D:\Sorting-Logic\Computer_Science\Android.assets\image-20220616110542625.png)
+- ![[D:\Sorting-Logic\Computer_Science\Android.assets\image-20220616110542625.png]]
   - 常用的实现类
     - **ArrayAdapter**: 通常用于将数组或List集合的多个值包装成多个列表项。
       - new ArrayAdapter（）时必须指定如下三个参数。
@@ -1204,7 +1204,7 @@
 
 ## 基于监听的事件处理
 
-- ![image-20220617133426871](Android.assets\image-20220617133426871.png)
+- ![[Android.assets\image-20220617133426871.png]]
 
 - 处理模型对象
   - Event Source (事件源) ;事件发生的场所，通常就是各个组件，例如按钮、窗口、菜单等。
@@ -1450,7 +1450,7 @@
 
 - Activity是Android应用中最重要、最常见的应用组件(此处的组件是**粗粒度的系统组成部分**，并非指界面控件: widget)。 
 
-- ![image-20220617165657046](Android.assets\image-20220617165657046.png)
+- ![[Android.assets\image-20220617165657046.png]]
 
 - 当一个Activity 类定义出来之后，这个Activity类何时被实例化、它所包含的方法何时被调用，这些都不是由开发者决定的，都应该由Android系统来决定。
 - 创建一个 Activity 也需要实现一个或多个方法，其中最常见的就是实现onCreate(Bundle status)方法，该方法将会在Activity创建时被回调，该方法调用Activity 的setContentView(View view)方法来显示要展示的View。为了管理应用程序界面中的各组件，调用Activity的findViewByld(int id)方法来获取程序界面中的组件。
@@ -1553,7 +1553,7 @@
     - 停止状态:该Activity不可见，失去焦点。
     - 销毁状态:该Activity结束，或Activity所在的进程被结束。
 
-  - ![image-20220620094827377](Android.assets\image-20220620094827377.png)
+  - ![[Android.assets\image-20220620094827377.png]]
 
   - 方法
 
@@ -1649,7 +1649,7 @@
 - 作用
   - 适应大屏幕的平板电脑，由于平板电脑的屏幕比手机屏幕更大，因此可以容纳更多的UI组件，且这些UI组件之间存在交互关系。
   - 简化了大屏幕UI的设计，它不需要开发者管理组件包含关系的复杂变化，开发者使用Fragment对UI组件进行分组、模块化管理，就可以更方便地在运行过程中动态更新Activity 的用户界面。
-- ![image-20220620105526905](Android.assets/image-20220620105526905.png)
+- ![[image-20220620105526905.png]]
 
 ### 创建Fragment
 
@@ -1683,7 +1683,7 @@
 
 ### 生命周期
 
-- ![img](Android.assets/webp.webp)
+- ![[webp.webp]]
 
   - | 方法                | 说明                                                         |
     | ------------------- | ------------------------------------------------------------ |
@@ -2455,7 +2455,7 @@
 
 ## 开发ContentProvider
 
-- ![image-20220622150030955](Android.assets/image-20220622150030955.png)
+- ![[image-20220622150030955.png]]
 
 - 步骤
   1. 开发一个ContentProvider子类，该子类需要实现query0、insert()、 update()和 delete)等方法。
@@ -2582,7 +2582,7 @@
 
 ### 生命周期
 
-- ![image-20220623093215507](Android.assets/image-20220623093215507.png)
+- ![[image-20220623093215507.png]]
 
 ### IntentService
 

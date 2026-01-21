@@ -24,7 +24,7 @@
       | SMS-GMSC | Gateway MSC For Short Message Service | function of an MSC capable of receiving a short message from an SC, interrogating an HLR for routing information and SMS info, and delivering the short message to the VMSC or the SGSN of the recipient MS |
       | SMR      |                                       | Short Message Relay (entity)                                 |
       
-    - ![image-20230322163101973](Message.assets/image-20230322163101973.png)
+    - ![[image-20230322163101973.png]]
 
       - 短信类型
         - SMS-DELIVER：conveying a short message from the SC to the MS;
@@ -55,7 +55,7 @@
 
 - 层次结构
 
-  - 概览：![image-20230322152317602](Message.assets/image-20230322152317602.png)
+  - 概览：![[image-20230322152317602.png]]
     - SM‑AL：Short Message Application Layer
       SM‑LL：Short Message Lower Layers
       SM‑RL：Short Message Relay Layer
@@ -69,11 +69,11 @@
 
 - 流程
 
-  - MO![image-20230322155829781](Message.assets/image-20230322155829781.png)
-    - Acknowledgement![image-20230322160019671](Message.assets/image-20230322160019671.png)
+  - MO![[image-20230322155829781.png]]
+    - Acknowledgement![[image-20230322160019671.png]]
 
-  - MT![image-20230322155447956](Message.assets/image-20230322155447956.png)
-    - Acknowledgement![image-20230322155733881](Message.assets/image-20230322155733881.png)
+  - MT![[image-20230322155447956.png]]
+    - Acknowledgement![[image-20230322155733881.png]]
 
 - 短信发送流程：app->framework->ril->modem
 
@@ -256,16 +256,16 @@
 
 #### TP-DCS 数据编码方案(Data    Coding   Scheme)
 
-- ![image-20230323000544236](Message.assets/image-20230323000544236.png)
+- ![[image-20230323000544236.png]]
 - GSM 7 bit default alphabet
-  - ![image-20230323001146648](Message.assets/image-20230323001146648.png)
+  - ![[image-20230323001146648.png]]
   - 一条短信UD内容为140 octets,7bit编码是一个字符用 7 个bit位来编，140*8bit/7bit=160 ，一页短信如果是 7bit的编码方式，可以存放 160 个字符
   - 长短信 7bit
     - 长短信包含UDH，一般为6 octets。故长短信的 7Bit编码一条消息里面最多可以发送 153 个字符.
       - 140-6    =    134 octets
       - （134*8）/    7    =   153    +    1bit
 - GSM  7  bit  default  alphabet  extension  table
-  - ![image-20230323001705097](Message.assets/image-20230323001705097.png)
+  - ![[image-20230323001705097.png]]
   - 扩展7bit字符表,编码特殊字符    ，每个字符用2个7bit来编码，可存80个 扩展7 bit字符。
   - 在编码的过程中，如果发现字符不在default table里，而是在extension table里，那就先加入一个0x1B，之后继续添加字符在extension table里的位置就可以了。同理，在解码的时候，如果发现0x1B，那就说明后面的字符在extension    table里面
 - 8BIT/16BIT (UCS2)编码
@@ -277,10 +277,10 @@
   - 根据TP-UDHI参数可以判断UD是否包含UDH
 - 结构
   1. 7bit编码
-     - ![image-20230323095814354](Message.assets/image-20230323095814354.png)
+     - ![[image-20230323095814354.png]]
        - 7BIT编码可能存在填充字节 Fill Bits。一条短信最长是 140 个byte，如果UDH占用6个byte，那SM 部分还剩134个byte，也就是134*8    =    1072   个bit位，如果用7bit编码，那就是 1072 / 7 =153  余上个 1bit   ，也就是 153 GSM characters 和1bit. 那多出来的这个  1    bit   就是    fill   bit，填充到SM的第一个byte的最后一个bit位，
   2. 8bit/16bit编码
-     - ![image-20230323095900815](Message.assets/image-20230323095900815.png)
+     - ![[image-20230323095900815.png]]
 
 ##### 长短信（Concatenated   Short   Message）
 
@@ -3953,16 +3953,16 @@
 
 - log流程
 
-  - ![image-20230210100644648](Message.assets/image-20230210100644648.png)
+  - ![[image-20230210100644648.png]]
 
 
 ## VM
 
-- ![image-20230323135931567](Message.assets/image-20230323135931567.png)
+- ![[image-20230323135931567.png]]
 
-- ![image-20230410100224374](Message.assets/image-20230410100224374.png)
+- ![[image-20230410100224374.png]]
 
-- ![image-20230410101005674](Message.assets/image-20230410101005674.png)
+- ![[image-20230410101005674.png]]
 
 - androidt/vendor/mediatek/proprietary/packages/services/Telephony/src/com/android/phone/NotificationMgr.java
 
@@ -5322,7 +5322,7 @@
   - 发送：MMS client与WAP 网关建立连接，通过WAP 将信息发送至MMSC，MMSC暂时保存彩信，并会给发送方一个确认消息。
   - 接收：MMSC接收到消息后，通过PUSH协议给接收方发送一条WAP PUSH 消息，这个消息通常是一条特殊短信，里面包含彩信的位置URL。接收方收到短信通知后，从中取出URL，然后通过标准的HTTP GET请求从MMS Proxy-Relay上获取彩信。
 
-- ![image-20220805141848052](Message.assets/image-20220805141848052.png)
+- ![[image-20220805141848052.png]]
 
 - PDU结构
 
@@ -5359,7 +5359,7 @@
 
 ## 架构
 
-- ![undefined](Message.assets/MMSCNA.png)
+- ![[MMSCNA.png]]
   - The MMS Architecture is the set of standards used by the Multimedia Messaging Service in mobile networks. The standards are prepared by 3GPP.The standard consists of a number of interfaces between components found in the mobile network
     1. MM1: the interface between MMS User Agent and MMS Center (MMSC, the combination of the MMS Relay & Server). Delivered as HTTP over a packet switched data session.
        - MM1 is used in the following actions:
@@ -5438,7 +5438,7 @@
            source build/envsetup.sh && export OUT_DIR=out_sys && lunch sys_mssi_64_ww-userdebug && mmma XXXX
            注意lunch项目的选择见目录device/mediatek/system/项目/ 下对应的项目文件名+variant，如下图所示：
      
-           - ![image-20230208145712051](C:\Users\haifei.liao\AppData\Roaming\Typora\typora-user-images\image-20230208145712051.png)
+           - ![[C:\Users\haifei.liao\AppData\Roaming\Typora\typora-user-images\image-20230208145712051.png]]
      6. Qualcomm
      
         - source build/envsetup.sh && export OUT_DIR=out_sys && lunch qssi-userdebug && mmma XXXX
@@ -5803,10 +5803,10 @@ Qualcomm
   - 目前WiFi AP 默认是打开的，如果大家要连接AP，可以这样查询密码 如这个密码是4pbtn47yxc5j4f6
     adb root
     adb shell cat /data/misc/apexdata/com.android.wifi/WifiConfigStoreSoftAp.xml
-    - ![企业微信截图_17356123437630](Message.assets/企业微信截图_17356123437630.png)
+    - ![[企业微信截图_17356123437630.png]]
 - ifconfig -s eth0 static 172.24.62.189 255.255.255.0 172.24.63.254
 - 删除 androidt/out/target/product/B321MH/resign
-  - ![image-20250313214410814](Message.assets/image-20250313214410814.png)
+  - ![[image-20250313214410814.png]]
 
 - 服务器命令
   - 查看服务器的cpu占用:mpstat -P ALL 1
@@ -5869,9 +5869,9 @@ Qualcomm
 
 1. 创建账号，进入网址：https://support-qualcomm.force.com/s/case/Case/Default
 2. 创建case
-   - ![image-20230213160115479](Message.assets/image-20230213160115479.png)
+   - ![[image-20230213160115479.png]]
 3. 提交附件和添加邮件通知成员
-   - ![image-20230213160322318](Message.assets/image-20230213160322318.png)
+   - ![[image-20230213160322318.png]]
 4. 交流并解决问题。
 
 # 系统配置

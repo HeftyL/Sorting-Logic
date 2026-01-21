@@ -57,7 +57,7 @@
   - **局部有界：** * 当 $\alpha < 0$ 时，在 $(0, +\infty)$ 内，$y > 0$，有下界但无上界。
     - 当 $\alpha > 0$ 时，在特定区间（如 $[a, b]$）内是有界的。
 
-- ![image-20260119152820758](Elementary mathematics.assets/image-20260119152820758.png)
+- ![[image-20260119152820758.png]]
 
 **常见类型**：
 
@@ -78,7 +78,7 @@
 
 **一般形式**：y = a^x，其中 a > 0，a ≠ 1
 
-![image-20260119153735318](Elementary mathematics.assets/image-20260119153735318.png)
+![[image-20260119153735318.png]]
 
 **性质**：
 - 定义域：R（全体实数）
@@ -101,7 +101,7 @@
 **与指数函数的关系**：对数函数是指数函数的反函数
 - 如果 y = a^x，则 x = log_a(y)
 
-![image-20260119154113102](Elementary mathematics.assets/image-20260119154113102.png)
+![[image-20260119154113102.png]]
 
 **性质**：
 - 定义域：(0, +∞)
@@ -225,25 +225,25 @@
 
 ## 二次函数
 
-![image-20220531171501662](senior high school.assets/image-20220531171501662.png)
+![[image-20220531171501662.png]]
 
 ### 函数性质
 
-![image-20220526005111270](senior high school.assets/image-20220526005111270.png)
+![[image-20220526005111270.png]]
 
 ### 求根公式
 
-![image-20220526005340476](senior high school.assets/image-20220526005340476.png)
+![[image-20220526005340476.png]]
 
 ### 韦达定理
 
-![image-20220608221639846](senior high school.assets/image-20220608221639846.png)
+![[image-20220608221639846.png]]
 
-![image-20220608221654236](senior high school.assets/image-20220608221654236.png)
+![[image-20220608221654236.png]]
 
 #### 三个推论
 
-![image-20220608221927830](senior high school.assets/image-20220608221927830.png)
+![[image-20220608221927830.png]]
 
 ## 二次不等式
 
@@ -251,23 +251,23 @@
 
 ### 求解
 
-![image-20220526005856468](senior high school.assets/image-20220526005856468.png)
+![[image-20220526005856468.png]]
 
 ## 乘法公式
 
-![image-20220531163251233](senior high school.assets/image-20220531163251233.png)
+![[image-20220531163251233.png]]
 
 完全次方公式：可以使用杨辉三角
 
-![image-20220531163634413](senior high school.assets/image-20220531163634413.png)
+![[image-20220531163634413.png]]
 
 ## 绝对值
 
 - 代数意义
 
-  - ![image-20220531170035829](senior high school.assets/image-20220531170035829.png)
+  - ![[image-20220531170035829.png]]
 
-  - ![image-20220531170110022](senior high school.assets/image-20220531170110022.png)
+  - ![[image-20220531170110022.png]]
 
 - 遇到绝对值就分类讨论
 
@@ -358,35 +358,35 @@
 
 ### 子集
 
-![image-20220612155931856](senior high school.assets/image-20220612155931856.png)
+![[image-20220612155931856.png]]
 
 ### 真子集
 
-![image-20220612160329786](senior high school.assets/image-20220612160329786.png)
+![[image-20220612160329786.png]]
 
 ### 相等
 
-![image-20220612160312026](senior high school.assets/image-20220612160312026.png)
+![[image-20220612160312026.png]]
 
 ### 空集
 
-![image-20220612160358145](senior high school.assets/image-20220612160358145.png)
+![[image-20220612160358145.png]]
 
 ## 集合的基本运算
 
 ### 交集
 
-![image-20220612160730136](senior high school.assets/image-20220612160730136.png)
+![[image-20220612160730136.png]]
 
 ### 并集
 
-![image-20220612160646636](senior high school.assets/image-20220612160646636.png)
+![[image-20220612160646636.png]]
 
 ### 补集
 
-![image-20220612161058416](senior high school.assets/image-20220612161058416.png)
+![[image-20220612161058416.png]]
 
-![image-20220612170756038](senior high school.assets/image-20220612170756038.png)
+![[image-20220612170756038.png]]
 
 ### 元素的个数
 
@@ -411,26 +411,26 @@
   - q称为命题的结论.
 - “若p，则q”形式的命题中p和q的关系，
   - 充分条件和必要条件
-    - ![image-20220710235737168](senior high school.assets/image-20220710235737168.png)
+    - ![[image-20220710235737168.png]]
   - 充要条件
-    - ![image-20220711000003327](senior high school.assets/image-20220711000003327.png)
-    - ![image-20220711000025997](senior high school.assets/image-20220711000025997.png)
+    - ![[image-20220711000003327.png]]
+    - ![[image-20220711000025997.png]]
 
 # 微积分
 
 ## 微分
 
 1. 导数（x->0）
-   - ![image-20230919112854513](senior high school.assets/image-20230919112854513.png)
+   - ![[image-20230919112854513.png]]
 2. 等价无穷小
-   1. ![高数常见坑点：等价无穷小](senior high school.assets/v2-0b9b50889edb01fc3f5467a071a323fa_1440w.jpeg)
-   2. ![image-20230919113033717](senior high school.assets/image-20230919113033717.png)
-   3. ![image-20230919113753263](senior high school.assets/image-20230919113753263.png)
+   1. ![[v2-0b9b50889edb01fc3f5467a071a323fa_1440w.jpeg]]
+   2. ![[image-20230919113033717.png]]
+   3. ![[image-20230919113753263.png]]
 3. 泰勒公式
    - <img src="senior high school.assets/image-20230921154340473.png" alt="image-20230921154340473"  />
 
 ## 积分
 
 - 基本积分表
-  - ![image-20231106111637449](senior high school.assets/image-20231106111637449.png)
-  - ![image-20231106111701520](senior high school.assets/image-20231106111701520.png)
+  - ![[image-20231106111637449.png]]
+  - ![[image-20231106111701520.png]]
