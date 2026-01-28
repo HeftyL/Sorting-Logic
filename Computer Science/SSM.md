@@ -1,4 +1,4 @@
-# SSM
+﻿# SSM
 
 ## 介绍
 
@@ -436,36 +436,36 @@ Bean标签
     <context:component-scan base-package=" 包名1"></context: component-scan> //注解扫描，扫描包名1和子包下的注解
     ```
 
-  - | 注解                     | 说明                                                         |
-    | ------------------------ | ------------------------------------------------------------ |
-    | **原始注解**             |                                                              |
-    | 类实例化                 |                                                              |
-    | @Component               | 使用在类上用于实例化Bean                                     |
-    | @Controller              | 使用在web层类上用于实例化Bean                                |
-    | @Service                 | 使用在service层类上用于实例化Bean                            |
-    | @Repository              | 使用在dao层类上用于实例化Bean                                |
-    | 依赖注入                 |                                                              |
-    | @Autowired               | 使用在字段上用于根据类型依赖注                               |
-    | @Qualifier               | 结合@Autowired—起使用用于根据名称进行依赖注入                |
-    | @Resource                | 相当于@Autowired+@Qualifier，按照名称进行注入                |
-    | 普通属性                 |                                                              |
-    | @Value                   | 注入普通属性                                                 |
-    | 范围配置                 |                                                              |
-    | @Scope                   | 标注Bean的作用范围                                           |
-    | 生命周期配置             |                                                              |
-    | @PostConstruct           | 使用在方法上标注该方法是Bean的初始化方法                     |
-    | @PreDestroy              | 使用在方法上标注该方法是Bean的销毁方法                       |
-    | **新注解**               |                                                              |
-    | 配置类                   |                                                              |
-    | @Configuration           | 用于指定当前类是一个Spring配置类，当创建容器时会从该类上加载注解 |
-    | 非自定义的Bean的配置     |                                                              |
-    | @Bean                    | 使用在方法上，标注将该方法的返回 值存储 到Spring 容器中      |
-    | 加载properties文件的配置 |                                                              |
-    | @PropertySource          | 用于加载.properties文件中的配置                              |
-    | 组件扫描                 |                                                              |
-    | @ComponentScan           | 用于指定Spring在初始化容器时要扫描的包。                     |
-    | 引入其他文件             |                                                              |
-    | @lmport                  | 用于导入其他配置类                                           |
+| 注解                     | 说明                                                         |
+| ------------------------ | ------------------------------------------------------------ |
+| **原始注解**             |                                                              |
+| 类实例化                 |                                                              |
+| @Component               | 使用在类上用于实例化Bean                                     |
+| @Controller              | 使用在web层类上用于实例化Bean                                |
+| @Service                 | 使用在service层类上用于实例化Bean                            |
+| @Repository              | 使用在dao层类上用于实例化Bean                                |
+| 依赖注入                 |                                                              |
+| @Autowired               | 使用在字段上用于根据类型依赖注                               |
+| @Qualifier               | 结合@Autowired—起使用用于根据名称进行依赖注入                |
+| @Resource                | 相当于@Autowired+@Qualifier，按照名称进行注入                |
+| 普通属性                 |                                                              |
+| @Value                   | 注入普通属性                                                 |
+| 范围配置                 |                                                              |
+| @Scope                   | 标注Bean的作用范围                                           |
+| 生命周期配置             |                                                              |
+| @PostConstruct           | 使用在方法上标注该方法是Bean的初始化方法                     |
+| @PreDestroy              | 使用在方法上标注该方法是Bean的销毁方法                       |
+| **新注解**               |                                                              |
+| 配置类                   |                                                              |
+| @Configuration           | 用于指定当前类是一个Spring配置类，当创建容器时会从该类上加载注解 |
+| 非自定义的Bean的配置     |                                                              |
+| @Bean                    | 使用在方法上，标注将该方法的返回 值存储 到Spring 容器中      |
+| 加载properties文件的配置 |                                                              |
+| @PropertySource          | 用于加载.properties文件中的配置                              |
+| 组件扫描                 |                                                              |
+| @ComponentScan           | 用于指定Spring在初始化容器时要扫描的包。                     |
+| 引入其他文件             |                                                              |
+| @lmport                  | 用于导入其他配置类                                           |
 
     ```java
     @Configuration
@@ -590,14 +590,15 @@ Bean标签
 - 
 
 - | 术语              | 说明                                                         |
-  | ----------------- | ------------------------------------------------------------ |
-  | Target(目标对象)  | 代理的目标对象                                               |
-  | Joinpoint(连接点) | 所谓连接点是指那些被拦截到的点。在spring中,这些点指的是方法，因为spring只支持方法类型的连接点 |
-  | Pointcut(切入点)  | 所谓切入点是指我们要对哪些Joinpoint进行拦截的定义            |
-  | Advice(通知/增强) | 所谓通知是指拦截到Joinpoint之后所要做的事情就是通知          |
-  | Weaving (织入)    | 是指把增强应用到目标对象来创建新的代理对象的过程。spring采用动态代理织入，而AspectJ采用编译期织入和类装载期织入 |
-  | Aspect(切面)      | 是切入点和通知(引介)的结合                                   |
-  | Proxy (代理)      | 一个类被AOP织入增强后，就产生一个结果代理类                  |
+
+| ----------------- | ------------------------------------------------------------ |
+| Target(目标对象)  | 代理的目标对象                                               |
+| Joinpoint(连接点) | 所谓连接点是指那些被拦截到的点。在spring中,这些点指的是方法，因为spring只支持方法类型的连接点 |
+| Pointcut(切入点)  | 所谓切入点是指我们要对哪些Joinpoint进行拦截的定义            |
+| Advice(通知/增强) | 所谓通知是指拦截到Joinpoint之后所要做的事情就是通知          |
+| Weaving (织入)    | 是指把增强应用到目标对象来创建新的代理对象的过程。spring采用动态代理织入，而AspectJ采用编译期织入和类装载期织入 |
+| Aspect(切面)      | 是切入点和通知(引介)的结合                                   |
+| Proxy (代理)      | 一个类被AOP织入增强后，就产生一个结果代理类                  |
 
 #### 实现代理的方式
 
@@ -942,13 +943,14 @@ Bean标签
 - 
 
 - | 名称           | 注解            | 说明                                                         |
-  | -------------- | --------------- | ------------------------------------------------------------ |
-  | 前置通知       | @Before         | 用于配置前置通知。指定增强的方法在切入点方法之前执行         |
-  | 后置通知       | @AfterReturning | 用于配置后置通知。指定增强的方法在切入点方法之后执行         |
-  | 环绕通`知`     | @Around         | 用于配置环绕通知。指定增强的方法在切入点方法之前和之后都 执行 |
-  | 异常抛出通知   | @AfterThrowing  | 用于配置异常抛出通知。指定增强的方法在出现异常时执行         |
-  | 最终通知       | @After          | 用于配置最终通知。无论增强方式执行是否有异常都会执行         |
-  | 切点表达式抽取 | @Pointcut       | 抽取方式是在切面内定义方法，在该方法上使用@Pointcut注解然后在在增强注解中进行引用 |
+
+| -------------- | --------------- | ------------------------------------------------------------ |
+| 前置通知       | @Before         | 用于配置前置通知。指定增强的方法在切入点方法之前执行         |
+| 后置通知       | @AfterReturning | 用于配置后置通知。指定增强的方法在切入点方法之后执行         |
+| 环绕通`知`     | @Around         | 用于配置环绕通知。指定增强的方法在切入点方法之前和之后都 执行 |
+| 异常抛出通知   | @AfterThrowing  | 用于配置异常抛出通知。指定增强的方法在出现异常时执行         |
+| 最终通知       | @After          | 用于配置最终通知。无论增强方式执行是否有异常都会执行         |
+| 切点表达式抽取 | @Pointcut       | 抽取方式是在切面内定义方法，在该方法上使用@Pointcut注解然后在在增强注解中进行引用 |
 
 - 在配置文件中开启组件扫描和AOP的自动代理     
 
@@ -989,12 +991,13 @@ Bean标签
     - （2） 幻读（Phantom Reads）：事务在操作过程中进行两次查询，第二次查询的结果包含了第一次查询中未出现的数据或者缺少了第一次查询中出现的数据（这里并不要求两次查询的SQL语句相同）。这是因为在两次查询过程中有另外一个事务插入数据造成的。
 
 - | 级别                       | 说明                                                         |
-  | -------------------------- | ------------------------------------------------------------ |
-  | ISOLATION_DEFAULT          | PlatfromTransactionManager默认的隔离级别，使用数据库默认的事务隔离级别,除了default ，其它几个Spring事务隔离级别与JDBC事务隔离级别相对应 |
-  | ISOLATION_READ_UNCOMMITTED | 也称为读未提交（Read Uncommitted）：允许脏读取，但不允许更新丢失。如果一个事务已经开始写数据，则另外一个事务则不允许同时进行写操作，但允许其他事务读此行数据。该隔离级别可以通过“排他写锁”实现。 |
-  | ISOLATION_READ_COMMITTED   | 也称为读提交（Read Committed）：允许不可重复读取，但不允许脏读取。这可以通过“瞬间共享读锁”和“排他写锁”实现。读取数据的事务允许其他事务继续访问该行数据，但是未提交的写事务将会禁止其他事务访问该行。 |
-  | ISOLATION_REPEATABLE_READ  | 可重复读取（Repeatable Read）：禁止不可重复读取和脏读取，但是有时可能出现幻读数据。这可以通过“共享读锁”和“排他写锁”实现。读取数据的事务将会禁止写事务（但允许读事务），写事务则禁止任何其他事务。 |
-  | ISOLATION_SERIALIZABLE     | 序列化（Serializable）：提供严格的事务隔离。它要求事务序列化执行，事务只能一个接着一个地执行，不能并发执行。仅仅通过“行级锁”是无法实现事务序列化的，必须通过其他机制保证新插入的数据不会被刚执行查询操作的事务访问到。 |
+
+| -------------------------- | ------------------------------------------------------------ |
+| ISOLATION_DEFAULT          | PlatfromTransactionManager默认的隔离级别，使用数据库默认的事务隔离级别,除了default ，其它几个Spring事务隔离级别与JDBC事务隔离级别相对应 |
+| ISOLATION_READ_UNCOMMITTED | 也称为读未提交（Read Uncommitted）：允许脏读取，但不允许更新丢失。如果一个事务已经开始写数据，则另外一个事务则不允许同时进行写操作，但允许其他事务读此行数据。该隔离级别可以通过“排他写锁”实现。 |
+| ISOLATION_READ_COMMITTED   | 也称为读提交（Read Committed）：允许不可重复读取，但不允许脏读取。这可以通过“瞬间共享读锁”和“排他写锁”实现。读取数据的事务允许其他事务继续访问该行数据，但是未提交的写事务将会禁止其他事务访问该行。 |
+| ISOLATION_REPEATABLE_READ  | 可重复读取（Repeatable Read）：禁止不可重复读取和脏读取，但是有时可能出现幻读数据。这可以通过“共享读锁”和“排他写锁”实现。读取数据的事务将会禁止写事务（但允许读事务），写事务则禁止任何其他事务。 |
+| ISOLATION_SERIALIZABLE     | 序列化（Serializable）：提供严格的事务隔离。它要求事务序列化执行，事务只能一个接着一个地执行，不能并发执行。仅仅通过“行级锁”是无法实现事务序列化的，必须通过其他机制保证新插入的数据不会被刚执行查询操作的事务访问到。 |
 
 - 隔离级别越高，越能保证数据的完整性和一致性，但是对并发性能的影响也越大。对于多数应用程序，可以优先考虑把数据库系统的隔离级别设为Read Committed。它能够避免脏读取，而且具有较好的并发性能。尽管它会导致不可重复读、幻读和第二类丢失更新这些并发问题，在可能出现这类问题的个别场合，可以由应用程序采用悲观锁或乐观锁来控制。
 
@@ -1251,7 +1254,7 @@ Bean标签
 
 ### SpringMVC组件解析
 
-![image-20220430192222854](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220430192222854.png)
+![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220430192222854.png]]
 
 #### SpringMVC的执行流程
 
@@ -1678,9 +1681,10 @@ Bean标签
 ####  拦截器和过滤器区别
 
 - | 区别     | 过滤器（Filter）                                             | 拦截器（Interceptor）                                        |
-  | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-  | 使用范围 | 是  servlet  规范中的一部分，任何 Java Web 工程都可以使用    | 是  SpringMVC  框架自己的，只有使用了 SpringMVC 框架的工程才能用 |
-  | 拦截范围 | 在  url-pattern  中配置了/*之后， 可以对所有要访问的资源拦截 | 在<mvc:mapping path=“”/>中配置了/**之 后，也可以多所有资源进行拦截，但 是可以 通 过<mvc:exclude-mapping  path=“”/>标签 排除不需要拦截的资源 |
+
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 使用范围 | 是  servlet  规范中的一部分，任何 Java Web 工程都可以使用    | 是  SpringMVC  框架自己的，只有使用了 SpringMVC 框架的工程才能用 |
+| 拦截范围 | 在  url-pattern  中配置了/*之后， 可以对所有要访问的资源拦截 | 在<mvc:mapping path=“”/>中配置了/**之 后，也可以多所有资源进行拦截，但 是可以 通 过<mvc:exclude-mapping  path=“”/>标签 排除不需要拦截的资源 |
 
 #### 步骤
 
@@ -1742,7 +1746,7 @@ Bean标签
 
 - 系统中异常包括两类：预期异常和运行时异常RuntimeException，前者通过捕获异常从而获取异常信息，后 者主要通过规范代码开发、测试等手段减少运行时异常的发生。
 - 系统的Dao、Service、Controller出现都通过throws Exception向上抛出，最后由SpringMVC前端控制器交 由异常处理器进行异常处理
-  - ![image-20220430224825045](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220430224825045.png)
+  - ![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220430224825045.png]]
 
 - 方式
 
@@ -1977,7 +1981,7 @@ Bean标签
   - 2、Mapper接口方法名和Mapper.xml中定义的每个statement的id相同
   - 3、Mapper接口方法的输入参数类型和mapper.xml中定义的每个sql的parameterType的类型相同
   - 4、Mapper接口方法的输出参数类型和mapper.xml中定义的每个sql的resultType的类型相同
-  - ![image-20220502230652929](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220502230652929.png)
+  - ![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220502230652929.png]]
 
 - ```java
   @Test
@@ -2029,12 +2033,13 @@ Mybatis 的映射文件中，前面我们的  SQL 都是比较简单的，有些
   ```
 
 - | 属性       | 说明                                      |
-  | ---------- | ----------------------------------------- |
-  | collection | 代表要遍历的集合元素，注意编写时不要写#{} |
-  | open       | 代表语句的开始部分                        |
-  | close      | 代表结束部分                              |
-  | item       | 代表遍历集合的每个元素，生成的变量名      |
-  | sperator   | 代表分隔符                                |
+
+| ---------- | ----------------------------------------- |
+| collection | 代表要遍历的集合元素，注意编写时不要写#{} |
+| open       | 代表语句的开始部分                        |
+| close      | 代表结束部分                              |
+| item       | 代表遍历集合的每个元素，生成的变量名      |
+| sperator   | 代表分隔符                                |
 
 ##### SQL片段抽取
 
@@ -2298,7 +2303,7 @@ Mybatis 的映射文件中，前面我们的  SQL 都是比较简单的，有些
 
 - 无论是  MyBatis 在预处理语句（PreparedStatement）中设置一个参数时，还是从结果集中取出一个值时，  都会用 类型处理器将获取的值以合适的方式转换成  Java 类型。
 - 默认的类型处理器（截取部分）。
-  - ![image-20220502232158668](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220502232158668.png)
+  - ![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220502232158668.png]]
 - 使用方法：实现org.apache.ibatis.type.TypeHandler 接口，  或继承一个很便利的类  org.apache.ibatis.type.BaseTypeHandler，  然 后可以选择性地将它映射到一个JDBC类型。
 
 ##### 步骤
@@ -2405,9 +2410,10 @@ public class MyDateTypeHandler extends BaseTypeHandler<Date> {
 - SqlSession工厂对象
 
 - | 方法                            | 说明                                                         |
-  | ------------------------------- | ------------------------------------------------------------ |
-  | openSession()                   | 会默认开启一个事务，但事务不会自动提交，也就意味着需要手动提 交该事务，更新操作数据才会持久化到数据库中 |
-  | openSession(boolean autoCommit) | 参数为是否自动提交，如果设置为true，那么不需要手动提交事务   |
+
+| ------------------------------- | ------------------------------------------------------------ |
+| openSession()                   | 会默认开启一个事务，但事务不会自动提交，也就意味着需要手动提 交该事务，更新操作数据才会持久化到数据库中 |
+| openSession(boolean autoCommit) | 参数为是否自动提交，如果设置为true，那么不需要手动提交事务   |
 
 - ```java
   //加载核心配置文件
@@ -2456,15 +2462,16 @@ List<User> all = mapper. f indAl1();
 ### 基于注解
 
 - | 注解     | 说明                                  |
-  | -------- | ------------------------------------- |
-  | @Select  | 实现查询                              |
-  | @lnsert  | 实现新增                              |
-  | @Update  | 实现更新                              |
-  | @Delete  | 实现删除                              |
-  | @Result  | 实现结果集封装                        |
-  | @Results | 可以与@Result一起使用，封装多个结果集 |
-  | @One     | 实现一对一结果集封装                  |
-  | @Many    | 实现一对多结果集封装                  |
+
+| -------- | ------------------------------------- |
+| @Select  | 实现查询                              |
+| @lnsert  | 实现新增                              |
+| @Update  | 实现更新                              |
+| @Delete  | 实现删除                              |
+| @Result  | 实现结果集封装                        |
+| @Results | 可以与@Result一起使用，封装多个结果集 |
+| @One     | 实现一对一结果集封装                  |
+| @Many    | 实现一对多结果集封装                  |
 
   增删改查
 
@@ -2487,11 +2494,12 @@ List<User> all = mapper. f indAl1();
 - 实现复杂关系映射之前我们可以在映射文件中通过配置<resultMap>来实现，使用注解开发后，我们可以使用@Results注解 ，@Result注解，@One注解，@Many注解组合完成复杂关系的配置
 
 - | 注解     | 说明                                                         |
-  | -------- | ------------------------------------------------------------ |
-  | @Results | 代替的是标签<resultMap>该注解中可以使用单个@Result注解，也可以使用@Result集 合。使用格式：@Results（{@Result（），@Result（）}）或@Results（@Result（）） |
-  | @Resut   | 代替了<id>标签和<result>标签 @Result中属性介绍:<br />column：数据库的列名 <br />property：需要装配的属性名<br/>one：需要使用的@One 注解（@Result（one=@One）（））） <br />many：需要使用的@Many 注解（@Result（many=@many）（））） |
-  | @One     | 代替了<assocation> 标签，是多表查询的关键，在注解中 用来指 定子查 询返回 单一对 象。 @One注解属性介绍：<br/>select: 指定用来多表查询的    sqlmapper<br/>使用格式：@Result(column="  ",property="",one=@One(select="")) |
-  | @Many    | 代替了<collection>标签,  是是多表查询的关键，在注解中用来 指定子 查询返 回对象 集合。 <br />使用格式：@Result(property="",column="",many=@Many(select="")) |
+
+| -------- | ------------------------------------------------------------ |
+| @Results | 代替的是标签<resultMap>该注解中可以使用单个@Result注解，也可以使用@Result集 合。使用格式：@Results（{@Result（），@Result（）}）或@Results（@Result（）） |
+| @Resut   | 代替了<id>标签和<result>标签 @Result中属性介绍:<br />column：数据库的列名 <br />property：需要装配的属性名<br/>one：需要使用的@One 注解（@Result（one=@One）（））） <br />many：需要使用的@Many 注解（@Result（many=@many）（））） |
+| @One     | 代替了<assocation> 标签，是多表查询的关键，在注解中 用来指 定子查 询返回 单一对 象。 @One注解属性介绍：<br/>select: 指定用来多表查询的    sqlmapper<br/>使用格式：@Result(column="  ",property="",one=@One(select="")) |
+| @Many    | 代替了<collection>标签,  是是多表查询的关键，在注解中用来 指定子 查询返 回对象 集合。 <br />使用格式：@Result(property="",column="",many=@Many(select="")) |
 
 - ```java
   //1. 创建Role实体，User实体,Order实体
@@ -2520,17 +2528,17 @@ List<User> all = mapper. f indAl1();
 
 #### 一对一
 
-![image-20220503002855304](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503002855304.png)
+![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503002855304.png]]
 
 #### 一对多
 
-![image-20220503003005128](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503003005128.png)
+![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503003005128.png]]
 
 
 
 #### 多对多
 
-![image-20220503003037432](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503003037432.png)
+![[C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220503003037432.png]]
 
 ### 缓存机制
 
@@ -2554,3 +2562,4 @@ List<User> all = mapper. f indAl1();
   - 查询的数据所转换的实体类类型必须实现序列化的接口
 - 使二级缓存失效的情况:
   - 两次查询之间执行了任意的增删改，会使—级和二级缓存同时失效
+缓存同时失效

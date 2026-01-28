@@ -1,4 +1,4 @@
-# 预训练语言模型的前世今生 - 从Word Embedding到BERT
+﻿# 预训练语言模型的前世今生 - 从Word Embedding到BERT
 
 本篇文章共 25027 个词，一个字一个字手码的不容易，转载请标明出处：
 [预训练语言模型的前世今生 - 从Word Embedding到BERT - 二十三岁的有德](https://www.cnblogs.com/nickchen121/p/15105048.html)
@@ -74,7 +74,6 @@ DeepMind 的计算机科学家 Sebastian Ruder 给出了 21 世纪以来，从�
 | 年份 | 2013 年  | 2014 年 | 2015 年        | 2016 年        | 2017 年     |
 | :--- | :------- | :------ | :------------- | :------------- | :---------- |
 | 技术 | word2vec | GloVe   | LSTM/Attention | Self-Attention | Transformer |
-
 | 年份 | 2018 年           | 2019 年                      | 2020 年              |
 | :--- | :---------------- | :--------------------------- | :------------------- |
 | 技术 | GPT/ELMo/BERT/GNN | XLNet/BoBERTa/GPT-2/ERNIE/T5 | GPT-3/ELECTRA/ALBERT |
@@ -87,7 +86,7 @@ DeepMind 的计算机科学家 Sebastian Ruder 给出了 21 世纪以来，从�
 
 在介绍图像领域的预训练之前，我们首先介绍下卷积神经网络（CNN），CNN 一般用于图片分类任务，并且CNN 由多个层级结构组成，不同层学到的图像特征也不同，**越浅的层学到的特征越通用（横竖撇捺），越深的层学到的特征和具体任务的关联性越强（人脸-人脸轮廓、汽车-汽车轮廓）**，如下图所示：
 
-[![img](Artificial Intelligence.assets/图像预训练示例.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/图像预训练示例.jpg)
+[![[图像预训练示例.jpg]]
 
 由此，当领导给我们一个任务：阿猫、阿狗、阿虎的图片各十张，然后让我们设计一个深度神经网络，通过该网络把它们三者的图片进行分类。
 
@@ -95,7 +94,7 @@ DeepMind 的计算机科学家 Sebastian Ruder 给出了 21 世纪以来，从�
 
 虽然领导给我们的数据量很少，**但是我们是否可以利用网上现有的大量已做好分类标注的图片**。比如 ImageNet 中有 1400 万张图片，并且这些图片都已经做好了分类标注。
 
-[![img](Artificial Intelligence.assets/预训练的应用.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/预训练的应用.jpg)
+[![[预训练的应用.jpg]]
 
 上述利用网络上现有图片的思想就是预训练的思想，具体做法就是：
 
@@ -104,7 +103,7 @@ DeepMind 的计算机科学家 Sebastian Ruder 给出了 21 世纪以来，从�
    1. 冻结：浅层参数使用模型 A 的参数，高层参数随机初始化，**浅层参数一直不变**，然后利用领导给出的 30 张图片训练参数
    2. 微调：浅层参数使用模型 A 的参数，高层参数随机初始化，然后利用领导给出的 30 张图片训练参数，**但是在这里浅层参数会随着任务的训练不断发生变化**
 
-[![img](Artificial Intelligence.assets/预训练在图像领域的应用.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/预训练在图像领域的应用.jpg)
+[![[预训练在图像领域的应用.jpg]]
 
 通过上述的讲解，对图像预训练做个总结（可参照上图）：对于一个具有少量数据的任务 A，首先通过一个现有的大量数据搭建一个 CNN 模型 A，由于 CNN的浅层学到的特征通用性特别强，因此在搭建一个 CNN 模型 B，其中模型 B 的浅层参数使用模型 A 的浅层参数，模型 B 的高层参数随机初始化，然后通过冻结或微调的方式利用任务 A 的数据训练模型 B，模型 B 就是对应任务 A 的模型。
 
@@ -226,7 +225,7 @@ P(wi|wi−1)=count(wi−1,wi)+1count(wi−1)+|V|公式(6)
 
 神经网络语言模型则引入神经网络架构来估计单词的分布，**并且通过词向量的距离衡量单词之间的相似度，因此，对于未登录单词，也可以通过相似词进行估计，进而避免出现数据稀疏问题**。
 
-[![img](Artificial Intelligence.assets/神经网络语言模型.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/神经网络语言模型.jpg)
+[![[神经网络语言模型.jpg]]
 
 上图为神经网络语言模型结构图，它的学习任务是输入某个句中单词 wt=bert 前的 t−1 个单词，要求网络正确预测单词 “bert”，即最大化：
 
@@ -256,7 +255,7 @@ P(wt=bert|w1,w2,⋯,wt−1;θ)公式(7)
 
 早期，人们想到的方法是使用独热（Onehot）编码，如下图所示：
 
-[![img](Artificial Intelligence.assets/单词的独热表示.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/单词的独热表示.jpg)
+[![[单词的独热表示.jpg]]
 
 对于上图的解释，假设有一个包含 8 个次的字典 V，“time” 位于字典的第 1 个位置，“banana” 位于字典的第 8 个位置，因此，采用独热表示方法，对于 “time” 的向量来说，除了第 1 个位置为 1，其余位置为 0；对于 “banana” 的向量来说，除了第 8 个位置为 1，其余位置为 0。
 
@@ -268,7 +267,7 @@ P(wt=bert|w1,w2,⋯,wt−1;θ)公式(7)
 
 在神经网络语言模型中，我们并没有详细解释词向量是如何计算的，现在让我们重看神经网络语言模型的架构图：
 
-[![img](Artificial Intelligence.assets/神经网络语言模型.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/神经网络语言模型.jpg)
+[![[神经网络语言模型.jpg]]
 
 上图所示有一个 V×m 的矩阵 Q，这个矩阵 Q 包含 V 行，V 代表词典大小，每一行的内容代表对应单词的 Word Embedding 值。
 
@@ -288,13 +287,13 @@ P(wt=bert|w1,w2,⋯,wt−1;θ)公式(7)
 
 下图给了网上找的几个例子，可以看出有些例子效果还是很不错的，一个单词表达成 Word Embedding 后，很容易找出语义相近的其它词汇。
 
-[![img](Artificial Intelligence.assets/wordembedding例子.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/wordembedding例子.jpg)
+[![[wordembedding例子.jpg]]
 
 # 四、Word2Vec 模型
 
 2013 年最火的用语言模型做 Word Embedding 的工具是 Word2Vec ，后来又出了Glove（由于 Glove 和 Word2Vec 的作用类似，并对 BERT 的讲解没有什么帮助，之后不再多加叙述），Word2Vec是怎么工作的呢？看下图：
 
-[![img](Artificial Intelligence.assets/word2vec.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/word2vec.jpg)
+[![[word2vec.jpg]]
 
 Word2Vec 的网络结构其实和神经网络语言模型（NNLM）是基本类似的，只是这个图长得清晰度差了点，看上去不像，其实它们是亲兄弟。不过这里需要指出：尽管网络结构相近，而且都是做语言模型任务，但是他们训练方法不太一样。
 
@@ -313,7 +312,7 @@ Word2Vec 有两种训练方法：
 
 突然在文章中插入这一段，其实就是给出一个问题：Word Embedding 这种做法能算是预训练吗？这其实就是标准的预训练过程。要理解这一点要看看学会 Word Embedding 后下游任务是怎么使用它的。
 
-[![img](Artificial Intelligence.assets/we模式下的预训练.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/we模式下的预训练.jpg)
+[![[we模式下的预训练.jpg]]
 
 假设如上图所示，我们有个NLP的下游任务，比如 QA，就是问答问题，所谓问答问题，指的是给定一个问题 X，给定另外一个句子 Y，要判断句子 Y 是否是问题 X 的正确答案。
 
@@ -347,7 +346,7 @@ Word2Vec 有两种训练方法：
 
 RNN 的基本单元结构如下图所示：
 
-[![img](Artificial Intelligence.assets/RNN-unrolled.png)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/RNN-unrolled.png)
+[![[RNN-unrolled.png]]
 
 上图左边部分称作 RNN 的一个 timestep，在这个 timestep 中可以看到，在 t 时刻，输入变量 xt，通过 RNN 的一个基础模块 A，输出变量 ht，而 t 时刻的信息，将会传递到下一个时刻 t+1。
 
@@ -362,7 +361,7 @@ RNN 解决了时序依赖问题，但这里的时序一般指的是短距离的�
 
 在这里我简单讲解下 RNN 为什么不适合长距离依赖问题。
 
-[![img](Artificial Intelligence.assets/RNN模型结构.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/RNN模型结构.jpg)
+[![[RNN模型结构.jpg]]
 
 如上图所示，为RNN模型结构，前向传播过程包括：
 
@@ -389,7 +388,7 @@ RNN中权重在各时间步内共享，最终的梯度是各个时间步的梯�
 
 为了解决 RNN 缺乏的序列长距离依赖问题，LSTM 被提了出来，首先我们来看看 LSTM 相对于 RNN 做了哪些改进：
 
-[![img](Artificial Intelligence.assets/LSTM模型结构.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/LSTM模型结构.jpg)
+[![[LSTM模型结构.jpg]]
 
 如上图所示，为 LSTM 的 RNN 门控结构（LSTM 的 timestep），LSTM 前向传播过程包括：
 
@@ -551,7 +550,7 @@ LSTM 遗忘门值 ft 可以选择在 [0,1] 之间，让 LSTM 来改善梯度消�
 
 在讲解 Word Embedding 时，细心地读者一定已经发现，这些词表示方法本质上是静态的，每一个词都有一个唯一确定的词向量，不能根据句子的不同而改变，无法处理自然语言处理任务中的多义词问题。
 
-[![img](Artificial Intelligence.assets/we多义词问题.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/we多义词问题.jpg)
+[![[we多义词问题.jpg]]
 
 如上图所示，例如多义词 Bank，有两个常用含义，但是 Word Embedding 在对 bank 这个单词进行编码的时候，是区分不开这两个含义的。
 
@@ -568,7 +567,7 @@ ELMo 采用了典型的两阶段过程：
 1. 第一个阶段是利用语言模型进行预训练；
 2. 第二个阶段是在做下游任务时，从预训练网络中提取对应单词的网络各层的 Word Embedding 作为新特征补充到下游任务中。
 
-[![img](Artificial Intelligence.assets/基于上下文的emedding.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/基于上下文的emedding.jpg)
+[![[基于上下文的emedding.jpg]]
 
 上图展示的是其第一阶段预训练过程，它的网络结构采用了双层双向 LSTM，目前语言模型训练的任务目标是根据单词 wi 的上下文去正确预测单词 wi，wi 之前的单词序列 Context-before 称为上文，之后的单词序列 Context-after 称为下文。
 
@@ -586,7 +585,7 @@ ELMo 采用了典型的两阶段过程：
 
 上面介绍的是 ELMo 的第一阶段：预训练阶段。那么预训练好网络结构后，如何给下游任务使用呢？
 
-[![img](Artificial Intelligence.assets/elmo训练后的使用.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/elmo训练后的使用.jpg)
+[![[elmo训练后的使用.jpg]]
 
 上图展示了下游任务的使用过程，比如我们的下游任务仍然是 QA 问题，此时对于问句 X：
 
@@ -607,7 +606,7 @@ ELMo 采用了典型的两阶段过程：
 
 Attention 是注意力的意思，从它的命名方式看，很明显借鉴了人类的注意力机制，因此，我们首先介绍人类的视觉注意力。
 
-[![img](Artificial Intelligence.assets/人类的视觉注意力.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/人类的视觉注意力.jpg)
+[![[人类的视觉注意力.jpg]]
 
 视觉注意力机制是人类视觉所特有的大脑信号处理机制。人类视觉通过快速扫描全局图像，获得需要重点关注的目标区域，也就是一般所说的注意力焦点，而后对这一区域投入更多注意力资源，以获取更多所需要关注目标的细节信息，而抑制其他无用信息。
 
@@ -627,7 +626,7 @@ Attention 是注意力的意思，从它的命名方式看，很明显借鉴了�
 
 通过 Query 这个信息从 Values 中筛选出重要信息，简单点说，**就是计算 Query 和 Values 中每个信息的相关程度。**
 
-[![img](Artificial Intelligence.assets/attention-计算图.png)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/attention-计算图.png)
+[![[attention-计算图.png]]
 
 再具体点，通过上图，Attention 通常可以进行如下描述，表示为将 Query(Q) 和 key-value pairs（**把 Values 拆分成了键值对的形式**） 映射到输出上，其中 query、每个 key、每个 value 都是向量，输出是 V 中所有 values 的加权，其中权重是由 Query 和每个 key 计算出来的，计算方法分为三步：
 
@@ -656,7 +655,7 @@ Attention 是注意力的意思，从它的命名方式看，很明显借鉴了�
 
 Self Attention 模型的架构如下图所示，接下来我们将按照这个模型架构的顺序来逐一解释。
 
-[![img](Artificial Intelligence.assets/self-attention.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/self-attention.jpg)
+[![[self-attention.jpg]]
 
 首先可以看到 Self Attention 有三个输入 Q、K、V：**对于 Self Attention，Q、K、V 来自句子 X 的 词向量 x 的线性转化，即对于词向量 x，给定三个可学习的矩阵参数 WQ,Wk,Wv，x 分别右乘上述矩阵得到 Q、K、V**。
 
@@ -666,25 +665,25 @@ Self Attention 模型的架构如下图所示，接下来我们将按照这个�
 
    1. 
 
-   ![img](Artificial Intelligence.assets/qkv.jpg)
+   ![[qkv.jpg]]
 
    上图操作：两个单词 Thinking 和 Machines。通过线性变换，即 xi 和 x2 两个向量分别与Wq,Wk,Wv 三个矩阵点乘得到 q1,q2,k1,k2,v1,v2 共 6 个向量。矩阵 Q 则是向量 q1,q2 的拼接，K、V 同理。
 
 2. 第二步，MatMul
 
-   1. ![img](Artificial Intelligence.assets/Q-K乘积.jpg)
+   1. ![[Q-K乘积.jpg]]
 
       上图操作：向量 q1,k1 做点乘得到得分 112， q1,k2 做点乘得到得分96。注意：**这里是通过 q1 这个信息找到 x1,x2 中的重要信息。**
 
 3. 第三步和第四步，Scale + Softmax
 
-   1. [![img](Artificial Intelligence.assets/qk-scale.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/qk-scale.jpg)
+   1. [![[qk-scale.jpg]]
 
    上图操作：对该得分进行规范，除以 √dk=8
 
 4. 第五步，MatMul
 
-   1. [![img](Artificial Intelligence.assets/qk-softmax.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/qk-softmax.jpg)
+   1. [![[qk-softmax.jpg]]
 
 用得分比例 [0.88，0.12] 乘以 [v1,v2] 值得到一个加权后的值，将这些值加起来得到 z1。
 
@@ -694,15 +693,15 @@ Self Attention 模型的架构如下图所示，接下来我们将按照这个�
 
 之前的例子是单个向量的运算例子。这张图展示的是矩阵运算的例子，输入是一个 [2x4] 的矩阵（句子中每个单词的词向量的拼接），每个运算是 [4x3] 的矩阵，求得 Q、K、V。
 
-[![img](Artificial Intelligence.assets/QKV-矩阵表示.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/QKV-矩阵表示.jpg)
+[![[QKV-矩阵表示.jpg]]
 
 Q 对 K 转制做点乘，除以 √dk，做一个 softmax 得到合为 1 的比例，对 V 做点乘得到输出 Z。那么这个 Z 就是一个考虑过 Thinking 周围单词 Machine 的输出。
 
-[![img](Artificial Intelligence.assets/QKVZ-结果.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/QKVZ-结果.jpg)
+[![[QKVZ-结果.jpg]]
 
 注意看这个公式，**QKT 其实就会组成一个 word2word 的 attention map！**（加了 softmax 之后就是一个合为 1 的权重了）。比如说你的输入是一句话 "i have a dream" 总共 4 个单词，这里就会形成一张 4x4 的注意力机制的图：
 
-[![img](Artificial Intelligence.assets/注意力机制矩阵图.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/注意力机制矩阵图.jpg)
+[![[注意力机制矩阵图.jpg]]
 
 这样一来，每一个单词对应每一个单词都会有一个权重，**这也是 Self Attention 名字的来源，即 Attention 的计算来源于 Source（源句） 和 Source 本身，通俗点讲就是 Q、K、V 都来源于输入 X 本身。**
 
@@ -710,7 +709,7 @@ Q 对 K 转制做点乘，除以 √dk，做一个 softmax 得到合为 1 的比
 
 引入 Self Attention 有什么好处呢？或者说通过 Self Attention 到底学到了哪些规律或者抽取出了哪些特征呢？我们可以通过下述两幅图来讲解：
 
-[![img](Artificial Intelligence.assets/self-attention-好处1.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/self-attention-好处1.jpg) [![img](Artificial Intelligence.assets/self-attention-好处2.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/self-attention-好处2.jpg)
+[![[self-attention-好处2.jpg]]
 
 从上述两张图可以看出，Self Attention 可以捕获同一个句子中单词之间的一些句法特征（例如第一张图展示的有一定距离的短语结构）或者语义特征（例如第二张图展示的 its 的指代对象为 Law）。
 
@@ -732,13 +731,13 @@ Q 对 K 转制做点乘，除以 √dk，做一个 softmax 得到合为 1 的比
 
 趁热打铁，我们讲讲 Transformer 未来会用到的 Masked Self Attention 模型，这里的 Masked 就是要在做语言模型（或者像翻译）的时候，不给模型看到未来的信息，它的结构如下图所示：
 
-[![img](Artificial Intelligence.assets/masked-attention.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/masked-attention.jpg)
+[![[masked-attention.jpg]]
 
 上图中和 Self Attention 重复的部分此处就不讲了，主要讲讲 Mask 这一块。
 
 假设在此之前我们已经通过 scale 之前的步骤得到了一个 attention map，**而 mask 就是沿着对角线把灰色的区域用0覆盖掉，不给模型看到未来的信息**，如下图所示：
 
-[![img](Artificial Intelligence.assets/mask-attention-map.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/mask-attention-map.jpg)
+[![[mask-attention-map.jpg]]
 
 详细来说：
 
@@ -749,7 +748,7 @@ Q 对 K 转制做点乘，除以 √dk，做一个 softmax 得到合为 1 的比
 
 并且在做完 softmax 之后，横轴结果合为 1。如下图所示：
 
-[![img](Artificial Intelligence.assets/mask-attention-map-softmax.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/mask-attention-map-softmax.jpg)
+[![[mask-attention-map-softmax.jpg]]
 
 具体为什么要 mask，未来再讲解 Transformer 的时候我们会详细解释。
 
@@ -759,19 +758,19 @@ Q 对 K 转制做点乘，除以 √dk，做一个 softmax 得到合为 1 的比
 
 Multi-Head Attention 就是把 Self Attention 得到的注意力值 Z 切分成 n 个 Z1,Z2,⋯,Zn，然后通过全连接层获得新的 Z′.
 
-[![img](Artificial Intelligence.assets/multi-head-attention.png)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/multi-head-attention.png)
+[![[multi-head-attention.png]]
 
 我们还是以上面的形式来解释，我们对 Z 进行 8 等份的切分得到 8 个 Zi 矩阵：
 
-[![img](Artificial Intelligence.assets/8-head-attention.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/8-head-attention.jpg)
+[![[8-head-attention.jpg]]
 
 为了使得输出与输入结构相同，拼接矩阵 Zi 后乘以一个线性 W0 得到最终的Z：
 
-[![img](Artificial Intelligence.assets/8-z-拼接.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/8-z-拼接.jpg)
+[![[8-z-拼接.jpg]]
 
 可以通过下图看看 multi-head attention 的整个流程：
 
-[![img](Artificial Intelligence.assets/multi-head-拼接.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/multi-head-拼接.jpg)
+[![[multi-head-拼接.jpg]]
 
 上述操作有什么好处呢？**多头相当于把原始信息 Source 放入了多个子空间中，也就是捕捉了多个信息，对于使用 multi-head（多头） attention 的简单回答就是，多头保证了 attention 可以注意到不同子空间的信息，捕捉到更加丰富的特征信息**。其实本质上是论文原作者发现这样效果确实好。
 
@@ -781,7 +780,7 @@ Multi-Head Attention 就是把 Self Attention 得到的注意力值 Z 切分成 
 
 其实不然，我们往前回顾，Self Attention 的 Q、K、V 三个矩阵是由同一个输入 X1=(x1,x2,⋯,xn) 线性转换而来，也就是说对于这样的一个被打乱序列顺序的 X2=(x2,x1,⋯,xn) 而言，**由于 Attention 值的计算最终会被加权求和，也就是说两者最终计算的 Attention 值都是一样的，进而也就表明了 Attention 丢掉了 X1 的序列顺序信息。**
 
-[![img](Artificial Intelligence.assets/位置向量.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/位置向量.jpg)
+[![[位置向量.jpg]]
 
 如上图所示，为了解决 Attention 丢失的序列顺序信息，Transformer 的提出者提出了 Position Embedding，也就是对于输入 X 进行 Attention 计算之前，在 X 的词向量中加上位置信息，也就是说 X 的词向量为 Xfinal_embedding=Embedding+PositionalEmbedding
 
@@ -789,19 +788,19 @@ Multi-Head Attention 就是把 Self Attention 得到的注意力值 Z 切分成 
 
 其中位置编码公式如下图所示：
 
-[![img](Artificial Intelligence.assets/位置编码公式.png)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/位置编码公式.png)
+[![[位置编码公式.png]]
 
 其中 pos 表示位置、i 表示维度、dmodel表示位置向量的向量维度 、2i、2i+1 表示的是奇偶数（奇偶维度），上图所示就是偶数位置使用 sin 函数，奇数位置使用 cos 函数。
 
 有了位置编码，我们再来看看位置编码是如何嵌入单词编码的（其中 512 表示编码维度），**通过把单词的词向量和位置向量进行叠加，这种方式就称作位置嵌入**，如下图所示：
 
-[![img](Artificial Intelligence.assets/位置编码和词向量之和.png)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/位置编码和词向量之和.png)
+[![[位置编码和词向量之和.png]]
 
 **Position Embedding 本身是一个绝对位置的信息**，但在语言模型中，相对位置也很重要。那么为什么位置嵌入机制有用呢？
 
 我们不要去关心三角函数公式，可以看看下图公式（3）中的第一行，我们做如下的解释，对于 “我爱吃苹果” 这一句话，有 5 个单词，假设序号分别为 1、2、3、4、5。
 
-[![img](Artificial Intelligence.assets/位置嵌入解释.png)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/位置嵌入解释.png)
+[![[位置嵌入解释.png]]
 
 假设 pos=1=我、k=2=爱、pos+k=3=吃，也就是说 pos+k=3 位置的位置向量的某一维可以通过 pos=1 位置的位置向量的某一维线性组合加以线性表示，通过该线性表示可以得出 “吃” 的位置编码信息蕴含了相对于前两个字 “我” 的位置编码信息。
 
@@ -815,17 +814,17 @@ Multi-Head Attention 就是把 Self Attention 得到的注意力值 Z 切分成 
 
 Transformer 的整体框架如下图所示：
 
-[![img](Artificial Intelligence.assets/tf-整体框架.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/tf-整体框架.jpg)
+[![[tf-整体框架.jpg]]
 
 上图所示的整体框架乍一眼一看非常复杂，由于 Transformer 起初是作为翻译模型，因此我们以翻译举例，简化一下上述的整体框架：
 
-[![img](Artificial Intelligence.assets/tf-框架简化.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/tf-框架简化.jpg)
+[![[tf-框架简化.jpg]]
 
 从上图可以看出 Transformer 相当于一个黑箱，左边输入 “Je suis etudiant”，右边会得到一个翻译结果 “I am a student”。
 
 再往细里讲，Transformer 也是一个 Seq2Seq 模型（Encoder-Decoder 框架的模型），左边一个 Encoders 把输入读进去，右边一个 Decoders 得到输出，如下所示：
 
-[![img](Artificial Intelligence.assets/tf-ed-框架.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/tf-ed-框架.jpg)
+[![[tf-ed-框架.jpg]]
 
 > 在这里，我们穿插描述下 Encoder-Decoder 框架的模型是如何进行文本翻译的：
 >
@@ -834,19 +833,19 @@ Transformer 的整体框架如下图所示：
 
 第一眼看到上述的 Encodes-Decoders 框架图，随之产生问题就是 Transformer 中 左边 Encoders 的输出是怎么和右边 Decoders 结合的。因为decoders 里面是有N层的，再画张图直观的看就是这样：
 
-[![img](Artificial Intelligence.assets/tf-ed-复杂.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/tf-ed-复杂.jpg)
+[![[tf-ed-复杂.jpg]]
 
 也就是说，Encoders 的输出，会和**每一层的 Decoder 进行结合**。
 
 现在我们取其中一层进行详细的展示：
 
-[![img](Artificial Intelligence.assets/ed-细分.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/ed-细分.jpg)
+[![[ed-细分.jpg]]
 
 通过上述分析，发现我们想要详细了解 Transformer，只要了解 Transformer 中的 Encoder 和 Decoder 单元即可，接下来我们将详细阐述这两个单元。
 
 ## 10.2 Encoder
 
-[![img](Artificial Intelligence.assets/ed-细分.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/ed-细分.jpg)
+[![[ed-细分.jpg]]
 
 有了上述那么多知识的铺垫，我们知道 Eecoders 是 N=6 层，通过上图我们可以看到每层 Encoder 包括两个 sub-layers：
 
@@ -857,7 +856,7 @@ Transformer 的整体框架如下图所示：
 
 现在我们给出 Encoder 的数据流示意图，一步一步去剖析
 
-[![img](Artificial Intelligence.assets/encoder-详细图.png)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/encoder-详细图.png)
+[![[encoder-详细图.png]]
 
 1. 深绿色的 x1 表示 Embedding 层的输出，加上代表 Positional Embedding 的向量之后，得到最后输入 Encoder 中的特征向量，也就是浅绿色向量 x1；
 
@@ -906,7 +905,7 @@ Transformer 的整体框架如下图所示：
 
 ## 10.3 Decoder
 
-[![img](Artificial Intelligence.assets/ed-细分.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/ed-细分.jpg)
+[![[ed-细分.jpg]]
 
 Decoders 也是 N=6 层，通过上图我们可以看到每层 Decoder 包括 3 个 sub-layers：
 
@@ -920,28 +919,28 @@ Decoders 也是 N=6 层，通过上图我们可以看到每层 Decoder 包括 3 
 
 以上，就讲完了 Transformer 编码和解码两大模块，那么我们回归最初的问题，将 “机器学习” 翻译成 “machine learing”，解码器的输出是一个浮点型的向量，怎么转化成 “machine learing” 这两个词呢？让我们来看看 Encoders 和 Decoders 交互的过程寻找答案：
 
-[![img](Artificial Intelligence.assets/ed-交互.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/ed-交互.jpg)
+[![[ed-交互.jpg]]
 
 从上图可以看出，Transformer 最后的工作是让解码器的输出通过线性层 Linear 后接上一个 softmax
 
 - 其中线性层是一个简单的全连接神经网络，它将解码器产生的向量 A 投影到一个更高维度的向量 B 上，假设我们模型的词汇表是10000个词，那么向量 B 就有10000个维度，每个维度对应一个惟一的词的得分。
 - 之后的softmax层将这些分数转换为概率。选择概率最大的维度，并对应地生成与之关联的单词作为此时间步的输出就是最终的输出啦！
 
-[![img](Artificial Intelligence.assets/tf-最后输出.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/tf-最后输出.jpg)
+[![[tf-最后输出.jpg]]
 
 假设词汇表维度是 6，那么输出最大概率词汇的过程如下：
 
-[![img](Artificial Intelligence.assets/tf-最终输出结果.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/tf-最终输出结果.jpg)
+[![[tf-最终输出结果.jpg]]
 
 # 十一、Transformer 动态流程展示
 
 首先我们来看看拿 Transformer 作翻译时，如何生成翻译结果的：
 
-[![img](Artificial Intelligence.assets/tf-动态生成.gif)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/tf-动态生成.gif)
+[![[tf-动态生成.gif]]
 
 继续进行：
 
-[![img](Artificial Intelligence.assets/tf-动态结果-2.gif)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/tf-动态结果-2.gif) [![img](Artificial Intelligence.assets/tf-整体框架.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/tf-整体框架.jpg)
+[![[tf-整体框架.jpg]]
 
 假设上图是训练模型的某一个阶段，我们来结合 Transformer 的完整框架描述下这个动态的流程图：
 
@@ -982,7 +981,7 @@ Decoders 也是 N=6 层，通过上图我们可以看到每层 Decoder 包括 3 
 
 除了以 ELMo 为代表的这种基于特征融合的预训练方法外，NLP 里还有一种典型做法，这种做法和图像领域的方式就是看上去一致的了，一般将这种方法称为 “基于Fine-tuning的模式”，而 GPT 就是这一模式的典型开创者，下面先让我们看看 GPT 的网络结构。
 
-[![img](Artificial Intelligence.assets/gpt-模型.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/gpt-模型.jpg)
+[![[gpt-模型.jpg]]
 
 GPT 是 “Generative Pre-Training” 的简称，从名字看其含义是指的生成式的预训练。
 
@@ -1003,7 +1002,7 @@ GPT也采用两阶段过程：
 
 上面讲的是 GPT 如何进行第一阶段的预训练，那么假设预训练好了网络模型，后面下游任务怎么用？它有自己的个性，和 ELMO 的方式大有不同。
 
-[![img](Artificial Intelligence.assets/gpt-fine.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/gpt-fine.jpg)
+[![[gpt-fine.jpg]]
 
 上图展示了 GPT 在第二阶段如何使用：
 
@@ -1034,7 +1033,7 @@ BERT 模型可以作为公认的里程碑式的模型，但是它最大的优点
 
 - 如下图所示，我们来看看 ELMo、GPT 和 BERT 三者的区别
 
-  - [![img](Artificial Intelligence.assets/BERT-GPT-比较.png)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/BERT-GPT-比较.png)
+  - [![[BERT-GPT-比较.png]]
 
   - ELMo 使用自左向右编码和自右向左编码的两个 LSTM 网络，分别以 P(wi|w1,⋯,wi−1) 和 P(wi|wi+1,⋯,wn) 为目标函数独立训练，**将训练得到的特征向量以拼接的形式实现双向编码，本质上还是单向编码，只不过是两个方向上的单向编码的拼接而成的双向编码**。
 
@@ -1051,7 +1050,7 @@ BERT 模型可以作为公认的里程碑式的模型，但是它最大的优点
 
 BERT 的模型结构如下图所示：
 
-[![img](Artificial Intelligence.assets/bert-模型结构.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/bert-模型结构.jpg)
+[![[bert-模型结构.jpg]]
 
 从上图可以发现，BERT 的模型结构其实就是 Transformer Encoder 模块的堆叠。在模型参数选择上，论文给出了两套大小不一致的模型。
 
@@ -1146,7 +1145,7 @@ BERT 在预训练阶段使用了前文所述的两种训练方法，**在真实�
 2. 另一套为位置编码（对应下图的 Position Embeddings），**不同于 Transformer 的位置编码用三角函数表示，BERT 的位置编码将在预训练过程中训练得到（训练思想类似于Word Embedding 的 Q 矩阵）**
 3. 由于在 MLM 的训练过程中，存在单句输入和双句输入的情况，因此 BERT 还需要一套区分输入语句的分割编码（对应下图的 Segment Embeddings），BERT 的分割编码也将在预训练过程中训练得到
 
-[![img](Artificial Intelligence.assets/BERT-输入.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/BERT-输入.jpg)
+[![[BERT-输入.jpg]]
 
 对于分割编码，Segment Embeddings 层只有两种向量表示。前一个向量是把 0 赋给第一个句子中的各个 token，后一个向量是把 1 赋给第二个句子中的各个 token ；如果输入仅仅只有一个句子，那么它的 segment embedding 就是全 0，下面我们简单举个例子描述下：
 
@@ -1154,7 +1153,7 @@ BERT 在预训练阶段使用了前文所述的两种训练方法，**在真实�
 >
 > [SEP]I Iike dogs and cats[SEP] 对应编码 0 0 0 0 0 0 0
 
-[![img](Artificial Intelligence.assets/segment-embeddings.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/segment-embeddings.jpg)
+[![[segment-embeddings.jpg]]
 
 # 十四、BERT 下游任务改造
 
@@ -1168,7 +1167,7 @@ BERT 根据自然语言处理下游任务的输入和输出的形式，将微调
 
 **如下图所示，句对用 [SEP] 分隔符拼接成文本序列，在句首加入标签 [CLS]，将句首标签所对应的输出值作为分类标签，计算预测分类标签与真实分类标签的交叉熵，将其作为优化目标，在任务数据上进行微调训练。**
 
-[![img](Artificial Intelligence.assets/句对分类.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/句对分类.jpg)
+[![[句对分类.jpg]]
 
 针对二分类任务，BERT 不需要对输入数据和输出数据的结构做任何改动，直接使用与 NSP 训练方法一样的输入和输出结构就行。
 
@@ -1192,7 +1191,7 @@ BERT 根据自然语言处理下游任务的输入和输出的形式，将微调
 
 **如下图所示，单句分类在句首加入标签 [CLS]，将句首标签所对应的输出值作为分类标签，计算预测分类标签与真实分类标签的交叉熵，将其作为优化目标，在任务数据上进行微调训练。**
 
-[![img](Artificial Intelligence.assets/单句分类.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/单句分类.jpg)
+[![[单句分类.jpg]]
 
 同样，针对多分类任务，需要在句首标签 [CLS] 的输出特征向量后接一个全连接层和 Softmax 层，保证输出维数与类别数目一致，最后通过 argmax 操作得到相对应的类别结果。
 
@@ -1216,7 +1215,7 @@ BERT 根据自然语言处理下游任务的输入和输出的形式，将微调
 
 **如下图所示，BERT 判断句子 B 中答案位置的做法是，将句子 B 中的每一个次得到的最终特征向量 T′i 经过全连接层（利用全连接层将词的抽象语义特征转化为任务指向的特征）后，分别与向量 s 和 e 求内积，对所有内积分别进行 softmax 操作，即可得到词 Tok m（m∈[1,M]）作为答案其实位置和终止位置的概率。最后，去概率最大的片段作为最终的答案**。
 
-[![img](Artificial Intelligence.assets/文本问答.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/文本问答.jpg)
+[![[文本问答.jpg]]
 
 文本回答任务的微调训练使用了两个技巧：
 
@@ -1246,7 +1245,7 @@ BERT 根据自然语言处理下游任务的输入和输出的形式，将微调
 
 **如下图所示，在进行单句标注任务时，需要在每个词的最终语义特征向量之后添加全连接层，将语义特征转化为序列标注任务所需的特征，单句标注任务需要对每个词都做标注，因此不需要引入辅助向量，直接对经过全连接层后的结果做 Softmax 操作，即可得到各类标签的概率分布。**
 
-[![img](Artificial Intelligence.assets/单句标注.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/单句标注.jpg)
+[![[单句标注.jpg]]
 
 由于 BERT 需要对输入文本进行分词操作，独立词将会被分成若干子词，因此 BERT 预测的结果将会是 5 类（细分为 13 小类）：
 
@@ -1284,11 +1283,11 @@ BERT 根据自然语言处理下游任务的输入和输出的形式，将微调
 
 在 11 个各种类型的 NLP 任务中达到目前最好的效果，某些任务性能有极大的提升。
 
-[![img](Artificial Intelligence.assets/bert-效果.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/bert-效果.jpg)
+[![[bert-效果.jpg]]
 
 # 十五、预训练语言模型总结
 
-[![img](Artificial Intelligence.assets/总结.jpg)](https://imgmd.oss-cn-shanghai.aliyuncs.com/BERT_IMG/总结.jpg)
+[![[总结.jpg]]
 
 到这里我们可以再梳理下几个模型之间的演进关系。
 

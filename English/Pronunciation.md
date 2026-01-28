@@ -1,14 +1,14 @@
-# 概述
+﻿# 概述
 
 - 口腔
-  - ![image-20221218133417816](Pronunciation.assets/image-20221218133417816.png)
+  - ![[image-20221218133417816.png]]
 
 # 音标体系
 
 - DJ音标
-  - ![image-20220904201935923](Pronunciation.assets/image-20220904201935923.png)
+  - ![[image-20220904201935923.png]]
 - KK音标
-  - ![image-20220904202033410](Pronunciation.assets/image-20220904202033410.png)
+  - ![[image-20220904202033410.png]]
 
 - Merriam韦氏词典
 - American Heritage Dictionary
@@ -17,14 +17,14 @@
 
 - 三要素
 
-  - ![image-20220904202610264](Pronunciation.assets/image-20220904202610264.png)
+  - ![[image-20220904202610264.png]]
     - 舌位：发音时舌面隆起的最高点在口腔中的位置。
 
 - 分布
 
-  - ![image-20220904205720862](Pronunciation.assets/image-20220904205720862.png)
+  - ![[image-20220904205720862.png]]
 
-  - ![image-20220904205738638](Pronunciation.assets/image-20220904205738638.png)
+  - ![[image-20220904205738638.png]]
 
 - 声带振动分类
   - 浊音：由声带震动发出的音叫做浊音，voiced sound
@@ -52,7 +52,7 @@
 
 # 技巧
 
-- ![image-20220924172754251](Pronunciation.assets/image-20220924172754251.png)
+- ![[image-20220924172754251.png]]
 
 ## 连读
 
@@ -61,18 +61,18 @@
 
 ## 加音
 
-- ![image-20220924174255054](Pronunciation.assets/image-20220924174255054.png)
-  1. ![image-20220924174518375](Pronunciation.assets/image-20220924174518375.png)
-  2. ![image-20220924174607952](Pronunciation.assets/image-20220924174607952.png)
-  3. ![image-20220924174737433](Pronunciation.assets/image-20220924174737433.png)
+- ![[image-20220924174255054.png]]
+  1. ![[image-20220924174518375.png]]
+  2. ![[image-20220924174607952.png]]
+  3. ![[image-20220924174737433.png]]
 
 ## 同化
 
-- ![image-20220924175546016](Pronunciation.assets/image-20220924175546016.png)
+- ![[image-20220924175546016.png]]
 
 ## 异化
 
-- ![image-20220924175934324](Pronunciation.assets/image-20220924175934324.png)
+- ![[image-20220924175934324.png]]
 
 ## 省音
 
@@ -80,7 +80,7 @@
 
 ## 缩读
 
-- ![image-20220924181138127](Pronunciation.assets/image-20220924181138127.png)
+- ![[image-20220924181138127.png]]
 
 ## 弱读
 
@@ -89,11 +89,11 @@
 
 ## 节奏
 
-- ![image-20220924183023631](Pronunciation.assets/image-20220924183023631.png)
-  - ![image-20220924183228344](Pronunciation.assets/image-20220924183228344.png)
+- ![[image-20220924183023631.png]]
+  - ![[image-20220924183228344.png]]
 
 ## 语调
 
-- ![image-20220924184730839](Pronunciation.assets/image-20220924184730839.png)
-  - ![image-20220924185148261](Pronunciation.assets/image-20220924185148261.png)
-  - ![image-20220924185211279](Pronunciation.assets/image-20220924185211279.png)
+- ![[image-20220924184730839.png]]
+  - ![[image-20220924185148261.png]]
+  - ![[image-20220924185211279.png]]

@@ -1,4 +1,4 @@
-# Java Web
+﻿# Java Web
 
 ## 网页开发基础
 
@@ -276,18 +276,20 @@
 #### public interface Servlet
 
 - | 方法                                                         | 说明                                                         |
-  | ------------------------------------------------------------ | ------------------------------------------------------------ |
-  | public void init(ServletConfig config);                      | Servlet引擎会在Servlet实例化之后，置入服务之前精确地调用init方法。在调用service方法之前，init方法必须成功退出。如果init方法抛出一个ServletException，你不能将这个Servlet置入服务中，如果init方法在超时范围内没完成，我们也可以假定这个Servlet是不具备功能的，也不能置入服务中。 |
-  | public void service(ServletRequest request, ServletResponse response) ; | Servlet引擎调用这个方法以允许Servlet响应请求。这个方法在Servlet未成功初始化之前无法调用。在Servlet被初始化之前，Servlet引擎能够封锁未决的请求。 在一个Servlet对象被卸载后，直到一个新的Servelt被初始化，Servlet引擎不能调用这个方法 |
-  | public void destroy();                                       | 当一个Servlet被从服务中去除时，Servlet引擎调用这个方法。在这个对象的service方法所有线程未全部退出或者没被引擎认为发生超时操作时，destroy方法不能被调用。 |
+
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| public void init(ServletConfig config);                      | Servlet引擎会在Servlet实例化之后，置入服务之前精确地调用init方法。在调用service方法之前，init方法必须成功退出。如果init方法抛出一个ServletException，你不能将这个Servlet置入服务中，如果init方法在超时范围内没完成，我们也可以假定这个Servlet是不具备功能的，也不能置入服务中。 |
+| public void service(ServletRequest request, ServletResponse response) ; | Servlet引擎调用这个方法以允许Servlet响应请求。这个方法在Servlet未成功初始化之前无法调用。在Servlet被初始化之前，Servlet引擎能够封锁未决的请求。 在一个Servlet对象被卸载后，直到一个新的Servelt被初始化，Servlet引擎不能调用这个方法 |
+| public void destroy();                                       | 当一个Servlet被从服务中去除时，Servlet引擎调用这个方法。在这个对象的service方法所有线程未全部退出或者没被引擎认为发生超时操作时，destroy方法不能被调用。 |
 
 #####  interface ServletConfig
 
 - | 方法                                 | 说明                                                         |
-  | ------------------------------------ | ------------------------------------------------------------ |
-  | String getServletName()              | 返回此 servlet 实例的名称。该名称可以通过服务器管理提供，在 Web 应用程序部署描述符中分配，或者对于未注册（因此未命名）的 servlet 实例，它将是 servlet 的类名。 |
-  | String getInitParameter(String name) | 获取具有给定名称的初始化参数的值。                           |
-  | ServletContext getServletContext()   | 返回ServletContext对调用者正在执行的 的引用。                |
+
+| ------------------------------------ | ------------------------------------------------------------ |
+| String getServletName()              | 返回此 servlet 实例的名称。该名称可以通过服务器管理提供，在 Web 应用程序部署描述符中分配，或者对于未注册（因此未命名）的 servlet 实例，它将是 servlet 的类名。 |
+| String getInitParameter(String name) | 获取具有给定名称的初始化参数的值。                           |
+| ServletContext getServletContext()   | 返回ServletContext对调用者正在执行的 的引用。                |
 
 
 ###### interface ServletContext
@@ -299,10 +301,11 @@
   - 域对象,是可以像 Map一样存取数据的对象,叫域对象。这里的域指的是存取数据的操作范围。
 
 - | 方法                                 | 说明                                       |
-  | ------------------------------------ | ------------------------------------------ |
-  | String getInitParameter(String name) | 获取web.xml中配置的上下文参数context-param |
-  | String getContextPath()              | 获取当前的工程路径,格式:/工程路径          |
-  | String getRealPath(String path)      | 获取工程部署后在服务器硬盘上的绝对路径     |
+
+| ------------------------------------ | ------------------------------------------ |
+| String getInitParameter(String name) | 获取web.xml中配置的上下文参数context-param |
+| String getContextPath()              | 获取当前的工程路径,格式:/工程路径          |
+| String getRealPath(String path)      | 获取工程部署后在服务器硬盘上的绝对路径     |
 
   - String getRealPath(String path)
 
@@ -327,18 +330,19 @@
 - 
 
 - | 方法                                  | 说明                                                         |
-  | ------------------------------------- | ------------------------------------------------------------ |
-  | getRequestURI()                       | 获取请求的统一资源标志符                                     |
-  | getRequestURL()                       | 获取请求的统一资源定位符（绝对路径〉                         |
-  | getRemoteHost()                       | 获取客户端的ip地址                                           |
-  | getHeader()                           | 获取请求头                                                   |
-  | getParameter()                        | 获取请求的参数                                               |
-  | getParameterValues()                  | 获取请求的参数〈多个值的时候使用）                           |
-  | getMethod()                           | 获取请求的方式GET或POST                                      |
-  | setAttribute( key , value);           | 设置域数据                                                   |
-  | getAttribute(key );                   | 获取域数据                                                   |
-  | void setCharacterEncoding(String env) | 覆盖此请求正文中使用的字符编码的名称。必须在读取请求参数或使用 getReader() 读取输入之前调用此方法。否则，它没有效果。 |
-  | getRequestDispatcher(String path)     | 获得请求转发对象                                             |
+
+| ------------------------------------- | ------------------------------------------------------------ |
+| getRequestURI()                       | 获取请求的统一资源标志符                                     |
+| getRequestURL()                       | 获取请求的统一资源定位符（绝对路径〉                         |
+| getRemoteHost()                       | 获取客户端的ip地址                                           |
+| getHeader()                           | 获取请求头                                                   |
+| getParameter()                        | 获取请求的参数                                               |
+| getParameterValues()                  | 获取请求的参数〈多个值的时候使用）                           |
+| getMethod()                           | 获取请求的方式GET或POST                                      |
+| setAttribute( key , value);           | 设置域数据                                                   |
+| getAttribute(key );                   | 获取域数据                                                   |
+| void setCharacterEncoding(String env) | 覆盖此请求正文中使用的字符编码的名称。必须在读取请求参数或使用 getReader() 读取输入之前调用此方法。否则，它没有效果。 |
+| getRequestDispatcher(String path)     | 获得请求转发对象                                             |
 
   - getRequestDispatcher()
 
@@ -364,10 +368,11 @@
 - servlet 容器创建一个HttpServletResponse对象并将其作为参数传递给 servlet 的服务方法（doGet、doPost等）。
 
 - | 方法                    | 说明                         |
-  | ----------------------- | ---------------------------- |
-  | getOutputStream();      | 常用于下载（传递二进制数据） |
-  | getWriter();            | 常用于回传字符串（常用）     |
-  | sendRedirect(String s） | 请求重定向                   |
+
+| ----------------------- | ---------------------------- |
+| getOutputStream();      | 常用于下载（传递二进制数据） |
+| getWriter();            | 常用于回传字符串（常用）     |
+| sendRedirect(String s） | 请求重定向                   |
 
   - 响应的乱码解决
 
@@ -729,16 +734,17 @@ req.getCookies() //Cookie[]
 - Session  会话中，我们经常用来保存用户登录之后的信息。
 
 - | 方法                                      | 说明                                                         |
-  | ----------------------------------------- | ------------------------------------------------------------ |
-  | request.getSession()                      | 第一次调用是：创建  Session  会话，之后调用都是：获取前面创建好的  Session  会话对象。 |
-  | boolean isNew();                          | 判断到底是不是刚创建出来的（新的）                           |
-  | getId()                                   | 得到  Session  的会话  id  值。                              |
-  | 域数据的存取                              |                                                              |
-  | setAttribute（String name, Object value） | 存session数据，key，value的形式                              |
-  | getAttribute（String name）               | 获得session数据                                              |
-  | 生命周期控制                              |                                                              |
-  | setMaxInactiveInterval(int interval)      | 设置  Session  的超时时间（以秒为单位），超过指定的时长，Session 就会被销毁。值为正数的时候，设定  Session  的超时时长。 负数表示永不超时（极少使用） |
-  | int getMaxInactiveInterval()              | 获取  Session  的超时时间，默认的超时时间长为  30  分钟      |
+
+| ----------------------------------------- | ------------------------------------------------------------ |
+| request.getSession()                      | 第一次调用是：创建  Session  会话，之后调用都是：获取前面创建好的  Session  会话对象。 |
+| boolean isNew();                          | 判断到底是不是刚创建出来的（新的）                           |
+| getId()                                   | 得到  Session  的会话  id  值。                              |
+| 域数据的存取                              |                                                              |
+| setAttribute（String name, Object value） | 存session数据，key，value的形式                              |
+| getAttribute（String name）               | 获得session数据                                              |
+| 生命周期控制                              |                                                              |
+| setMaxInactiveInterval(int interval)      | 设置  Session  的超时时间（以秒为单位），超过指定的时长，Session 就会被销毁。值为正数的时候，设定  Session  的超时时长。 负数表示永不超时（极少使用） |
+| int getMaxInactiveInterval()              | 获取  Session  的超时时间，默认的超时时间长为  30  分钟      |
 
 ## Filter
 
@@ -895,4 +901,6 @@ public class ContextLoaderListener implements ServletContextListener {
 ```
 
 启动服务器，就可以在启动的日志信息中看到 `contextInitialized()` 方法输出的内容，同时也说明了 `ServletContext` 对象在服务器启动的时候被创建了。
+
+�。
 

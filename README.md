@@ -1,8 +1,8 @@
-# Sorting Logic
+﻿# Sorting Logic
 
 ## 需求层次理论
 
-![image-20251126015335699](README.assets/image-20251126015335699.png)
+![[image-20251126015335699.png]]
 
 ## 辅助学习，梳理逻辑关系
 

@@ -1,11 +1,11 @@
-# Docker
+﻿# Docker
 
 ## 容器生态系统
 
 1. 容器核心技术
    1. 容器规范:容器不光是 Docker，还有其他容器，比如 CoreOS的rkt。为了保证容器生态的健康发展，保证不同容器之间能够兼容，包含 Docker、CoreOS、 Google在内的若干公司共同成立了一个叫 Open Container Initiative (OCI)的组织，其目的是制定开放的容器规范。
       - 目前OCI 发布了两个规范:runtime spec和 image format spec。有了这两个规范，不同组织和厂商开发的容器能够在不同的runtime 上运行。这样就保证了容器的可移植性和互操作性
-      - ![image-20230728140932235](Docker.assets/image-20230728140932235.png)
+      - ![[image-20230728140932235.png]]
    2. 容器run time:runtime是容器真正运行的地方。runtime需要跟操作系统 kernel 紧密协作，为容器提供运行环境。Java程序就好比是容器，JVM 则好比是 runtime，JVM为Java程序提供运行环境。同样的道理，容器只有在runtime中才能运行。
       1. lxc是Linux上老牌的容器runtime。Docker最初也是用lxc作为runtime。
       2. runc是 Docker自己开发的容器runtime，符合oci 规范，也是现在 Docker 的默认runtime。
@@ -14,7 +14,7 @@
       1. lxd是 lxc对应的管理工具。
       2. runc的管理工具是docker engine。docker engine包含后台deamon和 cli两个部分。我们通常提到Docker，一般就是指的docker engine。
       3. rkt的管理工具是 rkt cli。
-      4. ![image-20230728141316495](Docker.assets/image-20230728141316495.png)
+      4. ![[image-20230728141316495.png]]
    4. 容器定义工具:容器定义工具允许用户定义容器的内容和属性，这样容器就能够被保存、共享和重建
       1. docker image是 Docker容器的模板，runtime依据 docker image 创建容器。
       2. dockerfile是包含若干命令的文本文件，可以通过这些命令创建出 docker image。
@@ -77,9 +77,9 @@
   - 传统的虚拟化技术，比如 VMWare、KVM、Xen，目标是创建完整的虚拟机。为了运行应用，除了部署应用本身及其依赖（通常几十MB)，还得安装整个操作系统(几十GB)
 - 为什么需要容器
   - 容器使软件具备了超强的可移植能力。
-  - ![image-20230728160128275](Docker.assets/image-20230728160128275.png)
+  - ![[image-20230728160128275.png]]
 - docker架构
-  - ![image-20230728160252919](Docker.assets/image-20230728160252919.png)
+  - ![[image-20230728160252919.png]]
     1. Docker客户端
     2. Docker 服务器
     3. Docker 镜像：可将Docker镜像看成只读模板，通过它可以创建 Docker 容器。例如某个镜像可能包含一个Ubuntu操作系统、一个Apache HTTP Server以及用户开发的Web应用。
@@ -98,7 +98,7 @@
 
 - 镜像的分层结构：Docker支持通过扩展现有镜像，创建新的镜像。每安装一个软件，就在现有镜像的基础上增加一层。
 - 可写的容器层（Copy-on-Write特性）：当容器启动时，一个新的可写层被加载到镜像的顶部。这一层通常被称作“容器层”,“容器层”之下的都叫“镜像层”。所有对容器的改动，无论添加、删除，还是修改文件都只会发生在容器层中。只有容器层是可写的,容器层下面的所有镜像层都是只读的。
-  - ![image-20230728173724447](Docker.assets/image-20230728173724447.png)
+  - ![[image-20230728173724447.png]]
   - 镜像层数量可能会很多，所有镜像层会联合在一起组成一个统一的文件系统。如果不同层中有一个相同路径的文件，比如 la，上层的/a会覆盖下层的la，也就是说用户只能访问到上层中的文件/a。在容器层中，用户看到的是一个叠加之后的文件系统。
     1. 添加文件。在容器中创建文件时,新文件被添加到容器层中。
     2. 读取文件。在容器中读取某个文件时，Docker会从上往下依次在各镜像层中查找此文件。一旦找到，打开并读入内存。
@@ -127,7 +127,7 @@
         - silly _goldberg是 Docker为我们的容器随机分配的名字。
         - 新镜像命名为ubuntu-with-vi。
 2. Dockerfile
-   - ![image-20230729150646961](Docker.assets/image-20230729150646961.png)
+   - ![[image-20230729150646961.png]]
      1. 当前目录为/root。
      2. Dockerfile 准备就绪。
      3. 运行 `docker build`命令，`-t`将新镜像命名为ubuntu-with-vi-dockerfile，命令末尾的`﹒`指表明build context为当前目录。Docker 默认会从 build context 中查找 Dockerfile 文件，我们也可以通过-f参数指定Dockerfile的位置。
@@ -270,7 +270,7 @@
 
 ### 生命周期
 
-- ![img](Docker.assets/event_state.png)
+- ![[event_state.png]]
 
 ## 网络
 
