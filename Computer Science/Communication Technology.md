@@ -188,7 +188,7 @@
     - **噪声**（英语：Noise）在电子学中指，信号在传输过程中会受到一些外在能量所产生信号（如杂散电磁场）的干扰，这些能量即噪声。噪声通常会造成信号的失真。其来源除了来自系统外部，亦有可能由接收系统本身产生。噪声的强度通常都是与信号带宽成正比，所以当信号带宽越宽，噪声的干扰也会越大。
     - **信噪比**（英语：Signal-to-noise ratio，缩写为SNR或S/N），又称訊噪比，用于比较所需信号的强度与背景噪声的强度。其定义为信号功率与噪声功率的比率，以分贝（dB）为单位表示。大于比率1:1（高于0分贝）表示信号多于噪声。
   - 信道容量C 与信道带宽B 成正比，同时还取决于系统信噪比以及编码技术种类。
-- ![[Coding_mod_channel.png]]
+- ![调制信道与编码信道框图。对于数字通信系统，调制信道是编码信道的一部分。](Communication Technology.assets/Coding_mod_channel.png)
   - **调制信道**是指信号从调制器的输出端传输到解调器的输入端经过的部分。对于调制和解调的研究者来说，信号在调制信道上经过的传输媒质和变换设备都对信号做出了某种形式的变换，研究者只关心这些变换的输入和输出的关系，并不关心实现这一系列变换的具体物理过程。这一系列变换的输入与输出之间的关系，通常用多端口时变网络作为调制信道的数学模型进行描述。
   - **编码信道**是指数字信号由编码器输出端传输到译码器输入端经过的部分。对于编译码的研究者来说，编码器输出的数字串行经过编码信道上的一系列变换之后，在译码器的输入端成为另一组数字串行，研究者只关心这两组数字串行之间的变换关系，而并不关心这一系列变换发生的具体物理过程，甚至并不关心信号在调制信道上的具体变化。编码器输出的数字串行与到译码器输入的数字串行之间的关系，通常用多端口网络的转移概率作为编码信道的数学模型进行描述。
 
@@ -262,14 +262,14 @@
     5. 线路进入空闲状态：等待一个随机的时间，转到第1步，除非超过最大尝试次数。
     6. 超过最大尝试传输次数：向更高层的网络协议报告发送失败，退出传输模式。
   - 问题：以太网上的任何节点都可以选择是否监听线路上传输的所有信息
-  - 以太网帧：![[image-20220718154143615.png]]
+  - 以太网帧：![image-20220718154143615](Communication Technology.assets/image-20220718154143615.png)
     - 循环冗余校验（Cyclic redundancy check，CRC）：是一种根据网络数据包或电脑文件等数据产生简短固定位数校验码的一种散列函数，主要用来检测或校验数据传输或者保存后可能出现的错误。生成的数字在传输或者存储之前计算出来并且附加到数据后面，然后接收方进行检验确定数据是否发生变化。
     - 前导码和帧开始符：采用0和1交替出现的7个字节的前导码和1个字节的帧开始符作为帧的开始
     - 以太网帧的长度是64~1518字节。
 
 ##### IP数据包格式
 
-- ![[image-20220718155710397.png]]
+- ![image-20220718155710397](Communication Technology.assets/image-20220718155710397.png)
   - 版本号：版本号类型为IPv4和IPv6。
   - 首部长度：这是指IP包头的长度。IPv4以32 位（4字节）为一个单位，从“首部长度”4位的情况看，IP包头最大也就64字节，512位。
   - TOS：标识传送优先级。在具有QoS保障的IP网络，比如MPLS里，TOS的意义才真正体现出来。这个字段由现在不再使用的3个优先权位、4个TOS位和1个必须为0的未用位组成。4个TOS位是：最小延迟、最大吞吐量、最高可靠性和最小费用。这4位只能有1位为1
@@ -361,13 +361,13 @@
 - 组成
   - “主机地址”
   - “子网掩码”，用来标识该IP地址所在的子网（大部分是局域网）网段有多大。
-- 分类![[image-20220718180228797.png]]
+- 分类![image-20220718180228797](Communication Technology.assets/image-20220718180228797.png)
   - A类、B类和C类是最常用的单播IP地址，D类地址用于组播，E类地址被保留用于扩展和实验开发与研究。
   - 特殊功能地址
     - 0.0.0.0/0，未知网络，通常默认保留，常用于代表“缺省网络”，在路由器表中用于描述“缺省路径”。缺省路径的意思是享有最低优先级，在没有特别定义的情况下，IP数据包会按照该地址所定义的路由表项进行转发。
     - 127.0.0.0/8，表示回环地址和本地软件回送测试之用，保留而不分配。
     - 255.255.255.255/32，有限广播地址。
-    - 私有IP地址：![[image-20220718180651102.png]]
+    - 私有IP地址：![image-20220718180651102](Communication Technology.assets/image-20220718180651102.png)
       - 这3个IP地址段不会被互联网的公用服务器使用，而是在局域网中使用。
 
 - **域名系统**（英语：Domain Name System，缩写：DNS）是互联网的一项服务。它作为将域名和IP地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS使用TCP和UDP端口53[1]。当前，对于每一级域名长度的限制是63个字符，域名总长度则不能超过253个字符。
@@ -614,7 +614,7 @@
 
 ### 各种网络的结构关系
 
-- ![[image-20220720110658521.png]]
+- ![image-20220720110658521](Communication Technology.assets/image-20220720110658521.png)
 
 ## 传送介质和传输网
 
@@ -729,15 +729,15 @@
 
 - 波段
 
-| 波段   | 频率      | 说明                                                         |
-| ------ | --------- | ------------------------------------------------------------ |
-| L波段  | 1～2GHz   | 常用于移动通信                                               |
-| S波段  | 2～4GHz   | 主要应用于微波接力通信和地球站之间的卫星通信。               |
-| C波段  | 4～8GHz   | 主要应用于微波接力通信和地球站之间的卫星通信，C波段是其中应用最多的。 |
-| X波段  | 8～13GHz  | 主要应用于微波接力通信和地球站之间的卫星通信。               |
-| Ku波段 | 13～18GHz | 主要应用于微波接力通信和地球站之间的卫星通信。               |
-| K波段  | 18～28GHz | 主要应用于空间通信和近距离的地面通信。                       |
-| Ka波段 | 28～40GHz | 主要应用于地球站与空间站之间的通信。                         |
+  - | 波段   | 频率      | 说明                                                         |
+    | ------ | --------- | ------------------------------------------------------------ |
+    | L波段  | 1～2GHz   | 常用于移动通信                                               |
+    | S波段  | 2～4GHz   | 主要应用于微波接力通信和地球站之间的卫星通信。               |
+    | C波段  | 4～8GHz   | 主要应用于微波接力通信和地球站之间的卫星通信，C波段是其中应用最多的。 |
+    | X波段  | 8～13GHz  | 主要应用于微波接力通信和地球站之间的卫星通信。               |
+    | Ku波段 | 13～18GHz | 主要应用于微波接力通信和地球站之间的卫星通信。               |
+    | K波段  | 18～28GHz | 主要应用于空间通信和近距离的地面通信。                       |
+    | Ka波段 | 28～40GHz | 主要应用于地球站与空间站之间的通信。                         |
 
     - 我国的3G、4G网络运行在L和S波段
     - 我国的5G将采用S和C波段。当前工业和信息化部向三大电信运营商发放了5G系统中低频段试验频率使用许可
@@ -1437,20 +1437,20 @@
 
 # 大话无线通信
 
-- ![[image-20220928101126074.png]]
+- ![image-20220928101126074](Communication Technology.assets/image-20220928101126074.png)
   - BSS = ‘BTS’ （ Base Transceiver Station ， 基 站 收 发 信机）+ ‘BSC’（Base Station Controller，基站控制器）
   - ‘HLR’（Home Location Register， 归属位置寄存器），存储了IMSI号、Ki号及其他详细信息
   - ‘VLR’（Visitor Location Register，访问位置寄存器）
     - 情况一旦有所变化，‘VLR’都会实时和‘HLR’联系，到HLR下属的AuC’（Authentication Center，鉴权中心）里进行认证。
 - 信令
-  - ![[image-20220928101552929.png]]
+  - ![image-20220928101552929](Communication Technology.assets/image-20220928101552929.png)
   - BTS<->MS
     - TCH（Traffic CHannel，业务信道）
     
-      - ![[image-20221008164840169.png]]
+      - ![image-20221008164840169](Communication Technology.assets/image-20221008164840169.png)
     - CCH（Control CHannel，控制信道）等几类
     
-      - ![[image-20221008164424654.png]]
+      - ![image-20221008164424654](Communication Technology.assets/image-20221008164424654.png)
       - SDCCH,独立专用控制信道（Stand-Alone Dedicated Control Channel）
       - SACCH(Slow Associated Control Channel 慢速随路控制信道)
       - FACCH（Fast Associated Control CHannel,快 速 随 路 控 制 信 道 ）
@@ -1470,7 +1470,7 @@
 
 ## 通信系统
 
-- ![[image-20220928144638892.png]]
+- ![image-20220928144638892](Communication Technology.assets/image-20220928144638892.png)
   - 信源编码是以提高通信有效性为目的的编码。信源编码的效率通常是通过压缩信源的冗余度来实现的。信源编码追求的是相同信息量的最少比特位。
   - 信道编码是以提高信息传输的可靠性为目的的编码。通常通过增加信源的冗余度来实现。
     - 在信源编码的基础上，另外安排了一些冗余的比特传给收端，让收端自行验证信息是不是都收对了，这些“冗余信息”就称为信道编码。
@@ -1493,19 +1493,19 @@
 
 ## GSM系统组成
 
-- ![[image-20220929133836870.png]]
+- ![image-20220929133836870](Communication Technology.assets/image-20220929133836870.png)
   - 一 套 完 整 的 蜂 窝 无 线 通 信 系 统 通 常 由 交 换 子 系 统 （ NSS ， Network Switched Subsystem ） 、 基 站 子 系 统 （ BSS ， Base Station 
     Subsystem），移动台（MS，Mobile Station）以及操作维护中心（OMC，Operations & Maintenance Center）构成。
     - NSS包括移动业务交换中心（MSC）、访问位置寄存器（VLR）、归属位置寄存器（HLR）、鉴权中心 （ AuC ） 和 移 动 设 备 识 别 寄 存 器 （ EIR ） ；
     - BSS 包 括 基 站 控 制 器（ BSC ） 和 基 站 收 发 信 机 （ BTS ） 。 
     - 交 换 子 系 统 和 其 他 网 络 如 PSTN（Public Switched Telephone Network，公用电话交换网）、 PLMN（Public Lands Mobile-communication Network，公用陆地移动通信网）之间一般都有接口。
   - GSM系统的接口
-    - ![[image-20220929161601316.png]]
+    - ![image-20220929161601316](Communication Technology.assets/image-20220929161601316.png)
   - WCDMA的接口
-    - ![[image-20220929165059709.png]]
+    - ![image-20220929165059709](Communication Technology.assets/image-20220929165059709.png)
       - 无线网络控制器（RNC，Radio Network Controller）
       - Uu：UMTS Air Interface，This is the radio interface between the UTRAN (UMTS Terrestrial Radio Access Network) and the UE (User Equipment) utilizing CDMA.
-  - ![[image-20220929175359894.png]]
+  - ![image-20220929175359894](Communication Technology.assets/image-20220929175359894.png)
 - 手机部件
   - 天线
     - 一是将空中的电磁波转化为高频电流并将其输送到接收电路中。发射的时候则恰好相反，把高频电流转化为电磁波；
@@ -1514,7 +1514,7 @@
   - LNA（Low Noise Amplifier，低噪声放大器）
   - 射频滤波器：对特定接收频段以外的信号通通过滤掉
   - 超外差电路：把高频电流信号降下来变成中频电流信号， 然后进行放大和选频的电路
-  - ![[image-20220930094015088.png]]
+  - ![image-20220930094015088](Communication Technology.assets/image-20220930094015088.png)
 
 - BSC
   - 链路
@@ -1546,18 +1546,18 @@
     - AuC存储着鉴权信息，用来对用户进行鉴权，防止非法用户的接入；AuC还存储着密钥，用来对无线接口上的语音、数据、信令信号进行加密，保证用户的通信安全。
     - 每个用户在运营商处进行开户登记的时候，就会被分配一个用户号码（MSISDN号）和用户识别码（IMSI号）。IMSI通过SIM卡写卡机写入SIM卡中，同时在写卡机中又产生了一个对应此IMSI的唯一的用户密钥Ki。IMSI号与Ki号在SIM卡和AuC中都有存储，便于核对。
     - AuC的两大功能是鉴权和加密，AuC中有一个伪随机码发生器，用于产生一个不可预测的伪随机数（RAND）。RAND和Ki经A8算法（加密算法）产生一个Kc，经A3算法（鉴权算法）产生一个响应数（SRES）。 由RAND、SRES、Kc一起组成了一个用户的三参数组，AUC每次对一个用户产生7～10组三参数组，传送给HLR，HLR将其存储在该用户的用户资料库中。
-      - ![[image-20221008114533333.png]]
-      - ![[image-20221008114558018.png]]
+      - ![image-20221008114533333](Communication Technology.assets/image-20221008114533333.png)
+      - ![image-20221008114558018](Communication Technology.assets/image-20221008114558018.png)
 
 
 - 编号
-  - ![[image-20221008142728999.png]]
+  - ![image-20221008142728999](Communication Technology.assets/image-20221008142728999.png)
     - MSISDN（Mobile Station International ISDN Number）：指主叫用户为呼叫数字公用陆地蜂窝移动通信网中的用户所需拨的号码。
       - 综合业务数字网（Integrated Services Digital Network，ISDN）是一个数字电话网络国际标准，是一种典型的电路交换网络系统（circuit-switching network）。
     - CC（Country Code）＝国家码，即在国际长途电话通信网中要使用的标识号
     - NDC（National Destination Code）＝国内目的地码，即网络接入号，也就是平时手机拨号的前3位。
     - SN（Subcriber Number）＝用户号码，采用等长8位编号计划。
-  - ![[image-20221008143436614.png]]
+  - ![image-20221008143436614](Communication Technology.assets/image-20221008143436614.png)
     - MCC（Mobile Country Code）＝移动国家号码，由3位数字组成，唯一地识别移动用户所属的国家，我国为460。
     - MNC（Mobile Network Code）＝移动网号，由2位数字组成，用于识别移动用户所归属的移动网。中国移动的GSM PLMN网为00，中国联通的GSM PLMN网为01。MSIN（Mobile Station Identity Number）＝移动用户识别码，采 
     - 用等长10位数字构成，用于唯一地识别国内GSM移动通信网中的移动用户。
@@ -1577,7 +1577,7 @@
       - FAC＝工厂装配码，由厂家编码，表示生产厂家及其装配地。 
       - SNR＝序号码，由厂家分配，识别每个TAC和FAC中的某个设备的。 
       - SP＝备用，备作将来使用。
-  - ![[image-20221008154237285.png]]
+  - ![image-20221008154237285](Communication Technology.assets/image-20221008154237285.png)
     - 位置区识别码（LAI）
       - LAI代表MSC业务区的不同位置区（如图4.61所示），用于移动用户的位置更新
         - LAI＝MCC＋MNC＋LAC
@@ -1597,7 +1597,7 @@
 
 - GSM在无线路径上的传输单位是由GMSK调制的比特组成的脉冲串，称 为 “Burst”—— 突 发 脉 冲 
 - 突发脉冲在一个时间和频率的窗口上发送，这个窗口称为“time slot”——时隙
-  - ![[image-20221008155337643.png]]
+  - ![image-20221008155337643](Communication Technology.assets/image-20221008155337643.png)
 - TDMA信道上一个时隙中的信息格式称为突发脉冲序列。
   - 普通突发（NB，Normal Burst）脉冲序列
   - 空闲突发（DB，Dummy Burst）脉冲序列
@@ -1606,7 +1606,7 @@
   - 接入突发（AB，Access Burst）脉冲序列。
 - 普通突发脉冲序列
   - 普通突发脉冲序列用于携带业务信道（TCH）及除RACH、SCH、FCCH控制信道上的信息。
-  - ![[image-20221008160204767.png]]
+  - ![image-20221008160204767](Communication Technology.assets/image-20221008160204767.png)
     - TB（Tail Bit）是尾比特的意思，TB的数值总是000，以帮助均衡器识别起始位和终止位。
     - 普通突发脉冲序列有一个26bit的训练序列，这是一串特定的比特序列，共有8种。BTS在设置BSIC号的时候，相应的比特序列也就设置了。其作用是帮助均衡器产生和修正信道模型， 以消除时间色散
     - GP（Guard Period）是保护间隔，共8.25bit，大约30ms，这是一段空白信息，防止有时隙交错时，有用的比特信息不会交错
@@ -1614,17 +1614,17 @@
     - F是借用标志的意思，打电话的时候，我们一直占用的是TCH，信令都没地方传了，如果出现了比较紧急的信令要传递，比如说切换信息，那就把两个F位“偷帧信号”置为1，说明此时突发脉冲序列已经被FACCH信令借用。如果只设置了一个比特，表示突发脉冲序列只有一半被盗用。其中，“0”表示是TCH，“1”表示是FACCH。
 - 频率校正突发脉冲序列
   - 突发脉冲序列传送下行的FCCH，使MS能校正自己振荡器的频率并锁定到BTS的频率，它相当于一个特定频率的未调制的载波在FCCH上发送
-  - ![[image-20221008160754363.png]]
+  - ![image-20221008160754363](Communication Technology.assets/image-20221008160754363.png)
   - 频率校正突发脉冲序列也有前后各3bit的尾比特和8.25bit的保护比特，其作用和普通突发脉冲序列相同。142个固定比特全为0，这个信息很特殊，便于MS一眼识别并锁定载波频率
 - 同步突发脉冲序列
   - 同步突发脉冲序列用于MS和BTS间的时间同步，这里含有一个长同步序列TDMA帧号（FN，Frame Number）以及基站识别码（BSIC）的相关信息。
-  - ![[image-20221008161452573.png]]
+  - ![image-20221008161452573](Communication Technology.assets/image-20221008161452573.png)
     - 与突发脉冲序列有所不同的是，它有长达64bit的同步序列。这个同步序列是固定的，也可以看作是训练序列，此时网络还未建立连接，需要更多的比特位用于信道均衡来确保信息传递的有效性。
 - 接入突发脉冲序列
-  - ![[image-20221008162009925.png]]
+  - ![image-20221008162009925](Communication Technology.assets/image-20221008162009925.png)
   - 接入突发脉冲序列用于MS的随机接入。这种突发脉冲序列设置了一个较长的保护间隔（GP），所以其有用信息比其他类型的脉冲序列短很多。因为MS试图接入到系统时还不知道发射定时，所以要增加保护带。MS发送该突发脉冲序列时，BTS并不知道MS的位置，所以来自MS的消息的定时也无法准确计算（接入突发脉冲序列仅为上行）。由于第一个突发脉冲序列中没有时间调整，MS接入与后一个串有一定的交错，基站可以根据交错码个数来计算TA值。
 - 空闲突发脉冲序列
-  - ![[image-20221008162221054.png]]
+  - ![image-20221008162221054](Communication Technology.assets/image-20221008162221054.png)
   - 在其他信道不发送突发脉冲序列时，基站收发信机须在小区配置中C0的下行信道的每个时隙发送一个突发脉冲。因为MS是要不断监视BCCH射频的功率的，以便于进行小区选择。如果BCCH载频的TCH时隙有时候不发送信号，就会影响周围的MS对该载频信号强度的评估，因为 
     评估信号强度是根据采样点取平均值而得来的。所以如果有BCCH载频的时隙处于空闲状态，那就要发送空闲突发脉冲序列，不能让它闲着。
 - TDMA帧
@@ -1632,7 +1632,7 @@
     同步以及语音信号的加密，同步用在SCH上，加密是和Kc以及原始信号一起通过A5算法进行的。
   - 有了TDMA帧号，MS也可以判断当前载频到底是BCCH载频还是TCH载频，它的0号时隙传递的到底是BCCH信号还是TCH信号。因为BCCH载频包含了SCH，SCH告知了BCCH的TDMA帧号，因此载频的性质是可以根据TDMA帧号来分辨的。
   - 复帧，复帧是针对TDMA帧中的一个特定时隙来定义的
-    - ![[image-20221008163037715.png]]
+    - ![image-20221008163037715](Communication Technology.assets/image-20221008163037715.png)
     - 含26帧持续时间为120ms复帧结构
       - 26帧的复帧包括26个TDMA帧，持续时间为120ms，一般用于TCH（以及跟随TCH的SACCH和FACCH），作为话音信道及其随路控制信道。
       - 在26帧业务信道复帧中，帧12（帧从0号帧算起，所以是第13帧）被用作慢速随路控制信道（SACCH），用来在MS和BTS之间传送链路控制信息。小区给每个业务信道分配的时隙都是这种格式，也就是说，最开始是12个突发脉冲序列的业务信息，接下来是1个Burst的SACCH， 然后是12个Burst的业务信息和一个空闲的Burst。
@@ -1642,7 +1642,7 @@
   - 超帧（Superframe）：51帧和26帧之间是没有公约数的，要设置一种帧可以容纳这两种帧，那么这个帧的容量就必须要达到51×26＝1326帧。这种 
     帧称为超帧，1326个TDMA帧相当于6.12s的时间。
   - 巨帧（Hyperframe）:一个巨帧包含了2048个超帧结构 。 巨 帧 结 构 含 26×51×2048 ＝ 2715648 个 TDMA 帧 ， 持 续 时 间 为3h28min53s760ms。每个TDMA帧由帧计数器（FN）来标记。这些TDMA帧按照顺序排列，依次从0到2715647，帧号在同步信道中传送。巨帧也与加密和跳频有关系，一个巨帧持续3个多小时，每当一个新的巨帧开始时，加密和跳频算法也重新开始。
-  - ![[image-20221008163921953.png]]
+  - ![image-20221008163921953](Communication Technology.assets/image-20221008163921953.png)
 
 ## 第三层协议以及七号信令
 
@@ -1685,7 +1685,7 @@
      1. MTP-1：为信令传输提供一条双向数据通道，定义了信令数据链路的物理、电气功能特性和链路接入方法。
      2. MTP-2：定义了在信令数据链路上传送信令消息的功能和程序。它和第一级一起共同保证信令消息在两信令点之间的链路上可靠地传送。
         - 消息信令单元（Message Signal Unit，MSU）、链路状态信令单元（Link Status Signal Unit，LSSU）、插入信令单元（Fill-In Signal Unit，FISU）
-          - ![[image-20221110112428257.png]]
+          - ![image-20221110112428257](Communication Technology.assets/image-20221110112428257.png)
         - 定界：采用码型为“01111110”的标志码作为信令单元的分界，它既表示上一信令单元的结束，又表示下一信令单元的开始。信令单元里本身的“01111110”码型。在信令的发送端进行“0”比特插入，在接收端进行“0”比特删除。“0”比特插入，就是在发端连续发5个“1”之后插入一个比 特“0”，到了接收端，把这个插入的“0”去掉就是“0”比特删除。
         - 信令单元定位
         - 误差检测：将信息单元的所有比特对一个生成多项式G （x ）做一个 
@@ -1697,10 +1697,10 @@
         - LI（Length Indicator）：长度指示码，指示LI至CK间的八位位组个数，用于区分3种信 
           令单元
      3. MTP-3：在消息的实际传递中，将信令消息传至适当的信令链路或用户部分；当遇到故障或拥塞时，完成信令网的重新组合，以保证信令消息仍能可靠地传递。
-        - ![[image-20221110114128531.png]]
+        - ![image-20221110114128531](Communication Technology.assets/image-20221110114128531.png)
         - 编号：SP，Signal Point，信令点。STP， Signal Transfer Point，信令转接点
         - 发信地址称为OPC（Original Point Code，源点码），收信地址称为DPC（Destination Point Code，目的地码），信令传输中SP之间可能有多条路径，用4bit的链路选择字段SLS（Signal Link Select）来标注这些不同的道路。
-        - 管理消息![[image-20221110113233356.png]]
+        - 管理消息![image-20221110113233356](Communication Technology.assets/image-20221110113233356.png)
           - CHM：倒换和倒回消息。
             ECM：紧急倒换消息。
             FCM：信令业务流量控制消息。 
@@ -1723,10 +1723,10 @@
 
 ### 概述
 
-![[image-20221111111749230.png]]
+![image-20221111111749230](Communication Technology.assets/image-20221111111749230.png)
 
 - LTE 系 统 只 是 一 个 通 俗 的 说 法 ， 实 际 上 规 范 的 称 法 是 EPS （ Evolved Packet System ， 演 进 的 分 组 系 统 ） 。 EPS 由 核 心 网 EPC （ Evolved Packet Core ， 演 进 的 分 组 核 心 网 ） 以 及 E- UTRAN（演进的无线网）组成。EPS基于SAE（System Architecture Evolution，系统架构演进）技术，E-UTRAN基于LTE技术。
-- ![[image-20221111112058609.png]]
+- ![image-20221111112058609](Communication Technology.assets/image-20221111112058609.png)
 
 #### SAE核心网
 
@@ -1734,7 +1734,7 @@
 2. PS分组交换业务。分组交换业务是伴随着IP技术而成长起来的，随着IP技术的一统天下，Internet的普及，各种 业 务 都 分 组 化 了 ， PS业 务 日 渐 兴 盛 。 我 们 最 常 用 的 PS业 务 就 是 上网。
 3. 电 路 域 的 设 备 包 括 MSC-Server和 MGW（ Media Gateway ， 媒 体 网 关 ） 两 种 网 元 。 MSC是 移 动 交 换 机 的 意 思 ， MSC- Server可以简写为MSC-S。
 4. 分 组 域 的 主 要 设 备 是 SGSN （ GPRS 服 务 支 持 节 点 ） 和 GGSN（ GPRS网 关 支 持 节 点 ） 。 SGSN的 角 色 类 似 于 电 路 域 的 MSC- S， 负 责 为 服 务 区 域 内 的 分 组 数 据 用 户 提 供 服 务 ， 并 进 行 分 组 数 据 用户的接入控制、安全认证和位置管理等工作。GGSN负责将分组数据传送到相应的网络，是GPRS网络与外部分组交换网络的接口，还要完成协议转换、路由选择和消息过滤等工作。分组业务数据流先经过SGSN，再经过GGSN。
-5. ![[image-20221111114554159.png]]
+5. ![image-20221111114554159](Communication Technology.assets/image-20221111114554159.png)
    - MME （ Mobility Management Entity ， 移 动 性 管 理 实 体 ） ： 这 是 EPC中 的 主 要 网 元 ， 从 名 称 上 就 可 以 看 到 ， MME负 责 管 理 和 控 
      制，相当于班长。
    - SGW （ Serving GateWay ， 业 务 网 关 ） ： 这 也 是 EPC 中 的 主 要 网元，负责处理业务流。
@@ -1773,12 +1773,12 @@
 ##### EPC
 
 - 在建立业务承载时，EPC有两个选择：就近接入和回归接入
-- ![[image-20221111135058870.png]]
+- ![image-20221111135058870](Communication Technology.assets/image-20221111135058870.png)
 
 #### LTE无线网络
 
-- ![[image-20221111140348676.png]]
-- ![[image-20221111141254086.png]]
+- ![image-20221111140348676](Communication Technology.assets/image-20221111140348676.png)
+- ![image-20221111141254086](Communication Technology.assets/image-20221111141254086.png)
   - RRC（ Radio Resource Control， 无线资源控制）
     - RRC只处理控制面的信息，主要负责LTE空中接口的无线资源分配与控制，还承担了信令的处理和发送。由于RRC负责LTE空中接口的无线资源管理工作，可以看成LTE空中接口的大脑，因此是LTE空中接口最重要的组成部分。
   - PDCP（Packet Data Convergence Protocol，分 组 数 据 汇 聚 协 议 ） 
@@ -1789,18 +1789,18 @@
     - 主要负责与物理层接口，进行传输格式选择和信道的复用，支持无线网络的处理机制，如随机接入、调度、HARQ、上行功率控制等功能。
     - 进 行 信 道 编 解 码 ， 支 持 OFDM 调 制 复 用 、 支 持 多 天线，体现了LTE技术革命性的一面。
   - PHY物 理层，
-- ![[image-20221111141818527.png]]
+- ![image-20221111141818527](Communication Technology.assets/image-20221111141818527.png)
 - 信 令 无 线 承 载 ：Signal Radio Bearer，SRB
 - 无 线 承 载：Signal Radio Bearer， RB
 - Non Access Stratum，NAS 非接入层
 - Access Stratum，AS 接入层
-- ![[image-20221111142946872.png]]
-- ![[image-20221111143800133.png]]
-- ![[image-20221111143926592.png]]
+- ![image-20221111142946872](Communication Technology.assets/image-20221111142946872.png)
+- ![image-20221111143800133](Communication Technology.assets/image-20221111143800133.png)
+- ![image-20221111143926592](Communication Technology.assets/image-20221111143926592.png)
 
 ## 流程和机制
 
-- ![[watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5Lic5ZOlVjV-,size_20,color_FFFFFF,t_70,g_se,x_16.png]]
+- ![img](Communication Technology.assets/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5Lic5ZOlVjV-,size_20,color_FFFFFF,t_70,g_se,x_16.png)
   
 - 系统架构演进（又名SAE，System Architecture Evolution）是3GPP所制定的LTE无线通信的核心网络标准。
   - 移动性管理实体（MME，Mobility Management Entity）：MME是LTE接入网络的关键控制节点。它负责空闲模式UE（用户设备）跟踪和寻呼控制。这些内容也包括UE的注册与注销过程，同时帮助UE选择S-GW，以完成LTE系统核心网络（CN）节点切换。
@@ -1813,8 +1813,8 @@
 
 ### 待机状态
 
-- ![[image-20220927164459908.png]]
-- ![[image-20220927164524456.png]]
+- ![image-20220927164459908](Communication Technology.assets/image-20220927164459908.png)
+- ![image-20220927164524456](Communication Technology.assets/image-20220927164524456.png)
 - 待机状态的最大特点是终端的任务比较少，还没有建立与网络的业务连接，基本不占用网络的资源，也就是待机状态开销小、省资源。
 - 终端工作模式的差别
   - 关机后终端并没有完全断电，还有一部分模块以极低的功耗工作着。
@@ -1841,7 +1841,7 @@
   - 小区选择与重选； 
   - 位置登记。
 - 运行流程
-  - ![[image-20220926134717179.png]]
+  - ![image-20220926134717179](Communication Technology.assets/image-20220926134717179.png)
     - 小区
       - 服务小区，终端当前驻留的小区；
       - 邻区，终端能感知到的其他小区。
@@ -1878,12 +1878,12 @@
 #### 小区选择
 
 - 小区选择分为初始小区选择和普通小区选择两种方式
-  - ![[image-20220926141823701.png]]
+  - ![image-20220926141823701](Communication Technology.assets/image-20220926141823701.png)
     1. 在进行初始小区选择时，终端并不确定工作频点；而在进行普通小区选择时，终端已经确定了工作频点。工作频点的信息，可能来自 
        终 端 和 USIM卡 中 存 储 的 信 息 ， 也 可 能 来 自 初 始 小 区 选 择 得 到 的 可 用PLMN列表。
     2. 初始小区选择用于终端开机后以及从覆盖盲区回到覆盖区域 的 PLMN搜 索 过 程 中 ； 而 普 通 小 区 选 择 用 于 终 端 开 机 后 的 PLMN注 
        册过程或者从联机状态返回待机状态。
-- 普通小区选择![[image-20220926142035218.png]]
+- 普通小区选择![image-20220926142035218](Communication Technology.assets/image-20220926142035218.png)
 
 - 初始小区选择
   - 终端在进行初始小区选择时需要了解所有频段的环境，因此会在每个频段上扫描频点；
@@ -1893,7 +1893,7 @@
 
 #### 小区重选
 
-- ![[image-20220926142447783.png]]
+- ![image-20220926142447783](Communication Technology.assets/image-20220926142447783.png)
 
 #### 终端的测量机制与判决
 
@@ -1916,7 +1916,7 @@
     - LTE系统设置了很多门限值，只有达到了相应的门限，终端才会启动相应的测量。
     - 优先级，不同的频点可以设置不同的优先级，这样网络侧更容易控制终端的重选行为
     - 终端的移动速度
-  - ![[image-20220926150102789.png]]
+  - ![image-20220926150102789](Communication Technology.assets/image-20220926150102789.png)
 
 #### 小区同步
 
@@ -1924,7 +1924,7 @@
 
   - FDD
     - FDD LTE空中接口的时间结构分无线帧、子帧和时隙三个层次，无线帧的时长为10ms，子帧的时长为1ms，时隙的时长为0.5ms。每个时隙还由多个OFDM符号组成，每个OFDM符号的时长也是固定的，与子载波间隔相关。在现网中，子载波间隔为15kHz，对应的OFDM符号时长为66.7s。66.7s等于2048个Ts，Ts是采样点时长的意思，是LTE系统最小的一个时间单位。
-    - ![[image-20220926160124619.png]]
+    - ![image-20220926160124619](Communication Technology.assets/image-20220926160124619.png)
 
   - TDD
   - 尽管TD-LTE增加了一层时间结构，并且引入了可变的上下行比例和特殊子帧格式，但是无线帧、子帧和时隙的时长以及时隙的内部结构与FDD LTE还是保持了高度地一致，实现了尽可能地兼容。
@@ -1933,7 +1933,7 @@
 
   - 时间同步，就是在终端侧复制小区的时间结构，实现的方法就是同步机制。
   - 为了实施同步机制，终端还需要小区的帮助，提供一些信号，这些信号用于同步过程，称为同步信号。
-  - ![[image-20220926160738912.png]]
+  - ![image-20220926160738912](Communication Technology.assets/image-20220926160738912.png)
 
 #### 小区广播机制
 
@@ -1961,17 +1961,17 @@
     - SIB调度信息；
     - TDD配置参数：包含上下行比例和特殊子帧格式等信息。
 
-| 类型 | 内容                      | 特点 |
-| ---- | ------------------------- | ---- |
-| MIB  | 系统基本信息              | 必备 |
-| SIB1 | 小区选择参数、SIB调度信息 | 必备 |
-| SIB2 | 随机接入参数、信道配置    | 必备 |
-| SIB3 | 小区重选参数              | 必备 |
-| SIB4 | 同频邻区信息              | 必备 |
-| SIB5 | 异频邻区信息              | 可选 |
-| SIB6 | WCDMA/TD-SCDMA邻区信息    | 可选 |
-| SIB7 | GSM邻区信息               | 可选 |
-| SIB8 | cdma2000邻区信息          | 可选 |
+  - | 类型 | 内容                      | 特点 |
+    | ---- | ------------------------- | ---- |
+    | MIB  | 系统基本信息              | 必备 |
+    | SIB1 | 小区选择参数、SIB调度信息 | 必备 |
+    | SIB2 | 随机接入参数、信道配置    | 必备 |
+    | SIB3 | 小区重选参数              | 必备 |
+    | SIB4 | 同频邻区信息              | 必备 |
+    | SIB5 | 异频邻区信息              | 可选 |
+    | SIB6 | WCDMA/TD-SCDMA邻区信息    | 可选 |
+    | SIB7 | GSM邻区信息               | 可选 |
+    | SIB8 | cdma2000邻区信息          | 可选 |
 
 #### 位置登记与寻呼机制
 
@@ -2007,7 +2007,7 @@
 ### 联机状态
 
 - Connect mode，终端可以说就是为了联机状 态而生，有了联机状态终端才有存在价值。
-  - ![[image-20220927170131152.png]]
+  - ![image-20220927170131152](Communication Technology.assets/image-20220927170131152.png)
 
 - 使命
   - 建立业务连接；
@@ -2015,14 +2015,14 @@
   - 保持业务连接的连续性； 
   - 减少对其他设备的干扰。
 - 流程
-  - ![[image-20220927171454329.png]]
+  - ![image-20220927171454329](Communication Technology.assets/image-20220927171454329.png)
 - 重要参数
-  - ![[image-20221111150238605.png]]
-  - ![[image-20221111150300840.png]]
-  - ![[image-20221111150315402.png]]
+  - ![image-20221111150238605](Communication Technology.assets/image-20221111150238605.png)
+  - ![image-20221111150300840](Communication Technology.assets/image-20221111150300840.png)
+  - ![image-20221111150315402](Communication Technology.assets/image-20221111150315402.png)
 
 - 联机id
-  - ![[image-20221111150410496.png]]
+  - ![image-20221111150410496](Communication Technology.assets/image-20221111150410496.png)
 
 
 #### 随机接入
@@ -2062,7 +2062,7 @@
 
 1. 用户标识IMSI
 2. 用户密码又称密钥，在LTE系统中称为K参数，是个128比特的二进制数，也存储在用户的USIM卡以及核心网的数据库HSS中
-3. ![[image-20221110162251667.png]]
+3. ![image-20221110162251667](Communication Technology.assets/image-20221110162251667.png)
 
 ##### 加密
 
@@ -2096,7 +2096,7 @@
 ##### 上行资源调度
 
 1. 终端首先需要发送调度请求（Scheduling Request，SR），表明终端有数据要上传
-2. ![[image-20221111103453378.png]]
+2. ![image-20221111103453378](Communication Technology.assets/image-20221111103453378.png)
 3. SR可以通过随机接入过程上传，这时将采用终端的C-RNTI作为冲突检测的标识。基站也可以为终端预先分配传送SR的PUCCH信道，这样SR上传的时延会比较少。另一种基站收到终端通过PUCCH信道发送的SR 后，会给终端分配PUSCH信道，分配信息称为上行许可（UL Grant）， 用终端的C-RNTI加扰后，通过PDCCH信道下发。
 4. 终端收到上行许可后，根据分配的信息，先用这个PUSCH信道来上报缓冲区中待发的上行数据量，称为BSR（Buffer State Report）。
 
@@ -2125,7 +2125,7 @@
 
 ### S1和X2接口协议
 
-- ![[image-20221111151557251.png]]
+- ![image-20221111151557251](Communication Technology.assets/image-20221111151557251.png)
   - 接入层 （Access Stratum，AS）和非接入层（Non Access Stratum，NAS）两 
     大部分：接入层（AS）包含物理层、链路层和网络层，而非接入层 （NAS）为上层，如图3.10所示。接入层（AS）通过服务接入点 （SAP）为非接入层（NAS）提供服务。
 
@@ -2135,21 +2135,21 @@
 
 - 用户面，用来连接SGW与eNB。
 
-- ![[image-20221111152015251.png]]
+- ![image-20221111152015251](Communication Technology.assets/image-20221111152015251.png)
   - GPRS隧道协议（GPRS Tunnelling Protocol，简称GTP）是GPRS核心网目前定义的基于IP的协议。大体上说，这个协议允许GSM或WCDMA网络的最终用户可以随处移动，而同时持续地连接到因特网，如同只是从GGSN的同一个位置进行的。
   - 它通过承载从当前正在为签约用户（subscriber）提供服务的SGSN到当前正在处理该签约用户的会话的GGSN的签约用户数据来实现。GPRS核心网使用三种形式的GTP。
   - GTP协议本质上是一种IP包的封装协议，也就是IP over IP。，所谓用户面PDU，就是IP数据包。这些IP数据包经过GTP协议的封装，可以在LTE核心网中传送。
   - S1-U接口上传送着多个用户的数据流，每个用户也可能并发多个数据流，这些数据流的QoS各不相同。在S1-U接口上，数据流是利用TEID（Tunnel Endpoint Identifier，隧道端点ID）来区分的，而TEID恰恰是GTP协议中的地址
 
-1. ![[image-20221111151908700.png]]
-2. ![[image-20221111152519953.png]]
+1. ![image-20221111151908700](Communication Technology.assets/image-20221111151908700.png)
+2. ![image-20221111152519953](Communication Technology.assets/image-20221111152519953.png)
 
 ##### S1-MME
 
 - 控制面，用来连接MME与eNB；
-- ![[image-20221111152830638.png]]
+- ![image-20221111152830638](Communication Technology.assets/image-20221111152830638.png)
   - SCTP 是 Stream Control Transmission Protocol的缩写，也就是流控传输协议。SCTP是TCP协议的升级版，性能优于TCP协议。
-- ![[image-20221111152945363.png]]
+- ![image-20221111152945363](Communication Technology.assets/image-20221111152945363.png)
 - 功能
   - UE上下文的管理；
     - UE上下文就是终端的上下文，可以理解为终端和用户的档案，是终端和用户相关信息的集合
@@ -2168,7 +2168,7 @@
   - 切换；
   - 小区间负载均衡； 
   - 小区间干扰协调
-- ![[image-20221111154548320.png]]
+- ![image-20221111154548320](Communication Technology.assets/image-20221111154548320.png)
   - 源基站在X2-CP接口上向目标基站发出Handover Request消息， 请求切换。
   - 目标基站收到Handover Request消息后，判断可以接纳终端的切入，向源基站回复Handover Request Acknowledge消息。
 
@@ -2184,11 +2184,11 @@
 - 空中接口（Radio Interface，也称为Air Interface），是移动通信系统中基站与终端之间的接口
   - LTE空中接口上传送的信令分为两种：一种是NAS信令，终点是MME；另外一种是RRC信令，终点是eNB。这两种信令在LTE空中接口上，都用SRB来承载。
   - LTE空中接口利用无线承载（RB）来传送业务数据，RB是Radio Bearer的缩写。
-    - ![[watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9pcy1jbG91ZC5ibG9nLmNzZG4ubmV0,size_16,color_FFFFFF,t_70.png]]
-- ![[image-20221111160541646.png]]
-- 信令的传输过程![[image-20221113203107333.png]]
-- ![[image-20221113203229548.png]]
-- ![[image-20221111161404975.png]]
+    - ![GTP-U 与 EPS Bearer](Communication Technology.assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9pcy1jbG91ZC5ibG9nLmNzZG4ubmV0,size_16,color_FFFFFF,t_70.png)
+- ![image-20221111160541646](Communication Technology.assets/image-20221111160541646.png)
+- 信令的传输过程![image-20221113203107333](Communication Technology.assets/image-20221113203107333.png)
+- ![image-20221113203229548](Communication Technology.assets/image-20221113203229548.png)
+- ![image-20221111161404975](Communication Technology.assets/image-20221111161404975.png)
   - 这些信道是子层之间SAP的专用术语
   - 逻辑信道位于RLC子层与MAC子层之间
   - 传输信道位于MAC子层与物理层之间
@@ -2197,19 +2197,19 @@
 
 #### 分层
 
-- ![[image-20221113190511702.png]]
-- ![[image-20221113190615892.png]]
+- ![image-20221113190511702](Communication Technology.assets/image-20221113190511702.png)
+- ![image-20221113190615892](Communication Technology.assets/image-20221113190615892.png)
   - PDCP （ Packet Data Convergence Protocol ， 分 组 数 据 汇 聚 协 议 ） 
   - RLC （ Radio Link Control，无线链路控制）以及
   - MAC（Medium Access Control，媒体访问 控 制 ） 子 层 
   - RRC（ Radio Resource Control， 无 线 资 源 控 制 ） 是L3的一个子层。子层的名称通常来源于子层采用的协议。
   - NAS不是WCDMA空中接口的组成部分，但是产生的信令需要在WCDMA空中接口上传输，所以用虚线框标识。
 
-- ![[image-20221113190755185.png]]
+- ![image-20221113190755185](Communication Technology.assets/image-20221113190755185.png)
 
 ##### RRC
 
-- ![[image-20221113191019524.png]]
+- ![image-20221113191019524](Communication Technology.assets/image-20221113191019524.png)
 
   - RRC子层只有一半的宽度，这是因为RRC子层只处理信令。
 
@@ -2219,27 +2219,27 @@
 
   - LTE空中接口中的各种信令承载以及无线承载，包括逻辑信道、传输信道和物理信道的具体配置，都需要通过RRC子层来指定。另外，RRC子层还参与了待机状态和联机状态的众多处理机制， 比如广播、寻呼、鉴权、加密、业务连接的建立与释放、测量配置与测量报告等。以上这些处理机制，可以通过RRC消息的处理和NAS信令的收发来体现。
 
-  - ![[image-20221113191427126.png]]
+  - ![image-20221113191427126](Communication Technology.assets/image-20221113191427126.png)
 
   - RRC信令
 
     - 
 
-| 信令                                    | 主要用途              | 内容                      |
-| --------------------------------------- | --------------------- | ------------------------- |
-| RRC Connection Request                  | 建立RRC连接           | 终端的ID，建 立连接的原因 |
-| RRC Connection Setup                    | 建立RRC连接           | SRB1的信道配 置信息       |
-| RRC Connection Setup Complete           | 建立RRC连接           | PLMN标识以 及MME标识      |
-| RRC Connection Reconfiguration          | 建立SRB与RB           | SRB和RB的信 道配置信息    |
-|                                         | 测量配置              | 测量配置信息              |
-|                                         | 切换                  | 切换信息                  |
-| RRC Connection Reconfiguration Complete | 反馈执行完毕          | 无                        |
-| Measurement Report                      | 测量报告              | 测量报告                  |
-| Security Mode Command                   | 加密                  | 加密算法和完 整性保护算法 |
-| Security Mode Complete                  | 加密                  | 无                        |
-| Paging                                  | 寻呼                  | 终端D                     |
-| DLInformation Transfer                  | 承载来自MME 的NAS信令 | NAS信令                   |
-| ULInformation Transfer                  | 承载来自UE的 NAS信令  | NAS信令                   |
+    - | 信令                                    | 主要用途              | 内容                      |
+      | --------------------------------------- | --------------------- | ------------------------- |
+      | RRC Connection Request                  | 建立RRC连接           | 终端的ID，建 立连接的原因 |
+      | RRC Connection Setup                    | 建立RRC连接           | SRB1的信道配 置信息       |
+      | RRC Connection Setup Complete           | 建立RRC连接           | PLMN标识以 及MME标识      |
+      | RRC Connection Reconfiguration          | 建立SRB与RB           | SRB和RB的信 道配置信息    |
+      |                                         | 测量配置              | 测量配置信息              |
+      |                                         | 切换                  | 切换信息                  |
+      | RRC Connection Reconfiguration Complete | 反馈执行完毕          | 无                        |
+      | Measurement Report                      | 测量报告              | 测量报告                  |
+      | Security Mode Command                   | 加密                  | 加密算法和完 整性保护算法 |
+      | Security Mode Complete                  | 加密                  | 无                        |
+      | Paging                                  | 寻呼                  | 终端D                     |
+      | DLInformation Transfer                  | 承载来自MME 的NAS信令 | NAS信令                   |
+      | ULInformation Transfer                  | 承载来自UE的 NAS信令  | NAS信令                   |
 
 ##### PDCP
 
@@ -2262,7 +2262,7 @@
   - 透明传输模式（TM）：TM模式负责传输上层PDU，不附加任何的RLC信息，不保证数据传输的正确性，实时性最高。TM模式不执行分段／重组功能，基本没有开销。LTE系统的广播与寻呼信息采用了TM模式。
   - 非确认传输模式（UM）：UM模式负责传输上层PDU，携带有PDU的编号信息。UM模式下利 用 编 号 信 息 可 以 实 现 传 输 信 息 的 唯 一 性 。 UM模 式 下 不 进 行 数 据 重传 ， 因 此 不 保 证 数 据 传 输 的 正 确 性 ， 但 系 统 开 销 较 小 。 LTE 系 统 的 VoIP语音数据包采用了UM模式。
   - 确认传输模式（AM）：AM模 式 负 责 传 输 上 层 PDU， 能 进 行 数 据 重 传 ， 以 保 证 能 将 数 据正确地送达对等接收实体。当发生意外情况接收端不能正确接收时，AM会通知调用其的上层协议实体。AM模式的缺点是需要更多的处理过程，因此会引入较大的处理延迟，系统开销最大。LTE系统的信令以及数据业务采用了AM模式。
-  - ![[image-20221113202018109.png]]
+  - ![image-20221113202018109](Communication Technology.assets/image-20221113202018109.png)
 
 ##### MAC
 
@@ -2278,15 +2278,15 @@
 
 ##### 上行
 
-- ![[image-20221113202413947.png]]
+- ![image-20221113202413947](Communication Technology.assets/image-20221113202413947.png)
 
 ##### 下行
 
-- ![[image-20221113202803374.png]]
+- ![image-20221113202803374](Communication Technology.assets/image-20221113202803374.png)
 
 ##### 对等层
 
-- ![[image-20221113202820854.png]]
+- ![image-20221113202820854](Communication Technology.assets/image-20221113202820854.png)
 
 ### 信令流程
 
@@ -2298,16 +2298,16 @@
      2. 定义信息的格式与内容； 
      3. 定义信息的时间顺序。
   4. 在协议中，通常信令的内容以消息为单位，格式由相应的协议来规定；而消息的先后顺序也是由协议规定的，这就是信令流程。协议对理解信令流程非常重要，可以说，协议是信令流程的基石，而信令流程就是协议的具体体现。
-- ![[image-20221113221544191.png]]
+- ![image-20221113221544191](Communication Technology.assets/image-20221113221544191.png)
   - SRB0用 来 承 载 RRC信 令 ， 逻 辑 信 道 是 CCCH， 其 RLC子 层为虚线框，代表采用TM的传输模式。SRB0的处理路径为SRB0-CCCH- SCH-PDSCH。
   - SRB1用来承载RRC信令和NAS信令，对应RRC连接，是最重要的SRB。SRB1要经过PDCP子层的处理，进行加密和完整性保护；SRB1的 RLC 子 层 采 用 AM 的 传 输 模 式 。 SRB1 的 处 理 路 径 为 SRB1-DCCH1- SCH-PDSCH。
   - SRB2用来承载NAS信令。SRB2也要经过PDCP子层的处理，进行加密和完整性保护；SRB1的RLC子层同样采用AM的传输模式。SRB2处理路径为SRB2-DCCH2-SCH-PDSCH。
-- ![[image-20221113230939141.png]]
+- ![image-20221113230939141](Communication Technology.assets/image-20221113230939141.png)
   1. 当终端需要从待机状态转入联机状态时，在随机接入过程中，利用CCCH信道建立起SRB0，用来收发RRC信令。在SRB0上，终端会接收到eNB发送的RRC connection setup消息，在消息中eNB为终端指配了SRB1的资源。
   2. 终端根据eNB的指示，建立起SRB1，用于收发RRC信令以及部分NAS信令。当终端的SRB1建立成功后，终端占用的SRB0就释放了。
   3. 在 SRB1 上 ， 终 端 会 接 收 到 eNB 发 送 的 RRC connectionreconfiguration消息，在消息中eNB为终端指配了SRB2的资源。之所以需要建立SRB2，是为了分流SRB1的信令负荷。
   4. 在联机状态，终端最后将是SRB1和SRB2并存。
-- ![[image-20221113231515942.png]]
+- ![image-20221113231515942](Communication Technology.assets/image-20221113231515942.png)
 
 #### 位置更新流程
 
@@ -2320,64 +2320,64 @@
 
 - TA
   - 在 基 站 广 播 的 SIB1 消 息 中 ， 包 含 了 跟 踪 区 TA 的 信 息 ， 称 为TAI（Tracking Area Identity），终 端 根 据 SIB1中 的 TAI， 就 知 道 小 区 重 选 后 跟 踪 区 TA是 否 发 生了改变。
-  - ![[image-20221113232125621.png]]
+  - ![image-20221113232125621](Communication Technology.assets/image-20221113232125621.png)
 
 - 如何知道终端
   - 在 TAU过 程 中 ， 用 到 的 终 端 标 识 称 为 GUTI（ Globally Unique Temporary UE Identity），也就是终端全球唯一标识，由核心网分配。
-  - ![[image-20221113232551128.png]]
+  - ![image-20221113232551128](Communication Technology.assets/image-20221113232551128.png)
     - 16比 特 的 MMEGI代 表 MME池 组 的编 号 ， 8比 特 的 MMEC代 表 MME的 代 码 ， 32比 特 的 M-TMSI则是MME为终端分配的临时标识。
 
 - 过程
-  - ![[image-20221113233120114.png]]
-  - ![[image-20221113233153910.png]]
-  - ![[image-20221114114649990.png]]
+  - ![image-20221113233120114](Communication Technology.assets/image-20221113233120114.png)
+  - ![image-20221113233153910](Communication Technology.assets/image-20221113233153910.png)
+  - ![image-20221114114649990](Communication Technology.assets/image-20221114114649990.png)
 
 - TAU Request的主要内容
 
-| 项目                                                         | 说明                           |
-| ------------------------------------------------------------ | ------------------------------ |
-| Security info                                                | 安全相关的信息                 |
-| Active Flag                                                  | 位置更新后是否进入联机 状态    |
-| EPS Update Type                                              | 位置更新方式（如联合位置更新） |
-| EPS Mobile Identity - o1d GUTI                               | 终端的原GUTI标识               |
-| UE Network Capability                                        | 终端的能力                     |
-| Tracking Area Identity - Last visited Registered TAI         | 终端原来的TAI                  |
-| DRX Parameter                                                | DRX参数                        |
-| EPS Bearer Context Status                                    | 承载的状态                     |
-| MS Network Capability                                        | GSM终端的能力                  |
-| Location Area Identification - old location Area Identification | GSM终端原来的LAI               |
-| Mobile Station Classmark 2                                   | GSM终端的能力2                 |
-| Mobile Station Classmark 3                                   | GSM终端的能力3                 |
-| GUTI Type - old GUTI Type                                    | 终端原GUTI的类型               |
+  - | 项目                                                         | 说明                           |
+    | ------------------------------------------------------------ | ------------------------------ |
+    | Security info                                                | 安全相关的信息                 |
+    | Active Flag                                                  | 位置更新后是否进入联机 状态    |
+    | EPS Update Type                                              | 位置更新方式（如联合位置更新） |
+    | EPS Mobile Identity - o1d GUTI                               | 终端的原GUTI标识               |
+    | UE Network Capability                                        | 终端的能力                     |
+    | Tracking Area Identity - Last visited Registered TAI         | 终端原来的TAI                  |
+    | DRX Parameter                                                | DRX参数                        |
+    | EPS Bearer Context Status                                    | 承载的状态                     |
+    | MS Network Capability                                        | GSM终端的能力                  |
+    | Location Area Identification - old location Area Identification | GSM终端原来的LAI               |
+    | Mobile Station Classmark 2                                   | GSM终端的能力2                 |
+    | Mobile Station Classmark 3                                   | GSM终端的能力3                 |
+    | GUTI Type - old GUTI Type                                    | 终端原GUTI的类型               |
 
 - 鉴权
 
-  - ![[image-20221114134123666.png]]
+  - ![image-20221114134123666](Communication Technology.assets/image-20221114134123666.png)
 
 - NAS加密
 
-  - ![[image-20221114134748476.png]]
+  - ![image-20221114134748476](Communication Technology.assets/image-20221114134748476.png)
 
 - 接收位置更新
 
-  - ![[image-20221114135234794.png]]
+  - ![image-20221114135234794](Communication Technology.assets/image-20221114135234794.png)
     - RRC的Security Mode Command消息用于启动接入层AS的加密机制，消息中指定了在AS加密所用的加密算法和完整性保护算法。终端收到后响应Security Mode Complete消息，表明开始接入层的加密。于是，继NAS加密后，AS加密也启动了。
 
 - TAU Accept的主要内容
 
-| 项目                        | 说明                          |
-| --------------------------- | ----------------------------- |
-| Security Info               | 安全相关的信息                |
-| EPS Update Result Value     | 位置更新方式（联合位置 更新） |
-| EPS Mobile Identity - GUTI  | 终端的标识GUTI                |
-| GPRS Timer - T3412 Value    | 周期性位置更新参数            |
-| Tracking Area Identity List | TA列表                        |
-| EPS Bearer Context Status   | 承载的状态                    |
-| EPS Network Feature Support | 网络的业务能力（含 VoLTE）    |
+  - | 项目                        | 说明                          |
+    | --------------------------- | ----------------------------- |
+    | Security Info               | 安全相关的信息                |
+    | EPS Update Result Value     | 位置更新方式（联合位置 更新） |
+    | EPS Mobile Identity - GUTI  | 终端的标识GUTI                |
+    | GPRS Timer - T3412 Value    | 周期性位置更新参数            |
+    | Tracking Area Identity List | TA列表                        |
+    | EPS Bearer Context Status   | 承载的状态                    |
+    | EPS Network Feature Support | 网络的业务能力（含 VoLTE）    |
 
 - 完成位置更新
 
-  - ![[image-20221114140225941.png]]
+  - ![image-20221114140225941](Communication Technology.assets/image-20221114140225941.png)
   - 如果MME没有为终端分配新的GUTI，终端就不用回复TAU Complete消息。
     如果MME为终端分配了GUTI，那么终端在收到TAU Accept消息后， 将回复TAU Complete消息，eNB将终端的TAU Complete消息转发给MME
 
@@ -2394,21 +2394,21 @@
   - 为终端建立默认承载。
     - 默认承载，Default Bearer，也翻译为缺省承载。这是一个为了实现终端始终在线（Always On），减少处理时延而提供的EPS承载。
     - 默认承载意味着终端在附着后从核心网那里得到了一个IP地址以及默认的QoS设置，并且在SGW、基站和终端之间也建立了相应的E-RAB，对应SGW与基站间的S1承载以及基站与终端间的无线承载RB。
-- ![[image-20221114143435110.png]]
+- ![image-20221114143435110](Communication Technology.assets/image-20221114143435110.png)
 
 ##### 流程
 
-1. ![[image-20221114141102465.png]]
-   - ![[image-20221114141511265.png]]
-2. ![[image-20221114141442155.png]]
-3. ![[image-20221114141811487.png]]
+1. ![image-20221114141102465](Communication Technology.assets/image-20221114141102465.png)
+   - ![image-20221114141511265](Communication Technology.assets/image-20221114141511265.png)
+2. ![image-20221114141442155](Communication Technology.assets/image-20221114141442155.png)
+3. ![image-20221114141811487](Communication Technology.assets/image-20221114141811487.png)
 4. 鉴权
 5. NAS加密
-6. ![[image-20221114142013136.png]]
+6. ![image-20221114142013136](Communication Technology.assets/image-20221114142013136.png)
    - MME在确认用户是合法用户后，为用户在eNB中创建相应的终端上下文，并开始建立默认承载。
    - 建立默认承载需要MME与SGW交互，并通过PGW最终建立默认承载，交互的过程反映在核心网的信令上。
 7. 完成附着
-   - ![[image-20221114142849416.png]]
+   - ![image-20221114142849416](Communication Technology.assets/image-20221114142849416.png)
 
 #### 收发数据
 
@@ -2419,46 +2419,46 @@
 ###### 终端发起
 
 - 如果终端处于待机状态，那么需要先经过随机接入的过程，终端获得资源，从而建立起E-RAB，用来承载数据。建立E-RAB其实是重建默认承载对应的E-RAB。这是因为默认承载在初始附着过程中就已经建立好了。
-- ![[image-20221130140656213.png]]
-- ![[image-20221130140718734.png]]
-  - ![[image-20221130140825817.png]]
-  - ![[image-20221130141028005.png]]
+- ![image-20221130140656213](Communication Technology.assets/image-20221130140656213.png)
+- ![image-20221130140718734](Communication Technology.assets/image-20221130140718734.png)
+  - ![image-20221130140825817](Communication Technology.assets/image-20221130140825817.png)
+  - ![image-20221130141028005](Communication Technology.assets/image-20221130141028005.png)
 
 ###### 网络发起
 
-- ![[image-20221130142643480.png]]
-  1. ![[image-20221130142614826.png]]
+- ![image-20221130142643480](Communication Technology.assets/image-20221130142643480.png)
+  1. ![image-20221130142614826](Communication Technology.assets/image-20221130142614826.png)
 
 ##### 联机
 
 ###### 终端发起
 
 - 联机状态下终端已经建立了SRB1和SRB2，不需要经过随机接入过程，就可以发起建立EPS承载的过程
-- ![[image-20221130141244561.png]]
-  1. ![[image-20221130141506996.png]]
-  2. ![[image-20221130141553454.png]]
-  3. ![[image-20221130142032145.png]]
+- ![image-20221130141244561](Communication Technology.assets/image-20221130141244561.png)
+  1. ![image-20221130141506996](Communication Technology.assets/image-20221130141506996.png)
+  2. ![image-20221130141553454](Communication Technology.assets/image-20221130141553454.png)
+  3. ![image-20221130142032145](Communication Technology.assets/image-20221130142032145.png)
 
 ###### 网络发起
 
-- ![[image-20221130142804385.png]]
+- ![image-20221130142804385](Communication Technology.assets/image-20221130142804385.png)
 
 #### 切换流程
 
-- ![[image-20221130143032692.png]]
-- ![[image-20221130143114855.png]]
-  1. ![[image-20221130143546403.png]]
+- ![image-20221130143032692](Communication Technology.assets/image-20221130143032692.png)
+- ![image-20221130143114855](Communication Technology.assets/image-20221130143114855.png)
+  1. ![image-20221130143546403](Communication Technology.assets/image-20221130143546403.png)
 
 ##### 基于X2接口的切换
 
-- ![[image-20221130143751167.png]]
-  1. ![[image-20221130143803280.png]]
-  2. ![[image-20221130144253689.png]]
-  3. ![[image-20221130144336768.png]]
+- ![image-20221130143751167](Communication Technology.assets/image-20221130143751167.png)
+  1. ![image-20221130143803280](Communication Technology.assets/image-20221130143803280.png)
+  2. ![image-20221130144253689](Communication Technology.assets/image-20221130144253689.png)
+  3. ![image-20221130144336768](Communication Technology.assets/image-20221130144336768.png)
 
 ##### 基于S1接口的切换
 
-- ![[image-20221130144510645.png]]
+- ![image-20221130144510645](Communication Technology.assets/image-20221130144510645.png)
 
 #### 释放流程
 
@@ -2466,7 +2466,7 @@
 
 ##### RRC连接释放
 
-- ![[image-20221130150330976.png]]
+- ![image-20221130150330976](Communication Technology.assets/image-20221130150330976.png)
 
 ##### detach
 
@@ -2474,9 +2474,9 @@
 - 去附着可以由终端发起，也可以由网络发起，最常见的是手机关机引起的去附着。
 
 - 关机引起的detach，去附 着 类 型 为 关 机 （ Switch Off ）
-  - ![[image-20221130151550673.png]]
+  - ![image-20221130151550673](Communication Technology.assets/image-20221130151550673.png)
 - 非手机关机引起的去附着，去附着类型为正常去附着（Normal Detach）
-  - ![[image-20221130152633673.png]]
+  - ![image-20221130152633673](Communication Technology.assets/image-20221130152633673.png)
 
 ### IRAT
 
@@ -2494,29 +2494,29 @@
 - 种类
   - 待机状态下，IRAT就是多模终端的跨制式小区重选
   - 联机状态下，IRAT有三种方式，分别是切换PSHO、重定向以及快速返回FR
-  - ![[image-20221130160516226.png]]
+  - ![image-20221130160516226](Communication Technology.assets/image-20221130160516226.png)
     - 切换PSHO就是在LTE的联机状态和3G的联机状态间转换；
     - 重定向就是从LTE的联机状态进入2G或3G的待机状态；
     - 快速返回FR就是从3G的联机状态进入LTE的待机状态。
 - 性能对比
-  - ![[image-20221202154245285.png]]
+  - ![image-20221202154245285](Communication Technology.assets/image-20221202154245285.png)
 
 #### 联机策略
 
-- ![[image-20221130161408880.png]]
-- ![[image-20221130161433662.png]]
-- ![[image-20221130161447965.png]]
+- ![image-20221130161408880](Communication Technology.assets/image-20221130161408880.png)
+- ![image-20221130161433662](Communication Technology.assets/image-20221130161433662.png)
+- ![image-20221130161447965](Communication Technology.assets/image-20221130161447965.png)
   - EVDO：CDMA2000 1xEV-DO的简称是EVDO，EVDO（EV-DO)实际上是三个单词的缩写：Evolution（演进）、 Data Only。1xEV的意思是 'Evolution'，也表示标准的发展，DO的意思为Data Only(后来有为了能够更好地表达此技术的含义，把Data Only改为Data Optimized,表示EV-DO技术是对CDMA2000 1X网络在提供数据业务方面的一个有效的增强手段)。
 
 #### 小区重选
 
 - 原因：LTE网络的覆盖范围有限
-- ![[image-20221202101816411.png]]
+- ![image-20221202101816411](Communication Technology.assets/image-20221202101816411.png)
 
 ##### 跨制式小区重选
 
 1. 接收系统信息
-   - ![[image-20221202110655924.png]]
+   - ![image-20221202110655924](Communication Technology.assets/image-20221202110655924.png)
 2. 测量与判决
    - LTE系统引入了参数S nonIntraSearchP，在SIB3中广播。当终端测量到服务小区的RSRP低于S nonIntraSearchP对应的信号强度后，才会启动异频测量
    - 小区重选可能涉及两个以上的制式，LTE系统中引入了频点的优先级，以控制多系统之间小区重选的效果，让优先级高的频点优先重选。通过频点与制式之间明确的映射关系，隐含建立了制式的优先级。
@@ -2530,13 +2530,13 @@
 4. RAU/TAU
    - 在待机状态下，LTE核心网基于跟踪区TA管理LTE终端的位置，而对于WCDMA和GPRS系统的终端，核心网的位置管理基于路由区RA。
    - Track area update/Routing Area Update
-   - ![[image-20221202111955620.png]]
+   - ![image-20221202111955620](Communication Technology.assets/image-20221202111955620.png)
 5. 信道释放
 
 ##### 异系统重选整体流程
 
-- ![[image-20221202112519921.png]]
-- ![[image-20221202112539172.png]]
+- ![image-20221202112519921](Communication Technology.assets/image-20221202112519921.png)
+- ![image-20221202112539172](Communication Technology.assets/image-20221202112539172.png)
 
 #### 异系统切换
 
@@ -2546,11 +2546,11 @@
   - 异系统切换只发生在4G系统与3G系统之间，4G系统与GSM系统之间不支持PSHO
   - 即使是3G系统，WCDMA系统与TD-SCDMA系统支持PSHO的情况也是有差别的，支持能力与具体设备厂家有关
 - 流程
-  - ![[image-20221202140126437.png]]
+  - ![image-20221202140126437](Communication Technology.assets/image-20221202140126437.png)
     1. 测量：PSHO与普通切换一样，也是通过测量过程来启动的。eNB收到多模终端发出的测量报告后，发现目标小区是3G邻区，而且支持PSHO，就会进行PSHO。当然，如果目标小区不满足PSHO的条件，eNB会发起重定向的过程。
     2. 切换
-       1. ![[image-20221202140654155.png]]
-       2. ![[image-20221202140726983.png]]
+       1. ![image-20221202140654155](Communication Technology.assets/image-20221202140654155.png)
+       2. ![image-20221202140726983](Communication Technology.assets/image-20221202140726983.png)
 
 #### 异系统互操作的测量过程
 
@@ -2559,7 +2559,7 @@
   - A2事件定义为服务小区的信号弱于一个绝对门限，因此如果发生了A2事件，基站就可以要求终端启动异频测量。
   - 异系统测量的相关事件通常是B2事件，也就是服务小区信号弱于绝对门限1而异系统邻区信号强于绝对门限2。
   - 如果发生了B2事件，那么终端需要切换PSHO或者重定向到异系统的邻区。
-  - ![[image-20221202141601214.png]]
+  - ![image-20221202141601214](Communication Technology.assets/image-20221202141601214.png)
 
 #### 重定向
 
@@ -2580,7 +2580,7 @@
 ##### 重定向（R8）的流程
 
 - LTE规范R8版本中定义的重定向，非优化激活切换以及FR也是基于类似的处理流程
-- ![[image-20221202152001808.png]]
+- ![image-20221202152001808](Communication Technology.assets/image-20221202152001808.png)
   - eNB收到B2测量事件后，判断需要进行重定向，于是向多模终端发送RRC Connection Release消息，其中携带Release with redirect信息单元，包含了3G系统的频点号ARFCN。
   - 多模终端在ARFCN指定的频点上搜索小区，接收目标小区的系统信息广播，从而获得接入参数。最后，多模终端根据接入参数进行随机接入。
 
@@ -2588,20 +2588,20 @@
 
 - 增强重定向的改进在于，在基站下发的Release with Redirect信息单元中，还携带了3G系统信息广播的内容。
 - 要想实施增强重定向，eNB必须掌握周边3G邻区的系统信息广播内容，这就要求在eNB与3G的RNC之间建立信息通道，并能传送相应的系统信息
-- ![[image-20221202153337430.png]]
+- ![image-20221202153337430](Communication Technology.assets/image-20221202153337430.png)
 
 ##### CCO的流程
 
 - CCO（Cell Change Order，改变小区指令）是从4G系统切换到GSM系统的专用流程
-- ![[image-20221202153917765.png]]
+- ![image-20221202153917765](Communication Technology.assets/image-20221202153917765.png)
 
 # IMS
 
 ## 概述
 
 - IP  Multimedia  Subsystem(IMS) is a global, access-independent and standard-based IP connectivity and service control architecture that enables various types of multimedia services to end-users using common Internet-based protocols.
-- ![[image-20221202162519919.png]]
-- ![[image-20221205173119191.png]]
+- ![image-20221202162519919](Communication Technology.assets/image-20221202162519919.png)
+- ![image-20221205173119191](Communication Technology.assets/image-20221205173119191.png)
 - From  GSM  to  3GPP  Release  7
   - ETSI：The European Telecommunications Standards Institute
   - GSM：Global System for Mobile Communications
@@ -2613,7 +2613,7 @@
   - OSA: Open Service Architecture 
   - MSC：Mobile Switching Centre
   - MGW：Server–Media Gateway
-  - ![[image-20221202170242855.png]]
+  - ![image-20221202170242855](Communication Technology.assets/image-20221202170242855.png)
 
 ## 架构
 
@@ -2627,7 +2627,7 @@
 2. IP  connectivity
    1. IPv4，IPv6
    2. IP connectivity can be obtained either from the home network or the visited network
-   3. ![[image-20221202181548173.png]]
+   3. ![image-20221202181548173](Communication Technology.assets/image-20221202181548173.png)
       - This would allow users to use new, fancy IMS services even when they are roaming in an area that does not have an IMS network but 
         provides IP connectivity.
 3. Ensuring  quality  of  service  for  IP  multimedia  services
@@ -2643,10 +2643,10 @@
    - The policy control element is able to enforce when media traﬃc between the end points of a SIP session start or stop.This makes it possible to prevent the use of the bearer until session establishment is completed and allows traﬃc to start/stop in synchronization with the start/stop of charging for a session in IMS.
    - The policy control element is able to receive notiﬁcations when the IP connectivity access network service has either modiﬁed, suspended or released the bearer(s) of a user associated with a session.This allows IMS to release an ongoing session because, for instance, the user is no longer in the coverage area.
 5. Secure  communication
-   - ![[image-20221205112444635.png]]
+   - ![image-20221205112444635](Communication Technology.assets/image-20221205112444635.png)
 6. Charging  arrangements
    - The IMS architecture allows diﬀerent charging models to be used
-   - ![[image-20221205113341882.png]]
+   - ![image-20221205113341882](Communication Technology.assets/image-20221205113341882.png)
      - the IMS adds the possibility to charge for user IP traﬃc in a more granular manner than before.
 7. Support  of  roaming
    - 所谓用户平面，就是真正传输业务数据（e.g. DNS Request、HTTP Request）的平面，简称 UP。相对应的，传送信令数据（e.g. E-RAB Setup Request、Create Bearer Request）的平面称为控制平面（Control Plane），简称 CP。
@@ -2655,7 +2655,7 @@
    - the entity that has access to the subscriber database and interacts directly with service platforms is always located at the user’s home network
 10. Service  development
 11. Layered  design
-    - ![[image-20221205140133668.png]]
+    - ![image-20221205140133668](Communication Technology.assets/image-20221205140133668.png)
 12. Access  independence
     - IMS services can be provided over any IP connectivity networks 
 
@@ -2696,7 +2696,7 @@
 
 -  the focal point of the IMS as it is responsible for handling registration processes, making routing decisions and maintaining session states, and storing the service proﬁle(s)
   - service proﬁle：A service proﬁle is a collection of user-speciﬁc information that is permanently stored in the HSS
-- ![[image-20221205153219110.png]]
+- ![image-20221205153219110](Communication Technology.assets/image-20221205153219110.png)
 
 #### 紧急呼叫会话控制功能（E-CSCF)
 
@@ -2713,7 +2713,7 @@
     - registration information
     - access parameters：to set up sessions and include parameters like user authentication, roaming authorization and allocated S-CSCF names
     - service-triggering information：enables SIP service execution
-  - ![[image-20221205155035073.png]]
+  - ![image-20221205155035073](Communication Technology.assets/image-20221205155035073.png)
 - Subscription  Locator  Function  (SLF)：a resolution mechanism that enables the I-CSCF, the S-CSCF and the AS to ﬁnd the address of the HSS that holds the subscriber data for a given user identity when multiple and separately addressable HSSs have been deployed by the network operator
 
 #### 服务功能
@@ -2729,7 +2729,7 @@
   - 向计费功能实体发送账目信息的能力。
 - 提供的业务并不局限于基于SIP的服务，因为运营商能够为其IMS用户基于移动网络增强逻辑的定制应用（Customized Applications for Mobile 
   network Enhanced Logic，CAMEL)服务环境（Service Environment，CSE)和开发服务结构（Open Service Architecture，OSA)提供服务接入。因此，“AS”是一个术语，一般用来捕捉SIP AS、OSA服务性能服务器(Service Capability Server，SCS）和CAMEL IP多媒体服务交换功能（CAMEL IP Multimedia Service Switching Function，IM-SSF)的行为。
-- ![[image-20221205165842504.png]]
+- ![image-20221205165842504](Communication Technology.assets/image-20221205165842504.png)
 
 ##### 多媒体资源功能处理器( MRFP)
 
@@ -2739,7 +2739,7 @@
 
 ##### IMS-CS互连互通功能
 
-- ![[image-20221205170502408.png]]
+- ![image-20221205170502408](Communication Technology.assets/image-20221205170502408.png)
 
 ##### 支撑功能
 
@@ -2761,7 +2761,7 @@
 
 ### IMS参考点
 
-- ![[image-20221205173119191.png]]
+- ![image-20221205173119191](Communication Technology.assets/image-20221205173119191.png)
 - Gm参考点
   - Gm参考点连接UE和IMS。它用于传输UE和IMS之间所有的SIP信令消息。IMS中相对应的部分是P-CSCF。Gm参考点中的过程可以分为三大类:注册、会话控制和处理
   - 在注册过程中，UE使用Gm参考点发送注册请求给P-CSCF，该注册请求包含UE支持的安全机制的指示。在注册过程中，UE为其自身的鉴权与网络的鉴权需要交换必要的参数，获得固有的已注册的用户身份，协商与P-CSCF的安全关联的必要参数，还可能启动SIP压缩。另外，如果网络侧发起注销或者重鉴权请求时，需要Gm参考点通知UE。
@@ -2776,34 +2776,33 @@
 - 
 
 - | 参考点名称 | 与之相关实体                                            | 目的                                                         | 协议      |
-
-| ---------- | ------------------------------------------------------- | ------------------------------------------------------------ | --------- |
-| Gm         | UE，P-CSCF                                              | 该参考点用于在UE和CSCF之间交 互消息                          | SIP       |
-| Mw         | P-CSCF，I-CSCF，s-CSCF,                                 | 该参考点用于在不同CSCF 之间交 互消息                         | SIP       |
-| ISc        | s-CSCF，AS                                              | 该参考点用于在S-CSCF与AS之间 交互消息                        | sIP       |
-| Ma         | 1-CSCF，AS                                              | 该参考点用于在I-CSCF 与 AS之间 交互消息                      | SIP       |
-| Cx         | 1-CSCF，s-CSCF，HSS                                     | 该参考点用于1-CSCF/S-CSCF和 HSS之间的通信                    | Diameter  |
-| Dx         | l-CSCF，s-CSCF，SLF                                     | 该参考点用于在多HSS环境下选择 合适的HSS                      | Diameter  |
-| Sh         | SIP AS，OSA sCs，HSS                                    | 该参考点用于在SIP AS/OSA SCS和 HSS之间进行通信               | Diameter  |
-| si         | IM-SSF，HSS                                             | 该参考点用于在IM-SSF 和 HSS之 间交互消息                     | MAP       |
-| Dh         | SIP AS，OSA，SCF, IM-SSF，HSS                           | 该参考点用于在多HSS环境下AS 找到合适的HSS                    | Diarmeter |
-| Mm         | I-CSCF，s-CSCr, IBCF，外部IP网                          | 该参考点用于在IMS和外部IP网之 间交互消息                     | sIP       |
-| Mg         | MGCF一1-CSCF                                            | 该参考点用于在MGCF和I-CSCF之 间呼叫消息                      | SIP       |
-| Mi         | s-CSCF BCCF                                             | 该参考点用于在S-CSCF与 BCCF之 间交互消息                     | sIP       |
-| Mj         | BGCFMGCF                                                | 该参考点用于在相同IMS网络中的 BGCF与 MGCF之间的交互          | SIP       |
-| Mk         | BGCF→BGCF                                               | 该参考点用于不同IMS网络中的 BGCF之间的交互                   | SIP       |
-| Mr         | s-CsCF，MRFC                                            | 该参考点用于在S-CSCF与MRFC之 间交互消息                      | SIP       |
-| Mp         | MRFC，MRFP                                              | 该参考点允许MRFP的用户平面资 源控制                          | H248      |
-| Mn         | MGCF，IMS-MGw                                           | 该参考点允许IMS-MGW的用户平 面资源控制                       | H.248     |
-| Ut         | UE，AS ( SIP AS, OSASCS，IM-SSF)                        | 该参考点使得UE可以管理与它的 业务相关的信息                  | HTTP      |
-| Cx         | PCRF，接人网关                                          | 该参考点用于将策略和计费规则推 人接人网关，获得传输平面事件通知， 交换计费标识符 | Diameter  |
-| Rx         | P-CSCF，PCRF                                            | 该参考点用于向PCRF传递注册和 会话信息，获得传输层事件通知，并 交换计费标识符 | Diameter  |
-| Ro         | As，MRCF，S-CSCF，oCs                                   | AS/MRFC/s-CSCF用该参考点来向 OCS执行在线计费。备注:在S-CSCF 与OCS之间可能需要一个进行协同的 逻辑功能 | Diameter  |
-| Rf         | P-CSCF，s-CSCF, 1-CSCF，BGCF，MGCF, AS，MRFC，IBCF，CDF | IMS实体用该参考点来向CDF执行 离线计费                        | Diameter  |
-| Ml         | E-CSCF，LRF                                             | 该参考点用于为去往紧急呼叫中心 的路由请求交换必要的信息      | 未定义    |
-| Mx         | CSCF，BGCF，IBCF                                        | 当与不同运营商进行通信时，用该 参考点来使用IBCF的能力        | 未定义    |
-| lx         | IBCF，TrGw                                              | 该参考点允许进行trGW资源控制                                 | 未定义    |
-| lq         | P-CSCF，IMS接人网关                                     | 该参考点允许进行IMS接人网关 控制                             | 未定义    |
+  | ---------- | ------------------------------------------------------- | ------------------------------------------------------------ | --------- |
+  | Gm         | UE，P-CSCF                                              | 该参考点用于在UE和CSCF之间交 互消息                          | SIP       |
+  | Mw         | P-CSCF，I-CSCF，s-CSCF,                                 | 该参考点用于在不同CSCF 之间交 互消息                         | SIP       |
+  | ISc        | s-CSCF，AS                                              | 该参考点用于在S-CSCF与AS之间 交互消息                        | sIP       |
+  | Ma         | 1-CSCF，AS                                              | 该参考点用于在I-CSCF 与 AS之间 交互消息                      | SIP       |
+  | Cx         | 1-CSCF，s-CSCF，HSS                                     | 该参考点用于1-CSCF/S-CSCF和 HSS之间的通信                    | Diameter  |
+  | Dx         | l-CSCF，s-CSCF，SLF                                     | 该参考点用于在多HSS环境下选择 合适的HSS                      | Diameter  |
+  | Sh         | SIP AS，OSA sCs，HSS                                    | 该参考点用于在SIP AS/OSA SCS和 HSS之间进行通信               | Diameter  |
+  | si         | IM-SSF，HSS                                             | 该参考点用于在IM-SSF 和 HSS之 间交互消息                     | MAP       |
+  | Dh         | SIP AS，OSA，SCF, IM-SSF，HSS                           | 该参考点用于在多HSS环境下AS 找到合适的HSS                    | Diarmeter |
+  | Mm         | I-CSCF，s-CSCr, IBCF，外部IP网                          | 该参考点用于在IMS和外部IP网之 间交互消息                     | sIP       |
+  | Mg         | MGCF一1-CSCF                                            | 该参考点用于在MGCF和I-CSCF之 间呼叫消息                      | SIP       |
+  | Mi         | s-CSCF BCCF                                             | 该参考点用于在S-CSCF与 BCCF之 间交互消息                     | sIP       |
+  | Mj         | BGCFMGCF                                                | 该参考点用于在相同IMS网络中的 BGCF与 MGCF之间的交互          | SIP       |
+  | Mk         | BGCF→BGCF                                               | 该参考点用于不同IMS网络中的 BGCF之间的交互                   | SIP       |
+  | Mr         | s-CsCF，MRFC                                            | 该参考点用于在S-CSCF与MRFC之 间交互消息                      | SIP       |
+  | Mp         | MRFC，MRFP                                              | 该参考点允许MRFP的用户平面资 源控制                          | H248      |
+  | Mn         | MGCF，IMS-MGw                                           | 该参考点允许IMS-MGW的用户平 面资源控制                       | H.248     |
+  | Ut         | UE，AS ( SIP AS, OSASCS，IM-SSF)                        | 该参考点使得UE可以管理与它的 业务相关的信息                  | HTTP      |
+  | Cx         | PCRF，接人网关                                          | 该参考点用于将策略和计费规则推 人接人网关，获得传输平面事件通知， 交换计费标识符 | Diameter  |
+  | Rx         | P-CSCF，PCRF                                            | 该参考点用于向PCRF传递注册和 会话信息，获得传输层事件通知，并 交换计费标识符 | Diameter  |
+  | Ro         | As，MRCF，S-CSCF，oCs                                   | AS/MRFC/s-CSCF用该参考点来向 OCS执行在线计费。备注:在S-CSCF 与OCS之间可能需要一个进行协同的 逻辑功能 | Diameter  |
+  | Rf         | P-CSCF，s-CSCF, 1-CSCF，BGCF，MGCF, AS，MRFC，IBCF，CDF | IMS实体用该参考点来向CDF执行 离线计费                        | Diameter  |
+  | Ml         | E-CSCF，LRF                                             | 该参考点用于为去往紧急呼叫中心 的路由请求交换必要的信息      | 未定义    |
+  | Mx         | CSCF，BGCF，IBCF                                        | 当与不同运营商进行通信时，用该 参考点来使用IBCF的能力        | 未定义    |
+  | lx         | IBCF，TrGw                                              | 该参考点允许进行trGW资源控制                                 | 未定义    |
+  | lq         | P-CSCF，IMS接人网关                                     | 该参考点允许进行IMS接人网关 控制                             | 未定义    |
 
 ## 概念
 
@@ -2814,7 +2813,7 @@
 ### 注册
 
 - 注册过程使得UE可以使用IMS服务。在进行IMS注册之前，UE必须获得一个IP连接承载，并且发现IMS系统的人口点（即P-CSCF)。
-- ![[image-20221207161114939.png]]
+- ![image-20221207161114939](Communication Technology.assets/image-20221207161114939.png)
   - 左侧显示了第一阶段——网络如何向UE注册表示异议（ challenge);
   - 右侧展示了第二阶段——UE如何对网络的异议进行响应，并完成注册过程。
   - 流程
@@ -2829,7 +2828,7 @@
 
 ### 会话发起
 
-- ![[image-20221207165425253.png]]
+- ![image-20221207165425253](Communication Technology.assets/image-20221207165425253.png)
 - 当用户A想要与用户B进行会话时，UEA就生成一个SIP INVITE请求，并且通过Gm参考点将该请求发送给P-CSCF。P-CSCF会对这个请求进行处理，例如，它在将这个请求通过Mw参考点向S-CSCF转发之前，将其解压缩，并且验证呼叫发起用户的身份。S-CSCF继续处理这个请求，执行服务控制，这可能包括与应用服务器(AS)的交互，并且通过SIP INVITE请求中用户B的身份最终确定用户B的归属运营商的入口点。I-CSCF会通过Mw 参考点收到该请求，并且通过Cx 参考点来联系HSs,以找到正在为用户B提供服务的S-CSCF。该请求通过Mw参考点传送到S-CSCF。该s-CSCF负责处理这个终结的会话，这可以包括与应用服务器的交互，并最终通过Mw参考点将该请求发送给P-CSCF。经过进一步处理（例如压缩和隐私检查）之后，P-CSCF通过Gm参考点将这个SIP INVTTE请求发送给UE B。UEB生成一个响应，即183会话进行中。该响应将按照从UEA到UEB的相同路径反向传回UEA（也就是UE B→P-CSCF→s-cSCF→I-CSCF_S-CSCFP-CSCF→UE A)。再经过几次往返之后，两个UE都完成了会话建立过程，并且能够开始真正的应用了（例如一个棋类游戏)。在会话建立过程期间，运营商可以对媒体业务流所使用的承载进行控制。
 
 ### 标识
@@ -2870,7 +2869,7 @@
 - 多对多
 - 一个IMS用户可以拥有一个私人用户身份和多个公共用户标识。
 - 用户公共标识可以被多个用户设备共享。因此，这个特殊的用户公共标识，可能同时被拥有不同私有用户标识和不同联系地址的用户设备注册。
-- ![[image-20221207173928723.png]]
+- ![image-20221207173928723](Communication Technology.assets/image-20221207173928723.png)
 
 #### 没有ISIM的身份生成
 
@@ -2904,7 +2903,7 @@
 
   - 背景：在IMS 中，公共用户身份用于到达接收方，同时单个公共用户身份可以在同一个订购下的多个设备间共享。这就意味着，当有一个以上设备使用同一个公共用户身份注册时，就不可能识别出会话具体是发往哪个设备的。
   - 为了到达某个特定的设备，必须使用一个特殊的称为全球可路由用户代理URI(CRUU)的标识。
-  - ![[image-20221208095849318.png]]
+  - ![image-20221208095849318](Communication Technology.assets/image-20221208095849318.png)
   - 定义有两种GRUU，即临时GRUU和公共GRUU。IMS中的公共GRUU是用户的公共用户身份与设备的标识之间的组合，通过该组合，公共用户身份注册到IMS。公共GRUU的目的是实现具有长久地到达某个特定设备的能力，因为只要“公共用户身份-设备”这一对存在，到达设备就总是相同。相反，临时CRUU是一个具有有限存在期的标识（新的临时GRUU在每次进行IMS注册请求时创建)，并且它会让公共用户身份得到隐藏，比如，他根本就不包含用户的公共用户身份。
 
 ### IP多媒体服务身份模块
@@ -2921,7 +2920,7 @@
 ### 多终端间共享单个公共用户身份
 
 - 版本6的IMS 允许用户通过多个UE来注册同一个公共用户身份。另外，用户可以在注册阶段指出其对于某一个UE的优先选择。不同的注册可通过私有用户身份和所使用的IP地址加以区分。
-- ![[image-20221208102508346.png]]
+- ![image-20221208102508346](Communication Technology.assets/image-20221208102508346.png)
   - 如果请求中没有包含具体去往哪个设备的信息时，则由他的S-CSCF首先来决定到底联系哪个UE。该决策可基于注册阶段给定的优先级别来完成。
   - 除了基于优先选择( preference-based）的路由外，S-CSCF也可能进行分叉( forking)。
     - 顺序分叉是指逐个联系不同的UE。例如，S-CSCF首先将请求发送到2号UE;如果一定时间期限内用户没有响应，则S-CSCF接着尝试通过1号UE来到达Joe。
@@ -2931,9 +2930,9 @@
 
 - 为了与IMS网络通信，UE必须知道P-CSCF的至少一个P地址。UE找到这些地址的机制就被称为“P-CSCF发现”
 - 在第三代合作伙伴计划（3GPP)中对P-CSCF发现定义了两种动态机制:动态主机配置协议（ DHCP）域名系统（DNS）过程和GPRS过程。另外，也可以在UE配置P-CSCF名字或者P-CSCF的IP地址。
-- ![[image-20221208104244664.png]]
+- ![image-20221208104244664](Communication Technology.assets/image-20221208104244664.png)
   - 在GPRS过程中，UE在PDP上下文激活请求（或者次PDP上下文激活请求）中包含了P-CSCF地址请求标记，并且在响应中得到P-CSCF的P地址。这个信息是在协议配置可选信息单元中传送的[ 3GPP TS24.008 ]。网关GPRS支持节点( GGSN)如何获得P-CSCF的IP地址的机制并没有标准化。版本5之前的GCSN不支持该机制。
-- ![[image-20221208104417884.png]]
+- ![image-20221208104417884](Communication Technology.assets/image-20221208104417884.png)
   - 在DHCP DNS过程中，UE发送一个 DHCP请求给IP连接接入网络(例如GPRS )，该网络将这个请求转发给DHCP服务器。根据〔 RFC3319]和[ RFC3315]，UE可以请求一个SIP服务器域名形式的P-CSCF 列表，或者请求一个SIP服务器IPv6地址形式的P-CSCF列表。当返回域名时，UE需要执行一个DNS查询(NAPTR/SRV)来找到P-CSCF的IP地址。DHCP DNS机制是一个与接入无关的发现P-CSCF的方式。
 
 ### S-CSCF的指定
@@ -2993,23 +2992,22 @@
 
 - 为了提供后付费业务，IMS需要支持离线（ Offline）计费机制。离线计费是在会话之后收集计费信息，而且计费系统不会实时地影响所使用服务的计费过程。在该模型中，用户一般每月收到一张账单，该账单显示一个特定时期内的计费项目。预付费业务需要在线（ Online)计费支持。这就意味着IMS网络实体需要在允许用户使用业务之前咨询在线计费系统（OCS)。这个系统负责实时地与用户账户进行交互，控制或者监视与业务使用相关的费用。
 
-- ![[image-20221209110952140.png]]
+- ![image-20221209110952140](Communication Technology.assets/image-20221209110952140.png)
 
   - 离线计费：所有处理SIP信令的IMS实体能够与离线计费实体进行通信—即计费数据功能（ CDF)——-通过使用单一的基于Diameter的 Rf参考点[ 3GPP TS 32.299]。CDF接收到同样来自接入网实体的 Diameter请求，并且基于来自不同实体提供的信息，它就可以创建通过Ga参考点传送给计费网关功能（CCF)的CDR[3GPP TS 32.295]。最后，CGF处理接收到的CDR，并使用Bx参考点转发最后的CDR给计费系统[3GPP TS 32.240]。
   - 在线计费：与离线计费不同，只有三个IMS实体(AS、MRFC和S-CSCF)被用于在线计费。而且，由于版本5时间帧上设计不佳，S-CSCF不能直接与OCS通信。IMS网关功能(IMS-GWF)用于执行必要的协议转换。OCS支持来自其他网络实体的两个参考点。SGSN使用CAMEL应用部分（CAP)，其他实体使用基于Diameter的Ro参考点。就像离线计费中的CGF一样，OCS除了信用( credit)控制处理（实时地认可资源）之外，也能够创建CDR。
 
 - | 离线计费功能       | 关键过程                                                     |
-
-| ------------------ | ------------------------------------------------------------ |
-| 计费触发功能（CTF) | 监测SIP信令 检测触发器条件 从SIP信令中提取信息并且重组计费信息 发送计费信息给CDF |
-| 计费数据功能（CDF) | 构建CDR 传送CDR给CGF                                         |
-| 计费网关功能（CCF) | 关联、合并、过滤不必要的域并且在接收到的账户信息中增 加运营商特定的信息 CDR错误处理和存储 传送CDR给计费系统 预处理CDR |
-| 计费系统           | 创建实际的账单                                               |
+  | ------------------ | ------------------------------------------------------------ |
+  | 计费触发功能（CTF) | 监测SIP信令 检测触发器条件 从SIP信令中提取信息并且重组计费信息 发送计费信息给CDF |
+  | 计费数据功能（CDF) | 构建CDR 传送CDR给CGF                                         |
+  | 计费网关功能（CCF) | 关联、合并、过滤不必要的域并且在接收到的账户信息中增 加运营商特定的信息 CDR错误处理和存储 传送CDR给计费系统 预处理CDR |
+  | 计费系统           | 创建实际的账单                                               |
 
 ### 用户配置
 
 - 用户配置是用户特定信息的集合，它永久存储在HSS中。当S-CSCF需要为注册和未注册用户运行业务时，就将用户配置下载到S-CSCF中。用户配置至少包含一个私有的用户身份和单个服务配置。
-- ![[image-20221209112412930.png]]
+- ![image-20221209112412930](Communication Technology.assets/image-20221209112412930.png)
   - 公共标识指示运行特定服务配置的一个或多个身份。身份可以是公共用户身份，也可以是公共服务身份。
   - 核心网服务授权：服务授权定义有两种不同的能力，即媒体策略和IMS通信服务标识策略。媒体策略信息包含一个整数，用于标识在S-CSCF中的一个订阅的媒体配置（如允许的SDP参数)。该信息允许运营商在其IMS网络中定义不同的用户配置。IMS通信服务标识策略包含一个服务标识符列表,用来标识哪个IMS通信服务用户可以被授权使用。
   - 服务触发信息采用初始过滤规则的形式表示。初始过滤规则用来描述到来的SIP消息何时被进一步路由到一个特定的应用服务器。用户配置可以同时包含针对用户的服务触发信息（将其编码为初始过滤规则）和一个初始过滤规则的参考值（由S-CSCF本地管理和存储)。后者被称为共享初始过滤规则，编码为一个整数值，该整数值仅在单个运营商网络内有意义。
@@ -3025,18 +3023,18 @@
 
 ### 传统电路交换用户与IMS 用户之间的连接
 
-- ![[image-20221209141656104.png]]
+- ![image-20221209141656104](Communication Technology.assets/image-20221209141656104.png)
   - MGCF：Mutimedia Gateway Control Function
-- ![[image-20221209141815637.png]]
+- ![image-20221209141815637](Communication Technology.assets/image-20221209141815637.png)
 
 ### IMS转接
 
-- ![[image-20221209155901373.png]]
+- ![image-20221209155901373](Communication Technology.assets/image-20221209155901373.png)
 
 ### SIP压缩
 
 - IMS使用IETF定义的信令压缩（ SigComp）方案。该机制中，在通过网络发送消息之前，使用应用协议来进行消息压缩。对于应用来说，就是在应用协议和传送协议[ RFC3320和 RFC4896]之间的一层。SigComp使用通用解压缩虚拟机（UDVM)来对消息进行解压缩。使用SigComp进行压缩的消息称为SigComp消息。
-- ![[image-20221209162421224.png]]
+- ![image-20221209162421224](Communication Technology.assets/image-20221209162421224.png)
 
 ## 服务
 
@@ -3046,7 +3044,7 @@
 
 #### 概述
 
-- ![[image-20230112162438811.png]]
+- ![image-20230112162438811](Communication Technology.assets/image-20230112162438811.png)
   - 个人和终端是否可达;
   - 优选的通信方式;
   - 终端能力;
@@ -3068,28 +3066,28 @@
 - 在线状态观察者( Presence Watcher)——请求关于资源（即 Presentities)的在线状态信息的实体。
 - 观察者代理( Watcher Agent)——在观察者域控制观察者的在线状态服务用法的实体。
 - 观察者信息用户( Watcher Information Subscriber)——向在线状态服务请求观察者信息的实体。
-- ![[image-20230112162958718.png]]
+- ![image-20230112162958718](Communication Technology.assets/image-20230112162958718.png)
 
 #### 发布在线状态
 
 - 为了发布或者更新在线状态信息，在线状态源使用SIP PUBLISH方法向在线状态服务器上传在线状态信息
-  - ![[image-20230112163740956.png]]
-  - ![[image-20230112163122973.png]]
+  - ![image-20230112163740956](Communication Technology.assets/image-20230112163740956.png)
+  - ![image-20230112163122973](Communication Technology.assets/image-20230112163122973.png)
     - 发布者使用Request-URI来标识即将发布的在线状态的用户身份。发布者使用Event消息头来表明该请求与在线状态有关，S-CSCF根据它将该请求路由至在线状态服务器。Expires消息头指明在线状态的有效期。PUBLISH请求的主体包含用XML语言编码的真实在线状态信息。这里的XML主体内容揭示的信息有该用户已经注册、可用、愿意通信、可用的业务是PoC，以及在用户发布信息时的其他信息。
     - IETF和OMA都指定了不同的在线状态属性值的数目，用这些值来描述在线状态，例如是否愿意使用某种应用、是否可以使用某种应用、通信地址、位置类型、地理位置、时区、心情、头像、时间戳、便笺、会话参与、注册状态、离线状态等。
 
 #### 订阅在线状态
 
 - 为了获取其他用户的在线状态信息或者增强的在线状态服务，观察者通过向特定的用户或者在观察者自身的在线状态列表中的用户发送一条SIP SUBSCRIBER请求。RLS接受该订阅请求并返回200 OK消息。根据协议要求，RLS会立即发送一条NOTIFY请求。如果 RIS在列表中没有发现任何与资源相关的在线状态信息，它将发出一条主体内容为空的NOTIFY请求。一旦RLS从在线状态服务器中获得在线状态信息，它将发送包含有用户在线状态信息的有用的NOTIFY 请求。
-  - ![[image-20230112163438028.png]]
-  - ![[image-20230112163610655.png]]
-  - ![[image-20230112163636369.png]]
+  - ![image-20230112163438028](Communication Technology.assets/image-20230112163438028.png)
+  - ![image-20230112163610655](Communication Technology.assets/image-20230112163610655.png)
+  - ![image-20230112163636369](Communication Technology.assets/image-20230112163636369.png)
 
 #### 观察者消息
 
 - 在线状态信息共享会引发安全性和私密性方面的问题，为此定义了用于控制哪些用户可以看到发布在线状态信息用户的状态的机制。用户可以在状态服务器中设置他的在线状态授权规则，他可以设定允许某些用户进行在线状态订阅，拒绝某些用户进行在线状态订阅，或者每当有新的在线状态订阅请求时，要求在线状态服务器询问他是否愿意接受。
 
-- ![[image-20230112164334068.png]]
+- ![image-20230112164334068](Communication Technology.assets/image-20230112164334068.png)
 
 #### 设置在线状态授权
 
@@ -3115,16 +3113,16 @@
 
 - SIP(会话初始化协议）特定的事件通知机制允许用户（订阅用户）请求得到资源状态变化的通知。
 - [ RFC4662]描述了一种事件通知扩展的方法，使用户能仅用一条SUBSCRIBE请求就能订阅一个资源列表。这个列表用URI来标识，可以包括0个或多个URI，指向原子资源（ atomic resources）或其他列表。
-- ![[image-20230206155134225.png]]
+- ![image-20230206155134225](Communication Technology.assets/image-20230206155134225.png)
 
 ##### 资源列表的XCAP用法
 
 - 创建和维护资源列表。列表创建方法利用了XCAP(见5.3节)。
-- ![[image-20230206155651402.png]]
+- ![image-20230206155651402](Communication Technology.assets/image-20230206155651402.png)
 
 ##### OMA 群组管理
 
-- ![[image-20230206160320831.png]]
+- ![image-20230206160320831](Communication Technology.assets/image-20230206160320831.png)
   - 
 
 ### POC基于蜂窝网络的按键通话
@@ -3133,17 +3131,17 @@
 
 #### 体系架构
 
-- ![[image-20230302174558751.png]]
+- ![image-20230302174558751](Communication Technology.assets/image-20230302174558751.png)
   - OMA（开放移动联盟）定义的PoC标准版本1的体系架构，构建于PoC客户端、PoC应用服务器、PoC XML文档管理服务器（XDMS)之上。可以把XDMS看作是一种应用配置设置管理服务器，因为它保存了特定应用的配置设置。存储了PoC特定数据的XDMS服务器就称为“PoC XDMS”服务器。利用基于XCAP的参考点PoC-8(见图6-3)，PoC服务器能够获取与PoC相关的文档（如访问列表);利用基于XCAP的参考点PoC-5(见图6-3 )，PoC服务器能够从共享的XDMS服务器中获取通用列表(如myfriends@ example. com列表中的成员)。PoC服务器处理特定应用的任务，如通话突发时间片控制（为某个用户预留通话突发时间片）和PoC会话控制。它们还为运营商提供了配置和网管系统的接口，创建特定应用的CDR(计费数据记录）话单。PoC服务器通过IMS服务控制参考点接入IMS 网。IMS处理通用的功能，如 PoC用户鉴权、会话路由和基于SIP的通用计费。通常PoC客户端是UE（用户设备〉中的软件，但也可能是应用程序（可能在PC中)。
 
 ##### POC服务器
 
 - PoC服务器是IMS体系架构中的应用服务器，为用户提供PoC服务。它控制PoC会话建立过程，执行为PoC群组会话定义的策略（例如，允许谁加入;允许谁邀请更多的成员;当某个特定用户离开时，决定是否要释放会话;当某个特定用户加入时，决定是否要邀请其他用户)，提供用户群组的信息（例如通知某人何时加人群组或何时离开群组)。不仅如此，必要时PoC服务器还处理媒介分配和适配。而且，它还充当通话突发控制点的功能，即 PoC服务器决定谁有权发送媒体，通知其他用户发送媒体的权限已经赋予了某人，等等。这个机制称为“通话突发控制”。于是，简言之，PoC服务器同时处理与PoC服务有关的控制面和用户面的业务流量，为此它使用了IMS的参考点ISC和 Mb。
 - OMA中定义了两种不同的PoC服务器角色，即参与PoC功能和主控PoC功能。在PoC会话建立过程中指派PoC服务器角色，只有一个PoC服务器执行主控PoC功能，两个或两个以上的PoC服务器执行参与PoC功能，具体数目取决于参与PoC会话的人数。在一对一PoC会话和自组织PoC群组会话的情况下，实施邀请用户的那个PoC服务器将执行主控PoC功能。在聊天PoC群组或预先安排的群组会话的情况下，拥有或驻留群组标识的那个PoC服务器实施主控PoC功能「OMA PoC AD]。
-- ![[image-20230320152226091.png]]
+- ![image-20230320152226091](Communication Technology.assets/image-20230320152226091.png)
 - 服务器功能分布
-  - ![[image-20230320152508189.png]]
-  - ![[image-20230320152700932.png]]
+  - ![image-20230320152508189](Communication Technology.assets/image-20230320152508189.png)
+  - ![image-20230320152700932](Communication Technology.assets/image-20230320152700932.png)
 
 ##### PoC客户端
 
@@ -3163,7 +3161,7 @@
     2. 只有那些已受邀加人临时PoC会话的用户被允许，即用户必须先从临时组中的一个当前成员处收到加入临时组的请求（如从主控PoC服务器收到SIP INVITE 或SIP REFER)。
     3. 主控PoC服务器的本地策略可能只允许临时PoC组的发起人加人更多的用户（出于计费目的)[OMA PoC RD]。
 - 处于聊天PoC会话的状态下，不应该阻止用户同时接收其他会话。用户应该也能够同时加入好几个聊天会话（如“我的家庭”、“篮球球友”、“啤酒酒友”)。这就要求系统能够支持并发会话。
-- ![[image-20230320155028407.png]]
+- ![image-20230320155028407](Communication Technology.assets/image-20230320155028407.png)
 
 ##### 并发PoC会话
 
@@ -3178,8 +3176,8 @@
 ##### PoC会话建立模式
 
 - 存在两种不同的会话模式:按需会话和预建立会话。两类会话模式的主要区别在于媒体参数协商。在预建立会话模式中，用户在向其他PoC用户发出PoC会话请求之前，就与其参与PoC功能建立一个会话，并且会先协商所有媒体参数。在按需会话中采用了“通常的”SIP方法，即当用户请求PoC会话时，才开始协商媒体参数。预建立会话模式允许PoC客户端邀请其他PoC客户端或者接受PoC会话而无需再协商媒体参数。这将额外节约会话建立时间
-  - ![[image-20230320160129864.png]]
-  - ![[image-20230320162217633.png]]
+  - ![image-20230320160129864](Communication Technology.assets/image-20230320160129864.png)
+  - ![image-20230320162217633](Communication Technology.assets/image-20230320162217633.png)
 
 ##### 呼入PoC会话处理
 
@@ -3191,21 +3189,21 @@
 - 访问控制机制
   - 选择性地允许或阻止来自其他PoC用户和PoC群组的呼入PoC会话。
   - 选择性地定义能够自动接受哪些用户的PoC会话。
-  - ![[image-20230320164550534.png]]
+  - ![image-20230320164550534](Communication Technology.assets/image-20230320164550534.png)
     - 如果请求了手工应答覆盖，并且允许主叫用户用这个特性，那么就会执行自动应答模式。如果请求不被获准，那么应答模式的选择就遵从图6-8。
 
 ##### 即时个人警示
 
 - 有时主叫用户无法联系接收方（例如用户激活了呼入会话屏蔽)，于是主叫方可能希望留个明确的消息，以便让被叫方回呼。该消息称为“即时个人警示”。当期望使用不那么明显的警示方法时，即时个人警示请求可以用于替代按键通话的语音传输。
 - 区分出 PoC即时个人警示使得PoC客户端能够创建自动操作。为此，要求发起方PoC客户端必须在Accept Contact消息头字段包含PoC特性标签,“+g. poc. talkburst”、“re-quire”和“explicit”参数
-  - ![[image-20230320165304449.png]]
+  - ![image-20230320165304449](Communication Technology.assets/image-20230320165304449.png)
 - 如果用户不想接收即时个人警示，他可以激活Incoming Instant Personal Alert Bar-ring（屏蔽呼入的即时个人警示)。当激活这个服务时，为此用户服务的参与PoC服务器必须阻止传递，并向发送方反馈SIP 480 Temporarily Unavailable错误响应。
 
 ##### 群组公告
 
 - 发送群组公告，其中包括了创建组的所有必要信息:组名称（URI和显示名字)，组类型，公告文本。当其他族成员接到组公告时，他们可以决定保存联系信息以便日后通信。使用接收到的信息时，他们能立即决定拨入那个组。
 - 一个群组公告可以利用SIP MESSAGE发给一个或多个用户，或者可以一次发给所有的组成员，消息正文中包含了PoC特定内容，并采用MIME（多用途因特网邮件扩展)vnd. poc. advertisement + xml格式。此外，发送方必须包含Accept-Contact消息头字段并填入PoC特性标签“+g. poc. groupad”，且带上“require”和“explicit”参数。使用特性标签和上述参数，能够保证公告只传递给能够理解群组公告消息的支持PoC的UE。
-  - ![[image-20230320175724546.png]]
+  - ![image-20230320175724546](Communication Technology.assets/image-20230320175724546.png)
     - `<note >`元素——发送方填入的公告文本;
     - `<group >`元素——包含组类型有关的信息（拨入、拨出、其他)，PoC组的显示名字，PoC组的URI。
     - 当类型属性使用“拨入”时，说明是聊天PoC组。类似地，“拨出”意味着是预建立PoC组。增加了“其他”用于以后扩展
@@ -3225,7 +3223,7 @@
 #### 用户面
 
 - PoC的用户面包括三个部分，即媒体流（由通话突发构成)、通话突发控制和质量反馈
-  - ![[image-20230324163315626.png]]
+  - ![image-20230324163315626](Communication Technology.assets/image-20230324163315626.png)
 - 参与PoC服务器在主控PoC服务器和PoC客户端之间往返转发通话突发数据、通话突发控制消息和质量反馈测量数据,但以下情形除外:
   - PoC客户端与PoC服务器已经有一个预建立的会话;
   - PoC客户端和PoC服务器支持并发会话;
@@ -3256,7 +3254,7 @@
   11. TBCP连接（Connect )——在预建立会话中，该消息由PoC服务器发往PoC客户端，指示已经收到新的会话，并已经为此创建了相应的平台。
   12. TBCP断开连接 (Disconnect )——在预建立会话中，该消息由PoC服务器发往PoC客户端，指示某个特定的会话已经结束，并且相应平台已销毁。
 - TBCP使用RTCP的协议格式——实际上，该协议使用了BTCP APP数据包来发送控制消息。由于RTCP运行在不可靠传送之上——UDP协议（用户数据报文协议)，该协议采用请求-应答模式，使用基于特定定时器的应用层重传机制。此外，消息可以可靠地发送，也就是说发送方可以请求立即响应。
-  - ![[image-20230324172944731.png]]
+  - ![image-20230324172944731](Communication Technology.assets/image-20230324172944731.png)
 
 ##### 质量反馈
 
@@ -3285,7 +3283,7 @@
 
   - 示例：描述了PoC客户端不能激活屏蔽的情形。其中，应答模式设置为自动回复，并且设备能够支持并发PoC会话。
 
-    - ![[image-20230324174859056.png]]
+    - ![image-20230324174859056](Communication Technology.assets/image-20230324174859056.png)
 
 ### 消息服务
 
@@ -3297,7 +3295,7 @@
 #### 立即消息
 
 - 立即消息，或称为分页式消息( page-mode messaging)，采用的是IMS框架中为人们所熟知的即时消息范例。它使用SIP协议的 MESSAGE方法来在通信双方之间接近实时地发送消息。
-  - ![[image-20230324175500849.png]]
+  - ![image-20230324175500849](Communication Technology.assets/image-20230324175500849.png)
     - 在立即消息中，用户设备（UE)只需生成一条 MESSAGE请求，填人所需的内容，典型的是文字，也可以包含多媒体片断，例如声音和图片，并将请求URI(统一资源标识符）填写为接收者的地址。接下来该请求就使用与INVITE类似的方式在IMS系统中转发，直到这个立即消息辗转到达接收方用户的UE或者存储在网络中。
     - 当然，很可能会存在一个对该消息的应答。实际上，完整的立即消息很可能是两个用户间的来回对话。但是，与基于会话的消息不同，这个会话的上下文仅存在于参与其中的双方用户处。这种通信过程中会话不包含任何协议，每条立即消息都是一个独立的事务( transaction)，与前面的任何请求都没有关系。
     - 如果当一个IMS用户收到立即消息时处于离线状态或未注册状态，MESSAGE将路由到一个AS（应用服务器)。该AS能够保存消息，并且当用户注册时会将消息递送到最终的目的地。
@@ -3307,7 +3305,7 @@
 #### 基于会话的消息
 
 - 基于会话的消息与因特网上早已使用的一种常见的消息范例——因特网中继聊天( Internet Relay Chat，IRC)[ RFC2810]有关。在这种消息模式中，用户参与会话时，主要是以短文本消息作为其主要的媒介成分。与其他类型的会话一样，一个消息会话也具有一个定义完好的生命周期:当参与者启动一个会话时这个消息会话就开始，当他们关闭这个会话时会话就终止。当会话（在参与者之间用SIP和SDP）建立后，媒体就直接在他们之间进行P2P传送。
-  - ![[image-20230325114210829.png]]
+  - ![image-20230325114210829](Communication Technology.assets/image-20230325114210829.png)
 - 会话中传输消息的实际协议是MSRP(消息会话中继协议)[RFC4975]。MSRP建立于TCP之上，能够传递任何MIME ( Multipurpose Internet Mail Extensions，多用途因特网邮件扩展）封装的数据。消息可以是任意大小，因为协议的特性之一就是能支持用多个小块发送一个完整消息,并在接收端自动完成重组。
 
 #### 消息协同
@@ -3315,11 +3313,11 @@
 - SMS 和MMS是在移动网络中广泛使用的两种消息服务技术。SMS可以满足如下需求:简便，普遍，大规模市场占有，临界质量和可靠性。SMS原理易懂，使用便捷，通信失败和长延时也很少出现，现在基本上每台手机都加载了SMS。
 - 3GPP的第一步是规定如何在IMS网络中发送和接收SMS，该功能被称作基于IP的SMS。
   - 实际的SMS作为一种特殊的内容类型加入到SIP MESSACE方法中，从而可以将SMS发送到通过非蜂窝网IP-CAN (比如WLAN、WiMAX)接入的设备上。这也可以看作是对目前的承载选项（CS，GPRS)的一个替代的方案。利用这种协作方法，现有的所有类型的增值SMS业务都可以被传输到与IMS连接的UE上。
-  - ![[image-20230325114802031.png]]
+  - ![image-20230325114802031](Communication Technology.assets/image-20230325114802031.png)
     1. IP-Short-Message-Gateway应用服务器从SM服务中心收到短消息（ SM);
     2. 生成并发送 SIP MESSAGE。MES-SAGE请求的关键字段如下:Request-URI，指向注册的IMS公共用户标识的;Accept-Contact，表明该请求只发送给已经注册了接收基于P的SMS业务的设备;Request-Disposition的“no-fork”值，表示该请求被发给一个且只能是一个用户;Content-Type，表示消息的有效负载事实上是短消息〔3GPP TS 24.341]。
     3. 基于IP的SMS发起流程。就像终结流程一样，MESSACE请求的正文包含了实际的短消息，但在这里SIP层的目标地址实际是服务中心（接收者的地址被包含在实际的短消息中)。
-       - ![[image-20230325114902864.png]]
+       - ![image-20230325114902864](Communication Technology.assets/image-20230325114902864.png)
 - 在IMS消息协商中要考虑一个额外因素，那就是消息的长度。SIP MESSAGE[RFC3428]中指定了对长度的限制。该RFC中明确要求如果消息的长度比路由中最小的MTU值（该限制一般是1300B)小200B乃至更多的话，就不允许以会话以外的方式发送出去。如果 IP-SM-GW收到连续的SMS消息（由几个标准长度的短消息构成的一组消息被作为一个较长的消息发出)，那么就有可能会被超出SIP MESSACE的长度限制，此时IP-SM-GW就会使用会话模式来发送该消息。
 
 #### 开放移动联盟定义的即时消息
@@ -3329,13 +3327,13 @@
 ##### OMA IM架构
 
 - 开放移动联盟（OMA)IM标准版本1的架构基于IM客户端、IM应用服务器和XML文档管理服务器（XDMS)。保存IM特定数据的XDMS服务器被称为“IMXDMS”。IM服务器负责处理针对不同应用的任务，比如向所有的聊天对象发送MSRP消息，以及向好友列表上的所有成员发送立即消息。服务器同时也为运营商策略的实施和网络管理系统提供接口，并创建跟应用相关的计费数据记录（ CDR)。IM服务器通过IMS业务控制（IMS Service Control，ISC)参考点与IMS相连接。IMS负责通用功能，比如为IM进行用户身份认证、会话路由和基于SIP的通用计费。IM客户端在用户设备上一般以软件形式存在，而在 PC上则可以是一个应用积序
-  - ![[image-20230327175803742.png]]
+  - ![image-20230327175803742](Communication Technology.assets/image-20230327175803742.png)
 
 ###### IM服务器
 
 - IM服务器是IMS架构中的一个应用服务器，为用户提供IM服务。它控制IM的会话建立过程，执行进/出IM的相关策略（例如，谁可以加入，谁可以邀请更多的成员，某个用户离开时是否应该结束会话，某个用户加入时是否要邀请其他的用户，执行运营商关于消息大小和内容的策略)，提供群用户消息（例如，当有人加人/离开群时进行通知)，执行用户的黑名单/白名单，替用户发布IM相关的在线信息，用户重新上线时通告并传输存储的消息，以及为恢复先前的聊天历史记录提供可能性。更进一步，IM 服务器还负责处理 MSRP的流量分配。总而言之，IM服务器使用IMS参考点ISC和Mb来处理IM服务相关的控制平面和MSRP用户平面上的传输。
 
-- ![[image-20230328110901829.png]]
+- ![image-20230328110901829](Communication Technology.assets/image-20230328110901829.png)
 
 ###### IM客户端
 
@@ -3352,20 +3350,20 @@
 
 - 通过引人新的特征从而得到增值。在发端添加的新特征有:能够使用消息好友列表，可以将已发送的消息存储在网络中，以及增强了运营商对消息发送服务的控制。除了刚才提到的最后两个新特征外，终结IM服务器的使用也使得用户能够基于自己的喜好来创建白名单与黑名单，暂时阻隔所有到来的立即消息，以及离线时对到来的消息进行网络存储。
 - IMS AS通过ISC参考点连接到IMS，通过建立适当的IMS初始过滤准则,所有发端的立即消息请求都被路由到IM服务器。
-  1. ![[image-20230328113506301.png]]
+  1. ![image-20230328113506301](Communication Technology.assets/image-20230328113506301.png)
      - 发端IM服务器会执行所有必要的运营商服务控制步骤。如果请求不符合运营商的策略，IM服务器就使用一条合适的SIP错误消息来拒绝该请求。
-  2. ![[image-20230328113545383.png]]
+  2. ![image-20230328113545383](Communication Technology.assets/image-20230328113545383.png)
      - 一旦这个请求到达了接收端网络，就被按照IMS初始过滤准则路由至本地IM服务器。终端IM服务器首先检查接收者是否愿意接收立即消息，可以通过检查用户的IM服务设置值来得知，用户在注册了IM服务后就有权发布这些值。如果激活了屏蔽（ bar-ring)，那么IM服务器就立即回复一个 SIP 403 Forbidden来拒绝该请求，并附带相应的警告文本显示在发信者的显示屏上。下一个检查就是分析终端用户的白名单和黑名单。如果该检查不允许请求通过，则会用一个SIP 403 Forbidden进行拒绝。接下来如果该消息仍旧存活，则根据运营商的策略对携带的内容（如果有的话，例如图像和语音片段）进行检查。只要符合策略（如果不符合，则回应一条415 Unsupported Mediatype 的错误响应)，最终的测试通过，注册检验完成。若用户在线，则该消息会被直接传给用户;若用户离线，则将该消息保存在IM服务器中，待用户下次上线时再传输。
-  3. ![[image-20230328113555837.png]]
+  3. ![image-20230328113555837](Communication Technology.assets/image-20230328113555837.png)
 
 ###### 基于OMA IM会话的消息
 
 - 拨出式消息会话:在拨出式会话中，用户可以邀请一个或一群用户参与到消息传送会话中。在群通信的情况下，被邀请的群可以是预定义的IM群，也可以是由从发起用户的电话簿上选出的用户组成的临时群（即所谓的自组织IM群)。对于后一种情况，尤其是在拨出会话前就获悉其他用户的在线状态，可以给用户带来显然的额外价值。拨出式会话适用于非计划的情况，或是必须要逐个挑选参与者的情况下。被邀请的用户客户端会收到会话到来的提示，可能自动接受消息请求，或者是询问终端用户的许可，以接受通信请求。
 - 加人式消息会话和聊天群: 其中，参与者自己可以明确地选择加人一个IM消息会话。在这种模式下，用户对加人哪个群有充分的控制权。用户只有在加入某些群后，才能接收到消息。加入式模式适用于预先计划好的或是惯常的通信。加入到一个聊天群其实和现实生活中的一些行为类似，比如看电视、去电影院看电影或是参加一个会议。聊天IM会话可以持续数小时，但真正在通信的时间可能只占一小部分。因此，对于一个进行聊天IM会话的用户，他还应该可以同时接受其他的会话。当然用户也可以同时参与到几个不同的聊天会话中（比如,“我的家人”,“一起打篮球的朋友”,“酒友”)。一个聊天群可以是没有任何接入控制的公共群，也可以是有特定成员的私人群。公共群对任何知道群识别符（该群的SIP URI)的用户开放。群识别符可以在比如运营商的门户网站或是聊天室清单上找到。公共IM聊天群适用于公开讨论的论坛，有普遍或特定的讨论主题（比如钓鱼，汽车，足球)。而私人群则只对那些预先定义的用户开放。
-  - ![[image-20230328165656141.png]]
-- ![[image-20230328170035735.png]]
+  - ![image-20230328165656141](Communication Technology.assets/image-20230328165656141.png)
+- ![image-20230328170035735](Communication Technology.assets/image-20230328170035735.png)
   - 一旦UE收到来自用户的请求，它就会生成一条发往终端的SIP IN-VITE请求。该请求包括了一些OMA专有的特征，例如，请求中的Accept-Contact和Contact消息头会包含OMA IM专有的特征标签，即+ g. oma. sip-im;请求中包含指明IM版本号的SIP User-Agent消息头。若会话用于一对一或是预定义的IM群，那么目标用户的地址或是预定义IM群的名称就会包含在Request-URI消息头中。在自组织IM群会话的情况下，Request-URI消息头会包含conference factory URI，而有意加入的群组成员会包含在MIME资源列表正文中
-- ![[image-20230328170049639.png]]
+- ![image-20230328170049639](Communication Technology.assets/image-20230328170049639.png)
   - 位于IMS#A 的S-CSCF会执行初始过滤准则，并根据是否出现OMA IM专有的特征标签，请求将被路由至发端IM服务器。发端IM服务器会执行所有必要的服务检查(比如核实建议的SDP媒体属性是否遵从运营商的策略，用户是否有有效的消息订阅，是否是IM服务器所属的预定义群，是否允许用户使用预定义的IM群，或是被邀请用户的数量是否超过了群/运营商的限制)。如果未违反任何服务限制，那么IM服务器就跟会话参与者发起会话建立过程（图例所示是只有一个接收者的情形)
   - 针对每位会话参与者，重复进行以下步骤。使用正常的IMS路由机制将IM会话请求路由至终端网络。就像在发端网络中一样，S-CSCF会检测OMA IM专用的特征标签是否出现，并将该请求路由至终端的IM服务器。终端的IM服务器首先会通过检查用户在注册完成后公布的IM服务设置值，来检验终端用户是否愿意接收会话请求。在服务设置中，有一个值是用来阻挡所有呼入的会话请求( incoming-session-barring)的。如果屏蔽被激活，那么IM服务器会立即拒绝会话请求，并回复一条SIP 403 For-bidden消息，该回复包含相应的警告文本，会在发起者的屏幕上显示。下一个检查就是分析终端用户的白名单/黑名单。如果该检查不允许请求通过，则会用一条SIP 403Forbidden消息进行拒绝。接下来如果该消息仍旧存活，则根据运营商的策略对携带的内容（如果有的话，例如图像和语音片段）进行检查。只要符合策略（如果不符合，则回应一条488 Not Acceptable Here的错误响应)，最终的测试通过，注册检验完成。若用户在线，则该会话请求会被直接传给用户;若用户离线，则使用一条SIP 480Temporarily Unavailable拒绝请求。
   - 当会话建立完成后，所有会话成员就可以使用MSRP开始发送实际数据了。通常MSRP流量本身会经过IM服务器处的 MSRP交换机
@@ -3378,7 +3376,7 @@
 
 - 在公共聊天室和讨论组中，用户更希望使用别的代号来代替他们的真实身份。另外，用户可能希望在不同的论坛中使用不同的昵称，并可能随时地改变。不幸的是，IETF SIP和 MSRP规范目前都不支持聊天昵称的协商。而OMA IM则制定了自己的一套聊天昵称协商机制，采用了如下的SIP隐私能力和会议状态事件包。
 - 为了能在IM会话中使用聊天昵称，IM客户端在为IM会话进行初始化 INVITE时，会请求匿名。该请求将包含用户所想使用的聊天昵称，这个聊天昵称填在From消息头的 display-name域中
-  - ![[image-20230328174407136.png]]
+  - ![image-20230328174407136](Communication Technology.assets/image-20230328174407136.png)
 
 ###### IM通信拦截
 
@@ -3403,13 +3401,13 @@
 
 ###### 创建消息发送历史
 
-- ![[image-20230331162055280.png]]
+- ![image-20230331162055280](Communication Technology.assets/image-20230331162055280.png)
   - 一旦聊天历史功能被激活，参与IM服务器功能会存储所有到来（终端请求）的和出去的（发端请求)的消息。在寻呼模式下，SIP 消息( SIP MESSAGE)会被完整地保存下来。大型消息模式和会话模式下，所有与消息发送相关的INVITE，200 OK和BYE请求的相关SIP消息头（比如，发件人，收件人，P-Asserted-ldentity，主题，日期）都会被保存，同时所有与实际的MSRP消息有关的内容也会被保存。IM服务器会为每条存储的消息分配一个独一无二的历史索引，用来以后提取/删除某条存储的消息。除了保存实际的消息外，参与IM服务器还在IM-XDMS中存储消息的元数据。该元数据包括比如日期、时间、历史索引、存储消息的大小、消息种类和发送者身份等信息。
 
 ###### 利用聊天历史功能提取所保存的消息
 
 - 提取所保存的消息包括三步:获悉所要提取消息的历史索引，在IM客户端和聊天历史记录功能之间建立SIP会话，接收真正的MSRP消息。要完成第一步，IM服务器可以连接到IM XDMS，提取已经汇总了所有储存消息的XML文档，也可以选择连接到搜索代理，使用关键字来搜索某条消息。在获得了描述所需要的那条（些）消息，并包含了相应的历史索引的XML文档后，IM客户端发送SIP INVITE请求到如下的SIP地址 History@hostname (比如，History@imserverl. ex-ample. com)。该请求也包括了URI列表正文，该正文包括了要提取的消息的历史索引。
-  - ![[image-20230331171259760.png]]
+  - ![image-20230331171259760](Communication Technology.assets/image-20230331171259760.png)
 - IM服务器会核实并授权到来的请求。若允许此用户提取消息，那么IM服务器就接受此会话请求，下载存储的消息，为每条消息发起 MSRP传输。一旦IM客户端收到MSRP传输，就可以像传递其他消息一样将此消息传给用户。
 
 ###### 利用聊天历史功能删除保存的消息
@@ -3424,13 +3422,13 @@
 - 类似于SMS、MMSC和Email服务，OMA IM也为离线的用户提供存储立即消息的能力，以便稍后进行传递。IM服务器的消息延缓发送功能就可以实现此项服务。用户离线时，消息被保存在终端网络，而保存消息的元数据则被存放到IM XDMS中。元数据包括，比如，日期、时间、消息索引、被保存消息的大小以及发送者的身份等。对于SIP MESSAGES，整个消息都将保存下来;在大型消息模式下，所有与INVTTE，200 OK和BYE请求相关的SIP消息头（比如发件人、收件人、P-As-sert-ldentity、主题和日期）以及真正的 MSRP消息的内容都会被保存下来。IM服务器会为每个存储的消息分配一个独一无二的消息索引，以供在以后提取/删除被存储的消息时使用。
 - 可以采用推（ push)或拉（ pull)的模式来获取延缓发送的消息。在推模式下，IM客户端需要在IM服务设置中指明它要提取所有被延缓的消息。一旦IM收到此请求，就会发起与客户端之间的SIP会话，并使用MSRP将延缓的消息“推进来”。在拉模式下，IM客户端会联系IM XDMS并提取被延缓消息的消息索引，在选择了要提取的消息后，IM客户端会发送SIP INVITE请求给sip: Deferred@hostname (比如sip: Deferred@ imserver1. example. com)。如果只提取其中一些消息，那么这些消息通过INVITE请求中URI-list正文里的消息索引来识别
 - 要删除延缓发送的消息，在初始化删除操作之前，IM客户端要从IM XDMS中获取消息索引。IM客户端一旦获悉了索引，就发送SIP REFER 请求来删除消息。该请求被发送至预指定的SIP地址Delete@ hostname (比如，Delete@ im-serverl. example. com)。使用Refer-To域来指明用户想要删除单条、多条还是全部的消息。
-- ![[image-20230331172400462.png]]
+- ![image-20230331172400462](Communication Technology.assets/image-20230331172400462.png)
 
 ##### IM服务设置
 
 - IM用户可以使用IM服务设置来开/关IM通信屏蔽功能、激活/中止IM聊天历史功能、请求立即发送暂存消息以及指明该用户是否对其他IM用户可见（状态显示在线还是不在线)等先前描述过的功能。
 - IM重用了OMA PoC服务设置中的服务设置传输机制。也就是，IM客户端使用SIP PUBLISH 把服务设置发送到IM服务器，SIP PUBLISH中包含了OMA特定的XML负载。更准确地说，IM使用了两种已有的PoC服务设置XML元素，来用于寻呼模式屏蔽（ ipab-settings）和IM会话屏蔽（ isb-settings)，并在XML框架之上为PoC定义了三种新的XML元素。为了防患于未然，如果一个IMS应用服务器同时使用IM和PoC服务，会引入额外的XML属性“service-id”以明确的区别IM和PoC服务的屏蔽值。
-- ![[image-20230331172910340.png]]
+- ![image-20230331172910340](Communication Technology.assets/image-20230331172910340.png)
 
 ##### 投递报告
 
@@ -3439,15 +3437,15 @@
 ###### 寻呼模式消息
 
 - 若用户希望收到投递报告，就需要基于[ draft-ietf-simple-imdn-06]，在发出的SIPMESSAGE请求上附加一些适当的消息/CPIM净荷。控制IM功能会返回一条单独的SIP MESSAGE给该用户，该消息包含了关于已发出消息状态的信息/CPIM净荷。
-  - ![[image-20230331173339465.png]]
+  - ![image-20230331173339465](Communication Technology.assets/image-20230331173339465.png)
     - Tobias预先创建了一个IM群，fcunited@imservice. example. com,该群的成员是他所属足球队的骨干球员，现在Tobias需要通知他们，比赛要推迟一些进行。由于这个信息很重要，因此他要确认消息是否成功地送达。为了满足Tobias的这个需要，IM客户端将真正要传送的内容封装在一个消息/CPIM 包裹中，并且该消息/CPIM包裹包含一个特殊的消息头“imdn. Disposition-Notification”，以此来表明发送者的需求。在本例中，该消息头表明了，用户希望收到肯定的（ positive）与否定的( negative）投递报告。另外，“imdn. Message-ID”消息头也包含了一个惟一的值，使得IM发送端可以将收到的投递报告与之前发出的IM消息进行匹配。
 
 ###### 会话模式下的消息发送和大型消息模式下的消息发送
 
 - 若用户希望收到对应于MSRP SEND请求的投递报告，就要附加含有OMA IM特定内容的消息/CPIM 净荷。该特定内容由两部分组成:一个是新的名称空间( namespace)<urn: oma: xml: poc: final-report >;另一个是位于消息/cpim 正文中的新消息头。这个消息头的名称是“Final-Report”，从属于上面提到的名称空间。
-  - ![[image-20230331174254570.png]]
+  - ![image-20230331174254570](Communication Technology.assets/image-20230331174254570.png)
 - 为了提供真实的投递报告，在 MSRP REPORT 或是MSRP SEND请求的message/CPIM净荷中附加一个OMA特定的MIME正文“application/ vnd. oma. poc. final-report”。投递报告由控制IM功能来发送，控制IM功能可能会把多条不同回复整合在一条投递报告中，从而来减少信令开销。下面是一个最终的回应IM客户端请求的投递报告的MIME正文
-  - ![[image-20230331174337504.png]]
+  - ![image-20230331174337504](Communication Technology.assets/image-20230331174337504.png)
     - 最终投递报告文档从根元素`<Final>`开始。`<Final>`元素由一些`<leg>`元素和两个属性“last”和“Message-ID”构成。`<last>`属性只用在最后的Final Report 中，表示这是最后的Final Delivery Report文档。“Message-ID”则包含了SEND消息的Mes-sage-ID，Final Delivery Report正是为这条SEND消息产生的。每个`<leg>`元素都必须包括一个“uri”属性，里面含有接受者（如Alice，Bob，Cecile)的URI 和一个“status”属性（如200，9999)，以及一个可有可无的“max-size”属性。
     - 若MSRP消息成功地传至接收者，或是失败，那么`<leg >`元素中的“status”属性就会置为每个接收者的MSRP状态代码。若由于接收者SDP的“a = max-size”属性值小于MSRP消息的长度而导致MSRP消息发送失败，那么将`<leg>`元素中的“status”属性设置为“9999”，将“max-size”设置为之前协商过的值。
 
@@ -3463,14 +3461,14 @@
 
 ##### 协议
 
-- ![[image-20230331175510969.png]]
+- ![image-20230331175510969](Communication Technology.assets/image-20230331175510969.png)
 
 ##### 场景
 
 1. 本节基于如下假设:两个用户都已经附着到GPRS网络上，在本节中都以GPRS作为接入技术的例子。
 2. 法国学生Tobias正在芬兰游览，他要呼叫他的姐姐Theresa。Theresa在匈牙利工作，但此时正在奥地利出差
-   - ![[image-20230331175651305.png]]
-3. ![[image-20230331175719210.png]]
+   - ![image-20230331175651305](Communication Technology.assets/image-20230331175651305.png)
+3. ![image-20230331175719210](Communication Technology.assets/image-20230331175719210.png)
    1. Tobias 的归属运营商位于法国。由于他正在芬兰，而其归属地运营商与芬兰的运营商签署了IMS漫游协议，所以芬兰的运营商为其提供了代理呼叫会话控制功能（P-CSCF)。因此Tobias所使用的GPRS网关支持节点（GGSN)也位于芬兰。
    2. Theresa的归属运营商位于布达佩斯，没有与奥地利的运营商签署IMS漫游协议。因此她的终端是附着在她的匈牙利归属网络的P-CSCF上，所用的CGSN 也是位于那里。Theresa接入IMS是基于归属网络和拜访网络之间的GPRS层的漫游协议。
    3. 假设在Tobias 刚刚打开手机时，Theresa已经注册了她的SIP URI（统一资源标识)，即 sip: theresa@home2.hu。Tobias要呼叫姐姐并向她展示奥鲁（Oulu)的一栋漂亮的木屋，因此他把摄像机连接到手机上并对准木屋。与此同时，他的手机还要给Theresa发送另一个他脸部的视频流，这是由内置在手机中的摄像头完成的。但是，在呼叫他姐姐之前，Tobias需要先注册他的公共用户身份sip: tobias@ home1. fr。
@@ -3478,7 +3476,7 @@
 ### IMS注册过程
 
 - 执行会话初始化协议（SIP)注册过程的目的是建立用户的当前IP地址与用户的公共用户身份（即统一用户标识，SIP URI)之间的对应关系。Tobias 呼叫 Theresa的时候，他向Theresa 的地址“sip: theresa@home2.hu”发出一条SIP INVITE请求，而并不需要知道她用的是哪个终端。这个INVITE消息被传送到Theresa位于home2. hu的注册服务器（ registrar)。该注册服务器在Theresa的注册过程中已经知道了她当前的终端地址，这样它将地址 sip: theresa@home2.hu替换成已注册的联系地址（某个IP地址)，然后将该请求路由到Theresa的终端上。
-- ![[image-20230403100631517.png]]
+- ![image-20230403100631517](Communication Technology.assets/image-20230403100631517.png)
   1. 利用所得到的通用的、与 IMS相关的配置参数，对UE进行配置，该配置过程在每个UE上极可能只会发生一次，且并不需要在每次注册时都重复;
   2. 在Tobias 的用户设备（UE)与GPRS网关支持节点（GGSN)(在GPRS的情况下)之间建立专用的信令分组数据协议（ PDP)上下文;
   3. UE发现代理呼叫会话控制功能（P-CSCF)的地址，该实体在注册过程中用于SIP出站代理,在注册完成后服务于所有其他的SIP信令;
@@ -3505,7 +3503,7 @@
    3. P-CSCF地址:只适用于早期利用IPv4的 IMS部署或者不提供P-CSCF发现机制的网络。在本例中该域未进行设置，因为UE是通过IPv6连接到网络的，并使用P-CSCF发现机制;
    4. 运营商特有的、用于SIP计时器T1、T2、T4 (Timer_T1 , Timer_T2，Timer_T4)控制SIP事务( SIP transaction）重传的值。在某些情况下，特定的网络可能会改变这些计时器的默认值。在本例中，不考虑这种情况;
    5. IMS通信业务标识列表(ICSI_List):该列表向UE指示，网络能支持哪些ICSI值。这样，UE就只需要注册那些它本身支持、并且网络同时也支持的ICSI值，本例中，ICSI列表包含以下三个值:
-      - ![[image-20230403102805360.png]]
+      - ![image-20230403102805360](Communication Technology.assets/image-20230403102805360.png)
         - 注意，一旦这些URN注册到IANA ( Internet Assigned Number Authority，因特网编号管理委员会)后,URN中的“xxx”将被具体数值取代。
         - 除了这些配置参数之外，IMS MO能够让运营商从UE读取一系列的信息，例如，当UE接收到IMS MO时，它会通过OMA DM协议机制，根据当前设置以及以下字段中的可用值进行响应
           - 所有可用于上述配置字段（ configuration field)的值，例如，ConRefs，PDP_ContextOperPref，P-CSCF_Address，Timer_T1，Timer_T2，Timer_T4，以及ICSI_List。
@@ -3526,7 +3524,7 @@
 1. P-CSCF是Tobias 的 UE向IMS发送的所有SIP消息的惟一人口。因此，在发送第一个SIP消息之前，UE必须知道P-CSCF的地址。由于本例中该地址不是事先配置好的，因此UE首先要发现该地址。
 2. 在GPRS中，UE可以在建立通用或者信令PDP上下文的过程中请求P-CSCF地址。GGSN在对PDP上下文激活请求的应答中返回P-CSCF的IPv6地址前缀。
 3. 此外，UE也可以选择使用DHCPv6 ( IPv6的动态主机配置协议）来发现P-CSCF。如果DHCP返回的P-CSCF地址是一个全合格域名（FQDN)而非一个IP地址，那么与其他SIP服务器一样，P-CSCF的地址可以通过域名系统（ DNS）来解析。
-4. ![[image-20230404114401574.png]]
+4. ![image-20230404114401574](Communication Technology.assets/image-20230404114401574.png)
 
 ##### 使用DHCPv6进行SIP服务器和DNS 服务器配置
 
@@ -3535,18 +3533,18 @@
    - DNS服务器的地址;
    - P-CSCF的地址。
 3. 为了获得该信息，UE发送一条包含DHCP Options Request Option ( OPTION_ORO,code: 6)的 DHCP REQUEST消息。其中，OPTION_ORO 中包含了一个 DHCP OptionCodes 的列表，该列表显示了UE请求服务器发送给它的 DHCP Options。
-   - ![[image-20230403111542811.png]]
+   - ![image-20230403111542811](Communication Technology.assets/image-20230403111542811.png)
      - 第一项用于请求 DNS服务器的地址，第二项则是请求SIP服务器的域名。这里为SIP定义了两项DHCP IPv6 OPTIONS，一个用于域名服务（OPTION_SIP_SERVER_D-code 21)，另一个用于IP地址服务（OPTION_SIP_SERVER_A-Code 22)。在本例中，我们假设UE只请求域名选项。
 4. DHCP服务器对此请求返回 DHCP Reply，DHCP Reply将提供所请求的信息。
-   - ![[image-20230403111656917.png]]
+   - ![image-20230403111656917](Communication Technology.assets/image-20230403111656917.png)
      - Tobias 的UE现在配置有两个DNS服务器，并知道“visited 1.fi”域允许SIP服务，即提供有P-CSCF。但是，UE不能直接路由到 DHCP REPLY中返回的域名，它需要首先找到P-CSCF的主机名以及它的IP地址，然后才能进行SIP消息传送。
 
 ##### DNS名称权威指针( NAPTR)解析
 
 1. 为了找到所请求的地址，UE向 DNS服务器（由DHCP REPLY消息返回的列表中的其中一个）发送一条DNS查询消息，以获取NAPTR RR (NAPTR 资源记录)，询问所接收域名的进一步信息
-   - ![[image-20230403111947647.png]]
+   - ![image-20230403111947647](Communication Technology.assets/image-20230403111947647.png)
 2. DNS服务器进行应答，其中包含该域所提供的两项服务
-   - ![[image-20230403112024872.png]]
+   - ![image-20230403112024872](Communication Technology.assets/image-20230403112024872.png)
      - 该应答显示:拜访域为SIP提供两种不同的服务，一种基于UDP (“E2U + sip”) ,另―种基于TCP(“E2T + sip”)。在这个例子中，我们不对响应中的其他参数进一步解释,之后将会提到另外一个更复杂的例子。
 
 ##### 传输协议选择和DNS 服务( SRV)解析
@@ -3554,30 +3552,30 @@
 1. IMS对于UE和P-CSCF之间的SIP传输协议没有更多的限制。本例中，假定UDP(用户数据报协议）是首选的传输协议，所以UE选择UDP。UE可以自由选择传输协议，因为DNS NAPTR响应中不包含对于UDP(“E2U + sip")或TCP (“E2T + sip”)的偏好选择。网络运营商也可以在 NAPTR响应中放置服务项偏好设置值
 2. 只要消息不超过1300B，UDP将可用于在Tobias 的UE和P-CSCF之间传送SIP消息。当超过该限制时，则必须使用传输控制协议(TCP)。由于SIP也允许SIP消息体携带一些内容（例如，图片可以携带在MESSAGE请求的主体内容中)，所以在进行用户注册时，有可能是同时使用UDP和TCP。
 3. UE决定使用UDP来连接P-CSCF，因此通过进一步给本地 DNS 服务器发送DNSSRV查询请求，来解析所指示的服务名称。
-   - ![[image-20230403112411800.png]]
+   - ![image-20230403112411800](Communication Technology.assets/image-20230403112411800.png)
 4. DNS 服务器返回支持该业务（即UDP之上的SIP)的拜访域visited1.fi中的所有SIP服务器主机名。
-   - ![[image-20230403112447923.png]]
+   - ![image-20230403112447923](Communication Technology.assets/image-20230403112447923.png)
    - DNS SRV响应可能包含不止一个主机名，因而主机名需要由特定的程序进行选择。UE从该响应中得知，在拜访网络中，有一个P-CSCF支持基于UDP连接的SIP，该P-CSCF的主机名是pcscf1. visited1. fi，可通过UDP端口5060到达。
 
 ##### DNS IPv6地址解析
 
 1. 最后，为了能够向P-CSCF 发送IP包（该IP包会传送SIP消息)，UE请求该P-CSCF的IPv6地址。于是，它需要再一次查询DNS服务器，以便将P-CSCF的主机名解析成IPv6地址
-   - ![[image-20230403112916450.png]]
+   - ![image-20230403112916450](Communication Technology.assets/image-20230403112916450.png)
 2. DNS服务器发送以下信息来响应AAAA请求
-   - ![[image-20230403113020619.png]]
+   - ![image-20230403113020619](Communication Technology.assets/image-20230403113020619.png)
      - UE收集到了将SIP REGISTER请求路由到拜访网络中第一跳P-CSCF的所有信息。
 
 #### SIP注册和注册路由问题
 
 1. 与路由有关的消息头
 
-| 消息头        | 功能                                                         | 设置                                                         |
-| ------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Via           | 对请求消息进行路由转发                                       | 在请求的路由转发过程中，每个途经的SHIP实体都来 设置，将其地址写入 Via消息头 |
-| Route         | 对请求消息进行路由转发                                       | 初始请求:由发起请求的UE来设置，它将填人P- CSCF（出站代理）地址和Service-Route消息头的条目 初始请求:由CSCF来设置，它们从请求URI中的公 共用户身份（通过查询DNS和HSS）或者收到的Path 消息头中发现下一跳 后续请求:由发起请求的UE来设置，它根据初始请 求路由过程中由Record-Route消息头所采集的条目放入 Route消息头 |
-| Record-Route  | 为一个会话中的后续请求 记录Route消息头中的条目               | 由CSCF来设置，如果它们希望收到对话中的后续请 求，就将其地址放入Record-Route消息头 |
-| Service-Route | 指示初始请求的Route消息 头条目，初始请求由UE发往 用户的S-CSCF(用户发起) | 由S-CSCF来设置，它在对REGISTER请求的200 ( OK）响应中返回本消息头 |
-| Path          | 收集Route消息头条目，用 于从S-CSCF向用户P-CSCF 发出初始请求（用户终结) | 由P-CSCF来设置，它将自己的地址放人REGISTER 请求的Path消息头中，并将其发往S-CSCF |
+   - | 消息头        | 功能                                                         | 设置                                                         |
+     | ------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+     | Via           | 对请求消息进行路由转发                                       | 在请求的路由转发过程中，每个途经的SHIP实体都来 设置，将其地址写入 Via消息头 |
+     | Route         | 对请求消息进行路由转发                                       | 初始请求:由发起请求的UE来设置，它将填人P- CSCF（出站代理）地址和Service-Route消息头的条目 初始请求:由CSCF来设置，它们从请求URI中的公 共用户身份（通过查询DNS和HSS）或者收到的Path 消息头中发现下一跳 后续请求:由发起请求的UE来设置，它根据初始请 求路由过程中由Record-Route消息头所采集的条目放入 Route消息头 |
+     | Record-Route  | 为一个会话中的后续请求 记录Route消息头中的条目               | 由CSCF来设置，如果它们希望收到对话中的后续请 求，就将其地址放入Record-Route消息头 |
+     | Service-Route | 指示初始请求的Route消息 头条目，初始请求由UE发往 用户的S-CSCF(用户发起) | 由S-CSCF来设置，它在对REGISTER请求的200 ( OK）响应中返回本消息头 |
+     | Path          | 收集Route消息头条目，用 于从S-CSCF向用户P-CSCF 发出初始请求（用户终结) | 由P-CSCF来设置，它将自己的地址放人REGISTER 请求的Path消息头中，并将其发往S-CSCF |
 
 2. Tobias的UE首先会生成一个REGISTER请求，发往 Tobias运营商的归属域。相关信息将从Tobias的 USIM模块（通用用户标识模块）上的IP多媒体服务标识模块(ISIM)应用中获得。该请求将经过P-CSCF和 I-CSCF，如果没有事先指定S-CSCF，I-CSCF将为Tobias选择一个S-CSCF。
 
@@ -3587,12 +3585,12 @@
 
 5. S-CSCF 从 Path消息头中得知P-CSCF的地址。这是必需的，因为所有发往Tobias的初始化请求都必须首先经过P-CSCF才能达到UE。
 
-6. ![[image-20230406165940374.png]]
+6. ![image-20230406165940374](Communication Technology.assets/image-20230406165940374.png)
 
 ##### 构造REGISTER请求
 
 1. 在建立信令PDP上下文并发现P-CSCF地址之后，Tobias的UE可以开始生成初始的REGISTER请求
-   - ![[image-20230406112806332.png]]
+   - ![image-20230406112806332](Communication Technology.assets/image-20230406112806332.png)
      1. 上述消息不是一个完整的IMS RECISTER请求，其中隐去了一些消息头和参数。它只包含了为解释本节中的过程而必需的信息，后续的消息也是这样。
      2. 该请求消息的最终目的地是注册服务器，在请求URI中标志为sip: home1. fr（从ISIM中读出的Tobias 的归属网络的域名)。
      3. 在To消息头中有要注册的公共用户身份sip: tobias@ home1. fr，是从ISIM中读出。SIP注册的目的是告诉注册服务器:公共用户身份sip: tobias@home1.fr是可以通过Contact消息头中所指出的P地址访问到的。该IP地址包含一个IPv6前缀，这是UE在建立专用信令PDP上下文时分配的
@@ -3608,7 +3606,7 @@
      11. 还有Call-ID消息头，它和CSeq消息头一起标识这个RECISTER事务(Transac-tion)。
      12. 最后，由于Content-Length消息头中的内容为0，因此表示该RECISTER请求的正文部分是空的。
      13. 消息头的名字都是以长格式给出的。为了避免空中接口传送不必要的过长的信令，Tobias的UE可以使用压缩格式，这时该RECISTER请求是这样的:
-         - ![[image-20230406145526428.png]]
+         - ![image-20230406145526428](Communication Technology.assets/image-20230406145526428.png)
 
 ##### 从UE到P-CSCF
 
@@ -3642,12 +3640,12 @@
       3. “Result-Code”AVP (268）设置成“DIAMETER_SUCCESS”(2001 )，表明查询成功;
       4. “Server-Capabitities”AVP (603）包含一系列Mandatory-Capability AVP (604)以及Optional-Capability AVP (605)，这些能力用整数来表示，其含义是运营商网络特定的。运营商需要确保I-CSCF能理解所有列出来的必选和可选能力，因为I-CSCF将要基于这个列表来选择一个S-CSCF用于后续注册。基于所接收到的必选和可选能力列表，I-CSCF为Tobias选择一个S-CSCF。在这种情况下，S-CSCF的地址为sip:scscf1. home1. fr. lr。
 4. I-CSCF 在把自己的条目放在Via消息头的顶部，然后把该REGISTER请求发往S-CSCF。s-CSCF的地址要么是I-CSCF 从 HSS中查询得到的，要么是I-CSCF自己选择的。
-   - ![[image-20230406154630001.png]]
+   - ![image-20230406154630001](Communication Technology.assets/image-20230406154630001.png)
 
 ##### 在S-CSCF处注册
 
 1. 接到初始的REGISTER请求之后，S-CSCF要求Tobias进行认证。这将导致Tobias发来另一个 RECISTER请求。第二个RECISTER请求包含相同的有关注册的信息，并且它所经过的路由也与初始REGISTER请求完全相同。但是，第二个RECISTER请求将产生一个新的Call-ID。因此，它将包含新的CSeq号码、Branch参数和一个新的From标签。S-CSCF接到的第二个REGISTER 消息如下:
-   - ![[image-20230406155003970.png]]
+   - ![image-20230406155003970](Communication Technology.assets/image-20230406155003970.png)
 2. 假设认证过程成功，S-CSCF将对Tobias进行注册。这意味着S-CSCF将创建一个绑定关系，绑定REGISTER请求To消息头中的公共用户身份( sip: tobias@home1. fr)和Contact地址（ sip: [5555:: a: b: c: d])。这个绑定将严格的存在600000s，即UE在Contact消息头“expires”参数中填写的值，除非S-CSCF基于本地策略而决定缩短该时间。
 3. s-CSCF还会更新HSS中的数据，指示Tobias现在已经注册。HSS会通过Cx 接口向S-CSCF下载Tobias 的用户数据。所以S-CSCF通过Cx接口给HSS发送一条Diameter服务器分配请求(SAR)消息，执行Diameter S-CSCF Registration Noti-fication过程,其中包含以下内容:
    1. .“R”命令标志设置成“1”，表明这是一个 Diameter请求;
@@ -3678,8 +3676,8 @@
 
 ##### 200( OK)响应
 
-- ![[image-20230406160023613.png]]
-  - ![[image-20230406161042554.png]]
+- ![image-20230406160023613](Communication Technology.assets/image-20230406160023613.png)
+  - ![image-20230406161042554](Communication Technology.assets/image-20230406161042554.png)
   - s-CSCF在To消息头中增加了一个tag标签。
   - 这个响应被路由回UE时途经所有接收过RECISTER请求的 CSCF，之所以可以这样是由于各CSCF 在接收REGISTER请求时都把自己的地址放在了Via消息头的顶端。现在，当接收到200 ( OK)响应时，它们所作的就是从Via列表中移除自己的条目，并将请求转发到当前Via消息头中最顶端的地址。
   - 当收到响应后，UE就得知注册过程已经成功了。
@@ -3688,14 +3686,14 @@
 
 - 在注册过程中UE和P-CSCF都不知道S-CSCF的地址，因此必须联系I-CSCF以便从 HSS获得S-CSCF的地址。
 - 为了避免UE发起每个初始消息时都要将I-CSCF作为额外的一跳，S-CSCF需要在反馈给RECISTER请求的200 (OK)响应中的Service-Route消息头中填入它的地址
-  - ![[image-20230406160908378.png]]
-  - ![[image-20230406161224799.png]]
+  - ![image-20230406160908378](Communication Technology.assets/image-20230406160908378.png)
+  - ![image-20230406161224799](Communication Technology.assets/image-20230406161224799.png)
     - 本例中S-CSCF在其Service-Route条目中增加了一个用户部分(“orig")，因为它需要区分两类不同的请求:
       - 从服务对象用户（例如Tobias)发起的请求;
       - 发往Tobias UE的请求。
     - 任何时候当S-CSCF收到一个初始请求（例如INVITE请求）时，它需要判断该请求是来自用户还是发往服务对象的用户。利用Route消息头中的用户部分，S-CSCF能容易地知道所收到的请求是否是由服务对象用户发起的，因为Tobias 的UE会在发出的所有请求中的Route 条目中填入S-CSCF的 Service-Route 条目。
   - 当接收到200 (OK）响应时，UE将保存Service-Route消息头中所有的条目。这样无论何时当UE发出任何REGISTER 以外的初始请求时，它将:
-    - ![[image-20230406161256380.png]]
+    - ![image-20230406161256380](Communication Technology.assets/image-20230406161256380.png)
       - 把Service-Route消息头中得到的地址填写在初始请求的 Route消息头中;
       - 把P-CSCF地址放在初始请求Route消息头的最顶端。
 
@@ -3703,19 +3701,19 @@
 
 - S-CSCF将接到所有发往Tobias 的初始请求，因为它充当了他的注册服务器。在正常的SIP过程中，注册服务器能够直接向UE发送请求。但在IMS中，这是不可能的，因为需要首先联系P-CSCF。这是因为P-CSCF已经和UE建立IPsec SA安全联盟，保证所有收发的消息都得到完整性保护。不仅如此，P-CSCF还在媒体授权上扮演重要角色，因为它是IMS中惟一与GGSN有直接连接的网元。
 - S-CSCF需要确保发往UE的每个请求都要首先经过P-CSCF。为了达到这个目的，P-CSCF 在所有RECISTER请求中添加Path消息头，填入自己的地址。
-  - ![[image-20230406164154890.png]]
+  - ![image-20230406164154890](Communication Technology.assets/image-20230406164154890.png)
     - 当用户成功注册后，S-CSCF保存下这个P-CSCF地址。任何时候当接收到发往Tobias 的请求时，S-CSCF就添加一个Route消息头，填入从Path消息头中得到的地址。
 
 ##### 向应用服务器的第三方注册
 
 - 在成功注册后，S-CSCF 要检查所下载的该用户的过滤规则。我们假设有一个在线状态服务器为Tobias提供服务，该在线状态服务器需要知道Tobias 现在已经注册并且因而是可达的。为了将此信息通知给该在线状态服务器，需要设置过滤规则，触发所有由Tobias 公共用户身份发起的RECISTER请求。
-  - ![[image-20230406164501126.png]]
+  - ![image-20230406164501126](Communication Technology.assets/image-20230406164501126.png)
 
 
 
 - 由于这些过滤规则，无论何时Tobias成功地实施了注册，S-CSCF就要生成一个第三方REGISTER请求并发往在线状态服务器。
-  - ![[image-20230406165227144.png]]
-  - ![[image-20230406165423618.png]]
+  - ![image-20230406165227144](Communication Technology.assets/image-20230406165227144.png)
+  - ![image-20230406165423618](Communication Technology.assets/image-20230406165423618.png)
     - 这个RECISTER请求发往在线状态服务器presence. home1. fr，如请求URI 所示。由于没有包含Route消息头，因此该请求将直接发往这个地址。
     - To消息头中包含Tobias的公共用户身份，这是被注册了的URI。
     - s-CSCF在From消息头中给出自己的地址，它代表Tobias (即作为第三方）来注册Tobias 的公共用户身份。此外，S-CSCF还在Contact消息头中给出了自己的地址，这保证了在线状态服务器永远不会直接路由到Tobias 的 UE，而总是会先与S-CSCF联络。
@@ -3732,11 +3730,11 @@
 
 #### 认证
 
-![[image-20230406175018447.png]]
+![image-20230406175018447](Communication Technology.assets/image-20230406175018447.png)
 
 ##### 概述
 
-1. ![[image-20230406170313208.png]]
+1. ![image-20230406170313208](Communication Technology.assets/image-20230406170313208.png)
 
    - IMS中有几组安全关系。其中两个会影响SIP信令:用户与网络间的认证，UE与P-CSCF间的SA安全联盟。IMS中的认证和SA建立过程都与SIP注册过程直接结合在一起。
    - 假设3GPP AKA用于用户的认证。介绍一个关于CIBA( GPRS-IMS-bundled authentication，GPRS-IMS绑定认证)的例子。
@@ -3778,13 +3776,13 @@
 ##### 初始REGISTER请求中的认证信息
 
 1. 在初始REGISTER请求中，Tobias 的UE使用HTTP摘要的Authorization消息头来传输Tobias的私有用户身份。为了满足HTTP摘要的要求，UE在 Authorization消息头中包含以下字段:
-   - ![[image-20230406172754064.png]]
+   - ![image-20230406172754064](Communication Technology.assets/image-20230406172754064.png)
    - 认证模式——由于3GPP AKA被映射到HTTP摘要机制，因此该值设置为“Di-gest”;
    - 用户名字段——其值设置为Tobias的私有用户身份，它将被S-CSCF 和 HSS用于识别用户并找到相应的AV;
    - 域和URI字段——其值设置为Tobias的归属域;
    - 响应和 nonce域——其值设为空。该字段在 HTTP摘要中是必需的，但不用于初始REGISTER请求中。
 2. 由于在UE和P-CSCF相互之间没有建立任何类型的SIP信令级相互安全机制，P-CSCF 不能保证RECISTER请求真的是Tobias 发出的。例如，一个恶意用户可能伪造这个请求并把它发给P-CSCF，而P-CSCF并不了解真相。因此，P-CSCF在 Authoriza-tion消息头中增加integrity-protected字段并将值设为“no”，然后再将请求发往Tobias的归属网络。
-   - ![[image-20230406172853294.png]]
+   - ![image-20230406172853294](Communication Technology.assets/image-20230406172853294.png)
 
 
 
@@ -3795,7 +3793,7 @@
 
 ##### S-CSCF挑战UE
 
-- ![[image-20230406173350507.png]]
+- ![image-20230406173350507](Communication Technology.assets/image-20230406173350507.png)
 
 - 基于AV中的数据，S-CSCF通过401（未授权）响应返回WWW-Authenticate消息头并将其字段填写如下:
 
@@ -3805,7 +3803,7 @@
 
 - 在接收到401（未授权）响应后，P-CSCF必须从 WWW-Authenticate消息头中去除ik和ck并将其存储起来，然后再将响应发往UE:
 
-  - ![[image-20230406173937580.png]]
+  - ![image-20230406173937580](Communication Technology.assets/image-20230406173937580.png)
 
   - ```
     WWW-Authenticate: Digest realm="one.att.net",algorithm=AKAv1-MD5,qop="auth",nonce="VVVVVVVVVVVVVVVVVVVVVVZRUFNSXYAAVVRXVlFQ01I=",opaque="5ccc069c403ebaf9f0171e9517f40e415ccc069c403ebaf9f0171e9517f40e415ccc069c403ebaf9f0171e9517f40e41"
@@ -3824,17 +3822,17 @@
    2. nonce字段——该字段原样返回401（未授权）响应中 WWW-Authentication消息头中的同名字段的值。
    3. 响应字段——该字段包含认证挑战结果 RES，它是ISIM根据接收到的 RAND和共享密钥而计算生成的。
 3. ISIM还会计算K，P-CSCF也知道该值。根据这个密钥（以及其他信息)，UE和P-CSCF建立IPsec SA安全联盟，在此基础上UE发送第二个RECISTER请求:
-   - ![[image-20230406174732347.png]]
+   - ![image-20230406174732347](Communication Technology.assets/image-20230406174732347.png)
 
 ##### 完整性保护和成功认证
 
 1. 在P-CSCF能够检验出所收到的RECISTER请求在从UE到P-CSCF的路上是否被篡改过，因为它现在能够检查其完整性。如果检验成功，P-CSCF在Authentication消息头的“integrity-protected”字段内写入“yes”，并将RECISTER请求发往Tobias 的归属网络。
-   - ![[image-20230406174916413.png]]
+   - ![image-20230406174916413](Communication Technology.assets/image-20230406174916413.png)
 2. S-CSCF将比较所接收到的RES 和AV中的 XRES（包含在从HSS接收到的MAA消息的SIP-Authorization AVP中)。如果两个参数是完全相同的，则S-CSCF就成功地认证了用户。只有完成这一步之后，它才会继续进行正常的SIP注册过程。
 
 #### 接入安全性 一 IPsec SA
 
-- ![[image-20230406175330652.png]]
+- ![image-20230406175330652](Communication Technology.assets/image-20230406175330652.png)
 
 
 ##### 概述
@@ -3852,7 +3850,7 @@
    - 受保护的UE服务器端口( us1 ) ;
    - 受保护的P-CSCF客户端端口 ( pc1 ) ;
    - 受保护的P-CSCF 服务器端口( ps1 )。
-5. ![[image-20230407095711912.png]]
+5. ![image-20230407095711912](Communication Technology.assets/image-20230407095711912.png)
    1. 在初始注册中，UE和P-CSCF使用SIP安全机制协议的Security-Client、Security-Server和Security-Verify等消息头，来协商这些端口。
    2. 这组SA的建立需要使用共享的密钥。然而，P-CSCF对Tobias ISIM应用与归属网络HSS之间共享的安全参数一无所知。因此，S-CSCF在401（未授权)响应中使用wWW-Authenticate消息头将IK和CK发给P-CSCF。P-CSCF必须将这两个密钥从消息头中去掉并保存在本地，然后才能将401（(未授权）响应发给UE。之后P-CSCF就使用IK作为这组SA 的共享密钥。Gm接口另一侧的UE就从收到的401（未授权)响应中的挑战来计算IK，并将其作为共享密钥。
    3. 通过Ik，P-CSCF 和UE可以在四个端口之间建立起一组SA，关于这四个端口的信息已经事先在初始REGISTER请求及其响应中进行了交换:
@@ -3867,14 +3865,14 @@
 ##### 重认证情况下对多组SA的处理
 
 1. 我们已经见到第一组SA是如何在初始注册过程中建立的。由于一组SA的建立是基于S-CSCF 发出的401（未授权）响应中的认证数据，因此每次重认证都会在UE和P-CSCF之间建立一组新的SA。在重认证成功后，UE和P-CSCF之间会维护两组SA
-   - ![[image-20230407101241854.png]]
+   - ![image-20230407101241854](Communication Technology.assets/image-20230407101241854.png)
      - 在重注册发生之前已经建立并投入使用的那组SA，现在称为“旧SA组”;
      - 基于重认证而建立一组新的SA，现在称为“新SA组”。
 2. 这种情况的复杂之处在于，P-CSCF无法确认Tobias 的UE是否已经收到对第二个REGISTER 请求的200 (OK)响应，因为SIP没有定义对收到响应的确认机制，只有对INVITE请求的响应除外。如果UE没有接收到对第二个RECISTER 的 200 (OK）响应，它就无法使用新SA组。所以，P-CSCF必须等待UE使用新SA组发来新请求，它自己才能开始使用新SA组。这意味着，只要P-CSCF还没有在新SA组上收到UE发来的请求，它就:
    - 在向UE发送请求时使用旧SA 组，即从它的受保护的客户端端口pcl到UE的受保护的服务器端口us1 ;
    - 保持两组SA，直到其中之一或两者全部超时，或者接收到一个来自UE的新请求。
 3. 当UE需要发送新请求时，它会使用新SA组，P-CSCF就能确认新SA组已经完全可以投入使用。此外，此时还不能立刻放弃旧SA组，因为有可能UE已经通过它收到或发出了一-个请求，而对端还没有响应。因此，旧SA组还需要再保存64 * Ts ( IMS环境下一般是128s)后才可以丢弃。
-   - ![[image-20230407102243610.png]]
+   - ![image-20230407102243610](Communication Technology.assets/image-20230407102243610.png)
 4. 还要注意UE不能用新SA组对来自旧SA组的请求（例如一个 MESSAGE请求)发送响应（例如200 ( OK)响应)。由于P-CSCF的 Via消息头或者TCP连接的约束，UE必须使用与请求相同的端口和相同的SA组发送该请求的响应。
 5. 任何时候一旦一个临时的SA建立起来，UE就要丢弃所有其他的SA，唯独发送最后一个REGISTER请求所使用的那个SA除外。因此，UE永远不需要同时处理多于两组的SA。
 
@@ -3912,7 +3910,7 @@
 
 1. Tobias的UE使用如下信息来进行初始注册:
 
-   - ![[image-20230407103226855.png]]
+   - ![image-20230407103226855](Communication Technology.assets/image-20230407103226855.png)
 
      - UE将按照以下端口建立IPsec SA:
        - 将端口2468作为受保护的客户端端口(Security-Client消息头中的port-c参数);
@@ -3927,14 +3925,14 @@
 
 2. 随后UE收到的401(未授权)响应将如下所示:
 
-   - ![[image-20230407103534178.png]]
+   - ![image-20230407103534178](Communication Technology.assets/image-20230407103534178.png)
      - 这意味着P-CSCF将使用以下端口建立IPsec SA:
        - 将端口8642作为受保护的客户端端口(Security-Server消息头中的port-c参数)﹔
        - 将端口 7531作为受保护的服务器端口( Security-Server消息头中的 port-s参数)。
 
 3. 在上述交换之后，UE和P-CSCF之间就建立起临时的SA 组，UE将按保护方式发出第二个RECISTER 请求，如下所示:
 
-   1. ![[image-20230407110219252.png]]
+   1. ![image-20230407110219252](Communication Technology.assets/image-20230407110219252.png)
       1. 注意，这个请求仍然包含Security-Client和 Security-Verify消息头，但由于它们对于SA的建立和路由已经不再有什么影响了，因此就没有显示在这个例子中。上述RECISTER请求意味着UE会:
          1. 希望所有呼入初始请求都被路由到它的受保护的服务器端口(Contact消息头中的端口号);
          2. 已经通过临时IPsec SA 发送该REGISTER请求（即发往P-CSCF受保护的服务器端口——Route消息头中的端口号);
@@ -3957,13 +3955,13 @@
 
 1. 介绍了如何通过一个或多个SA组对请求和响应进行传送。在所选的例子中，只使用了UDP作为传输协议。然而对于TCP，这些过程稍有不同。
    若通过UDP发送请求时，所有相关的响应都要传送到Via消息头所指示的IP地址和端口号。当通过TCP发送请求时，Via消息头中的信息被覆盖掉，响应被传送回发送该请求的IP地址和端口号。这里需要注意TCP本质上是面向连接的传输协议。通过使用这个规则，可以确保不需要建立额外的TCP连接，来发送对TCP接收的请求的响应。这使得P-CSCF 和UE之间SIP消息的路由行为会根据协议的不同而有所不同。不论使用UDP还是TCP，UE将在其发出的每个请求的Via消息头中设置其受保护的服务器端口(us1)。所有的请求都是从UE的受保护的客户端端口( uc1)发出。
-   - ![[image-20230407111738611.png]]
+   - ![image-20230407111738611](Communication Technology.assets/image-20230407111738611.png)
 2. 当使用UDP时，对于该请求的响应将发往Via消息头中所指示的UE受保护的服务器端口( us1 )。
 3. 当使用TCP时，对于该请求的响应将发往UE受保护客户端端口(uc1 )，请求就是从该端口发出的。对于另一个方向也是同样的（即由P-CSCF 发往UE的请求及其响应)。
 
 #### SIP安全机制协议
 
-- ![[image-20230407140917902.png]]
+- ![image-20230407140917902](Communication Technology.assets/image-20230407140917902.png)
 
 ##### 概述
 
@@ -3984,7 +3982,7 @@
 ##### 初始REGISTER请求中与SIP安全机制协议有关的消息头
 
 1. 为了激活安全机制协定，UE在初始REGISTER请求中包含如下信息:
-   - ![[image-20230407114157470.png]]
+   - ![image-20230407114157470](Communication Technology.assets/image-20230407114157470.png)
      - Proxy-Require消息头中包含了选项标签“sec-agree”，它指示下一跳代理（这里就是P-CSCF)必须支持SIP安全机制协议的过程，以便进一步处理本请求。如果下一跳代理不支持SIP安全机制协议的过程，它会根据〔 RFC3261]定义的对Proxy-Require消息头的处理规定，发回一个420（无效扩展）响应，其中包含一个 Unsupported消息头，其内容是选项标签“sec-agree”。由于本例中的P-CSCF完全兼容IMS版本5和版本6，它当然会支持SIP SA过程而不会向UE发送这样的响应。
      - 此外，还包括一个 Require消息头，指示了“sec-agree”选项标签。[ RFC 3329 ]定义了SIP安全机制协议，强制要求包括该字段。Require消息头与Proxy-Require的用法相同，但它是被远端UE所用（而非代理)。它的存在仅仅是为了防止如下情况:如果请求（本例中是REGISTER请求）直接从源UE发往最终目的地( S-CSCF)，而后者根本不看Proxy-Require消息头，这就意味着不会发生安全机制的协商。Require消息头则可以强制接收方执行sec-agree过程。
      - 由于P-CSCF可以执行SIP安全机制协议过程，它将Require 和 Proxy-Require 中的sec-agree选项标签删除,然后将请求送往Tobias的归属运营商网络。
@@ -3997,7 +3995,7 @@
 ##### 401(未授权）响应中的Security-Server消息头
 
 - 当接到来自S-CSCF的对于REGISTER请求的401（未授权）响应时，P-CSCF在响应的Secutity-Server消息头中包含了一个所支持的安全机制的列表。
-  - ![[image-20230407134353531.png]]
+  - ![image-20230407134353531](Communication Technology.assets/image-20230407134353531.png)
     - 在这个例子中，P-CSCF支持两个安全机制:3GPP特定的IPsec和TLS。它还给予TILS较高的优先级:只要UE也支持TLS，就应该选择它作为UE和P-CSCF之间消息的安全保护。
     - 此外，P-CSCF使用与UE相同的方式，发送关于SPI、受保护的客户端和服务器端口等与IPsec有关的信息。
     - 当向UE发送401（未授权)响应时，P-CSCF已经知道将使用IPsec作为安全机制，因为它了解到这是UE和它自己都能支持的惟一的机制。
@@ -4005,7 +4003,7 @@
 ##### 第二个REGISTER消息中的SIP安全机制协议消息头
 
 - 在接到401（未授权）响应后，UE就可以建立 IPsec SA了。当这完成之后，它可以使用已经建立起来的SA来发送第二个 REGISTER请求。在这个RECISTER请求中包含以下有关信息:
-  - ![[image-20230407135705139.png]]
+  - ![image-20230407135705139](Communication Technology.assets/image-20230407135705139.png)
     - 这里Require和 Proxy-Require消息头又一次包含了选项标签“sec-agree”。它们的作用与初始REGISTER请求一样，并且会重复出现在UE发出的每一个RECISTER请求中。P-CSCF总会先将它们删掉再继续转发该请求，与初始REGISTER请求的处理方式一样。如果在删除sec-agree之后发现Proxy-Require或Require消息头之一(或全部）变成空，则P-CSCF也会将其删除。
     - Security-Verity消息头复制了所收到的Security-Server消息头。Security-Client 的内容就是对初始REGISTER请求的简单重复。
     - P-CSCF将会比较初始和第二个RECISTER请求中的两个 Security-Client消息头，看它们是否匹配。它还会比较两个消息头的内容:一是它所发送的401（未授权）响应中的Security-Server消息头，二是它所收到的第二个REGISTER请求中的Security-Verify 消息头。
@@ -4015,20 +4013,20 @@
 
 1. 在每次重注册过程中，S-CSCF都可以决定对UE进行重新认证;通过重新认证,它强制UE和P-CSCF之间建立一组新的IPsec SA，因为IPsec SA所依赖的IK在每次重认证过程中都要改变。建立一组新的SA也就意味着，要协商一组新的SPI、新的受保护的客户端和服务器端口。
 2. 当UE发送新的RECISTER请求来重注册时，它还不能确定S-CSCF是否会要求重认证。因而它需要在每个新的REGISTER请求中加人新的Security-Client消息头，其中包含新的SPI值、受保护的客户端和服务器端口。
-   1. ![[image-20230407140257496.png]]
+   1. ![image-20230407140257496](Communication Technology.assets/image-20230407140257496.png)
       1. 请注意，Security-Client消息头中SPI的值和受保护的客户端端口号已经发生了改变，在S-CSCF要求重认证UE时，这样才能建立一组新的SA。UE的受保护的服务器端口没有变化，在用户的注册状态下始终保持不变。
       2. Security-Verify消息头的内容没有改变，因为它是最后一次收到的Security-Server消息头的复制品。
       3. 在收到S-CSCF发来的对该RECISTER请求的响应时，P-CSCF 和UE就能知道是否需要建立新的 IPsec SA:也就是说，是接到了一个401（未授权）响应还是接到了一个200 ( OK)响应。
       4. 当从S-CSCF收到一个401（未授权）响应时，P-CSCF将会在这个响应中添加一个新的 Security-Server消息头，提供新的受保护端口值和新的SPI。
-   2. ![[image-20230407140517473.png]]
+   2. ![image-20230407140517473](Communication Technology.assets/image-20230407140517473.png)
    3. 此外，P-CSCF不会改变受保护的服务器端口(7531)。于是，UE和P-CSCF之间就建立了一组新的临时SA.。作为对重认证挑战的响应，REGISTER请求将通过这组新的临时SA发送出去，并包含以下消息头:
-      1. ![[image-20230407140652815.png]]
+      1. ![image-20230407140652815](Communication Technology.assets/image-20230407140652815.png)
    4. 与初始注册过程一样，第二个RECISTER请求仍然重复了上一个REGISTER请求的Security-Client消息头（但采用新值)，并将刚才收到的401（未授权）响应的Security-Server消息头的值复制到Security-Verify消息头中。重注册过程的第二个 RECISTER请求，将不再承载与以前建立的SA组有关的任何信息。
-      - ![[image-20230407140812760.png]]
+      - ![image-20230407140812760](Communication Technology.assets/image-20230407140812760.png)
 
 #### IMS通信服务标识和其他被叫方能力
 
-- ![[image-20230407143212143.png]]
+- ![image-20230407143212143](Communication Technology.assets/image-20230407143212143.png)
 
 ##### 概述
 
@@ -4046,7 +4044,7 @@
    3. UE是一个移动电话（移动性);
    4. UE支持接收的SIP方法( methods = )。
 2. 由于这些特性标签表达的是设备能力，因此它们会被包含在Contact消息头中，即终端所注册的IP地址会将相关的特性标签作为参数。所以，RECISTER消息的Contact消息头如下:
-   1. ![[image-20230407141858219.png]]
+   1. ![image-20230407141858219](Communication Technology.assets/image-20230407141858219.png)
       1. Contact消息头现在包含了一个很长的参数列表，每个参数彼此用“;”隔开。最开始的三个参数（“;audio ; video ; mobility”)是没有特定数值的特性标签，即它们直接表示了UE的能力。
       2. 而最后一个参数则加上了tag-value-list，即表明UE支持所有被列出的SIP方法。这就意味着，如果一个呼叫要求支持一个或多个上面所列的方法，当这个呼叫到来时,它将会被传递给该UE。
 
@@ -4066,12 +4064,12 @@
    1. 一个被称为“g.3gpp. icsi_ref”的新的SIP特性标签，它把ICSI数值的列表记为tag-value-list ;
    2. 一个被称为“g. 3gpp. iari_ref”的新的SIP特性标签，它把 IARI数值的列表记为tag-value-list，与“methods”特性标签表示方式相同。
 7. 由于将ICSI和 IARI定义为URN了，所以在对Contact消息头编码时会遇到另外一个问题。在[ RFC 3840]中定义的 tag-value-list不支持将冒号(“:”)作为有效字符，因此需要如〔RFC 3986]所定义那样，避开在ICSI和 IARI URN 中的冒号。这就意味着当每次出现冒号字符时，就要用字符串“%3A”来替代。所以现在本例中的Contact消息头表示如下:
-   - ![[image-20230407143015030.png]]
+   - ![image-20230407143015030](Communication Technology.assets/image-20230407143015030.png)
      - 为简便起见，后面大多数例子中的Contact消息头都没有包含前两章中所介绍的特性标签。另外需要注意的是，本例给出的ICSI和IARI值中，只有IMS多媒体电话通信服务标识( urmn;urn-xxx :3gpp-service-Ims. icis. mmtel)已进行标准化并投人使用了。上述其他ICSI 和 IARI 值都是为举例而创造的。
 
 #### 压缩协商
 
-- ![[image-20230407172559086.png]]
+- ![image-20230407172559086](Communication Technology.assets/image-20230407172559086.png)
 
 ##### 概述
 
@@ -4093,14 +4091,14 @@
 ##### 注册过程中的comp = SigComp参数
 
 1. UE发送的初始RECISTER请求中包含以下与压缩有关的信息:
-   - ![[image-20230407171728993.png]]
+   - ![image-20230407171728993](Communication Technology.assets/image-20230407171728993.png)
      - Via消息头包含了comp = SigComp参数，指示UE愿意接受对于该请求的所有响应都采用压缩形式。因此，P-CSCF可以按照压缩形式发送401（未授权)响应，但是它不应该由此就创建一个状态（即一个容器)。
      - Contact消息头也出现了comp = SigComp参数。这个参数将包含在UE所接收到的每个初始请求中，因为S-CSCF会将每一个初始请求的请求-URI（指向sip: tobias@home1. fr）替换为已注册的联系地址（即sip:[5555: 1: 2:3:4]:1357; comp =SigComp)。
      - 来自P-CSCF的401（未授权）响应不会包含任何关于P-CSCF执行信令压缩能力的进一步信息。在首次注册之前发现的P-CSCF地址（见10.3节)中不会见到comp = Sig-Comp参数。由于只有在下一跳地址中设置了comp = SigComp参数时，SIP消息才会采用压缩形式，因此UE不会向P-CSCF发送任何压缩格式的初始请求。
 2. 后续请求（例如ACK、PRACK、UPDATE和BYE)可以按压缩形式发送，由于从UE到P-CSCF的路由遵循P-CSCF的 Record-Route条目，其中P-CSCF可以设置comp = SigComp参数。从UE到P-CSCF的响应也是同样的，因为它们是根据P-CSCF的Via消息头条目进行路由的，其中 P-CSCF也进行了设置。
 3. 虽然要求使用comp参数来指示是否采用了压缩，但3GPP TS 24.229并未明确要求指示初始消息是否采用了压缩格式。这样就存在一种可能性，即UE只要按照压缩形式发送所有初始请求就可以，因为P-CSCF无论如何也要支持SigCompo
 4. 于是UE将comp = SigComp参数添加在之前发现的P-CSCF地址中。这样它就可以按压缩形式发送第二个REGISTER请求。
-   - ![[image-20230407172301988.png]]
+   - ![image-20230407172301988](Communication Technology.assets/image-20230407172301988.png)
 
 
 
@@ -4108,14 +4106,14 @@
 
 #### 接入和位置信息
 
-- ![[image-20230407174043297.png]]
+- ![image-20230407174043297](Communication Technology.assets/image-20230407174043297.png)
 
 ##### P-Access-Network-Info
 
 1. P-Access-Network-Info消息头是3GPP特有的消息头，用于向IMS网络指示UE正通过哪种接入技术附着到IMS上。在我们的例子中所使用的接入技术是GPRS。它还包含小区全球ID(CGI)，标志用户所处的位置。
 2. Tobias UE在其发送的每个请求（包括ACK和CANCEL 请求）和每个响应（包括对CANCEL请求的响应）中包含P-Access-Network-Info消息头，但必须是当该请求具有完整性保护时（即通过SA发送)。
 3. 因此，该消息头首次发送是在第二个REGISTER请求中，在UE收到401（未授权)响应之后。该消息头如下所示:
-   - ![[image-20230407173518468.png]]
+   - ![image-20230407173518468](Communication Technology.assets/image-20230407173518468.png)
      - Tobias的 S-CSCF从每个请求或响应中删除P-Access-Network-Info消息头，然后转发给下一个实体。该规则的惟一例外是:当AS 与S-CSCF处于同一个信任域时。
      - 当一个紧急呼叫的 INVITE请求中包含P-Access-Network-Info消息头时，P-CSCF和S-CSCF可以从Cell-ID 中判断出离用户最近的应急中心而进行联络。
 
@@ -4123,23 +4121,23 @@
 
 1. P-Visited-Network-ID消息头向Tobias 的归属网络指示他正在漫游的网络的标志。Tobias UE当前所附着的P-CSCF添加了该消息头。S-CSCF用该消息头中的信息检查与拜访网络间的漫游协议。
 2. 假设Tobias正在芬兰漫游，并附着到虚构的芬兰运营商Musta Kissa。由于P-CSCF也是由该运营商提供，它在每个发往Tobias归属网络的REGISTER请求中增加一个P-Visited-Network-ID消息头。该消息头中有一个字符串，用于S-CSCF识别拜访网络。
-   - ![[image-20230407174022855.png]]
+   - ![image-20230407174022855](Communication Technology.assets/image-20230407174022855.png)
 
 #### 注册过程中与计费有关的信息
 
 1. 在注册过程中与计费有关的SIP消息头的内容及其处理。
 2. 当P-CSCF收到初始REGISTER请求时，它生成IMS计费ID(ICID)，只要用户处于注册状态，该ID对于所有的IMS有关的信令就是有效的。该ICID值通过P-Char-ging-Vector消息头从P-CSCF传送到S-CSCF。
-   - ![[image-20230407174315404.png]]
+   - ![image-20230407174315404](Communication Technology.assets/image-20230407174315404.png)
      - 当收到这个消息头后，S-CSCF会保存ICID，并执行计费过程。P-Charging-Vector消息头在[RFC3455]中定义，该消息头的扩展和在IMS中的用法在[ 3GPP TS 24.229] 中描述。
 
 #### 用户身份
 
-- ![[image-20230419165641630.png]]
+- ![image-20230419165641630](Communication Technology.assets/image-20230419165641630.png)
 
 ##### 概述
 
 1. Tobias需要向他的归属网络进行注册才能发起对他姐姐的呼叫。在本例中，目前他使用SIP URI sip: tobias@home1.fr来进行注册。当Tobias使用与工作无关的服务时他使用这个用户身份。然而，Tobias 在其法国的运营商处注册了一整套用户身份
-   - ![[image-20230407174734676.png]]
+   - ![image-20230407174734676](Communication Technology.assets/image-20230407174734676.png)
      - 一个注册组可由几个SIP URI和 tel URL组成。对于每个tel URL,在网络中必须要有一个相关SIP URI可用，即 SIP URI用户部分取tel URL的数值。这些tel URL和它们相关的SIP URI都是公共用户身份的别名（Alias ID)，这就意味着它们分享HSS中的相同用户配置信息。
      - 在初始注册过程中，Tobias 只能明确地注册这些URI的其中之一，在我们的例子中就是sip: tobias@ home1. fr。然而，IMS 允许隐性地和明确地注册更多的公共用户身份:
        1. 在初始注册阶段，上面列出的部分身份可以被网络自动（隐性地）注册。
@@ -4160,7 +4158,7 @@
 2. 私有用户身份仅用于认证。公共用户身份就是Tobias 将要首次注册的SIP URI。Tobias可以有其他多个公共用户身份，其中一些甚至可以存储在ISIM中,但是在开始只有一个可以显式注册的。
 3. 如果UE中没有配备ISIM，它可以从同样存在于UICC中的USIM应用中得到用户身份和注册服务器地址。USIM应用包含了所有与用户电路交换（CS）域和分组交换（ PS）域的注册和认证有关的数据。
 4. 拥有了这些参数，UE可以填写初始RECISTER请求中的如下字段:
-   - ![[image-20230407180057140.png]]
+   - ![image-20230407180057140](Communication Technology.assets/image-20230407180057140.png)
      - 从ISIM中读出的公共用户身份，写入To和 From消息头。Authorization消息头中username字段取值为私有用户身份，而注册服务器的地址则放入请求URI中以及Au-thorization消息头的realm和uri字段中。
 
 ##### 从USIM派生出的身份
@@ -4176,7 +4174,7 @@
 1. 如果Tobias在初始注册中使用了临时公共用户身份，他将遇到这样的问题:虽然已经注册过，但是不能进行任何其他操作（例如，呼叫他的姐姐或者订购服务)，因为他注册中所使用的身份不能再继续使用（被屏蔽的身份)。他的终端需要知道另一个隐性注册的身份。
 2. 任何时候一旦用户成功地进行了认证和注册，S-CSCF于是就会对RECISTER 请求发出一个200 ( OK）响应，在该响应中发送P-Associated-URI消息头。该消息头列出了该用户的所有SIP URI和 tel URL （即公共用户身份)，这些都与用户关联，但并非必须注册。消息头中只有第一个列出的URI总是有效的、已注册的公共用户身份，可被UE和 P-CSCF用来实施进一步操作。
 3. 对应于Tobias RECISTER请求的200 ( OK）响应中，其中的P-Associated-URI 如下所示：
-   1. ![[image-20230417170721944.png]]
+   1. ![image-20230417170721944](Communication Technology.assets/image-20230417170721944.png)
       - 通过这些信息，Tobias可以知道至少有一个公共用户身份“sip: tobias @home1. fr”是已经注册的。他还可以得知还可使用其他两个SIP URI和两个tel URL,但他并不知道这些标识现在是否已经注册。
       - 由于P-Associated-URI只定义为传递SIP URI，因此它用SIP URI 的格式来表示所包含的、与Tobias关联的两个tel URL ( tel:+44123456789和tel:+44123456111)。
 
@@ -4188,18 +4186,18 @@
    - 能隐藏用户身份的临时CRUU，即 CRUU有一个SIP地址，但该地址不会让人知道对应于GRUU用户的SIP地址，例如，sip: 98hzah4pmmn@ home1.net;gro
 3. 在注册过程中，IMS终端被强制要求同时申请一个公共CRUU和一个临时GRUU。S-CSCF在没有任何HSS的参与下分配GRUU，而且 GRUU也不会存储在 HSS 中。
 4. 为了请求CRUU的分配，Tobias 的电话在它发送的RECISTER请求的Contact消息头中包含一个instance-ld参数，即
-   1. ![[image-20230417171336021.png]]
+   1. ![image-20230417171336021](Communication Technology.assets/image-20230417171336021.png)
 5. 如果注册成功，那么S-CSCF将同时分配公共 GRUU和临时GRUU，并在200(OK)(对 REGISTER请求的响应)的Contact消息头中将它们发回:
-   - ![[image-20230417171445777.png]]
+   - ![image-20230417171445777](Communication Technology.assets/image-20230417171445777.png)
      - 如上所述，GRUU与注册状态下的公共用户身份和Contact 地址（即进行注册的设备的地址)都有关联。GRUU总是同时与用户和设备进行绑定。
      - GRUU由SIP URI中的“gr”参数标识。在这里分配的公共CRUU是Tobias的SIPURI，并且将“gr”参数设置为所注册的instance ID。这样，可以很容易地知道CRUU分配给了哪个用户。临时GRUU使用在用户名字符串中，它是由S-CSCF创建的，并且不会显示任何与Tobias或Tobias 的电话之间的关系。为了确保在不将该地址存储在HSS中的情况下仍能对其进行路由，该临时GRUU会在其用户部分显示所分配的S-CSCF的地址（( scscf1. home1. fr)，这就确保I-CSCF 不用从SLF/HSS中解析GRUU（见12.3.3.4节)，因为基于GRUU主机部分的信息，它可以直接转发到分配CRUU的S-CSCF。另外，临时GURR也包含“gr”参数，但这次它是空的，因为用户名中的字符串是全球惟一的，不需要进一步区分。
      - s-CSCF和 Tobias的电话都会存储公共GRUU和临时GRUU。
 
 ##### UE订阅注册状态信息
 
-1. ![[image-20230417174349296.png]]
+1. ![image-20230417174349296](Communication Technology.assets/image-20230417174349296.png)
 2. 在成功进行初始注册和认证之后，Tobias 的终端发送一个SUBSCRIBE请求，包含如下信息:
-   - ![[image-20230417172156620.png]]
+   - ![image-20230417172156620](Communication Technology.assets/image-20230417172156620.png)
      1. 没有显示 SUBSCRIBE请求的所有信息，以上只列出了必需的消息头，以便理解注册状态事件订阅的实质和请求消息的路由。
      2. 该订阅仅针对名为“reg”的事件，就是注册状态事件包，在请求消息的Event消息头中指示。
      3. 请求URI指示了要订阅哪个用户的注册状态信息，因此，需要设置为Tobias已注册的公共用户身份，并在To消息头中明示。
@@ -4212,7 +4210,7 @@
      8. Contact消息头设置的联系信息与注册过程中的联系信息相同，即由接人网分配的UE的IP地址和由IPsec SA 使用的受保护的服务器端口。
      9. Route消息头:它包含了REGISTER请求的200 ( OK）响应中Service-Route消息头中的路由集合，其中最顶端的就是P-CSCF的地址，它用作出站代理。这使得SUBSCRIBE请求首先被路由到P-CSCF，而后直接继续转发到注册过程中指派的S-CSCF。
 3. P-CSCF接到UE发来的SUBSCRIBE请求后，将检查P-Preferred-Identity消息头中的信息集合是否是Tobias 的有效的公共用户身份。如果是，它将P-Preferred-Identity消息头换成P-Asserted-ldentity消息头。
-   - ![[image-20230417174217272.png]]
+   - ![image-20230417174217272](Communication Technology.assets/image-20230417174217272.png)
 4. s-CSCF在接收到SUBSCRIBE请求后，会检查P-Asserted-Identity消息头中的用户身份是否已经在S-CSCF上注册。随后，它会检查它是否可以向订阅者用户提供Tobias的注册状态信息。由于本例中Tobias订阅的是他自己的注册状态信息，是允许的。因此，S-CSCF会立即:
    - 对SUBSCRIBE请求返回一个200 ( OK)响应，指示该订阅已经成功;
    - 生成一个reginfo类型的XML文件，包含Tobias 关联的URI的当前注册状态信息;
@@ -4221,9 +4219,9 @@
 
 ##### P-CSCF订阅注册状态信息
 
-1. ![[image-20230417175708574.png]]
+1. ![image-20230417175708574](Communication Technology.assets/image-20230417175708574.png)
 2. P-CSCF也需要订阅Tobias的注册状态信息，因此它也创建一个SUBSCRIBE请求，看上去与终端创建的请求类似。
-   - ![[image-20230417175533506.png]]
+   - ![image-20230417175533506](Communication Technology.assets/image-20230417175533506.png)
      - 两者主要的区别在于这次是P-CSCF要订阅Tobias的注册状态信息。因此它要在From消息头和P-Asserted-Identity消息头中标识自己。由于P-CSCF是可信任的实体，它直接在请求中加入P-Asserted-Identity消息头。
 3. 由于初次注册阶段，P-CSCF并没有出于自身路由的目的而保存任何路由信息，因此它不知道为用户指定了哪个S-CSCF，因此也就无法包含Route消息头。所以，它只能根据请求URI的主机部分（即“home1.fr”）来进行该请求消息的路由，可以通过DNS解析找到Tobias归属网络中一个或多个I-CSCF-的地址。然后I-CSCF查询HSS得到分配给URI sip: tobias@homel.fr的S-CSCF地址，并将请求发给S-CSCF。
    1. 注意：通过这个SUBSCRIBE请求也建立起一个新的对话，这次是在P-CSCF和S-CSCF之间。这个对话与UE是否订阅了同样的注册状态信息完全没有关系，因此S-CSCF要分别针对UE的订阅和P-CSCF 的订阅，生成包含Tobias注册状态信息的、单独的NOTIFY请求。
@@ -4232,7 +4230,7 @@
 
 1. 在收到一个新的订阅后，无论何时注册状态信息发生变化时（例如注册了一个新的公共用户身份)，S-CSCF都会立刻用Tobias的注册状态信息创建一个NOTIFY 消息。
 2. 本节中我们仅仅看一下Tobias终端在订阅之后立刻收到的NOTIFY 请求和注册状态信息。这些信息与P-CSCF收到的完全一样，而且基本上是同时收到的。
-   - ![[image-20230417180224545.png]]
+   - ![image-20230417180224545](Communication Technology.assets/image-20230417180224545.png)
      - 由于这个请求是从通知者（S-CSCF) 发往订阅者(Tobias 的UE)的，To和From消息头发生了改变。尽管这两个消息头的内容几乎完全相同，但是它们的标签不同。S-CSCF又增加了一个“To”标签（“peruna")，但现在出现在From消息头中。
      - 增加了Subscription-State消息头，指示该订阅是活跃的，并将在599999s后超时。
 
@@ -4342,13 +4340,13 @@
 - 举例
 
   1. Tobias 的注册状态信息包含在 NOTIFY请求消息的正文部分中，这个NOTIFY请求是S-CSCF发往UE和P-CSCF的。它首先包含一个XML文件的头部:
-     1. ![[image-20230419110817327.png]]
+     1. ![image-20230419110817327](Communication Technology.assets/image-20230419110817327.png)
         1. 该头部指示所使用的XML版本（ 1.0)。注册信息总是从根元素“reginfo”开始，它包括很多属性:
         2. xmlns属性指向统一资源名称（URN)，它定义了XML文件和XML命名空间。
         3. version属性总是从“O”开始，并且在每次有新版本（即更新后)的注册状态信息发往同一接收者时，该属性的值就递增1。
         4. state属性指示下面的注册状态信息是与Tobias有关的所有AOR的完整列表。第一个版本（“O”)的reginfo文件总是要作为完整列表(“full”）来发送，后续信息(从“1”开始）可以是“部分”的，可以仅包含上一次通知之后发生的改变。
   2. 和Tobias有关的所有公共用户身份及其注册状态在如下文档中列出:
-     1. ![[image-20230419111327769.png]]
+     1. ![image-20230419111327769](Communication Technology.assets/image-20230419111327769.png)
         1. 第一个AOR或URI是sip: tobias@home1. fr，在前面的例子中已经了解。它现在的状态是已注册（ state =“active")。这个registration子元素的内容是一个contact子元素，它指示S-CSCF创建了在sip; tobias@home1.fr 和联系信息sip:[5555:: 1: 2: 3:4](“uri”子元素〉之间的绑定。event属性设置为“registered”，表示该AOR显式注册为这个contact地址。除此之外，我们看到一些其他的属性，给出了关于注册的contact的更多信息，例如duration-registered属性，可以显示contact 已注册多长时间。
         2. 和contact 一起显式注册的更多信息和参数如下所示:
            1. Tobias 的电话所设置的显示名称，以便从所有其他正在进行的注册中识别当前的电话;
@@ -4356,14 +4354,14 @@
            3. IMS通信服务标识（ICSI）和 IMS应用参考标识（IARI)
            4. 客户端的instance-id
            5. 被分配给设备的公共GRUU和临时GRUU，gr: pub-gru和gr: temp-gruu元素。
-  3. ![[image-20230419141844469.png]]
+  3. ![image-20230419141844469](Communication Technology.assets/image-20230419141844469.png)
      1. 另一个AOR是另一个隐性注册的SIP URI ( event = “ created”)，与第一个AOR使用相同的I地址。这个隐性注册是由S-CSCF根据Tobias的用户配置数据来完成的。由于是隐性注册，所有显式注册的公共用户身份的callee 能力（即各个特性标签，包含ICSI 和 IARI值）也都应用于隐式注册的用户身份，因此也都被复制为未知参数。
      2. 此外，该URI也分配有公共GRUU和临时GRUU，只是与显式注册的公共用户身份的取值不同。公共 GRUU将instance-Id加到注册元素的SIP URI 中，而临时GRUU则赋予一个不同的值。每个隐式注册的公共用户身份将被分配不同的GRUU值。
-  4. ![[image-20230419142231108.png]]
+  4. ![image-20230419142231108](Communication Technology.assets/image-20230419142231108.png)
      1. 另一个AOR是一个隐式注册的tel URL ( event = “ created")，并且与第一个AOR有相同的IP地址。由S-CSCF基于Tobias 的用户配置信息来执行该隐式注册。
-  5. ![[image-20230419142450679.png]]
+  5. ![image-20230419142450679](Communication Technology.assets/image-20230419142450679.png)
      1. 这两个AOR目前都还是未注册状态（ state = “ terminated")，因此registration子元素并不包含任何信息。
-  6. ![[image-20230419142539176.png]]
+  6. ![image-20230419142539176](Communication Technology.assets/image-20230419142539176.png)
      1. Tobias还是一个在线角色扮演游戏（RPG)的游戏管理员。他非常重视他这个游戏管理员的工作，因此他总是通过一个游戏控制台保持注册状态，控制台地址是sip:[5555 : : 101:102:103: 104]:1458。控制台的contact地址是显式注册的 （ event = “registered”)。但是，Tobias还希望在他通过IMS UE在线时也能获知游戏的进展状态，因此接收到对sip: tobias@home1.fr的 RECISTER请求时，这个AOR也被S-CSCF隐性注册( event = " created") 了。
 
 ##### 多个终端和注册状态信息
@@ -4373,12 +4371,12 @@
 
 #### 重注册和重认证
 
-- ![[image-20230419171728734.png]]
+- ![image-20230419171728734](Communication Technology.assets/image-20230419171728734.png)
 
 ##### 用户发起的重注册
 
 - Tobias 的UE在任何时候实施重注册，只需要向网络发出一个新的REC-ISTER请求。例如由于注册时间即将超时，注册就需要进行刷新，这时就会发生重注册。由于重注册的处理与初始SIP注册过程完全一样，这里不再进一步介绍。
-  - ![[image-20230419170134640.png]]
+  - ![image-20230419170134640](Communication Technology.assets/image-20230419170134640.png)
 
 ##### 网络发起的重认证
 
@@ -4390,24 +4388,24 @@
 
 ##### 网络发起的重认证通知
 
-- ![[image-20230419171529885.png]]
-- ![[image-20230419171417034.png]]
+- ![image-20230419171529885](Communication Technology.assets/image-20230419171529885.png)
+- ![image-20230419171417034](Communication Technology.assets/image-20230419171417034.png)
   - 所有注册和相关contact信息的状态仍然设置为“active”，但对contact信息所发生的最后一个事件指示为“shortened”。超时时间值显示UE在10min之后就需要再次进行注册。在上述文件中，只传递了部分的注册状态信息（文档头中state =“par-tial”)，因为其他的注册状态信息没有改变。
   - 因为S-CSCF只发送部分信息，所以没有缩短的contact元素也就没有显示在这条注册状态信息中。
 
 #### 解除注册
 
 1. 关机时，手机会向S-CSCF 发出另一个 RECISTER请求，包含我们已经见到的所有信息，但指示这次该消息是为了解除注册。s-CSCF则清除为Tobias所保存的所有信息，更新HSS 数据，并向TobiasUE发出一个200 ( OK)响应。
-   - ![[image-20230419172055869.png]]
+   - ![image-20230419172055869](Communication Technology.assets/image-20230419172055869.png)
 2. 有时网络也会需要解除用户的注册。可能是由于S-CSCF需要关机。这些情况下，S-CSCF只需要向Tobias UE发出另一个携带注册状态信息的NOTIFY 消息，但这次是指示他已经被解除注册。
-   1. ![[image-20230419172248334.png]]
+   1. ![image-20230419172248334](Communication Technology.assets/image-20230419172248334.png)
    2. 如果注册时间过期，而且Tobias 也没有进一步发送任何RECISTER请求，那么注册就被终止，NOTIFY请求会被发送给所有订阅了Tobias 注册状态信息的订阅者，但这时并不解除UE的注册。由于绑定已过期，因此不能向它发送任何消息。
    3. 在以上任何一种情况下，S-CSCF都会发出 NOTIFY请求给P-CSCF以及所有订阅了Tobias注册状态信息的订阅者，指示Tobias 已经被解除注册。通过发送这个 NOTI-FY请求，也将关闭在订阅注册状态事件期间创建的对话。
 
 ##### 用户发起的注册解除
 
 - 当Tobias 关闭手机时，UE会向网络发出一个RECISTER请求，以便解除注册。
-  - ![[image-20230419172448551.png]]
+  - ![image-20230419172448551](Communication Technology.assets/image-20230419172448551.png)
     1. 以上信息与其他REGISTER请求中已经看到过的信息基本相同，主要区别在于超时时间设置成0，意味着用户希望解除公共用户身份（在To消息头中）和IP地址（在Contact消息头中)之间已注册的绑定关系。
     2. 这个REGISTER请求和其他每个REGISTER请求经历完全相同的路由（即不会按照已存储的Service-Route进行路由)。因此，它将:
        - 穿越P-CSCF——进行完整性保护检查，并在Authorization消息头中增加integri-ty-protected = yes的标志;
@@ -4416,11 +4414,11 @@
     3. s-CSCF通过Cx接口给HSS 发送一条SAR ( Diameter Server-Assignment Request )消息，来执行Diameter注册解除通知过程。 
     4. HSS 从Tobias 的注册相关数据中删除S-CSCF的名称，并返回一条Diameter 服务器分配应答( SAA)消息给S-CSCF
     5. s-CSCF 会立刻向UE发回一个200 (OK）响应，包含的expires消息头也设为0。随后，S-CSCF会创建NOTIFY请求，发往所有订阅了Tobias注册状态信息的订阅者，包括Tobias UE。每个 NOTIFY 请求都包含Subscription-State消息头，并设置为“terminated”，表示已经终止了对于该用户的注册状态信息的订阅关系。
-       - ![[image-20230419175727375.png]]
+       - ![image-20230419175727375](Communication Technology.assets/image-20230419175727375.png)
     6. 这些NOTIFY请求的消息正文中会包含Tobias的注册状态信息
-       - ![[image-20230419175902121.png]]
+       - ![image-20230419175902121](Communication Technology.assets/image-20230419175902121.png)
          - 这个XML文件仍然包含一个“partial”状态指示，因为它并不显式地列出尚未注册的公共用户身份
-    7. ![[image-20230419180412246.png]]
+    7. ![image-20230419180412246](Communication Technology.assets/image-20230419180412246.png)
        - 公共用户身份sip: tobias@ home1.fr仍然是激活的，因为它还已被Tobias的寻呼机注册，只有移动电话的contact地址设置为已结束。
        - 游戏的URI sip: gameMaster@homel.fr也保持了注册状态，因为另一个UE正在活跃地使用它。只有显式解除注册的contact地址才会被删除。
 
@@ -4482,7 +4480,7 @@
   - Call-ID包含了此通话的全局唯一标识符，由随机字符串和softphone的主机名或IP地址的组合生成。To标签、From标签和Call-ID三者组合完全定义了Alice和Bob之间的点对点SIP关系，并被称为对话（dialog）。
 
 - SIP, as part of the IETF process, is based on the Hypertext Transfer Protocol (HTTP) and the Simple Mail Transfer Protocol (SMTP)
-  - ![[image-20221213133025084.png]]
+  - ![image-20221213133025084](Communication Technology.assets/image-20221213133025084.png)
 - 目标
   - transport protocol neutrality - able to run over reliable(TCP, SCTP) and unreliable(UDP) protocols;
   - request routing - direct (performance) or proxy-routed (control);
@@ -4496,7 +4494,7 @@
     - User Agent Client (UAC)- the caller application that initiates requests.
     - User Agent Server (UAS)- accepts, redirects, rejects requests and sends responses to incoming requests on behalf of the user.
     - Gateways  are  special  cases  of  UAs.
-    - ![[image-20221213173756995.png]]
+    - ![image-20221213173756995](Communication Technology.assets/image-20221213173756995.png)
   - intermediaries (servers)
     - SIP intermediaries are logical entities through which SIP messages pass on their way to their ﬁnal destination. These intermediaries are used to route and redirect requests.These intermediaries are used to route and redirect requests.
     - Proxy server:receives and forwards SIP requests
@@ -4570,10 +4568,10 @@
 - SIP是一种基于文本的协议，使用UTF-8字符集。
 - SIP消息可以是客户端向服务器发出的请求，也可以是服务器向客户端发出的响应。
 
-- ![[image-20221215160703268.png]]
+- ![image-20221215160703268](Communication Technology.assets/image-20221215160703268.png)
   - 一次呼叫只能建立一次session，但可以建立多个Dialog，因为接受请求的可能不止一个。
 - 组成部分：无论是请求还是响应消息，都使用了RFC 2822 的基本格式，尽管语法在字符集和具体语法方面有所不同（例如，SIP允许存在一些在RFC 2822中无效的头字段）。这两种类型的消息都由起始行、一个或多个头字段、表示头字段结束的空行以及可选的消息体组成。
-  - ![[image-20230725114358777.png]]
+  - ![image-20230725114358777](Communication Technology.assets/image-20230725114358777.png)
      - the   start   line
        - The start line contents vary depending on whether the SIP message is a request or a response. For requests it is referred to as a ‘‘request line’’ and for responses it is referred to as a ‘‘status line’’.
   
@@ -4581,14 +4579,14 @@
      - body.
      - 起始行、每个消息头行和空行必须以回车换行序列（CRLF）结尾。注意，即使消息体不存在，空行也必须存在。
   
-  - ![[image-20221214114332115.png]]
+  - ![image-20221214114332115](Communication Technology.assets/image-20221214114332115.png)
   
 
 #### Requests
 
 - SIP请求通过在起始行带一个 Request 行和其他的 method 加以区别。一个请求行包含method 名称，一个 Request URI ，和由单空格字符分开的协议版本。
 - 请求行以换行符CRLF 结束。可以允许无回车或换行，除了在以换行符结束 的序列中。不允许在任何网元中有任意数量的空白格（ LWS ）存在。
-  1. ![[image-20230801172744206.png]]
+  1. ![image-20230801172744206](Communication Technology.assets/image-20230801172744206.png)
   2. Method:此规范定义了六个方法 : REGISTER 支持注册联系消息， INVITE ACK ，和CANCEL 支持会话创建， BYE 支持结束会话， OPTIONS 支持对服务器的能力查询。SIP 拓展中定义了其他的方法。
   3. Request URI: Request URI 是一个 SIP 或 SIP URL,它指示了此请求所针对的用户或服务。请求URI不得包含未转义的空格或控制字符，并且不得用“<>”括起来。
   4. SIP-Version: 请求和响应消息都包含正在使用的SIP版本，并遵循[H3.1]（其中将HTTP替换为SIP，HTTP/1.1替换为SIP/2.0）关于版本排序、合规要求和版本号升级方面的规定。为了符合本规范，发送SIP消息的应用程序必须包含一个"SIP/2.0"的SIP-Version。SIP-Version字符串不区分大小写，但实现必须使用大写字母。
@@ -4598,7 +4596,7 @@
 
 - SIP响应通过具有Status-Line作为起始行来与请求进行区分。Status-Line由协议版本、数字状态码及其关联的文本短语组成，每个元素之间用一个空格字符（SP）分隔。
 - 请求行以换行符CRLF 结束。可以允许无回车或换行，除了在以换行符结束 的序列中。
-  1. ![[image-20230801173558298.png]]
+  1. ![image-20230801173558298](Communication Technology.assets/image-20230801173558298.png)
   2. 状态码:是一个三位整数的结果代码，它表示一个测试输出的响应理解，满足请求的要求。
      1. 状态码的第一个数字定义了响应的级别。状态码后两位没有层级的设置。因为这个原因，任何状态码介于 100 和 199 之间的响应被看作是 "1xx response"，任何状态码介于 200 和 299 的响应看作是一个 "2xx 响应，以此类推。以第一个数字为划分类别， SIP/2.0 支持了六个级别的状态响应码
         1. 1xx: Provisional 请求收到的响应码，表示是临时响应，会继续处理此请求；
@@ -4743,15 +4741,15 @@
 
 - Some   headers   are   mandatory   in   every   SIP   request   and   response
 
-| header              | example                                               |
-| ------------------- | ----------------------------------------------------- |
-| To header           | To:SIP-URI(;parameters)                               |
-| From header         | From: SIP-URI(;parameters)                            |
-| Call-ID header      | Call-ID: unique-id                                    |
-| CSeq header         | CSeq: digit method                                    |
-| Via header          | Via: SIP/2.0/[transport-protocol] sent-by(parameters) |
-| Max-Forwards header | Max-Forwards: digit                                   |
-| Contact header      | Contact: SIP-URI(;parameters)                         |
+  - | header              | example                                               |
+    | ------------------- | ----------------------------------------------------- |
+    | To header           | To:SIP-URI(;parameters)                               |
+    | From header         | From: SIP-URI(;parameters)                            |
+    | Call-ID header      | Call-ID: unique-id                                    |
+    | CSeq header         | CSeq: digit method                                    |
+    | Via header          | Via: SIP/2.0/[transport-protocol] sent-by(parameters) |
+    | Max-Forwards header | Max-Forwards: digit                                   |
+    | Contact header      | Contact: SIP-URI(;parameters)                         |
 
     - that the brackets around parameters indicate that they are optional
 
@@ -5168,7 +5166,7 @@
 ### SIP  structure
 
 - SIP is a layered protocol that allows diﬀerent modules within it to function indepen-dently with just a loose coupling(连接器) between each layer
-- ![[image-20221214155656033.png]]
+- ![image-20221214155656033](Communication Technology.assets/image-20221214155656033.png)
   1. Syntax  and  encoding  layer：Encoding makes use of augmented Backus-Naur Form (BNF) grammar, the complete description 
      of which can be found in [RFC3261].
      - 巴科斯范式（英语：Backus Normal Form，缩写为 BNF），又称为巴科斯-诺尔范式（英语：Backus-Naur Form，缩写同样为 BNF，也译为巴科斯-瑙尔范式、巴克斯-诺尔范式），是一种用于表示上下文无关文法的语言，上下文无关文法描述了一类形式语言。它是由约翰·巴科斯（John Backus）和彼得·诺尔（Peter Naur）首先引入的用来描述计算机语言语法的符号集。
@@ -5368,11 +5366,11 @@
 ### SDP  message  contents
 
 1. Session-level description – this includes the session identiﬁer and other session-level parameters, such as the IP address, subject, contact info about the session and/or creator.
-   - ![[image-20230103153909525.png]]
+   - ![image-20230103153909525](Communication Technology.assets/image-20230103153909525.png)
 2. Timing   description   –   start   and   stop   times,   repeat   times,   one   or   more   media-level descriptions.
-   - ![[image-20230103153929447.png]]
+   - ![image-20230103153929447](Communication Technology.assets/image-20230103153929447.png)
 3. Media   type   and   format   –   transport   protocol   and   port   number,   other   media-level parameters. Note that the media address may be diﬀerent from the signalling address.
-   - ![[image-20230103153959868.png]]
+   - ![image-20230103153959868](Communication Technology.assets/image-20230103153959868.png)
 
 ### Format
 
@@ -5392,7 +5390,7 @@
 ### RCS架构
 
 - 对于RCS来说，基础网络元素是IMS核心系统，其实现了RCS客户端之间的点对点通信。服务提供商可以部署其他网络节点，以提供RCS功能集的其他部分。
-- ![[image-20230423110206706.png]]
+- ![image-20230423110206706](Communication Technology.assets/image-20230423110206706.png)
   1. PS/CS网关用于电路交换（CS）和分组交换（PS）语音之间的互操作，如基于VoLTE的语音
   2. MSG Store relates to the CPM (Converged IP Messaging) Message Store Server
   3. Legacy Msg refers to the Short Message Service (SMS)/Multimedia Message Service (MMS) services that may be utilized via an IWF (Interworking Function) located in the group of Application Servers (ASs) which in addition to these IWF node(s) may also include various other nodes used by the RCS services, for example:
@@ -5426,21 +5424,21 @@
 
 #### RCS服务
 
-- ![[image-20231229000838150.png]]
+- ![image-20231229000838150](Communication Technology.assets/image-20231229000838150.png)
 
-- ![[image-20231228172554211.png]]
+- ![image-20231228172554211](Communication Technology.assets/image-20231228172554211.png)
 
 ####ACS
 
 - rcc.14、rcc.15、rcc.20
 - ACS是一种终端设备从远程服务器检索其RCS配置，并为RCS 操作进行自我配置的机制。RCS配置高度依赖于终端设备的RCS堆栈实现和网络运营商的要求。在RCS实施的早期阶段，大多数终端设备提供了一个特殊的图形用户界面，通过该界面可以手动配置RCS操作，或者将一个特殊的配置文件放置在终端设备上。然而，随着RCS实施的成熟和网络运营商开始在真实网络（或至少在实验网络）中部署RCS，这种情况发生了变化。
 - 流程上终端设备通过HTTP（非安全协议）和HTTPS（安全协议）与核心网络中的自动配置服务器进行通信。它是一个包含4个步骤的协商过程。前两个步骤只是为了检查服务器是否可用。真正的配置过程只在第3步和第4步中完成。
-  - ![[image-20231228165725815.png]]
+  - ![image-20231228165725815](Communication Technology.assets/image-20231228165725815.png)
 
 
 ##### 解密ssl后的流程
 
-- ![[image-20231228165912692.png]]
+- ![image-20231228165912692](Communication Technology.assets/image-20231228165912692.png)
 
 - ```http
   (1) HTTP GET Request
@@ -5521,7 +5519,7 @@
       Accept-Language: en-US
   ```
 
-  - ![[image-20231228170551662.png]]
+  - ![image-20231228170551662](Communication Technology.assets/image-20231228170551662.png)
 
 - ```
   (4) HTTPS 200 OK
@@ -5983,7 +5981,7 @@
       </wap-provisioningdoc>
   ```
 
-  - ![[image-20231228170927250.png]]
+  - ![image-20231228170927250](Communication Technology.assets/image-20231228170927250.png)
 
 
 ### rcs 注册
@@ -5998,23 +5996,22 @@
 #### Services feature tags
 
 - 根据相关的服务规范，当相应的服务已被授权/启用于所使用的接入（即蜂窝或Wi-Fi）时，客户应在SIP REGISTER请求中包括以下功能标签：
-  - ![[image-20230423160341335.png]]
-  - ![[image-20230423160638760.png]]
+  - ![image-20230423160341335](Communication Technology.assets/image-20230423160341335.png)
+  - ![image-20230423160638760](Communication Technology.assets/image-20230423160638760.png)
     - CPIM：Common Profile for Instant Messaging
 
 #### rcs注册流程
 
 - | Step | Direction  | Protocol | Message                                                  |
-
-| ---- | ---------- | -------- | -------------------------------------------------------- |
-| 1    | UA1 --> NW | SIP      | `REGISTER sip:test-rcs.com`                              |
-| 2    | UA1 <-- NW | SIP      | 200 OK                                                   |
-| 3    | UA1 --> NW | SIP      | `SUBSCRIBE sip:+339012341234@test-rcs.com;pres-list=rcs` |
-| 4    | UA1 <-- NW | SIP      | 200 OK                                                   |
-| 5    | UA1 --> NW | SIP/XML  | `PUBLISH sip:+339012341234@test-rcs.com`                 |
-| 6    | UA1 <-- NW | SIP      | 200 OK                                                   |
-| 7    | UA1 <-- NW | SIP      | `NOTIFY sip:192.168.1.1:5060;transport=udp`              |
-| 8    | UA1 --> NW | SIP      | 200 OK                                                   |
+  | ---- | ---------- | -------- | -------------------------------------------------------- |
+  | 1    | UA1 --> NW | SIP      | `REGISTER sip:test-rcs.com`                              |
+  | 2    | UA1 <-- NW | SIP      | 200 OK                                                   |
+  | 3    | UA1 --> NW | SIP      | `SUBSCRIBE sip:+339012341234@test-rcs.com;pres-list=rcs` |
+  | 4    | UA1 <-- NW | SIP      | 200 OK                                                   |
+  | 5    | UA1 --> NW | SIP/XML  | `PUBLISH sip:+339012341234@test-rcs.com`                 |
+  | 6    | UA1 <-- NW | SIP      | 200 OK                                                   |
+  | 7    | UA1 <-- NW | SIP      | `NOTIFY sip:192.168.1.1:5060;transport=udp`              |
+  | 8    | UA1 --> NW | SIP      | 200 OK                                                   |
 
 - ```
   （1) REGISTER sip:test-rcs.com
@@ -6283,12 +6280,12 @@
   - The discovery mechanism that is to be used by the device is by using the configuration parameter CAPABILITY DISCOVERY MECHANISM
 
 - option流程
-  - ![[image-20231228193801004.png]]
-  - ![[image-20231228194323188.png]]
+  - ![image-20231228193801004](Communication Technology.assets/image-20231228193801004.png)
+  - ![image-20231228194323188](Communication Technology.assets/image-20231228194323188.png)
 
 - SIP OPTIONS response
-  - ![[image-20230423174204791.png]]
-  - ![[image-20230423174257411.png]]
+  - ![image-20230423174204791](Communication Technology.assets/image-20230423174204791.png)
+  - ![image-20230423174257411](Communication Technology.assets/image-20230423174257411.png)
 
 - Service part of the presence Data Model
 
@@ -6380,9 +6377,9 @@
     				</presence>
     ```
 
-  - ![[image-20230424102523000.png]]
+  - ![image-20230424102523000](Communication Technology.assets/image-20230424102523000.png)
 
-  - ![[image-20230424102546390.png]]
+  - ![image-20230424102546390](Communication Technology.assets/image-20230424102546390.png)
 
 - Service/capability indicators
   - RCS能力表示RCS用户/客户在特定时间点可以访问的服务列表。这些能力取决于以下四个因素：
@@ -6397,8 +6394,8 @@
 
 - Future extensions to the mechanism
   - A Service Provider (or group of Service Providers) to deploy additional services which can benefit from the RCS discovery mechanism, an additional tag and Service ID format is defined.
-    - ![[image-20230424111045328.png]]
-    - ![[image-20230424111748037.png]]
+    - ![image-20230424111045328](Communication Technology.assets/image-20230424111045328.png)
+    - ![image-20230424111748037](Communication Technology.assets/image-20230424111748037.png)
 
 #### Presence
 
@@ -6412,8 +6409,8 @@
 
 ##### Presence流程图
 
-- ![[image-20231228200937881.png]]
-- ![[image-20231228201006421.png]]
+- ![image-20231228200937881](Communication Technology.assets/image-20231228200937881.png)
+- ![image-20231228201006421](Communication Technology.assets/image-20231228201006421.png)
 
 ##### uce sip流程
 
@@ -6421,7 +6418,7 @@
 
 ### RCS 协议
 
-- ![[image-20230424114119705.png]]
+- ![image-20230424114119705](Communication Technology.assets/image-20230424114119705.png)
 - MSRP session matching：For all services using MSRP, an RCS client shall set up MSRP sessions as per [RCS-CPMCONVFUNC-ENDORS].
 - SIP Issues
   - An RCS client should use a random originating SIP signalling port of the range 1025-65535， If the selected port is not available, the next port number shall be used for this session.
@@ -6440,9 +6437,9 @@ End User Confirmation Requests
 #### 1-to-1 Messaging Technology Selection
 
 - Messaging towards contacts not known as Chatbots
-  - ![[image-20230424162536551.png]]
+  - ![image-20230424162536551](Communication Technology.assets/image-20230424162536551.png)
 - Messaging towards contacts known as Chatbots
-  - ![[image-20230424165621666.png]]
+  - ![image-20230424165621666](Communication Technology.assets/image-20230424165621666.png)
   - If capability discovery is not enabled, and if
     - 如果只启用了Chatbot Standalone Messaging或1对1 Chatbot会话中的一种，那么客户应选择已启用的技术来建立与Chatbot的对话。如果收到一个SIP 405 Method Not Allowed响应，其中的Allow头表示chatbot能理解的方法（即所选技术不被聊天机器人支持），那么聊天机器人就不能使用，如果满足下面提到的条件，客户可以通过SMS重新发送消息。
     - 如果同时启用了Chatbot独立消息和1对1 Chatbot会话，那么客户应选择使用3.6.8.3.1节中定义的1对1 Chatbot会话。如果收到SIP 405 Method Not Allowed响应，包括Allow header中的MESSAGE方法（即聊天工具只支持Chatbot Standalone Messaging），客户应使用3.6.8.3.2节中定义的Chatbot Standalone Messaging重新发送消息。
@@ -6480,7 +6477,7 @@ End User Confirmation Requests
 
 ###### Pager Mode Messaging
 
-- ![[image-20231228234707861.png]]
+- ![image-20231228234707861](Communication Technology.assets/image-20231228234707861.png)
   - 如果提供了基于网络的公共消息存储，任何发送或接收的独立消息都将按照对应要求存储在相应的RCS用户的消息存储中。
 
 ###### Large Message Mode Messaging 
@@ -6490,14 +6487,13 @@ End User Confirmation Requests
 ###### Flows
 
 - | Step | Direction         | Protocol | Message | Comments                      |
-
-| ---- | ----------------- | -------- | ------- | ----------------------------- |
-| (1)  | UA1 --> Proxy/UA2 | SIP      | MESSAGE | Send a text '123456789abcdef' |
-| (2)  | UA1 <-- Proxy/UA2 | SIP      | 200 OK  |                               |
-| (3)  | UA1 <-- Proxy/UA2 | SIP      | MESSAGE | Delivery Notification         |
-| (4)  | UA1 --> Proxy/UA2 | SIP      | 200 OK  |                               |
-| (5)  | UA1 <-- Proxy/UA2 | SIP      | MESSAGE | Display Notification          |
-| (6)  | UA1 --> Proxy/UA2 | SIP      | 200 OK  |                               |
+  | ---- | ----------------- | -------- | ------- | ----------------------------- |
+  | (1)  | UA1 --> Proxy/UA2 | SIP      | MESSAGE | Send a text '123456789abcdef' |
+  | (2)  | UA1 <-- Proxy/UA2 | SIP      | 200 OK  |                               |
+  | (3)  | UA1 <-- Proxy/UA2 | SIP      | MESSAGE | Delivery Notification         |
+  | (4)  | UA1 --> Proxy/UA2 | SIP      | 200 OK  |                               |
+  | (5)  | UA1 <-- Proxy/UA2 | SIP      | MESSAGE | Display Notification          |
+  | (6)  | UA1 --> Proxy/UA2 | SIP      | 200 OK  |                               |
 
 - ```
   (1) MESSAGE
@@ -6882,19 +6878,18 @@ End User Confirmation Requests
 ##### Flows
 
 - | Step | Direction         | Protocol | Message              | Comments              |
-
-| ---- | ----------------- | -------- | -------------------- | --------------------- |
-| (1)  | UA1 --> Proxy/UA2 | SIP/SDP  | INVITE               |                       |
-| (2)  | UA1 <-- Proxy/UA2 | SIP      | 100 Trying           |                       |
-| (3)  | UA1 <-- Proxy/UA2 | SIP      | 183 Session Progress |                       |
-| (4)  | UA1 <-- Proxy/UA2 | SIP/SDP  | 200 OK               |                       |
-| (5)  | UA1 --> Proxy/UA2 | SIP      | ACK                  |                       |
-| (6)  | UA1 --> Proxy/UA2 | MSRP     | SEND                 |                       |
-| (7)  | UA1 <-- Proxy/UA2 | MSRP     | 200 OK               |                       |
-| (8)  | UA1 --> Proxy/UA2 | MSRP     | SEND                 | Send Text 'Hello'     |
-| (9)  | UA1 <-- Proxy/UA2 | MSRP     | 200 OK               |                       |
-| (10) | UA1 <-- Proxy/UA2 | MSRP     | SEND                 | Delivery Notification |
-| (11) | UA1 --> Proxy/UA2 | MSRP     | 200 OK               |                       |
+  | ---- | ----------------- | -------- | -------------------- | --------------------- |
+  | (1)  | UA1 --> Proxy/UA2 | SIP/SDP  | INVITE               |                       |
+  | (2)  | UA1 <-- Proxy/UA2 | SIP      | 100 Trying           |                       |
+  | (3)  | UA1 <-- Proxy/UA2 | SIP      | 183 Session Progress |                       |
+  | (4)  | UA1 <-- Proxy/UA2 | SIP/SDP  | 200 OK               |                       |
+  | (5)  | UA1 --> Proxy/UA2 | SIP      | ACK                  |                       |
+  | (6)  | UA1 --> Proxy/UA2 | MSRP     | SEND                 |                       |
+  | (7)  | UA1 <-- Proxy/UA2 | MSRP     | 200 OK               |                       |
+  | (8)  | UA1 --> Proxy/UA2 | MSRP     | SEND                 | Send Text 'Hello'     |
+  | (9)  | UA1 <-- Proxy/UA2 | MSRP     | 200 OK               |                       |
+  | (10) | UA1 <-- Proxy/UA2 | MSRP     | SEND                 | Delivery Notification |
+  | (11) | UA1 --> Proxy/UA2 | MSRP     | 200 OK               |                       |
 
 - ```
   (1) INVITE
@@ -7299,7 +7294,7 @@ End User Confirmation Requests
 
 - 群组消息就是多人一对一聊天。所有参与者将建立一个以“focus”为中心的 1:1 聊天。此逻辑角色作为 RCS (CPM/SIMPLE) 服务器功能的一部分来实现。
 
-  - ![[image-20231229094055402.png]]
+  - ![image-20231229094055402](Communication Technology.assets/image-20231229094055402.png)
 
 - 如果 Karin 想要创建群聊，她会将 SIP INVITE 发送到 RCS 服务器。RCS 将通过 Request-URI 将此 INVITE 请求识别为创建新的临时会议的请求。INVITE 通常还包含正文中的参与者列表：
 
@@ -7323,7 +7318,7 @@ End User Confirmation Requests
 
 - 对于“Ad-hoc”会议。这意味着会议不需要安排或预订，而是“即时”创建。这种方法的好处是用户不需要知道会议 URI；相反，由focus （RCS 服务器）创建并被参与者的 UA 使用。
 
-  - ![[image-20231229094906679.png]]
+  - ![image-20231229094906679](Communication Technology.assets/image-20231229094906679.png)
 
 #### File Transfer
 
@@ -7346,7 +7341,7 @@ End User Confirmation Requests
 - 在进行中的一对一聊天会话中，任何文件传输的过程都是作为一个独立的会话与正在进行的一对一聊天同时进行的，因此与启动文件传输的独立会话的过程相同。
 - 不同类型的内容（文件）可以在进行中的会话期间或没有进行中的会话时进行交换，即在通话或一对一聊天会话期间或之外。
   当在不存在现有会话时传输文件（即与要共享文件的联系人不在通话或聊天会话中），并且在传输开始后（即接收用户接受了传入文件），文件传输以聊天上下文的形式呈现给接收者。这为传输建立了通信上下文，因为接收者可能想知道发送者为什么要共享该文件。在文件呈现时，聊天会话未启动。只有在接收者向文件传输的发送者发送聊天消息时，聊天会话才会启动。
-  - ![[image-20231229100435097.png]]
+  - ![image-20231229100435097](Communication Technology.assets/image-20231229100435097.png)
 - 当通话中启动文件传输时，文件传输将持续直至完成或取消，即使通话结束，文件传输也不会被终止。
 - 在群聊中可以进行文件传输。在这种情况下，文件将发送给所有能够接收文件的参与者。
 
@@ -7360,10 +7355,10 @@ End User Confirmation Requests
 
 ##### Flows
 
-- ![[image-20231229102306778.png]]
+- ![image-20231229102306778](Communication Technology.assets/image-20231229102306778.png)
   - 客户端在传输下一个文件块之前，不需等待MSRP 200 OK响应，将文件以不同的MSRP块发送。
   - 为了成功地传输文件，客户端应在接收到文件的所有块的MSRP 200 OK响应之后，才发送SIP BYE。
-- ![[image-20231229102555561.png]]
+- ![image-20231229102555561](Communication Technology.assets/image-20231229102555561.png)
 
 #### Geolocation Push services
 
@@ -7386,17 +7381,17 @@ End User Confirmation Requests
 - RCS File Transfer服务被用于传递地理位置信息。在群聊中分享位置时，基于群聊的File Transfer是其基础
 - 在语音或视频通话中（假设用户希望将位置发送给通话中的对方），使用的是RCS File Transfer 服务来传递地理位置信息。
 
-- ![[image-20230505133610401.png]]
-- ![[image-20230505133626507.png]]
-  - ![[image-20231229104939074.png]]
+- ![image-20230505133610401](Communication Technology.assets/image-20230505133610401.png)
+- ![image-20230505133626507](Communication Technology.assets/image-20230505133626507.png)
+  - ![image-20231229104939074](Communication Technology.assets/image-20231229104939074.png)
 
 ##### Flows
 
-- ![[image-20231229111130655.png]]
+- ![image-20231229111130655](Communication Technology.assets/image-20231229111130655.png)
 - PULL
-  - ![[image-20231229111544122.png]]
-  - ![[image-20231229111427161.png]]
-  - ![[image-20231229111639885.png]]
+  - ![image-20231229111544122](Communication Technology.assets/image-20231229111544122.png)
+  - ![image-20231229111427161](Communication Technology.assets/image-20231229111427161.png)
+  - ![image-20231229111639885](Communication Technology.assets/image-20231229111639885.png)
 
 ## RCS 服务部署
 
@@ -7476,7 +7471,7 @@ End User Confirmation Requests
 
 ## Package Flow
 
-- ![[image-20240129112306345.png]]
+- ![image-20240129112306345](Communication Technology.assets/image-20240129112306345.png)
   - 步骤0（Package＃0）：DM服务器通过发送DM通知请求DM客户端启动DM会话。此DM通知称为“Package＃0”。这是一个可选的包流程，因为在客户端发起的情况下不需要DM通知。
   - 步骤1（Package＃1）：DM客户端通过发送“Package＃1”发起DM会话：该包可以包含DM客户端支持的MO的信息，DM服务器可以利用这些信息进行管理操作。
   - 步骤2（Package＃2）：在接收到Package＃1或Package＃3之后，DM服务器向DM客户端发送管理命令：包含DM命令的包被称为“Package＃2”。
@@ -7501,14 +7496,13 @@ End User Confirmation Requests
 - Standard Options  
 
 - | Option No | Name               | Value Format | DM Client Support | DM Server Support | Occurrence |
-
-| --------- | ------------------ | ------------ | ----------------- | ----------------- | ---------- |
-| 1         | SERVER-ID          | String       | Mandatory         | Mandatory         | ZeroOrOne  |
-| 2         | PREFERRED-CON-TYPE | Opaque       | Mandatory         | Mandatory         | ZeroOrOne  |
-| 3         | NOTIFICATION-ID    | Uint         | Optional          | Mandatory         | ZeroOrOne  |
-| 4         | SHA256-DIGEST      | Opaque       | Optional          | Mandatory         | ZeroOrOne  |
-| 5         | TIMESTAMP          | Opaque       | Optional          | Mandatory         | ZeroOrOne  |
-| 6         | REQ-MOS            | Null         | Mandatory         | Mandatory         | ZeroOrOne  |
+  | --------- | ------------------ | ------------ | ----------------- | ----------------- | ---------- |
+  | 1         | SERVER-ID          | String       | Mandatory         | Mandatory         | ZeroOrOne  |
+  | 2         | PREFERRED-CON-TYPE | Opaque       | Mandatory         | Mandatory         | ZeroOrOne  |
+  | 3         | NOTIFICATION-ID    | Uint         | Optional          | Mandatory         | ZeroOrOne  |
+  | 4         | SHA256-DIGEST      | Opaque       | Optional          | Mandatory         | ZeroOrOne  |
+  | 5         | TIMESTAMP          | Opaque       | Optional          | Mandatory         | ZeroOrOne  |
+  | 6         | REQ-MOS            | Null         | Mandatory         | Mandatory         | ZeroOrOne  |
 
   - 选项的值的格式必须是以下格式之一：
     - Uint：一个非负整数，使用Option Length决定的字节数以网络字节顺序表示。Option Value的取值范围由2的Option Length次方计算得出，以位为单位。例如，如果Option Length为2，则Option Value的取值范围为0-65535。
@@ -7524,12 +7518,12 @@ End User Confirmation Requests
 
   - 此选项的值必须是以下之一：
 
-| Value | Semantics     | Description                                                  |
-| ----- | ------------- | ------------------------------------------------------------ |
-| 0x00  | ANY_AVAILABLE | Indicates the preferred connection is anything currently available |
-| 0x01  | CELLULAR      | Indicates the preferred connection is cellular, e.g. GSM/CDMA/UMTS/LTE |
-| 0x02  | WLAN          | Indicates the preferred connection is WLAN. e.g. IEEE 802.11 a/b/g/n/ac |
-| 0x03  | WIRELINE      | Indicates the preferred connection is wireline               |
+    - | Value | Semantics     | Description                                                  |
+      | ----- | ------------- | ------------------------------------------------------------ |
+      | 0x00  | ANY_AVAILABLE | Indicates the preferred connection is anything currently available |
+      | 0x01  | CELLULAR      | Indicates the preferred connection is cellular, e.g. GSM/CDMA/UMTS/LTE |
+      | 0x02  | WLAN          | Indicates the preferred connection is WLAN. e.g. IEEE 802.11 a/b/g/n/ac |
+      | 0x03  | WIRELINE      | Indicates the preferred connection is wireline               |
 
 - 通知标识选项（NOTIFICATION-ID）
   - 通知标识选项用于指定用于检测DM通知的重复的16位无符号整数。如果底层传输提供了丢弃重复DM通知的功能，该选项可能不会被呈现。该选项的长度必须为2个字节。
@@ -7568,20 +7562,19 @@ End User Confirmation Requests
 ## DM Commands
 
 - | Command | Description                                                  | DM Server support | DM Client support |
-
-| ------- | ------------------------------------------------------------ | ----------------- | ----------------- |
-| HGET    | The DM Server uses this command to requests the DM Client to retrieve data from the Data Repository using HTTP GET, and add or replace the received data into the DM Tree | MUST              | MUST              |
-| HPUT    | The DM Server uses this command to request the DM Client to send data to the Data Repository using HTTP PUT | MUST              | MUST              |
-| HPOST   | The DM Server uses this command to request the DM Client to send data to the Data Repository using HTTP POST | MUST              | MUST              |
-| DELETE  | The DM Server uses this command to delete data in the DM Tree | MUST              | MUST              |
-| EXEC    | The DM Server uses this command to execute an executable node in the DM Tree | MUST              | MUST              |
-| GET     | The DM Server uses this command to retrieve data from the DM Tree. The DM Client sends the data within the current DM Session | MUST              | SHOULD            |
-| SHOW    | The DM Server uses this command to initiate a UI Session between the Web Browser Component and the Web Server Component | MUST              | SHOULD            |
-| CONT    | The DM Server uses this command for the DM Client to continue the DM Session with the specified DM Server URI | MUST              | MUST              |
-| END     | This command is used by the DM Server to terminate the DM session | MUST              | MUST              |
-| DEFAULT | Configure the DM Client to use a specific address to capture configuration if that is missing in the device for an specific MOID | MUST              | SHOULD            |
-| SUB     | The DM Server uses this command to request to the DM Client to report (subscribe) changes in the DM Tree part identified by the provided ClientURI | SHOULD            | SHOULD            |
-| UNSUB   | The DM Server uses this command to request to the DM Client to revoke previous subscription to notification for changes in the DM Tree part identified by the provided ClientURI | SHOULD            | SHOULD            |
+  | ------- | ------------------------------------------------------------ | ----------------- | ----------------- |
+  | HGET    | The DM Server uses this command to requests the DM Client to retrieve data from the Data Repository using HTTP GET, and add or replace the received data into the DM Tree | MUST              | MUST              |
+  | HPUT    | The DM Server uses this command to request the DM Client to send data to the Data Repository using HTTP PUT | MUST              | MUST              |
+  | HPOST   | The DM Server uses this command to request the DM Client to send data to the Data Repository using HTTP POST | MUST              | MUST              |
+  | DELETE  | The DM Server uses this command to delete data in the DM Tree | MUST              | MUST              |
+  | EXEC    | The DM Server uses this command to execute an executable node in the DM Tree | MUST              | MUST              |
+  | GET     | The DM Server uses this command to retrieve data from the DM Tree. The DM Client sends the data within the current DM Session | MUST              | SHOULD            |
+  | SHOW    | The DM Server uses this command to initiate a UI Session between the Web Browser Component and the Web Server Component | MUST              | SHOULD            |
+  | CONT    | The DM Server uses this command for the DM Client to continue the DM Session with the specified DM Server URI | MUST              | MUST              |
+  | END     | This command is used by the DM Server to terminate the DM session | MUST              | MUST              |
+  | DEFAULT | Configure the DM Client to use a specific address to capture configuration if that is missing in the device for an specific MOID | MUST              | SHOULD            |
+  | SUB     | The DM Server uses this command to request to the DM Client to report (subscribe) changes in the DM Tree part identified by the provided ClientURI | SHOULD            | SHOULD            |
+  | UNSUB   | The DM Server uses this command to request to the DM Client to revoke previous subscription to notification for changes in the DM Tree part identified by the provided ClientURI | SHOULD            | SHOULD            |
 
 ## Generic Alert
 
@@ -7595,14 +7588,14 @@ End User Confirmation Requests
 
 - 以下表格总结了通用警报支持的属性：
 
-| Property  | Description                                                  | Occurrence |
-| --------- | ------------------------------------------------------------ | ---------- |
-| AlertType | The type of the Generic Alert                                | One        |
-| SourceURI | The address to the node in the MO that is related to this Generic Alert | ZeroOrOne  |
-| TargetURI | The additional address related to the Generic Alert. This MUST be a ClientURI as specified in the section 6.1. The usage of the TargetURI is not specified in this specification. | ZeroOrOne  |
-| Mark      | The importance level. The following values are defined: "fatal", "critical", "minor", "warning", "informational", "harmless" and "indeterminate". If the parameter is omitted then the default importance level "informational" is assumed. | ZeroOrOne  |
-| DataType  | The Media Type of the Data content. This property MUST be present if the Data property exists. | ZeroOrOne  |
-| Data      | The additional data for the Generic Alert. The format and the content of the Data are not specified in this specification | ZeroOrOne  |
+  - | Property  | Description                                                  | Occurrence |
+    | --------- | ------------------------------------------------------------ | ---------- |
+    | AlertType | The type of the Generic Alert                                | One        |
+    | SourceURI | The address to the node in the MO that is related to this Generic Alert | ZeroOrOne  |
+    | TargetURI | The additional address related to the Generic Alert. This MUST be a ClientURI as specified in the section 6.1. The usage of the TargetURI is not specified in this specification. | ZeroOrOne  |
+    | Mark      | The importance level. The following values are defined: "fatal", "critical", "minor", "warning", "informational", "harmless" and "indeterminate". If the parameter is omitted then the default importance level "informational" is assumed. | ZeroOrOne  |
+    | DataType  | The Media Type of the Data content. This property MUST be present if the Data property exists. | ZeroOrOne  |
+    | Data      | The additional data for the Generic Alert. The format and the content of the Data are not specified in this specification | ZeroOrOne  |
 
 ## HTTP Error handling  
 
@@ -7614,7 +7607,7 @@ End User Confirmation Requests
 ### Introduction
 
 - OMA Push Over-the-Air (Push-OTA)是一组协议及其与各种网络承载的绑定，通过这些协议和绑定，Push代理网关（PPG）或其他推送服务器与推送客户端进行交互，以实现网络发起内容传递到由推送客户端提供的客户端应用程序。OMA推送启用器的架构模型和启用器实体（PPG和推送客户端）在[PushArch]中引入。
-  - ![[image-20240129150134042.png]]
+  - ![image-20240129150134042](Communication Technology.assets/image-20240129150134042.png)
 
 - Push-OTA支持各种协议变体和承载绑定
   - Push-OTA协议提供了“无连接”和“面向连接”的服务。面向连接的服务是指推送客户端与PPG建立了特定的传输层“连接”，用于接收基于推送的服务。面向连接的服务通过WAP1无线会话协议（WSP）作为OTA-WSP推送协议、通过基于WAP2的OTA-HTTP推送协议和基于SIP的OTA-SIP推送协议来支持。无连接的服务不依赖于推送客户端和PPG之间预先建立/特定的连接，并且通过OTA-WSP、OTA-SIP和OTA-PTM支持。
@@ -7639,11 +7632,11 @@ End User Confirmation Requests
         - 通过OMA BCAST客户端提供OTA-PTM/BCAST
         - 通过MBMS客户端提供OTA-PTM/MBMS
 
-- ![[image-20240129151133426.png]]
+- ![image-20240129151133426](Communication Technology.assets/image-20240129151133426.png)
 
 ### Protocol Variants
 
-- ![[image-20240129151319594.png]]
+- ![image-20240129151319594](Communication Technology.assets/image-20240129151319594.png)
   - “OTA-WSP”是WSP协议的一种变体，它提供了面向连接和无连接的推送功能。面向连接的OTA-WSP通过WTP/IP进行操作，而无连接的OTA-WSP则通过WDP/SMS或WDP/IP进行操作。
   - “OTA-HTTP”是HTTP协议的一种变体，仅提供面向连接的推送功能，并通过TCP/IP进行操作。如果在OTA-HTTP中实现TLS 以提供逐跳传输层安全性，则将此协议变体称为“OTA-HTTP-TLS”。
   - “OTA-SIP”是SIP协议的一种变体，提供面向连接和无连接的推送功能。OTA-SIP的安全性由底层的SIP/IP核心网络提供，如[SIPPush]中所述。面向连接的OTA-SIP通过SIP/(UDP或TCP)控制平面和MSRP/TCP/IP用户平面进行操作，而无连接的OTA-SIP则通过SIP/(UDP或TCP)控制平面进行操作。
@@ -7658,7 +7651,7 @@ End User Confirmation Requests
 #### Overview
 
 - 定义的原语包括推送操作原语和推送管理原语。推送操作原语用于从服务器（也称为“PPG”）向客户端（也称为“终端”）传递内容，而推送管理原语用于建立和管理推送会话。
-  - ![[image-20240129152613909.png]]
+  - ![image-20240129152613909](Communication Technology.assets/image-20240129152613909.png)
 
 ##### Push Operational Primitives
 
@@ -7667,14 +7660,13 @@ End User Confirmation Requests
 - 该原语用于通过面向连接的服务，在推送会话中以非确认方式从服务器发送信息。
 
 - | Primitive Parameter | Po-Push |      |
-
-| ------------------- | ------- | ---- |
-|                     | req     | ind  |
-| Push Headers        | O       | C(=) |
-| Authenticated       | O       | C(=) |
-| Trusted             | O       | C(=) |
-| Last                | O       | C(=) |
-| Push Body           | O       | C(=) |
+  | ------------------- | ------- | ---- |
+  |                     | req     | ind  |
+  | Push Headers        | O       | C(=) |
+  | Authenticated       | O       | C(=) |
+  | Trusted             | O       | C(=) |
+  | Last                | O       | C(=) |
+  | Push Body           | O       | C(=) |
 
   - 推送头部在[PushMsg]中被定义。
   - 通过Authenticated参数，指示发起者URI是否通过服务器进行身份验证。
@@ -7724,4 +7716,4 @@ End User Confirmation Requests
 ##### Connection-orientated Push  
 
 - 连接导向的推送必须通过WSP会话服务原语中的S-Push（例如未确认的推送）或S-ConfirmedPush来执行。必须建立一个推送会话来执行这些原语。推送会话是一个启用了已确认、未确认或二者都启用的推送能力的WSP会话[W-TCP]。
-  推送会话可以使用安全或非安全的传输服务。服务器端口号在[WDP]中为这两种选项保留。如果需要安全传输服务，则必须使用WTLS。如果联系点中的端口号是已注册的安全端口[WDP]，或者在PPG的预先存在的联系点列表中指示了安全传输，则需要安全传输服务。全传输服务。
+  推送会话可以使用安全或非安全的传输服务。服务器端口号在[WDP]中为这两种选项保留。如果需要安全传输服务，则必须使用WTLS。如果联系点中的端口号是已注册的安全端口[WDP]，或者在PPG的预先存在的联系点列表中指示了安全传输，则需要安全传输服务。

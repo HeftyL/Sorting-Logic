@@ -1,4 +1,4 @@
-﻿# Android应用和开发环境
+# Android应用和开发环境
 
 ## Android的简介
 
@@ -7,7 +7,7 @@
 
 ## Android9.x平台特性
 
-- ![[android-stack_2x.png]]
+- ![Android 软件堆栈](Android.assets/android-stack_2x.png)
 
 - Android的底层建立在linux之上，主要由操作系统、中间件、用户界面和应用软件4层组成
   - 设计思路：采用一种被称为软件叠层(Software Stack)的方式进行构建。
@@ -24,21 +24,20 @@
   2. Java API框架层
      - 提供了大量API供开发者使用
      
-    - 调用原生C/C++库的服务。
-
-
-| 名称                          | 功能描述                                   |
-| --------------------------- | -------------------------------------- |
-| Activity Manager(活动管理器)     | 管理各个应用程序生命周期以及通常的导航回退功能                |
-| Location Manager(位置管理器)     | 提供地理位置以及定位功能服务                         |
-| Package Manager(包管理器)       | 管理所有安装在Android系统中的应用程序                 |
-| Notification Manager(通知管理器) | 使得应用程序可以在状态栏中显示自定义的提示信息                |
-| Resource Manager（资源管理器）     | 提供应用程序使用的各种非代码资源，如本地化字符串、图片、布局文件、颜色文件等 |
-| Telephony Manager(电话管理器)    | 管理所有的移动设备功能                            |
-| Window Manager（窗口管理器）       | 管理所有开启的窗口程序                            |
-| Content Providers（内容提供器）    | 使得不同应用程序之间可以共享数据                       |
-| View System（视图系统）           | 构建应用程序的基本组件                            |
-
+     - 调用原生C/C++库的服务。
+     
+     - | 名称                             | 功能描述                                                     |
+       | -------------------------------- | ------------------------------------------------------------ |
+       | Activity Manager(活动管理器)     | 管理各个应用程序生命周期以及通常的导航回退功能               |
+       | Location Manager(位置管理器)     | 提供地理位置以及定位功能服务                                 |
+       | Package Manager(包管理器)        | 管理所有安装在Android系统中的应用程序                        |
+       | Notification Manager(通知管理器) | 使得应用程序可以在状态栏中显示自定义的提示信息               |
+       | Resource Manager（资源管理器）   | 提供应用程序使用的各种非代码资源，如本地化字符串、图片、布局文件、颜色文件等 |
+       | Telephony Manager(电话管理器)    | 管理所有的移动设备功能                                       |
+       | Window Manager（窗口管理器）     | 管理所有开启的窗口程序                                       |
+       | Content Providers（内容提供器）  | 使得不同应用程序之间可以共享数据                             |
+       | View System（视图系统）          | 构建应用程序的基本组件                                       |
+     
   3. 原生C/C++库
      - Android包含一套被不同组件所使用的C/C++库的集合。一般来说，Android应用开发者不能直接调用这套C/C++库集，而是通过它上面的JavaAPI框架调用这些库
      - SQLlite：供所有应用程序使用的功能强大的轻量级关系数据库
@@ -502,7 +501,7 @@
 - 关系：Android应用的所有UI组件都继承了View类
 
 - ==问题==：view和子类的继承关系是什么样的？
-  - ![[SouthEast.jpeg]]
+  - ![View继承关系](D:\Sorting-Logic\Computer Science\Android.assets\SouthEast.jpeg)
 
 - Android开发API：https://developer.android.com/reference/packages?hl=zh-cn
 
@@ -519,24 +518,22 @@
 
 - ViewGroup.LayoutParams支持的XML属性
 
-
-| XML灞炴€?              | 璇存槑                   | 鍊硷紙閮芥敮鎸侊級                      | 璇存槑                                                         |
-| --------------------- | ---------------------- | --------------------------------- | ------------------------------------------------------------ |
-| android:layout height | 鎸囧畾璇ュ瓙缁勪欢鐨勫竷灞€楂樺害 | match_ parent (鏃╂湡鍙玣ill parent) | 鎸囧畾瀛愮粍浠剁殑楂樺害銆佸搴︿笌鐖跺鍣ㄧ粍浠剁殑楂樺害銆佸搴︾浉鍚?瀹為檯涓婅繕瑕佸噺鍘诲～鍏呯殑绌虹櫧璺濈)銆?|
-| android:layout width  | 鎸囧畾璇ュ瓙缁勪欢鐨勫竷灞€瀹藉害 | wrap content                      | 鎸囧畾瀛愮粍浠剁殑澶у皬鎭板ソ鑳藉寘瑁瑰畠鐨勫唴瀹瑰嵆鍙€?                    |
+  - | XML属性               | 说明                   | 值（都支持）                      | 说明                                                         |
+    | --------------------- | ---------------------- | --------------------------------- | ------------------------------------------------------------ |
+    | android:layout height | 指定该子组件的布局高度 | match_ parent (早期叫fill parent) | 指定子组件的高度、宽度与父容器组件的高度、宽度相同(实际上还要减去填充的空白距离)。 |
+    | android:layout width  | 指定该子组件的布局宽度 | wrap content                      | 指定子组件的大小恰好能包裹它的内容即可。                     |
 
   - 注意：Android 组件的大小不仅受它实际的宽度、高度控制，还受它的布局高度与布局宽度控制。比如设置-一个组件的宽度为30pt, 如果将它的布局宽度设为match parent, 那么该组件的宽度将会被“拉宽"到占满它所在的父容器:如果将它的布局宽度设为wrap content, 那么该组件的宽度才会是30pt。
 
 - ViewGroup.MarginLayoutParams用于控制子组件周围的页边距(Margin,也就是组件四周的留白)
 
-
-| XML属性                         | 相关方法                     | 说明                           |
-| ------------------------------- | ---------------------------- | ------------------------------ |
-| android:layout margin           | setMargins(int,int,int,int)  | 指定该子组件四周的页边距       |
-| android:layout marginBottom     | setMargins(int, int,int,int) | 指定该子组件下边的页边距       |
-| android:layout marginEnd        | setMargins(int,int,int,int)  | 指定该子组件结尾处的页边距     |
-| android:layout marginHorizontal | setMargins(int,int,int,int)  | 指定该子组件左、右两边的页边距 |
-| android:layout marginLeft       | setMargins(int,int,int,int)  | 指定该子组件左边的页边距       |
+  - | XML属性                         | 相关方法                     | 说明                           |
+    | ------------------------------- | ---------------------------- | ------------------------------ |
+    | android:layout margin           | setMargins(int,int,int,int)  | 指定该子组件四周的页边距       |
+    | android:layout marginBottom     | setMargins(int, int,int,int) | 指定该子组件下边的页边距       |
+    | android:layout marginEnd        | setMargins(int,int,int,int)  | 指定该子组件结尾处的页边距     |
+    | android:layout marginHorizontal | setMargins(int,int,int,int)  | 指定该子组件左、右两边的页边距 |
+    | android:layout marginLeft       | setMargins(int,int,int,int)  | 指定该子组件左边的页边距       |
 
 ### 控制UI界面
 
@@ -569,16 +566,15 @@
 
 - 方法：当开发者打算派生自己的UI组件时，首先要定义1个继承View基类的子类，然后重写View类的一个或多个方法。
 
-
-| 方法                                  | 说明                                                         |
-| ------------------------------------- | ------------------------------------------------------------ |
-| 构造器                                | 重写构造器是定制View的最基本方式，当Java或Kotlin代码创建一个View实例，或根据XML布局文件加载并构建界面时将，需要调用该构造器。 |
-| onFinishInflate()                     | 这是-一个回调方法，当应用从XML布局文件加载该组件并利用它来构建界面之后，该方法将会被回调。 |
-| onMeasure(int,int)                    | 调用该方法来检测View组件及其所包含的所有子组件的大小。       |
-| onLayout(boolean, int, int, int, int) | 当该组件需要分配其子组件的位置、大小时，该方法就会被回调。   |
-| onDraw(Canvas)                        | 当该组件将要绘制它的内容时回调该方法。                       |
-| onSizeChanged(int, int, int, int)     | 当该组件的大小被改变时回调该方法。                           |
-| onKeyDown(int, KeyEvent)              | 当某个键被按下时触发该方法。                                 |
+  - | 方法                                  | 说明                                                         |
+    | ------------------------------------- | ------------------------------------------------------------ |
+    | 构造器                                | 重写构造器是定制View的最基本方式，当Java或Kotlin代码创建一个View实例，或根据XML布局文件加载并构建界面时将，需要调用该构造器。 |
+    | onFinishInflate()                     | 这是-一个回调方法，当应用从XML布局文件加载该组件并利用它来构建界面之后，该方法将会被回调。 |
+    | onMeasure(int,int)                    | 调用该方法来检测View组件及其所包含的所有子组件的大小。       |
+    | onLayout(boolean, int, int, int, int) | 当该组件需要分配其子组件的位置、大小时，该方法就会被回调。   |
+    | onDraw(Canvas)                        | 当该组件将要绘制它的内容时回调该方法。                       |
+    | onSizeChanged(int, int, int, int)     | 当该组件的大小被改变时回调该方法。                           |
+    | onKeyDown(int, KeyEvent)              | 当某个键被按下时触发该方法。                                 |
 
 - 注意：
 
@@ -600,24 +596,21 @@
 
 - Android的线性布局**不会换行**，当组件一个挨着一个排列到头之后，**剩下的组件将不会被显示出来**。
 
-
-| XML属性                         | 相关方法                                    | 说明                                                         |
-
-| ------------------------------- | ------------------------------------------- | ------------------------------------------------------------ |
-| android:baselineAligned         | setBaselineAligned(boolean)                 | 该属性设为false, 将会阻止该布局管理器与它的子元素的基线对齐  |
-| android:divider                 | setDividerDrawable(Drawable)                | 设置垂直布局时两个按钮之间的分隔条                           |
-| android:gravity                 | setGravity(int)                             | 设置布局管理器内组件的对齐方式。该属性支持top、bottom、left、 right、 center_ vertical、fill_ vertical center_ horizontal、 fill _horizontal、center、fill、 clip_ vertical、 clip_ horizontal 几个属性值。也可以同时指定多种对齐方式的组合，例如left\|center_vertical 代表出现在屏幕左边，而且垂直居中 |
-| android:measureWithIargestChild | setMeasureWithL argestChildEnabled(boolean) | 当该属性设为true时，所有带权重的子元素都会具有最大子元素的最小尺寸 |
-| android:orientation             | setOrientation(int)                         | 设置布局管理器内组件的排列方式，可以设置为horizontal (水平排列)、vertical (垂直排列，默认值)两个值的其中之一 |
-| android:weightSum               |                                             | 设置该布局管理器的最大权值和                                 |
+- | XML属性                         | 相关方法                                    | 说明                                                         |
+  | ------------------------------- | ------------------------------------------- | ------------------------------------------------------------ |
+  | android:baselineAligned         | setBaselineAligned(boolean)                 | 该属性设为false, 将会阻止该布局管理器与它的子元素的基线对齐  |
+  | android:divider                 | setDividerDrawable(Drawable)                | 设置垂直布局时两个按钮之间的分隔条                           |
+  | android:gravity                 | setGravity(int)                             | 设置布局管理器内组件的对齐方式。该属性支持top、bottom、left、 right、 center_ vertical、fill_ vertical center_ horizontal、 fill _horizontal、center、fill、 clip_ vertical、 clip_ horizontal 几个属性值。也可以同时指定多种对齐方式的组合，例如left\|center_vertical 代表出现在屏幕左边，而且垂直居中 |
+  | android:measureWithIargestChild | setMeasureWithL argestChildEnabled(boolean) | 当该属性设为true时，所有带权重的子元素都会具有最大子元素的最小尺寸 |
+  | android:orientation             | setOrientation(int)                         | 设置布局管理器内组件的排列方式，可以设置为horizontal (水平排列)、vertical (垂直排列，默认值)两个值的其中之一 |
+  | android:weightSum               |                                             | 设置该布局管理器的最大权值和                                 |
 
 - LinearLayout包含的所有子元素都受LinearLayout.LayoutParams 控制，因此LinearLayout包含的**子元素**可以额外指定属性。
 
-
-| XML属性                | 说明                                   |
-| ---------------------- | -------------------------------------- |
-| android:layout_gravity | 指定该子元素在LinearLayout中的对齐方式 |
-| android:layout_weight  | 指定该子元素在LinearLayout中所占的权重 |
+  - | XML属性                | 说明                                   |
+    | ---------------------- | -------------------------------------- |
+    | android:layout_gravity | 指定该子元素在LinearLayout中的对齐方式 |
+    | android:layout_weight  | 指定该子元素在LinearLayout中所占的权重 |
 
 
 ### 表格布局
@@ -640,12 +633,11 @@
 
 - TableLayout继承了LinearLayout,因此它完全可以支持LinearLayout所支持的全部XML属性。除此之外，TableL ayout还有自己独特的方法
 
-
-| XML属性                 | 相关方法                        | 说明                                                         |
-| ----------------------- | ------------------------------- | ------------------------------------------------------------ |
-| android:collapseColumns | setColumnCollapsed(int,boolean) | 设置需要被隐藏的列的列序号。多个列序号之间用逗号隔开，从0开始 |
-| android:shrinkColumns   | setShrinkllColumns(boolean)     | 设置允许被收缩的列的列序号。多个列序号之间用逗号隔开，从0开始 |
-| android:stretchColumns  | setStretchAllColumns(boolean)   | 设置允许被拉伸的列的列序号。多个列序号之间用逗号隔开，从0开始 |
+  - | XML属性                 | 相关方法                        | 说明                                                         |
+    | ----------------------- | ------------------------------- | ------------------------------------------------------------ |
+    | android:collapseColumns | setColumnCollapsed(int,boolean) | 设置需要被隐藏的列的列序号。多个列序号之间用逗号隔开，从0开始 |
+    | android:shrinkColumns   | setShrinkllColumns(boolean)     | 设置允许被收缩的列的列序号。多个列序号之间用逗号隔开，从0开始 |
+    | android:stretchColumns  | setStretchAllColumns(boolean)   | 设置允许被拉伸的列的列序号。多个列序号之间用逗号隔开，从0开始 |
 
     
 
@@ -655,12 +647,10 @@
 
 - 帧布局容器为每个加入其中的组件都创建一个空白的区域(称为一帧), 每个子组件占据1帧，这些帧都会根据gravity 属性执行自动对齐。帧布局的效果有点类似于AWT编程的CardLayout,都是**把组件一一个个叠加在一起**。与CardLayout的区别在于，CardLayout可以将下面的Card移上来，但FrameLayout则没有提供相应的方法。
 
-
-| XML属性                    | 相关方法                       | 说明                                                         |
-
-| -------------------------- | ------------------------------ | ------------------------------------------------------------ |
-| android:foregroundGravity  | setForegroundGravity(int)      | 定义绘制前景图像的gravity 属性                               |
-| android:measureAllChildren | setMeasureAllChildren(boolean) | 设置该布局管理器计算大小时是否考虑所有子组件，默认为false,即只考虑可见状态的组件 |
+- | XML属性                    | 相关方法                       | 说明                                                         |
+  | -------------------------- | ------------------------------ | ------------------------------------------------------------ |
+  | android:foregroundGravity  | setForegroundGravity(int)      | 定义绘制前景图像的gravity 属性                               |
+  | android:measureAllChildren | setMeasureAllChildren(boolean) | 设置该布局管理器计算大小时是否考虑所有子组件，默认为false,即只考虑可见状态的组件 |
 
 - FrameLayout包含的子元素也受FrameLayout.LayoutParams控制，因此它所包含的子元素也可指定android:layout_gravity 属性，该属性控制该子元素在FrameLayout中的对齐方式。
 
@@ -674,12 +664,10 @@
 
 - 注意：使用绝对布局会很难兼顾不同屏幕大小、分辨率的问题。因此，AbsoluteLayout 布局管理器已经过时。
 
-
-| XML属性          | 说明                  |
-
-| ---------------- | --------------------- |
-| android:layout_x | 指定该子组件的X坐标。 |
-| android:layout_y | 指定该子组件的Y坐标。 |
+- | XML属性          | 说明                  |
+  | ---------------- | --------------------- |
+  | android:layout_x | 指定该子组件的X坐标。 |
+  | android:layout_y | 指定该子组件的Y坐标。 |
 
   - Android常用的距离单位。
     - px (像素) :每个px对应屏幕上的一个点。
@@ -709,12 +697,11 @@
     app: layout_ constraintVertical_bias="0.05"
     ```
 
-| XML属性                           | 说明                                                         |
-
-| --------------------------------- | ------------------------------------------------------------ |
-| app:layout constraintXxx _toXxxOf | 设置该组件与父容器(或其他组件)对齐。其中Xxx可以是Start、 End、 Top、 Bottom 等值，具体可根据实际情况设置。该属性的属性值可以是parent (代表父容器)或其他组件的ID。 |
-| android:layout_ marginXxx         | 设置该组件与参照组件的间距。其中Xxx可以是Start、End、Top、Bottom等值，具体可根据实际情况设置。 |
-| app:layout constraintXxx_ bias    | 设置该组件在参照组件中的百分比。其中Xxx可以是Horizontal或Vertical。 |
+- | XML属性                           | 说明                                                         |
+  | --------------------------------- | ------------------------------------------------------------ |
+  | app:layout constraintXxx _toXxxOf | 设置该组件与父容器(或其他组件)对齐。其中Xxx可以是Start、 End、 Top、 Bottom 等值，具体可根据实际情况设置。该属性的属性值可以是parent (代表父容器)或其他组件的ID。 |
+  | android:layout_ marginXxx         | 设置该组件与参照组件的间距。其中Xxx可以是Start、End、Top、Bottom等值，具体可根据实际情况设置。 |
+  | app:layout constraintXxx_ bias    | 设置该组件在参照组件中的百分比。其中Xxx可以是Horizontal或Vertical。 |
 
 - 约束布局还提供了两种自动创建约束的方式。
 
@@ -733,13 +720,12 @@
 
 - 引导线对应于Guideline元素，属性
 
-
-| XML属性                                | 说明                                                         |
-| -------------------------------------- | ------------------------------------------------------------ |
-| android:orientation                    | 该属性指定引导线的方向。该属性支持vertical和horizontal 两个值，代表垂直引导线和水平引导线。 |
-| app:layout_ constraintGuide_ begin     | 该属性指定引导线到父容器起始处的距离。该属性值可以是一个距离值。 |
-| app:layout_ constraintGuide_ end       | 该属性指定引导线到父容器结束处的距离。该属性值可以是一个距离值。 |
-| app:layout_ _constraintGuide_ _percent | 该属性指定引导线位于父容器的指定百分比处。                   |
+  - | XML属性                                | 说明                                                         |
+    | -------------------------------------- | ------------------------------------------------------------ |
+    | android:orientation                    | 该属性指定引导线的方向。该属性支持vertical和horizontal 两个值，代表垂直引导线和水平引导线。 |
+    | app:layout_ constraintGuide_ begin     | 该属性指定引导线到父容器起始处的距离。该属性值可以是一个距离值。 |
+    | app:layout_ constraintGuide_ end       | 该属性指定引导线到父容器结束处的距离。该属性值可以是一个距离值。 |
+    | app:layout_ _constraintGuide_ _percent | 该属性指定引导线位于父容器的指定百分比处。                   |
 
   - 注意：后3个属性的作用是相同的，只是代表引导线的3种不同的定位方式，它们都用于控制引导线的位置，因此只要指定其中之一即可。
 
@@ -795,12 +781,11 @@
 
 - 状态开关按钮(ToggleButton) 和开关( Switch)也是由Button派生出来的，因此它们的本质也是按钮，Button 支持的各种属性、方法也适用于ToggleButton 和Switch。
 
-
-|     | CheckBox  | ToggleButton、Switch |
-| --- | --------- | ------------------- |
-| 相同  | 都可以提供两种状态 | 都可以提供两种状态           |
-| 不同  | 只是自身是否被选中 | 切换程序的状态             |
-|     |           |                     |
+- |      | CheckBox           | ToggleButton、Switch |
+  | ---- | ------------------ | -------------------- |
+  | 相同 | 都可以提供两种状态 | 都可以提供两种状态   |
+  | 不同 | 只是自身是否被选中 | 切换程序的状态       |
+  |      |                    |                      |
 
 ### 时钟(AnalogClock 和TextClock )
 
@@ -844,7 +829,7 @@
 
 - Adapter本身只是一个接口，它派生了ListAdapter 和SpinnerAdapter 两个子接口，其中ListAdapter为AbsListView**提供列表项**，而SpinnerAdapter为AbsSpinner提供列表项。几乎所有的Adapter都继承了BaseAdapter, 而BaseAdapter同时实现了ListAdapter、SpinnerAdapter两个接口，因此BaseAdapter及其子类可以同时为AbsListView、AbsSpinner 提供列表项。
 
-- ![[image-20220616110542625.png]]
+- ![image-20220616110542625](D:\Sorting-Logic\Computer_Science\Android.assets\image-20220616110542625.png)
   - 常用的实现类
     - **ArrayAdapter**: 通常用于将数组或List集合的多个值包装成多个列表项。
       - new ArrayAdapter（）时必须指定如下三个参数。
@@ -982,24 +967,22 @@
 
 - 数值选择器用于让用户输入数值，用户既可以通过键盘输入数值，也可以通过拖动来选择数值。
 
-
-| 方法                      | 说明          |
-| ----------------------- | ----------- |
-| setMinValue(int minVal) | 设置该组件支持的最小值 |
-| setMaxValue(int maxVal) | 设置该组件支持的最大值 |
-| setValue(int value)     | 设置该组件的当前值   |
+- | 方法                    | 说明                   |
+  | ----------------------- | ---------------------- |
+  | setMinValue(int minVal) | 设置该组件支持的最小值 |
+  | setMaxValue(int maxVal) | 设置该组件支持的最大值 |
+  | setValue(int value)     | 设置该组件的当前值     |
 
 ### 搜索框(SearchView)
 
 - SearchView是搜索框组件，它可以让用户在文本框内输入文字，并允许通过监听器监控用户输入，当用户输入完成后提交搜索时，也可通过监听器执行实际的搜索。
 
-
-| 方法                                                                | 说明                 |
-| ----------------------------------------------------------------- | ------------------ |
-| setlconifiedByDefault (boolean iconified)                         | 设置该搜索框默认是否自动缩小为图标。 |
-| setSubmitButtonEnabled(boolean enabled)                           | 设置是否显示搜索按钮。        |
-| setQueryHint(CharSequence hint)                                   | 设置搜索框内默认显示的提示文本。   |
-| setOnQueryTextListener (SearchView .OnQueryTextListener listener) | 为该搜索框设置事件监听器。      |
+- | 方法                                                         | 说明                                 |
+  | ------------------------------------------------------------ | ------------------------------------ |
+  | setlconifiedByDefault (boolean iconified)                    | 设置该搜索框默认是否自动缩小为图标。 |
+  | setSubmitButtonEnabled(boolean enabled)                      | 设置是否显示搜索按钮。               |
+  | setQueryHint(CharSequence hint)                              | 设置搜索框内默认显示的提示文本。     |
+  | setOnQueryTextListener (SearchView .OnQueryTextListener listener) | 为该搜索框设置事件监听器。           |
 
 - 提供结果：如果为SearchView增加一个配套的ListView,则可以为SearchView提供搜索的结果
 
@@ -1027,17 +1010,16 @@
 
 - Notification.Builder 类，可以轻松地创建Notification对象。常用方法：
 
-
-| 方法               | 说明                                                  |
-| ------------------ | ----------------------------------------------------- |
-| setDefaults()      | 设置通知LED灯、音乐、振动等。                         |
-| setAutoCancel()    | 设置点击通知后，状态栏自动删除通知。                  |
-| setContentTitle()  | 设置通知标题。                                        |
-| setContentText()   | 设置通知内容。                                        |
-| setSmallcon()      | 为通知设置图标。                                      |
-| setLargeIcon(）    | 为通知设置大图标。                                    |
-| setTick()          | 设置通知在状态栏的提示文本。                          |
-| setContentIntent() | 设置点击通知后将要启动的程序组件对应的PendingIntent。 |
+  - | 方法               | 说明                                                  |
+    | ------------------ | ----------------------------------------------------- |
+    | setDefaults()      | 设置通知LED灯、音乐、振动等。                         |
+    | setAutoCancel()    | 设置点击通知后，状态栏自动删除通知。                  |
+    | setContentTitle()  | 设置通知标题。                                        |
+    | setContentText()   | 设置通知内容。                                        |
+    | setSmallcon()      | 为通知设置图标。                                      |
+    | setLargeIcon(）    | 为通知设置大图标。                                    |
+    | setTick()          | 设置通知在状态栏的提示文本。                          |
+    | setContentIntent() | 设置点击通知后将要启动的程序组件对应的PendingIntent。 |
 
 - Android 8加入了通知Channel帮助用户来统一管理通知，开发者可以为不同类型的通知创建同一个通知Channel,而用户则可通过该Channel统一管 理这些通知的行为一所有使用同一个Channel的通知都具有相同的行为。
 
@@ -1084,14 +1066,14 @@
 
   4. 调用AlertDialog Builder的相关设置方法设置对话框内容。
 
-| 方法                   | 说明                           |
-| ---------------------- | ------------------------------ |
-| setMessage()           | 设置对话内容为简单文本。       |
-| setltems()             | 设置对话框内容为简单列表项。   |
-| setSingleChoiceItems() | 设置对话框内容为单选列表项。   |
-| setMultiChoiceItems()  | 设置对话框内容为多选列表项。   |
-| setAdapter()           | 设置对话框内容为自定义列表项。 |
-| setView()              | 设置对话框内容为自定义View。   |
+     - | 方法                   | 说明                           |
+       | ---------------------- | ------------------------------ |
+       | setMessage()           | 设置对话内容为简单文本。       |
+       | setltems()             | 设置对话框内容为简单列表项。   |
+       | setSingleChoiceItems() | 设置对话框内容为单选列表项。   |
+       | setMultiChoiceItems()  | 设置对话框内容为多选列表项。   |
+       | setAdapter()           | 设置对话框内容为自定义列表项。 |
+       | setView()              | 设置对话框内容为自定义View。   |
 
   5. 调用AlertDialog.Builder 的setPositiveButton()、setNegativeButton()或 setNeutralButton()方法添加多个按钮。
 
@@ -1198,12 +1180,11 @@
 
   - ActionBar方法
 
-
-| 方法                                            | 说明                                                         |
-| ----------------------------------------------- | ------------------------------------------------------------ |
-| setDisplayHomeAsUpEnabled(boolean showHomeAsUp) | 设置是否将应用程序图标转变成可点击的图标，并在图标上添加一个向左的箭头。 |
-| setDisplayOptions(int options)                  | 通过传入int 类型常量来控制该ActionBar的显示选项。            |
-| setDisplayShowHomeEnabled(boolean showHome)     | 设置是否显示应用程序图标。                                   |
+    - | 方法                                            | 说明                                                         |
+      | ----------------------------------------------- | ------------------------------------------------------------ |
+      | setDisplayHomeAsUpEnabled(boolean showHomeAsUp) | 设置是否将应用程序图标转变成可点击的图标，并在图标上添加一个向左的箭头。 |
+      | setDisplayOptions(int options)                  | 通过传入int 类型常量来控制该ActionBar的显示选项。            |
+      | setDisplayShowHomeEnabled(boolean showHome)     | 设置是否显示应用程序图标。                                   |
 
 - 添加Action View
 
@@ -1223,7 +1204,7 @@
 
 ## 基于监听的事件处理
 
-- ![[Android.assets\image-20220617133426871.png]]
+- ![image-20220617133426871](Android.assets\image-20220617133426871.png)
 
 - 处理模型对象
   - Event Source (事件源) ;事件发生的场所，通常就是各个组件，例如按钮、窗口、菜单等。
@@ -1251,15 +1232,14 @@
 
   - View类的内部接口
 
-
-| 接口                             | 说明                                           |
-| -------------------------------- | ---------------------------------------------- |
-| View.OnClickListener             | 单击事件的事件监听器必须实现的接口。           |
-| View.OnCreateContextMenuListener | 创建上下文菜单事件的事件监听器必须实现的接口。 |
-| View.onFocusChangeListener       | 焦点改变事件的事件监听器必须实现的接口。       |
-| View.OnKeyListener               | 按键事件的事件监听器必须实现的接口。           |
-| View.OnIongClickListener         | 长按事件的事件监听器必须实现的接口。           |
-| View.OnTouchListener             | 触摸事件的事件监听器必须实现的接口。           |
+    - | 接口                             | 说明                                           |
+      | -------------------------------- | ---------------------------------------------- |
+      | View.OnClickListener             | 单击事件的事件监听器必须实现的接口。           |
+      | View.OnCreateContextMenuListener | 创建上下文菜单事件的事件监听器必须实现的接口。 |
+      | View.onFocusChangeListener       | 焦点改变事件的事件监听器必须实现的接口。       |
+      | View.OnKeyListener               | 按键事件的事件监听器必须实现的接口。           |
+      | View.OnIongClickListener         | 长按事件的事件监听器必须实现的接口。           |
+      | View.OnTouchListener             | 触摸事件的事件监听器必须实现的接口。           |
 
 - **事件监听器的形式**
 
@@ -1306,15 +1286,14 @@
 
   - View类的事件处理回调方法
 
-
-| 方法                                                | 说明                                         |
-| --------------------------------------------------- | -------------------------------------------- |
-| boolean onKeyDown(int keyCode, KeyEvent event)      | 当用户在该组件上按下某个按键时触发该方法。   |
-| boolean onKeyLongPress(int keyCode, KeyEvent event) | 当用户在该组件上长按某个按键时触发该方法。   |
-| boolean onKeyShortcut(int keyCode, KeyEvent event)  | 当一个键盘快捷键事件发生时触发该方法。       |
-| boolean onKeyUp(int keyCode, KeyEvent event)        | 当用户在该组件上松开某个按键时触发该方法。   |
-| boolean onTouchEvent(MotionEvent event)             | 当用户在该组件上触发触摸屏事件时触发该方法。 |
-| boolean onTrackballEvent(MotionEvent event)         | 当用户在该组件上触发轨迹球事件时触发该方法。 |
+    - | 方法                                                | 说明                                         |
+      | --------------------------------------------------- | -------------------------------------------- |
+      | boolean onKeyDown(int keyCode, KeyEvent event)      | 当用户在该组件上按下某个按键时触发该方法。   |
+      | boolean onKeyLongPress(int keyCode, KeyEvent event) | 当用户在该组件上长按某个按键时触发该方法。   |
+      | boolean onKeyShortcut(int keyCode, KeyEvent event)  | 当一个键盘快捷键事件发生时触发该方法。       |
+      | boolean onKeyUp(int keyCode, KeyEvent event)        | 当用户在该组件上松开某个按键时触发该方法。   |
+      | boolean onTouchEvent(MotionEvent event)             | 当用户在该组件上触发触摸屏事件时触发该方法。 |
+      | boolean onTrackballEvent(MotionEvent event)         | 当用户在该组件上触发轨迹球事件时触发该方法。 |
 
 - 使用流程
 
@@ -1354,18 +1333,17 @@
 
   - Configuration对象的常用属性
 
-
-| 属性               | 说明                                                         |
-| ------------------ | ------------------------------------------------------------ |
-| float fontScale    | 获取当前用户设置的字体的缩放因子。                           |
-| int keyboard       | 获取当前设备所关联的键盘类型。该属性可能返回KEYBOARD NOKEYS、KEYBOARD QWERTY (普通电脑键盘)、KEYBOARD 12KEY (只有12个键的小键盘)等属性值。 |
-| int keyboardHidden | 该属性返回一个boolean值用于标识当前键盘是否可用。该属性不仅会判断系统的硬件键盘，也会判断系统的软键盘(位于屏幕上)。如果该系统的硬件键盘不可用，但软键盘可用，该属性也会返回KEYBOARDHIDDEN NO;只有当两个键盘都不可用时才返回KEYBOARDHIDDEN YES。 |
-| Locale locale      | 获取用户当前的Locale。                                       |
-| int mcc            | 获取移动信号的国家码。                                       |
-| int mnc            | 获取移动信号的网络码。                                       |
-| int navigation     | 判断系统上方向导航设备的类型。该属性可能返回NAVIGATION_ NONAV(无导航)、NAVIGATION DPAD (DPAD导航)、NAVIGATION_ TRACKBALL (轨迹球导航)、NAVIGATION WHEEL (滚轮导航)等属性值。 |
-| int orientation    | 获取系统屏幕的方向，该属性可能返回ORIENTATION LANDSCAPE (横向屏幕)、ORIENTATION PORTRAIT (竖向屏幕)、ORIENTATION SQUARE (方形屏幕)等属性值。 |
-| int touchscreen    | 获取系统触摸屏的触摸方式。该属性可能返回TOUCHSCREEN NOTOUCH ( 无触摸屏)、TOUCHSCREEN STYLUS ( 触摸笔式的触摸屏)、TOUCHSCREEN FINGER (接受手指的触摸屏)等属性值。 |
+    - | 属性               | 说明                                                         |
+      | ------------------ | ------------------------------------------------------------ |
+      | float fontScale    | 获取当前用户设置的字体的缩放因子。                           |
+      | int keyboard       | 获取当前设备所关联的键盘类型。该属性可能返回KEYBOARD NOKEYS、KEYBOARD QWERTY (普通电脑键盘)、KEYBOARD 12KEY (只有12个键的小键盘)等属性值。 |
+      | int keyboardHidden | 该属性返回一个boolean值用于标识当前键盘是否可用。该属性不仅会判断系统的硬件键盘，也会判断系统的软键盘(位于屏幕上)。如果该系统的硬件键盘不可用，但软键盘可用，该属性也会返回KEYBOARDHIDDEN NO;只有当两个键盘都不可用时才返回KEYBOARDHIDDEN YES。 |
+      | Locale locale      | 获取用户当前的Locale。                                       |
+      | int mcc            | 获取移动信号的国家码。                                       |
+      | int mnc            | 获取移动信号的网络码。                                       |
+      | int navigation     | 判断系统上方向导航设备的类型。该属性可能返回NAVIGATION_ NONAV(无导航)、NAVIGATION DPAD (DPAD导航)、NAVIGATION_ TRACKBALL (轨迹球导航)、NAVIGATION WHEEL (滚轮导航)等属性值。 |
+      | int orientation    | 获取系统屏幕的方向，该属性可能返回ORIENTATION LANDSCAPE (横向屏幕)、ORIENTATION PORTRAIT (竖向屏幕)、ORIENTATION SQUARE (方形屏幕)等属性值。 |
+      | int touchscreen    | 获取系统触摸屏的触摸方式。该属性可能返回TOUCHSCREEN NOTOUCH ( 无触摸屏)、TOUCHSCREEN STYLUS ( 触摸笔式的触摸屏)、TOUCHSCREEN FINGER (接受手指的触摸屏)等属性值。 |
 
 ### 响应系统设置更改
 
@@ -1387,18 +1365,16 @@
 
   - 为了让主线程能“适时”地处理新启动的线程所发送的消息，显然只能通过回调的方式来实现一一开发者只要重写Handler类中处理消息的方法，当新启动的线程发送消息时，消息会发送到与之关联的MessageQueue, 而Handler 会不断地从MessageQueue中获取并处理消息一一这将 导致Handler类中处理消息的方法被回调。
 
-
-| 方法                                                | 说明                                                         |
-
-| --------------------------------------------------- | ------------------------------------------------------------ |
-| handleMessage(Message msg)                          | 处理消息的方法。该方法通常用于被重写。                       |
-| hasMessages(intwhat)                                | 检查消息队列中是否包含what属性为指定值的消息。               |
-| hasMessages(int what, Object object)                | 检查消息队列中是否包含what属性为指定值且object属性为指定对象的消息。 |
-| Message obtainMessage()                             | 获取消息。                                                   |
-| sendEmptyMessage(int what)                          | 发送空消息。                                                 |
-| sendEmptyMessageDelayed(int what, long delayMillis) | 指定多少毫秒之后发送空消息。                                 |
-| sendMessage(Message msg)                            | 立即发送消息。                                               |
-| sendMessageDelayed(Message msg, long delayMillis)   | 指定多少毫秒之后发送消息。                                   |
+- | 方法                                                | 说明                                                         |
+  | --------------------------------------------------- | ------------------------------------------------------------ |
+  | handleMessage(Message msg)                          | 处理消息的方法。该方法通常用于被重写。                       |
+  | hasMessages(intwhat)                                | 检查消息队列中是否包含what属性为指定值的消息。               |
+  | hasMessages(int what, Object object)                | 检查消息队列中是否包含what属性为指定值且object属性为指定对象的消息。 |
+  | Message obtainMessage()                             | 获取消息。                                                   |
+  | sendEmptyMessage(int what)                          | 发送空消息。                                                 |
+  | sendEmptyMessageDelayed(int what, long delayMillis) | 指定多少毫秒之后发送空消息。                                 |
+  | sendMessage(Message msg)                            | 立即发送消息。                                               |
+  | sendMessageDelayed(Message msg, long delayMillis)   | 指定多少毫秒之后发送消息。                                   |
 
 ### 	Handler、Loop、MessageQueue的工作原理
 
@@ -1448,12 +1424,12 @@
 
   2. 根据需要，实现AsyncTask的如下方法。
 
-| 方法                                 | 说明                                                         |
-| ------------------------------------ | ------------------------------------------------------------ |
-| doInBackground(Param..)              | 重写该方法就是后台线程将要完成的任务。该方法可以调用publishProgress(Progress.. values)方法更新任务的执行进度。 |
-| onProgressUpdate(Progress... values) | 在doInBackground0方法中调用publishProgress(）方法更新任务的执行进度后，将会触发该方法。 |
-| onPreExecute()                       | 该方法将在执行后台耗时操作前被调用。通常该方法用于完成一~些初始化的准备工作，比如在界面上显示进度条等。 |
-| onPostExecute(Result result)         | 当doInBackground()完成后，系统会自动调用onPostExecute(）方法，并将doInBackground0方法的返回值传给该方法。 |
+     - | 方法                                 | 说明                                                         |
+       | ------------------------------------ | ------------------------------------------------------------ |
+       | doInBackground(Param..)              | 重写该方法就是后台线程将要完成的任务。该方法可以调用publishProgress(Progress.. values)方法更新任务的执行进度。 |
+       | onProgressUpdate(Progress... values) | 在doInBackground0方法中调用publishProgress(）方法更新任务的执行进度后，将会触发该方法。 |
+       | onPreExecute()                       | 该方法将在执行后台耗时操作前被调用。通常该方法用于完成一~些初始化的准备工作，比如在界面上显示进度条等。 |
+       | onPostExecute(Result result)         | 当doInBackground()完成后，系统会自动调用onPostExecute(）方法，并将doInBackground0方法的返回值传给该方法。 |
 
   3. 调用AsyncTask子类的实例的execute(Params... params)开始执行耗时任务。
 
@@ -1474,7 +1450,7 @@
 
 - Activity是Android应用中最重要、最常见的应用组件(此处的组件是**粗粒度的系统组成部分**，并非指界面控件: widget)。 
 
-- ![[Android.assets\image-20220617165657046.png]]
+- ![image-20220617165657046](Android.assets\image-20220617165657046.png)
 
 - 当一个Activity 类定义出来之后，这个Activity类何时被实例化、它所包含的方法何时被调用，这些都不是由开发者决定的，都应该由Android系统来决定。
 - 创建一个 Activity 也需要实现一个或多个方法，其中最常见的就是实现onCreate(Bundle status)方法，该方法将会在Activity创建时被回调，该方法调用Activity 的setContentView(View view)方法来显示要展示的View。为了管理应用程序界面中的各组件，调用Activity的findViewByld(int id)方法来获取程序界面中的组件。
@@ -1495,14 +1471,13 @@
 
   - 配置Activity 时通常指定属性
 
-
-| 属性       | 说明                                                         |
-| ---------- | ------------------------------------------------------------ |
-| name       | 指定该Activity的实现类的类名                                 |
-| icon       | 指定该Activity对应的图标。                                   |
-| label      | 指定该Activity的标签。                                       |
-| exported   | 指定该Activity是否允许被其他应用调用。如果将该属性设为true,那么该Activity将可以被其他应用调用。 |
-| launchMode | 指定该Activity 的加载模式，该属性支持standard、singleTop、 singleTask 和singleInstance |
+    - | 属性       | 说明                                                         |
+      | ---------- | ------------------------------------------------------------ |
+      | name       | 指定该Activity的实现类的类名                                 |
+      | icon       | 指定该Activity对应的图标。                                   |
+      | label      | 指定该Activity的标签。                                       |
+      | exported   | 指定该Activity是否允许被其他应用调用。如果将该属性设为true,那么该Activity将可以被其他应用调用。 |
+      | launchMode | 指定该Activity 的加载模式，该属性支持standard、singleTop、 singleTask 和singleInstance |
 
   - 在配置Activity时通常还需要指定一个或多个<intent-filter../>元素，该元素用于指定该Activity可响应的Intent。
 
@@ -1510,21 +1485,19 @@
 
 - Activity启动其他Activity
 
-
-| 方法                                                   | 说明                                                         |
-| ------------------------------------------------------ | ------------------------------------------------------------ |
-| startActivity(Intent intent)                           | 启动其他Activity。                                           |
-| startActivityForResult(Intent intent, int requestCode) | 以指定的请求码( requestCode)启动  Activity,而且程序将会获取新启动的Activity 返回的结果(通过重写onActivityResult()方法来获取)。 |
+  - | 方法                                                   | 说明                                                         |
+    | ------------------------------------------------------ | ------------------------------------------------------------ |
+    | startActivity(Intent intent)                           | 启动其他Activity。                                           |
+    | startActivityForResult(Intent intent, int requestCode) | 以指定的请求码( requestCode)启动  Activity,而且程序将会获取新启动的Activity 返回的结果(通过重写onActivityResult()方法来获取)。 |
 
     - 启动Activity时可指定一个requestCode 参数，该参数代表了启动Activity的请求码。这个请求码的值由开发者根据业务自行设置，用于标识请求来源。
 
 - 关闭Activity
 
-
-| 方法                            | 说明                                                         |
-| ------------------------------- | ------------------------------------------------------------ |
-| finish()                        | 结束当前Activity。                                           |
-| finishActivity(int requestCode) | 结束以startActivityForResult(Intent intent, int requestCode)方法启动的Activity. |
+  - | 方法                            | 说明                                                         |
+    | ------------------------------- | ------------------------------------------------------------ |
+    | finish()                        | 结束当前Activity。                                           |
+    | finishActivity(int requestCode) | 结束以startActivityForResult(Intent intent, int requestCode)方法启动的Activity. |
 
 ### Bundle交换数据
 
@@ -1534,23 +1507,21 @@
 
 - Intent数据交换方法
 
-
-| 方法                             | 说明                                     |
-| -------------------------------- | ---------------------------------------- |
-| putExtras(Bundle data)           | 向Intent中放入需要“携带”的数据包。       |
-| Bundle getExtras()               | 取出Intent中所“携带”的数据包。           |
-| putExtra(String name, Xxx value) | 向Intent中按key-value 对的形式存入数据。 |
-| getXxxExtra(String name)         | 从Intent中按key取出指定类型的数据。      |
+  - | 方法                             | 说明                                     |
+    | -------------------------------- | ---------------------------------------- |
+    | putExtras(Bundle data)           | 向Intent中放入需要“携带”的数据包。       |
+    | Bundle getExtras()               | 取出Intent中所“携带”的数据包。           |
+    | putExtra(String name, Xxx value) | 向Intent中按key-value 对的形式存入数据。 |
+    | getXxxExtra(String name)         | 从Intent中按key取出指定类型的数据。      |
 
   - Bundle数据交换方法
 
-
-| 方法                                           | 说明                                        |
-| ---------------------------------------------- | ------------------------------------------- |
-| putXxx(String key，Xxx data)                   | 向Bundle中放入Int、Long 等各种类型的数据。  |
-| putSerializable(String key, Serializable data) | 向Bundle中放入一个可序列化的对象。          |
-| getXxx(String key)                             | 从Bundle 中取出Int、Long 等各种类型的数据。 |
-| getSerializable(String key, Serializable data) | 从Bundle中取出一一个可序列化的对象。        |
+    - | 方法                                           | 说明                                        |
+      | ---------------------------------------------- | ------------------------------------------- |
+      | putXxx(String key，Xxx data)                   | 向Bundle中放入Int、Long 等各种类型的数据。  |
+      | putSerializable(String key, Serializable data) | 向Bundle中放入一个可序列化的对象。          |
+      | getXxx(String key)                             | 从Bundle 中取出Int、Long 等各种类型的数据。 |
+      | getSerializable(String key, Serializable data) | 从Bundle中取出一一个可序列化的对象。        |
 
 #### 启动其他Activity并返回结果
 
@@ -1582,20 +1553,19 @@
     - 停止状态:该Activity不可见，失去焦点。
     - 销毁状态:该Activity结束，或Activity所在的进程被结束。
 
-  - ![[Android.assets\image-20220620094827377.png]]
+  - ![image-20220620094827377](Android.assets\image-20220620094827377.png)
 
   - 方法
 
-
-| 方法                         | 说明                                                         |
-| ---------------------------- | ------------------------------------------------------------ |
-| onCreate(Bundle savedStatus) | 创建Activity时被回调。该方法只会被调用一一次。               |
-| onStart()                    | 启动Activity时被回调。                                       |
-| onRestart()                  | 重新启动Activity时被回调。                                   |
-| onResume()                   | 恢复Activity 时被回调。在onStart0方法后一定 会回调onResume0方法。 |
-| onPause()                    | 暂停Activity时被回调。                                       |
-| onStop()                     | 停止Activity 时被回调。                                      |
-| onDestroy()                  | 销毁Activity 时被回调。该方法只会被调用一次。                |
+    - | 方法                         | 说明                                                         |
+      | ---------------------------- | ------------------------------------------------------------ |
+      | onCreate(Bundle savedStatus) | 创建Activity时被回调。该方法只会被调用一一次。               |
+      | onStart()                    | 启动Activity时被回调。                                       |
+      | onRestart()                  | 重新启动Activity时被回调。                                   |
+      | onResume()                   | 恢复Activity 时被回调。在onStart0方法后一定 会回调onResume0方法。 |
+      | onPause()                    | 暂停Activity时被回调。                                       |
+      | onStop()                     | 停止Activity 时被回调。                                      |
+      | onDestroy()                  | 销毁Activity 时被回调。该方法只会被调用一次。                |
 
 ### Activity与Servlet
 
@@ -1611,24 +1581,22 @@
 
 - 区别
 
-
-| Activity                                                     | Servlet                                                      |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Activity是Android窗口的容器，因此Activity最终以窗口的形式显示出来 | Servlet 并不会生成应用界面，只是向浏览者生成文本响应。       |
-| Activity运行于Android应用中，因此Activity 的本质还是通过各种界面组件来搭建界面 | Servlet则主要以I0流向浏览者生成文本响应，浏览者看到的界面其实是由浏览器负责生成的。 |
-| Activity之间的跳转主要通过Intent对象来控制                   | 而Servlet之间的跳转则主要由用户请求来控制。                  |
+  - | Activity                                                     | Servlet                                                      |
+    | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | Activity是Android窗口的容器，因此Activity最终以窗口的形式显示出来 | Servlet 并不会生成应用界面，只是向浏览者生成文本响应。       |
+    | Activity运行于Android应用中，因此Activity 的本质还是通过各种界面组件来搭建界面 | Servlet则主要以I0流向浏览者生成文本响应，浏览者看到的界面其实是由浏览器负责生成的。 |
+    | Activity之间的跳转主要通过Intent对象来控制                   | 而Servlet之间的跳转则主要由用户请求来控制。                  |
 
 ### 加载模式
 
 - 配置Activity时可指定android:launchMode 属性，该属性用于配置该Activity的加载模式。该属性支持4个属性值。
 
-
-| 属性值         | 说明                           |
-| -------------- | ------------------------------ |
-| standard       | 标准模式，这是默认的加载模式。 |
-| singleTop      | Task 栈顶单例模式。            |
-| singleTask     | Task 内单例模式。              |
-| singleInstance | 全局单例模式。                 |
+  - | 属性值         | 说明                           |
+    | -------------- | ------------------------------ |
+    | standard       | 标准模式，这是默认的加载模式。 |
+    | singleTop      | Task 栈顶单例模式。            |
+    | singleTask     | Task 内单例模式。              |
+    | singleInstance | 全局单例模式。                 |
 
 - Android对Activity 的管理：Android 采用Task来管理多个Activity, 当启动一个应用时，Android 就会为之创建一个Task, 然后启动这个应用的入口Activity (即
   `<intent- ft...>`中配置为MAIN和LAUNCHER的Activity)。
@@ -1681,7 +1649,7 @@
 - 作用
   - 适应大屏幕的平板电脑，由于平板电脑的屏幕比手机屏幕更大，因此可以容纳更多的UI组件，且这些UI组件之间存在交互关系。
   - 简化了大屏幕UI的设计，它不需要开发者管理组件包含关系的复杂变化，开发者使用Fragment对UI组件进行分组、模块化管理，就可以更方便地在运行过程中动态更新Activity 的用户界面。
-- ![[image-20220620105526905.png]]
+- ![image-20220620105526905](Android.assets/image-20220620105526905.png)
 
 ### 创建Fragment
 
@@ -1715,22 +1683,21 @@
 
 ### 生命周期
 
-- ![[Database/Android.assets/webp.webp]]
+- ![img](Android.assets/webp.webp)
 
-
-| 方法                | 说明                                                         |
-| ------------------- | ------------------------------------------------------------ |
-| onAttach()          | 当该Fragment被添加到它所在的Context时被回调。该方法只会被调用一次。 |
-| onCreate()          | 创建Fragment时被回调。该方法只会被调用一次。                 |
-| onCreateView()      | 每次创建、绘制该Fragment的View组件时回调该方法，Fragment 将会显示该方法返回的View组件。 |
-| onActivityCreated() | 当Fragment 所在的Activity被启动完成后回调该方法。            |
-| onStart()           | 启动Fragment时被回调。                                       |
-| onResume()          | 恢复Fragment 时被回调，在onStart()方法后一定会回调onResume()方法。 |
-| onPause()           | 暂停Fragment时被回调。                                       |
-| onStop()            | 停止Fragment时被回调。                                       |
-| onDestroyView(）    | 销毁该Fragment 所包含的View组件时调用。                      |
-| onDestroy()         | 销毁Fragment时被回调。该方法只会被调用一次。                 |
-| onDetach()          | 将该Fragment 从它所在的Context中删除、替换完成时回调该方法，在onDestroy()方法后一定会回调onDetach(）方法。该方法只会被调用一次。 |
+  - | 方法                | 说明                                                         |
+    | ------------------- | ------------------------------------------------------------ |
+    | onAttach()          | 当该Fragment被添加到它所在的Context时被回调。该方法只会被调用一次。 |
+    | onCreate()          | 创建Fragment时被回调。该方法只会被调用一次。                 |
+    | onCreateView()      | 每次创建、绘制该Fragment的View组件时回调该方法，Fragment 将会显示该方法返回的View组件。 |
+    | onActivityCreated() | 当Fragment 所在的Activity被启动完成后回调该方法。            |
+    | onStart()           | 启动Fragment时被回调。                                       |
+    | onResume()          | 恢复Fragment 时被回调，在onStart()方法后一定会回调onResume()方法。 |
+    | onPause()           | 暂停Fragment时被回调。                                       |
+    | onStop()            | 停止Fragment时被回调。                                       |
+    | onDestroyView(）    | 销毁该Fragment 所包含的View组件时调用。                      |
+    | onDestroy()         | 销毁Fragment时被回调。该方法只会被调用一次。                 |
+    | onDetach()          | 将该Fragment 从它所在的Context中删除、替换完成时回调该方法，在onDestroy()方法后一定会回调onDetach(）方法。该方法只会被调用一次。 |
 
 ### Fragment导航
 
@@ -1754,20 +1721,18 @@
 
 - PendingIntent对象：PendingIntent 是对Intent的包装，一般通过调用PendingIntent的getActivity()、getService()、getBroadcastReceiver()静态方法来获取PendingIntent对象。与Intent对象不同的是，PendingIntent 通常会传给其他应用组件，从而由其他应用程序来执行PendingIntent所包装的“Intent"。
 
-
-| 组件类型          | 启动方法                                                     |
-
-| ----------------- | ------------------------------------------------------------ |
-| Activity          | startActivity(Intent intent)                                 |
-|                   | startActivityForResult(Intent intent, int requestCode)       |
-| Service           | ComponentName startService(Intent service)                   |
-|                   | boolean bindService(Intent service, ServiceConnection conn, int flags) |
-| BroadcastReceiver | sendBroadcast(Intent intent)                                 |
-|                   | sendBroadcast(Intent intent, String receiverPermission)      |
-|                   | sendOrderedBroadcast(Intent intent, String receiverPermission) |
-|                   | sendOrderedBroadcast(Intent intent, String receiverPermnission,BroadcastReceiver resultReceiver, Handler scheduler, int initialCode, String initialData, Bundle initialExtras) |
-|                   | sendStickyBroadcast(Intent intent)                           |
-|                   | sendStickyOrderedBroadcast(Intent intent, BroadcastReceiver resultReceiver, Handler scheduler, int initialCode,String initialData, Bundle initialExtras) |
+- | 组件类型          | 启动方法                                                     |
+  | ----------------- | ------------------------------------------------------------ |
+  | Activity          | startActivity(Intent intent)                                 |
+  |                   | startActivityForResult(Intent intent, int requestCode)       |
+  | Service           | ComponentName startService(Intent service)                   |
+  |                   | boolean bindService(Intent service, ServiceConnection conn, int flags) |
+  | BroadcastReceiver | sendBroadcast(Intent intent)                                 |
+  |                   | sendBroadcast(Intent intent, String receiverPermission)      |
+  |                   | sendOrderedBroadcast(Intent intent, String receiverPermission) |
+  |                   | sendOrderedBroadcast(Intent intent, String receiverPermnission,BroadcastReceiver resultReceiver, Handler scheduler, int initialCode, String initialData, Bundle initialExtras) |
+  |                   | sendStickyBroadcast(Intent intent)                           |
+  |                   | sendStickyOrderedBroadcast(Intent intent, BroadcastReceiver resultReceiver, Handler scheduler, int initialCode,String initialData, Bundle initialExtras) |
 
 ## Intent的属性及intent-filter 配置
 
@@ -1778,23 +1743,21 @@
 
 - Intent的Component属性需要接受一个ComponentName对象
 
-
-| 构造器                                   | 说明                                     |
-| ---------------------------------------- | ---------------------------------------- |
-| ComponentName(String pkg, String cls)    | 创建pkg所在包下的cls类所对应的组件。     |
-| ComponentName(Context pkg, String cls)   | 创建pkg所对应的包下的cls类所对应的组件。 |
-| ComponentName(Context pkg, Class<?> cls) | 创建pkg所对应的包下的cls类所对应的组件。 |
+  - | 构造器                                   | 说明                                     |
+    | ---------------------------------------- | ---------------------------------------- |
+    | ComponentName(String pkg, String cls)    | 创建pkg所在包下的cls类所对应的组件。     |
+    | ComponentName(Context pkg, String cls)   | 创建pkg所对应的包下的cls类所对应的组件。 |
+    | ComponentName(Context pkg, Class<?> cls) | 创建pkg所对应的包下的cls类所对应的组件。 |
 
     - 一个ComponentName需要指定包名和类名,这就可以唯一地确定一个组件类，这样应用程序即可根据给定的组件类去启动特定的组件。
 
   - Intent 还包含了如下三个方法。
 
-
-| 方法                                                   | 说明                                   |
-| ------------------------------------------------------ | -------------------------------------- |
-| setClass(Context packageContext, Class<?> cls)         | 设置该Intent将要启动的组件对应的类。   |
-| setClassName(Context packageContext, String className) | 设置该Intent将要启动的组件对应的类名。 |
-| setClassName(String packageName, String className)     | 设置该Intent将要启动的组件对应的类名。 |
+    - | 方法                                                   | 说明                                   |
+      | ------------------------------------------------------ | -------------------------------------- |
+      | setClass(Context packageContext, Class<?> cls)         | 设置该Intent将要启动的组件对应的类。   |
+      | setClassName(Context packageContext, String className) | 设置该Intent将要启动的组件对应的类名。 |
+      | setClassName(String packageName, String className)     | 设置该Intent将要启动的组件对应的类名。 |
 
 - 显式Intent：指定Component属性的Intent已经明确了它将要启动哪个组件，因此这种Intent也被称为显式Intent
 
@@ -1875,30 +1838,29 @@
 
   - 可通过R资源清单类访问的资源，保存在/res/目录下。
 
-
-| 目录           | 存放的资源                                                   |
-| -------------- | ------------------------------------------------------------ |
-| /res/animator/ | 存放定义属性动画的XML文件                                    |
-| /res/anim/     | 存放定义补间动画的XML文件                                    |
-| /res/color/    | 存放定义不同状态下颜色列表的XML文件                          |
-| /res/drawable/ | 存放适应不同屏幕分辨率的各种位图文件(如*.png、 *.9.png、 *jpg、 *.gif 等)。此外，也可能编译成如下各种Drawable对象的XML文件。 |
-|                | BitmapDrawable 对象                                          |
-|                | NinePatchDrawable对象                                        |
-|                | StateListDrawable对象                                        |
-|                | ShapeDrawable对象                                            |
-|                | AnimationDrawable 对象                                       |
-|                | Drawable的其他各种子类的对象                                 |
-| /res/mipmap    | 主要存放适应不同屏幕分辨率的应用程序图标，以及其他系统保留的Drawable资源 |
-| /res/layout    | 存放各种用户界面的布局文件                                   |
-| /res/menu/     | 存放为应用程序定义各种菜单的资源，包括选项菜单、子菜单、上下文菜单资源 |
-| /res/raw/      | 存放任意类型的原生资源(比如音频文件、视频文件等)。在Java或Kotlin代码中可通过调用Resources 对象的openRawResource(int id)方法来获取该资源的二进制输入流。实际上，如果应用程序需要使用原生资源，也可把这些原生资源保存到/assets/目录下，然后在应用程序中使用AssetManager来访问这些资源 |
-| /res/values/   | 存放各种简单值的XML文件。这些简单值包括字符串值、整数值、颜色值、数组等。这些资源文件的根元素都是<resources../>,为该Tesources..>元素添加不同的子元素则代表不同的资源。如string/integer/bool、color 、array 等子元素<br />由于各种简单值都可定义在/res/values/目录下的资源文件中，如果在同一份资源文件中定义各种值，势必增加程序维护的难度。为此，Android 建议使用不同的文件来存放不同类型的值 |
-|                | arrays.xml: 定义数组资源                                     |
-|                | colors.xml:定义颜色值资源                                    |
-|                | dimens.xml: 定义尺寸值资源                                   |
-|                | strings.xml:定义字符串资源                                   |
-|                | styles.xml:定义样式资源                                      |
-| /res/xm/       | 存放任意的原生XML文件。这些XML文件可以在Java或Kotlin代码中使用Resources. getXML()方法进行访问 |
+    - | 目录           | 存放的资源                                                   |
+      | -------------- | ------------------------------------------------------------ |
+      | /res/animator/ | 存放定义属性动画的XML文件                                    |
+      | /res/anim/     | 存放定义补间动画的XML文件                                    |
+      | /res/color/    | 存放定义不同状态下颜色列表的XML文件                          |
+      | /res/drawable/ | 存放适应不同屏幕分辨率的各种位图文件(如*.png、 *.9.png、 *jpg、 *.gif 等)。此外，也可能编译成如下各种Drawable对象的XML文件。 |
+      |                | BitmapDrawable 对象                                          |
+      |                | NinePatchDrawable对象                                        |
+      |                | StateListDrawable对象                                        |
+      |                | ShapeDrawable对象                                            |
+      |                | AnimationDrawable 对象                                       |
+      |                | Drawable的其他各种子类的对象                                 |
+      | /res/mipmap    | 主要存放适应不同屏幕分辨率的应用程序图标，以及其他系统保留的Drawable资源 |
+      | /res/layout    | 存放各种用户界面的布局文件                                   |
+      | /res/menu/     | 存放为应用程序定义各种菜单的资源，包括选项菜单、子菜单、上下文菜单资源 |
+      | /res/raw/      | 存放任意类型的原生资源(比如音频文件、视频文件等)。在Java或Kotlin代码中可通过调用Resources 对象的openRawResource(int id)方法来获取该资源的二进制输入流。实际上，如果应用程序需要使用原生资源，也可把这些原生资源保存到/assets/目录下，然后在应用程序中使用AssetManager来访问这些资源 |
+      | /res/values/   | 存放各种简单值的XML文件。这些简单值包括字符串值、整数值、颜色值、数组等。这些资源文件的根元素都是<resources../>,为该Tesources..>元素添加不同的子元素则代表不同的资源。如string/integer/bool、color 、array 等子元素<br />由于各种简单值都可定义在/res/values/目录下的资源文件中，如果在同一份资源文件中定义各种值，势必增加程序维护的难度。为此，Android 建议使用不同的文件来存放不同类型的值 |
+      |                | arrays.xml: 定义数组资源                                     |
+      |                | colors.xml:定义颜色值资源                                    |
+      |                | dimens.xml: 定义尺寸值资源                                   |
+      |                | strings.xml:定义字符串资源                                   |
+      |                | styles.xml:定义样式资源                                      |
+      | /res/xm/       | 存放任意的原生XML文件。这些XML文件可以在Java或Kotlin代码中使用Resources. getXML()方法进行访问 |
 
     - /res/目录下的drawable 和mipmap子目录都可针对不同的分辨率建立对应的子目录，比如drawable-ldpi (低分辨率)、drawable-mdpi (中等分辨率)、drawable -hdpi (高分辨率)、drawable-xhdpi(超高分辨率)、 drawable-xxhdpi (超超高分辨率)等子目录。 这种做法可以让系统根据屏幕分辨
       率来选择对应子目录下的图片。如果开发时为所有分辨率的屏幕提供的是同一张图片，则可直接将该图片放在drawable目录下。
@@ -1922,11 +1884,10 @@
 
 - Resources由Context调用getResources()方法来获取。
 
-
-| 方法           | 说明                                           |
-| -------------- | ---------------------------------------------- |
-| getXxx(int id) | 根据资源清单ID来获取实际资源。                 |
-| getAssets()    | 获取访问/assets/目录下资源的AssetManager对象。 |
+  - | 方法           | 说明                                           |
+    | -------------- | ---------------------------------------------- |
+    | getXxx(int id) | 根据资源清单ID来获取实际资源。                 |
+    | getAssets()    | 获取访问/assets/目录下资源的AssetManager对象。 |
 
 ### 在XML文件中使用资源
 
@@ -1937,12 +1898,11 @@
 
 ### 字符串、颜色、尺寸
 
-| 资源类型   | 资源文件的默认名        | 对应于R类中的内部类的名称 |
-
-| ---------- | ----------------------- | ------------------------- |
-| 字符串资源 | /res/values/strings.xml | R.string                  |
-| 颜色资源   | /res/values/colors.xml  | R.color                   |
-| 尺寸资源   | /res/values/dimens.xml  | R.dimen                   |
+- | 资源类型   | 资源文件的默认名        | 对应于R类中的内部类的名称 |
+  | ---------- | ----------------------- | ------------------------- |
+  | 字符串资源 | /res/values/strings.xml | R.string                  |
+  | 颜色资源   | /res/values/colors.xml  | R.color                   |
+  | 尺寸资源   | /res/values/dimens.xml  | R.dimen                   |
 
 - Android中的颜色值是通过红(Red)、绿(Green)、蓝(Blue)三原色以及一个透明度(Alpha)值来表示的，颜色值总是以井号(#)开头，就是Alpha-Red-Green-Blue的形式。其中Alpha值可以省略，如果省略了Alpha值，那么该颜色默认是完全不透明的。
 
@@ -2031,13 +1991,12 @@
 
 - 定义补间动画的XML资源文件以<set...>元素作为根元素，该元素内可以指定如下4个元素。
 
-
-| 属性      | 说明                   |
-| --------- | ---------------------- |
-| alpha     | 设置透明度的改变。     |
-| scale     | 设置图片进行缩放变换。 |
-| translate | 设置图片进行位移变换。 |
-| rotate    | 设置图片进行旋转。     |
+  - | 属性      | 说明                   |
+    | --------- | ---------------------- |
+    | alpha     | 设置透明度的改变。     |
+    | scale     | 设置图片进行缩放变换。 |
+    | translate | 设置图片进行位移变换。 |
+    | rotate    | 设置图片进行旋转。     |
 
   - 定义动画的XML资源应该放在/res/anmi/路径下，Android Studio 创建Android应用时，默认不会包含该路径，开发者需要自行创建该路径。
 
@@ -2142,24 +2101,22 @@
 
 - SharedPreferences方法
 
-
-| 方法                             | 说明                                                         |
-| -------------------------------- | ------------------------------------------------------------ |
-| boolean contains(String key)     | 判断SharedPreferences是否包含特定key的数据。                 |
-| Map<String, ?> getAll()          | 获取SharedPreferences数据里全部的key-value对。               |
-| getXxx(String key, xxx defValue) | 获取SharedPreferences 数据里指定key对应的value。如果该key不存在，则返回默认值defValue。其中xxX可以是boolean、float、 int、 long、String等各种基本类型的值。 |
+  - | 方法                             | 说明                                                         |
+    | -------------------------------- | ------------------------------------------------------------ |
+    | boolean contains(String key)     | 判断SharedPreferences是否包含特定key的数据。                 |
+    | Map<String, ?> getAll()          | 获取SharedPreferences数据里全部的key-value对。               |
+    | getXxx(String key, xxx defValue) | 获取SharedPreferences 数据里指定key对应的value。如果该key不存在，则返回默认值defValue。其中xxX可以是boolean、float、 int、 long、String等各种基本类型的值。 |
 
 - SharedPreferences接口并没有提供写入数据的能力，通过SharedPreferences. Editor才允许写入，SharedPreferences调用edit()方法即可获取它所对应的Editor 对象。
 
   - SharedPreferences. Editor方法
 
-
-| SharedPreferences.Editor clear()                       | 清空SharedPreferences里所有数据。                            |
-| ------------------------------------------------------ | ------------------------------------------------------------ |
-| SharedPreferences.Editor putXxx(String key, xXx value) | 向SharedPreferences 存入指定key对应的数据。其中xxx可以是boolean、float、 int、 long、String等各种基本类型的值。 |
-| SharedPreferences.Editor remove(String key)            | 删除SharedPreferences里指定key对应的数据项。                 |
-| boolean apply()                                        | 当Editor编辑完成后，调用该方法提交修改。                     |
-| commit()                                               | 与applyO功能类似，但commit()会立即提交修改:而apply()在后台提交修改，不会阻塞前台! |
+    - | SharedPreferences.Editor clear()                       | 清空SharedPreferences里所有数据。                            |
+      | ------------------------------------------------------ | ------------------------------------------------------------ |
+      | SharedPreferences.Editor putXxx(String key, xXx value) | 向SharedPreferences 存入指定key对应的数据。其中xxx可以是boolean、float、 int、 long、String等各种基本类型的值。 |
+      | SharedPreferences.Editor remove(String key)            | 删除SharedPreferences里指定key对应的数据项。                 |
+      | boolean apply()                                        | 当Editor编辑完成后，调用该方法提交修改。                     |
+      | commit()                                               | 与applyO功能类似，但commit()会立即提交修改:而apply()在后台提交修改，不会阻塞前台! |
 
 - SharedPreferences本身是一个**接口**，程序无法直接创建SharedPreferences 实例，只能通过Context提供的getSharedPreferences(String name，int mode)方法来获取SharedPreferences实例
 
@@ -2177,15 +2134,14 @@
 
 - Context提供了方法来处理应用程序的数据文件夹里的文件IO流。
 
-
-| 方法                                                   | 说明                                                 |
-| ------------------------------------------------------ | ---------------------------------------------------- |
-| FileInputStream openFileInput(String name)             | 打开应用程序的数据文件夹下的name文件对应的输入流。   |
-| FileOutputStream openFileOutput(String name, int mode) | 打开应用程序的数据文件夹下的name文件对应的输出流。   |
-| getDir(String name, int mode)                          | 在应用程序的数据文件夹下获取或创建name对应的子目录。 |
-| File getFilesDir()                                     | 获取应用程序的数据文件夹的绝对路径。                 |
-| String[] fileList()                                    | 返回应用程序的数据文件夹下的全部文件。               |
-| deleteFile(String name)                                | 删除应用程序的数据文件夹下的指定文件。               |
+  - | 方法                                                   | 说明                                                 |
+    | ------------------------------------------------------ | ---------------------------------------------------- |
+    | FileInputStream openFileInput(String name)             | 打开应用程序的数据文件夹下的name文件对应的输入流。   |
+    | FileOutputStream openFileOutput(String name, int mode) | 打开应用程序的数据文件夹下的name文件对应的输出流。   |
+    | getDir(String name, int mode)                          | 在应用程序的数据文件夹下获取或创建name对应的子目录。 |
+    | File getFilesDir()                                     | 获取应用程序的数据文件夹的绝对路径。                 |
+    | String[] fileList()                                    | 返回应用程序的数据文件夹下的全部文件。               |
+    | deleteFile(String name)                                | 删除应用程序的数据文件夹下的指定文件。               |
 
     - mode:指定打开文件的模式，该模式的可选项为
       - MODE _PRIVATE:该文件只能被当前程序读写。
@@ -2213,35 +2169,33 @@
 
 - SQLiteDatabase方法
 
-
-|            | 方法                                                         | 说明                                                         |
-| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 打开或创建 | static SQLiteDatabase openDatabase(String path, SQLiteDatabase.CursorFactory factory, int flags) | 打开path文件所代表的SQLite数据库。                           |
-|            | static SQLiteDatabase openOrCreateDatabase(**File** file, SQLiteDatabase.Cursor Factory factory) | 打开或创建(如果不存在) file 文件所代表的SQLite数据库。       |
-|            | static SQLiteDatabase openOrCreateDatabase(**String** path,SQLiteDatabase. Cursor Factoryfactory) | 打开或创建(如果不存在) path 文件所代表的SQLite数据库。       |
-| 操作       | execSQL(String sql, Object[] bindArgs)                       | 执行带占位符的SQL语句。                                      |
-|            | execSOL(String sal)                                          | 执行SOL语句。                                                |
-|            | insert(String table, String nullColumnHack, ContentValues values) | 向指定表中插入数据。                                         |
-|            | update(String table, ContentV alues values, String whereClause, String[] whereArgs) | 更新指定表中的特定数据。                                     |
-|            | delete(String table, String whereClause, String[] whereArgs) | 删除指定表中的特定数据。                                     |
-|            | Cursor query(String table, String[] columns, String whereClause, String[] whereArgs, String groupBy, String having, String orderBy) | 对指定数据表执行查询。                                       |
-|            | Cursor query(String table, String[] columns, String whereClause, String[] whereArgs, String groupBy, String having, String orderBy, String limit) | 对指定数据表执行查询。limit 参数控制最多查询几条记录(用于控制分页的参数)。 |
-|            | Cursor query(boolean distinct, String table, String[] columns, String whereClause, String[]whereArgs, String groupBy, String having, String orderBy, String limit) | 对指定数据表执行查询。其中第-一个参数控制是否去除重复值。    |
-|            | rawQuery(String sql, String] selectionArgs)                  | 执行带占位符的SQL查询                                        |
-|            | beginTransaction()                                           | 开始事务。                                                   |
-|            | endTransaction()                                             | 结束事务。                                                   |
+  - |            | 方法                                                         | 说明                                                         |
+    | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | 打开或创建 | static SQLiteDatabase openDatabase(String path, SQLiteDatabase.CursorFactory factory, int flags) | 打开path文件所代表的SQLite数据库。                           |
+    |            | static SQLiteDatabase openOrCreateDatabase(**File** file, SQLiteDatabase.Cursor Factory factory) | 打开或创建(如果不存在) file 文件所代表的SQLite数据库。       |
+    |            | static SQLiteDatabase openOrCreateDatabase(**String** path,SQLiteDatabase. Cursor Factoryfactory) | 打开或创建(如果不存在) path 文件所代表的SQLite数据库。       |
+    | 操作       | execSQL(String sql, Object[] bindArgs)                       | 执行带占位符的SQL语句。                                      |
+    |            | execSOL(String sal)                                          | 执行SOL语句。                                                |
+    |            | insert(String table, String nullColumnHack, ContentValues values) | 向指定表中插入数据。                                         |
+    |            | update(String table, ContentV alues values, String whereClause, String[] whereArgs) | 更新指定表中的特定数据。                                     |
+    |            | delete(String table, String whereClause, String[] whereArgs) | 删除指定表中的特定数据。                                     |
+    |            | Cursor query(String table, String[] columns, String whereClause, String[] whereArgs, String groupBy, String having, String orderBy) | 对指定数据表执行查询。                                       |
+    |            | Cursor query(String table, String[] columns, String whereClause, String[] whereArgs, String groupBy, String having, String orderBy, String limit) | 对指定数据表执行查询。limit 参数控制最多查询几条记录(用于控制分页的参数)。 |
+    |            | Cursor query(boolean distinct, String table, String[] columns, String whereClause, String[]whereArgs, String groupBy, String having, String orderBy, String limit) | 对指定数据表执行查询。其中第-一个参数控制是否去除重复值。    |
+    |            | rawQuery(String sql, String] selectionArgs)                  | 执行带占位符的SQL查询                                        |
+    |            | beginTransaction()                                           | 开始事务。                                                   |
+    |            | endTransaction()                                             | 结束事务。                                                   |
 
   - Cursor对象，Android 中的Cursor类似于JDBC的ResultSet, Cursor同样提供了方法来移动查询结果的记录指针。
 
-
-| 方法                                 | 说明                                                         |
-| ------------------------------------ | ------------------------------------------------------------ |
-| move(int offset)                     | 将记录指针向上或向下移动指定的行数。offset 为正数就是向下移动;为负数就是向上移动。 |
-| boolean moveToFirst()                | 将记录指针移动到第一行，如果移动成功则返回true。             |
-| boolean moveToLast()                 | 将记录指针移动到最后一行，如果移动成功则返回true。           |
-| boolean moveToNext()                 | 将记录指针移动到下一行，如果移动成功则返回true。             |
-| boolean moveToPosition(int position) | 将记录指针移动到指定行,如果移动成功则返回true。              |
-| boolean moveToPrevious()             | 将记录指针移动到上一行，如果移动成功则返回true。             |
+    - | 方法                                 | 说明                                                         |
+      | ------------------------------------ | ------------------------------------------------------------ |
+      | move(int offset)                     | 将记录指针向上或向下移动指定的行数。offset 为正数就是向下移动;为负数就是向上移动。 |
+      | boolean moveToFirst()                | 将记录指针移动到第一行，如果移动成功则返回true。             |
+      | boolean moveToLast()                 | 将记录指针移动到最后一行，如果移动成功则返回true。           |
+      | boolean moveToNext()                 | 将记录指针移动到下一行，如果移动成功则返回true。             |
+      | boolean moveToPosition(int position) | 将记录指针移动到指定行,如果移动成功则返回true。              |
+      | boolean moveToPrevious()             | 将记录指针移动到上一行，如果移动成功则返回true。             |
 
   - SQLiteDatabase.CursorFactory:该参数是一个用于返回Cursor的工厂，如果指定该参数为null, 则意味着使用默认的工厂。
 
@@ -2249,15 +2203,13 @@
 
 - SQLiteOpenHelper是Android 提供的一个管理数据库的工具类，可用于管理数据库的创建和版本更新。一般的用法是创建SQLiteOpenHelper的子类，并扩展它的onCreate (SQLiteDatabase db)和onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)方法。
 
-
-| 方法                                                         | 说明                                             |
-
-| ------------------------------------------------------------ | ------------------------------------------------ |
-| synchronized sQLiteDatabase getReadableDatabase()            | 以读写的方式打开数据库对应的SQLiteDatabase对象。 |
-| synchronized SQLiteDatabase getWritableDatabase()            | 以写的方式打开数据库对应的SQLiteDatabase对象。   |
-| abstract void onCreate(SQLiteDatabase db)                    | 当第一次创建数据库时回调该方法。                 |
-| abstract void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) | 当数据库版本更新时回调该方法。                   |
-| synchronized void close()                                    | 关闭所有打开的SQLiteDatabase对象。               |
+- | 方法                                                         | 说明                                             |
+  | ------------------------------------------------------------ | ------------------------------------------------ |
+  | synchronized sQLiteDatabase getReadableDatabase()            | 以读写的方式打开数据库对应的SQLiteDatabase对象。 |
+  | synchronized SQLiteDatabase getWritableDatabase()            | 以写的方式打开数据库对应的SQLiteDatabase对象。   |
+  | abstract void onCreate(SQLiteDatabase db)                    | 当第一次创建数据库时回调该方法。                 |
+  | abstract void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) | 当数据库版本更新时回调该方法。                   |
+  | synchronized void close()                                    | 关闭所有打开的SQLiteDatabase对象。               |
 
   - onCreate(SQLiteDatabase db):用于初次使用软件时生成数据库表。当调用SQLiteOpenHelper的getWritableDatabase()或getReadableDatabase()方法获取用于操作数据库的SQLiteDatabase实例时，如果数据库不存在，Android系统会自动生成一个数据库，然后调用onCreate()方法，该方法在**初次生成数据库表时才会被调用**。重写onCreate(）方法时，可以生成数据库表结构，也可以添加应用使用到的一些初始化数据。
   - onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion):用于升级软件时更新数据库表结构，此方法在数据库的版本发生变化时会被调用，该方法被调用时oldVersion代表数据库之前的版本号，newVersion代表数据库当前的版本号。当程序创建SQLiteOpenHelper对象时，必须指定一个version 参数，该参数就决定了所使用的数据库的版本,只要某次创建SQLiteOpenHelper时指定的数据库版本号高于之前指定的版本号，系统就会自动触发
@@ -2299,12 +2251,11 @@
 
 ### 事务
 
-| 方法               | 说明                                                 |
-
-| ------------------ | ---------------------------------------------------- |
-| beginTransaction() | 开始事务。                                           |
-| endTransaction()   | 结束事务。                                           |
-| inTransaction()    | 如果当前上下文处于事务中，则返回true;否则返回false。 |
+- | 方法               | 说明                                                 |
+  | ------------------ | ---------------------------------------------------- |
+  | beginTransaction() | 开始事务。                                           |
+  | endTransaction()   | 结束事务。                                           |
+  | inTransaction()    | 如果当前上下文处于事务中，则返回true;否则返回false。 |
 
   - 当程序执行endTransaction()方法时将会结束事务，提交和回滚取决于SQLiteDatabase是否调用了setTransactionSuccesful()方法来设置事务标志，如果程序在事务执行中调用该方法设置了事务成功则提交事务;否则程序将会回滚事务。
 
@@ -2322,15 +2273,14 @@
 
 - GestureDetector.OnGestureListener 方法
 
-
-| 方法                                                         | 说明                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| boolean onDown(MotionEvent e)                                | 当触碰事件按下时触发该方法。                                 |
-| boolean onFling(MotionEvent el, MotionEvent e2, float velocityX, float velocityY) | 当用户手指在触摸屏上“拖过”时触发该方法。其中velocityX、velocityY 代表“拖过”动作在横向、纵向上的速度。 |
-| abstract void onLongPress(MotionEvent e)                     | 当用户手指在屏幕上长按时触发该方法。                         |
-| boolean onScroll(MotionEvent el, MotionEvent e2, float distanceX, float distanceY) | 当用户手指在屏幕上“滚动"时触发该方法。                       |
-| void onShowPress(MotionEvent e)                              | 当用户手指在触摸屏上按下，而且还未移动和松开时触发该方法。   |
-| boolean onSingleTapUp(MotionEvent e)                         | 用户手指在触摸屏上的轻击事件将会触发该方法。                 |
+  - | 方法                                                         | 说明                                                         |
+    | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | boolean onDown(MotionEvent e)                                | 当触碰事件按下时触发该方法。                                 |
+    | boolean onFling(MotionEvent el, MotionEvent e2, float velocityX, float velocityY) | 当用户手指在触摸屏上“拖过”时触发该方法。其中velocityX、velocityY 代表“拖过”动作在横向、纵向上的速度。 |
+    | abstract void onLongPress(MotionEvent e)                     | 当用户手指在屏幕上长按时触发该方法。                         |
+    | boolean onScroll(MotionEvent el, MotionEvent e2, float distanceX, float distanceY) | 当用户手指在屏幕上“滚动"时触发该方法。                       |
+    | void onShowPress(MotionEvent e)                              | 当用户手指在触摸屏上按下，而且还未移动和松开时触发该方法。   |
+    | boolean onSingleTapUp(MotionEvent e)                         | 用户手指在触摸屏上的轻击事件将会触发该方法。                 |
 
 - 使用流程
 
@@ -2351,26 +2301,24 @@
 
 - GestureLibraries方法
 
-
-| 方法                                                         | 说明                                               |
-| ------------------------------------------------------------ | -------------------------------------------------- |
-| static GestureLibrary fromFile(String path)                  | 从path代表的文件中加载手势库。                     |
-| static GestureLibrary fromFile(File path)                    | 从path代表的文件中加载手势库。                     |
-| static GestureLibrary fromPrivateFile(Context context, String name) | 从指定应用程序的数据文件夹的name文件中加载手势库。 |
-| static GestureLibrary fromRawResource(Context context, int resourceld) | 从resourceld所代表的资源中加载手势库。             |
+  - | 方法                                                         | 说明                                               |
+    | ------------------------------------------------------------ | -------------------------------------------------- |
+    | static GestureLibrary fromFile(String path)                  | 从path代表的文件中加载手势库。                     |
+    | static GestureLibrary fromFile(File path)                    | 从path代表的文件中加载手势库。                     |
+    | static GestureLibrary fromPrivateFile(Context context, String name) | 从指定应用程序的数据文件夹的name文件中加载手势库。 |
+    | static GestureLibrary fromRawResource(Context context, int resourceld) | 从resourceld所代表的资源中加载手势库。             |
 
   - 获得了GestureLibrary对象之后，该对象提供了如下方法来添加手势、识别手势。
 
-
-| 方法                                                  | 说明                                                       |
-| ----------------------------------------------------- | ---------------------------------------------------------- |
-| void addGesture(String entryName, Gesture gesture)    | 添加一一个名为entryName的手势。                            |
-| Set<String> getGestureEntries()                       | 获取该手势库中的所有手势的名称。                           |
-| ArrayList<Gesture> getGestures(String entryName)      | 获取entryName名称对应的全部手势。                          |
-| ArrayList <Prediction> recognize(Gesture gesture)     | 从当前手势库中识别与gesture匹配的全部手势。                |
-| void removeEntry(String entryName)                    | 删除手势库中entryName对应的手势。                          |
-| void removeGesture(String entryName, Gesture gesture) | 删除手势库中entryName、gesture对应的手势。                 |
-| booleansave()                                         | 当向手势库中添加手势或从中删除手势后调用该方法保存手势库。 |
+    - | 方法                                                  | 说明                                                       |
+      | ----------------------------------------------------- | ---------------------------------------------------------- |
+      | void addGesture(String entryName, Gesture gesture)    | 添加一一个名为entryName的手势。                            |
+      | Set<String> getGestureEntries()                       | 获取该手势库中的所有手势的名称。                           |
+      | ArrayList<Gesture> getGestures(String entryName)      | 获取entryName名称对应的全部手势。                          |
+      | ArrayList <Prediction> recognize(Gesture gesture)     | 从当前手势库中识别与gesture匹配的全部手势。                |
+      | void removeEntry(String entryName)                    | 删除手势库中entryName对应的手势。                          |
+      | void removeGesture(String entryName, Gesture gesture) | 删除手势库中entryName、gesture对应的手势。                 |
+      | booleansave()                                         | 当向手势库中添加手势或从中删除手势后调用该方法保存手势库。 |
 
 - GestureOverlayView：提供了一个专门的手势编辑组件:, 该组件就像一个“绘图组件”，只是用户在组件上绘制的不是图形，而是手势。
 
@@ -2399,10 +2347,10 @@
 
   3. 通过TexttoSpeech朗读文本
 
-| 方法                                                         | 说明                                                      |
-| ------------------------------------------------------------ | --------------------------------------------------------- |
-| speak(CharSequence text, int queueMode, Bundle params, String utteranceld) | 把text 文字内容转换为音频，播放转换的音频                 |
-| synthesizeToFile (CharSequence text, Bundle params, File file, String utteranceId) | 把text 文字内容转换为音频，把转换得到的音频保存成声音文件 |
+     - | 方法                                                         | 说明                                                      |
+       | ------------------------------------------------------------ | --------------------------------------------------------- |
+       | speak(CharSequence text, int queueMode, Bundle params, String utteranceld) | 把text 文字内容转换为音频，播放转换的音频                 |
+       | synthesizeToFile (CharSequence text, Bundle params, File file, String utteranceId) | 把text 文字内容转换为音频，把转换得到的音频保存成声音文件 |
 
      - queueMode：指定TTS的发音队列模式，该参数支持如下两个常量。
 
@@ -2435,15 +2383,14 @@
        	android:exported="true"/>
        ```
 
-| 方法                                                         | 说明                                                         |
-
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| boolean onCreate()                                           | 该方法在ContentProvider创建后会被调用，当其他应用程序第一次访问ContentProvider时，该ContentProvider会被创建出来，并立即回调该onCreate0方法。 |
-| Uri insert(Uri uri, ContentValues values)                    | 根据该Uri插入values对应的数据。                              |
-| int delete(Uri uri, String selection, String[] selectionArgs) | 根据Uri删除selection 条件所匹配的全部记录。                  |
-| int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) | 根据Uri修改selection条件所匹配的全部记录。                   |
-| Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) | 根据Uri查询出selection条件所匹配的全部记录，其中projection 就是一个列名列表，表明只选择出指定的数据列。 |
-| String getType(Uri uri)                                      | 该方法用于返回当前Uri所代表的数据的MIME类型。如果该Uri对应的数据可能包括多条记录,那么MIME类型字符串应该以vnd.android.cursor dir/开头;如果该Uri对应的数据只包含一条记录，那么MIME类型字符串应该以vnd. android.cursor.item/开头。 |
+- | 方法                                                         | 说明                                                         |
+  | ------------------------------------------------------------ | ------------------------------------------------------------ |
+  | boolean onCreate()                                           | 该方法在ContentProvider创建后会被调用，当其他应用程序第一次访问ContentProvider时，该ContentProvider会被创建出来，并立即回调该onCreate0方法。 |
+  | Uri insert(Uri uri, ContentValues values)                    | 根据该Uri插入values对应的数据。                              |
+  | int delete(Uri uri, String selection, String[] selectionArgs) | 根据Uri删除selection 条件所匹配的全部记录。                  |
+  | int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) | 根据Uri修改selection条件所匹配的全部记录。                   |
+  | Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) | 根据Uri查询出selection条件所匹配的全部记录，其中projection 就是一个列名列表，表明只选择出指定的数据列。 |
+  | String getType(Uri uri)                                      | 该方法用于返回当前Uri所代表的数据的MIME类型。如果该Uri对应的数据可能包括多条记录,那么MIME类型字符串应该以vnd.android.cursor dir/开头;如果该Uri对应的数据只包含一条记录，那么MIME类型字符串应该以vnd. android.cursor.item/开头。 |
 
 ## URI
 
@@ -2475,11 +2422,10 @@
 
 - UriMatcher工具类方法。
 
-
-| 方法                                                 | 说明                                                         |
-| ---------------------------------------------------- | ------------------------------------------------------------ |
-| void addURI(String authority, String path, int code) | 该方法用于向UriMatcher对象注册Uri。其中authority和path组合成一个Uri,而code则代表该Uri对应的标识码。 |
-| int match(Uri uri)                                   | 根据前面注册的Uri来判断指定Uri对应的标识码。如果找不到匹配的标识码，该方法将会返回-1。 |
+  - | 方法                                                 | 说明                                                         |
+    | ---------------------------------------------------- | ------------------------------------------------------------ |
+    | void addURI(String authority, String path, int code) | 该方法用于向UriMatcher对象注册Uri。其中authority和path组合成一个Uri,而code则代表该Uri对应的标识码。 |
+    | int match(Uri uri)                                   | 根据前面注册的Uri来判断指定Uri对应的标识码。如果找不到匹配的标识码，该方法将会返回-1。 |
 
 ### 操作Uri字符串
 
@@ -2487,11 +2433,10 @@
 
 - ContentUris方法
 
-
-| 方法                    | 说明                                |
-| ----------------------- | ----------------------------------- |
-| withAppendedld(uri, id) | 用于为路径加上ID部分。              |
-| parseId(uri)            | 用于从指定Uri中解析出所包含的ID值。 |
+  - | 方法                    | 说明                                |
+    | ----------------------- | ----------------------------------- |
+    | withAppendedld(uri, id) | 用于为路径加上ID部分。              |
+    | parseId(uri)            | 用于从指定Uri中解析出所包含的ID值。 |
 
 ## ContentResolver
 
@@ -2499,19 +2444,18 @@
 
 - ContentResolver方法
 
-
-| 方法                                                         | 说明                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Uri insert(Uri uri, ContentValues values)                    | 根据该Uri对应的ContentProvider插入values对应的数据。         |
-| int delete(Uri uri, String selection, String[] selectionArgs) | 根据Uri对应的ContentProvider删除selection 条件所匹配的全部记录。 |
-| int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) | 根据Uri对应的ContentProvider修改selection条件所匹配的全部记录。 |
-| Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) | 根据Uri对应的ContentProvider查询出selection条件所匹配的全部记录，其中projection 就是一个列名列表，表明只选择出指定的数据列。 |
+  - | 方法                                                         | 说明                                                         |
+    | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | Uri insert(Uri uri, ContentValues values)                    | 根据该Uri对应的ContentProvider插入values对应的数据。         |
+    | int delete(Uri uri, String selection, String[] selectionArgs) | 根据Uri对应的ContentProvider删除selection 条件所匹配的全部记录。 |
+    | int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) | 根据Uri对应的ContentProvider修改selection条件所匹配的全部记录。 |
+    | Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) | 根据Uri对应的ContentProvider查询出selection条件所匹配的全部记录，其中projection 就是一个列名列表，表明只选择出指定的数据列。 |
   
 - 一般来说，ContentProvider 是单实例模式的，当多个应用程序通过ContentResolver 来操作ContentProvider提供的数据时, ContentResolver 调用的数据操作将会委托给同一个ContentProvider处理。
 
 ## 开发ContentProvider
 
-- ![[image-20220622150030955.png]]
+- ![image-20220622150030955](Android.assets/image-20220622150030955.png)
 
 - 步骤
   1. 开发一个ContentProvider子类，该子类需要实现query0、insert()、 update()和 delete)等方法。
@@ -2525,15 +2469,14 @@
 
 - 只要为<applcation..>元素添加<provier../>子元素即可配置ContentProvider，provier子元素属性
 
-
-| 属性             | 说明                                                         |
-| ---------------- | ------------------------------------------------------------ |
-| name             | 指定该ContentProvider的实现类的类名。                        |
-| authorities      | 指定该ContentProvider对应的Uri(相当于为该ContentProvider分配一个域名 )。 |
-| android:exported | 指定该ContentProvider是否允许其他应用调用。如果将该属性设为false,那么该ContentProvider将不允许其他应用调用。 |
-| readPermission   | 指定读取该ContentProvider所需要的权限。也就是调用ContentProvider的query()方法所需要的权限 |
-| writePermission  | 指定写入该ContentProvider 所需要的权限。也就是调用ContentProvider的insert()、delete()、 update()方法所需要的权限。 |
-| permission       | 该属性相当于同时配置readPermission和writePermission两个权限。 |
+  - | 属性             | 说明                                                         |
+    | ---------------- | ------------------------------------------------------------ |
+    | name             | 指定该ContentProvider的实现类的类名。                        |
+    | authorities      | 指定该ContentProvider对应的Uri(相当于为该ContentProvider分配一个域名 )。 |
+    | android:exported | 指定该ContentProvider是否允许其他应用调用。如果将该属性设为false,那么该ContentProvider将不允许其他应用调用。 |
+    | readPermission   | 指定读取该ContentProvider所需要的权限。也就是调用ContentProvider的query()方法所需要的权限 |
+    | writePermission  | 指定写入该ContentProvider 所需要的权限。也就是调用ContentProvider的insert()、delete()、 update()方法所需要的权限。 |
+    | permission       | 该属性相当于同时配置readPermission和writePermission两个权限。 |
 
     - 如果不配置上面的readPermission、 writePermission、 permission 权限，则表明没有权限限制.那意味着该ContentProvider可以被所有App访问。
 
@@ -2559,12 +2502,11 @@
 
 - Uri
 
-
-| Uri                                                 | 说明                    |
-| --------------------------------------------------- | ----------------------- |
-| ContactsContract.Contacts.CONTENT_URI               | 管理联系人的Uri。       |
-| ContactsContract.CommonDataKinds. Phone.CONTENT_URI | 管理联系人的电话的Uri。 |
-| ContactsContract.CommonDataKinds.Email.CONTENT URI  | 管理联系人的E-mail的Uri |
+  - | Uri                                                 | 说明                    |
+    | --------------------------------------------------- | ----------------------- |
+    | ContactsContract.Contacts.CONTENT_URI               | 管理联系人的Uri。       |
+    | ContactsContract.CommonDataKinds. Phone.CONTENT_URI | 管理联系人的电话的Uri。 |
+    | ContactsContract.CommonDataKinds.Email.CONTENT URI  | 管理联系人的E-mail的Uri |
 
 ### Camera的ContentProvider
 
@@ -2600,27 +2542,25 @@
 
 - 生命周期
 
-
-| 方法                                                       | 说明                                                         |
-| ---------------------------------------------------------- | ------------------------------------------------------------ |
-| IBinder onBind(Intent intent)                              | 该方法是Service 子类必须实现的方法。该方法返回一个IBinder对象，应用程序可通过该对象与Service组件通信。 |
-| void onCreate()                                            | 在该Service第一次被创建后将立即回调该方法。                  |
-| void onDestroy()                                           | 在该Service 被关闭之前将会回调该方法。                       |
-| void onStartCommand(Intent intent, int flags, int startId) | 该方法的早期版本是void onStart(Intent intent, Int startId)，每次客户端调用startService(Intent)方 法启动该Service时都会回调该方法。 |
-| boolean onUnbind(Intent intent)                            | 当该Service上绑定的所有客户端都断开连接时将会回调该方法      |
-|                                                            |                                                              |
+  - | 方法                                                       | 说明                                                         |
+    | ---------------------------------------------------------- | ------------------------------------------------------------ |
+    | IBinder onBind(Intent intent)                              | 该方法是Service 子类必须实现的方法。该方法返回一个IBinder对象，应用程序可通过该对象与Service组件通信。 |
+    | void onCreate()                                            | 在该Service第一次被创建后将立即回调该方法。                  |
+    | void onDestroy()                                           | 在该Service 被关闭之前将会回调该方法。                       |
+    | void onStartCommand(Intent intent, int flags, int startId) | 该方法的早期版本是void onStart(Intent intent, Int startId)，每次客户端调用startService(Intent)方 法启动该Service时都会回调该方法。 |
+    | boolean onUnbind(Intent intent)                            | 当该Service上绑定的所有客户端都断开连接时将会回调该方法      |
+    |                                                            |                                                              |
 
 - 配置:定义了Service之后，在AndroidManifest.xml文件中配置该Service, 配置Service使用<service...>元素。与配置Activity相似的是，配置Service时也可为<service.../>元素配置<intent-filter../>子元素，用于说明该Service可被哪些Intent 启动。
 
   - <service.../>元素属性
 
-
-| 属性       | 说明                                                         |
-| ---------- | ------------------------------------------------------------ |
-| name       | 指定该Service的实现类类名。                                  |
-| exported   | 指定该 Service是否能被其他 App启动。如果在配置该Service时指定了<intent-filter...> 子元素，则该属性默认为true。 |
-| permission | 指定启动该Service所需的权限。                                |
-| process    | 指定该Service所处的进程，该Service组件默认处于该App所在的进程中。实际上，Android的四大组件都可通过该属性指定进程。 |
+    - | 属性       | 说明                                                         |
+      | ---------- | ------------------------------------------------------------ |
+      | name       | 指定该Service的实现类类名。                                  |
+      | exported   | 指定该 Service是否能被其他 App启动。如果在配置该Service时指定了<intent-filter...> 子元素，则该属性默认为true。 |
+      | permission | 指定启动该Service所需的权限。                                |
+      | process    | 指定该Service所处的进程，该Service组件默认处于该App所在的进程中。实际上，Android的四大组件都可通过该属性指定进程。 |
 
 ### 启动和停止Service
 
@@ -2642,7 +2582,7 @@
 
 ### 生命周期
 
-- ![[image-20220623093215507.png]]
+- ![image-20220623093215507](Android.assets/image-20220623093215507.png)
 
 ### IntentService
 
@@ -2727,20 +2667,18 @@
 
 - Vibrator方法
 
-
-| 方法                                                      | 说明                                                         |
-| --------------------------------------------------------- | ------------------------------------------------------------ |
-| vibrate(VibrationEffect vibe)                             | 控制手机按VibrationEffect效果执行振动。                      |
-| vibrate(VibrationEffect vibe, AudioAttributes attributes) | 控制手机按VibrationEffect效果执行振动，并执行AudioAttributes指定的声音效果。 |
-| cancel()                                                  | 关闭手机振动。                                               |
+  - | 方法                                                      | 说明                                                         |
+    | --------------------------------------------------------- | ------------------------------------------------------------ |
+    | vibrate(VibrationEffect vibe)                             | 控制手机按VibrationEffect效果执行振动。                      |
+    | vibrate(VibrationEffect vibe, AudioAttributes attributes) | 控制手机按VibrationEffect效果执行振动，并执行AudioAttributes指定的声音效果。 |
+    | cancel()                                                  | 关闭手机振动。                                               |
 
   - VibrationEffect方法
 
-
-| 方法                                            | 说明                                                         |
-| ----------------------------------------------- | ------------------------------------------------------------ |
-| createOneShot(long milliseconds, int amplitude) | 创建只振动一次的振动效果。其中milliseconds指定振动时间，amplitude 指定振动幅度，该值可以是0~255之间的幅度。 |
-| createW aveform(long[] timings, int repeat)     | 创建波形振动的振动效果。其中timings指定振动停止、开始的时间，比如[400, 800, 1200], 就是指定在400ms、800ms、 1200ms 这些时间点交替关闭、启动振动。 |
+    - | 方法                                            | 说明                                                         |
+      | ----------------------------------------------- | ------------------------------------------------------------ |
+      | createOneShot(long milliseconds, int amplitude) | 创建只振动一次的振动效果。其中milliseconds指定振动时间，amplitude 指定振动幅度，该值可以是0~255之间的幅度。 |
+      | createW aveform(long[] timings, int repeat)     | 创建波形振动的振动效果。其中timings指定振动停止、开始的时间，比如[400, 800, 1200], 就是指定在400ms、800ms、 1200ms 这些时间点交替关闭、启动振动。 |
 
 #### 闹钟服务（AlarmManager）
 
@@ -2748,13 +2686,12 @@
 
 - AlarmManager方法
 
-
-| 方法                                                         | 说明                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| set(int type, long triggerAtTime, PendingIntent operation)   | 设置在triggerAtTime时间启动由operation参数指定的组件。其中第一个参数指定定时服务的类型 |
-| setInexactRepeating(int type, long triggerAtTime, long interval, PendingIntent operation) | 设置一个非精确的周期性任务。例如，我们设置Alarm每个小时启动一次，但系统并不一定总在每个小时的开始启动Alarm服务。 |
-| setRepeating(int type, long triggerAtTime, long interval, PendingIntent operation) | 设置一个周期性执行的定时服务                                 |
-| cancel(PendingIntent operation)                              | 取消AlarmManager 的定时服务。                                |
+  - | 方法                                                         | 说明                                                         |
+    | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | set(int type, long triggerAtTime, PendingIntent operation)   | 设置在triggerAtTime时间启动由operation参数指定的组件。其中第一个参数指定定时服务的类型 |
+    | setInexactRepeating(int type, long triggerAtTime, long interval, PendingIntent operation) | 设置一个非精确的周期性任务。例如，我们设置Alarm每个小时启动一次，但系统并不一定总在每个小时的开始启动Alarm服务。 |
+    | setRepeating(int type, long triggerAtTime, long interval, PendingIntent operation) | 设置一个周期性执行的定时服务                                 |
+    | cancel(PendingIntent operation)                              | 取消AlarmManager 的定时服务。                                |
 
 ## BroadcastReceiver
 
@@ -2807,14 +2744,13 @@
 
 ServerSocket方法
 
-| 方法                                                     | 说明                                                         |
-
-| -------------------------------------------------------- | ------------------------------------------------------------ |
-| Socket accept()                                          | 如果接收到一个客户端Socket的连接请求，该方法将返回一个与连接客户端Socket对应的Socket，否则该方法直处于等待状态，线程也被阻塞。 |
-| ServerSocket(int port)                                   | 用指定的端口port 来创建一个 ServerSocket。该端口应该有一个有效的端口整数值0~-65535。 |
-| ServerSocket(int port,int backlog)                       | 增加一个用来改变连接队列长度的参数backlog。                  |
-| ServerSocket(int port,int backlog,InetAddress localAddr) | 在机器存在多个IP 地址的情况下，允许通过localAddr这个参数来指定将ServerSocket绑定到指定的IP地址。 |
-| close()                                                  | 关闭该ServerSocket                                           |
+- | 方法                                                     | 说明                                                         |
+  | -------------------------------------------------------- | ------------------------------------------------------------ |
+  | Socket accept()                                          | 如果接收到一个客户端Socket的连接请求，该方法将返回一个与连接客户端Socket对应的Socket，否则该方法直处于等待状态，线程也被阻塞。 |
+  | ServerSocket(int port)                                   | 用指定的端口port 来创建一个 ServerSocket。该端口应该有一个有效的端口整数值0~-65535。 |
+  | ServerSocket(int port,int backlog)                       | 增加一个用来改变连接队列长度的参数backlog。                  |
+  | ServerSocket(int port,int backlog,InetAddress localAddr) | 在机器存在多个IP 地址的情况下，允许通过localAddr这个参数来指定将ServerSocket绑定到指定的IP地址。 |
+  | close()                                                  | 关闭该ServerSocket                                           |
 
   -  服务器不应该只接收一个客户端请求，而应该不断地接收来自客户端的所有请求，所以程序通常会通过循环不断地调用ServerSocket的accept()方法
   - 创建ServerSocket时没有指定IP地址，ServerSocket将会绑定到本机默认的IP地址。
@@ -2825,14 +2761,13 @@ ServerSocket方法
 
 - Socket方法
 
-
-| 方法                                                         | 说明                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Socket(InetAddress/String remoteAddress, int port)           | 创建连接到指定远程主机、远程端口的 Socket,该构造器没有指定本地地址、本地端口，默认使用本地主机的默认IP地址，默认使用系统动态分配的端口。 |
-| Socket(InetAddress/String remoteAddress, int port, InetAddress localAddr, int localPort) | 创建连接到指定远程主机、远程端口的Socket,并指定本地IP地址和本地端口，适用于本地主 |
-| InputStream getInputStream()                                 | 返回该Socket 对象对应的输入流，让程序通过该输入流从Socket中取出数据。 |
-| OutputStream getOutputStream()                               | 返回该Socket对象对应的输出流，让程序通过该输出流向Socket中输出数据。 |
-| setSoTimeout( int timeout)                                   | 当网络连接、读取操作超过timeout之后，系统自动认为该操作失败  |
+  - | 方法                                                         | 说明                                                         |
+    | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | Socket(InetAddress/String remoteAddress, int port)           | 创建连接到指定远程主机、远程端口的 Socket,该构造器没有指定本地地址、本地端口，默认使用本地主机的默认IP地址，默认使用系统动态分配的端口。 |
+    | Socket(InetAddress/String remoteAddress, int port, InetAddress localAddr, int localPort) | 创建连接到指定远程主机、远程端口的Socket,并指定本地IP地址和本地端口，适用于本地主 |
+    | InputStream getInputStream()                                 | 返回该Socket 对象对应的输入流，让程序通过该输入流从Socket中取出数据。 |
+    | OutputStream getOutputStream()                               | 返回该Socket对象对应的输出流，让程序通过该输出流向Socket中输出数据。 |
+    | setSoTimeout( int timeout)                                   | 当网络连接、读取操作超过timeout之后，系统自动认为该操作失败  |
 
   - 多线程
     - C/S聊天室
@@ -2845,17 +2780,16 @@ ServerSocket方法
 
 - URL类方法
 
-
-| 方法                           | 说明                                                         |
-| ------------------------------ | ------------------------------------------------------------ |
-| String getFile()               | 获取此URL的资源名。                                          |
-| String getHost()               | 获取此URL的主机名。                                          |
-| String getPath()               | 获取此URL的路径部分。                                        |
-| int getPort()                  | 获取此URL的端口号。                                          |
-| String getProtocol()           | 获取此URL的协议名称。                                        |
-| String getQuery()              | 获取此URL的查询字符串部分。                                  |
-| URLConnection openConnection() | 返回一个URLConnection对象，它表示到URL所引用的远程对象的连接。 |
-| InputStream openStream()       | 打开与此URL的连接，并返回一个用于读取该URL资源的InputStream。 |
+  - | 方法                           | 说明                                                         |
+    | ------------------------------ | ------------------------------------------------------------ |
+    | String getFile()               | 获取此URL的资源名。                                          |
+    | String getHost()               | 获取此URL的主机名。                                          |
+    | String getPath()               | 获取此URL的路径部分。                                        |
+    | int getPort()                  | 获取此URL的端口号。                                          |
+    | String getProtocol()           | 获取此URL的协议名称。                                        |
+    | String getQuery()              | 获取此URL的查询字符串部分。                                  |
+    | URLConnection openConnection() | 返回一个URLConnection对象，它表示到URL所引用的远程对象的连接。 |
+    | InputStream openStream()       | 打开与此URL的连接，并返回一个用于读取该URL资源的InputStream。 |
 
 - 从Android 9开始，Android 默认要求使用加密连接,需要使用传输层安全协议(TransportLayer Security)。 但如果目标网站就是使用HTTP协议，那么App确实需要使用HTTP协议与目标网站通信，可以在AndroidManifest.xml文件配置
   - 在<application.../>元素 中通过android:networkSecurityConfig属性指定网络安全配置，通过该配置文件将目标网站加入白名单中。
@@ -2875,12 +2809,12 @@ ServerSocket方法
 
   4. 远程资源变为可用，程序可以访问远程资源的头字段，或通过输入流读取远程资源的数据。
 
-| 方法                               | 说明                                                         |
-| ---------------------------------- | ------------------------------------------------------------ |
-| Object getContent()                | 获取该URLConnection的内容。                                  |
-| String getHeaderField(String name) | 获取指定响应头字段的值。                                     |
-| getInputStream()                   | 返回该URLConnection对应的输入流，用于获取URLConnection响应的内容。 |
-| getOutputStream()                  | 返回该URLConnection对应的输出流，用于向URLConnection发送请求参数。 |
+     - | 方法                               | 说明                                                         |
+       | ---------------------------------- | ------------------------------------------------------------ |
+       | Object getContent()                | 获取该URLConnection的内容。                                  |
+       | String getHeaderField(String name) | 获取指定响应头字段的值。                                     |
+       | getInputStream()                   | 返回该URLConnection对应的输入流，用于获取URLConnection响应的内容。 |
+       | getOutputStream()                  | 返回该URLConnection对应的输出流，用于向URLConnection发送请求参数。 |
 
 ### 使用HttpURLConection访问网络
 
@@ -2888,13 +2822,12 @@ ServerSocket方法
 
 - HttpURLConection方法
 
-
-| 方法                            | 说明                   |
-| ------------------------------- | ---------------------- |
-| int getResponseCode()           | 获取服务器的响应代码。 |
-| String getResponseMessage()     | 获取服务器的响应消息。 |
-| String getRequestMethod()       | 获取发送请求的方法。   |
-| setRequestMethod(String method) | 设置发送请求的方法。   |
+  - | 方法                            | 说明                   |
+    | ------------------------------- | ---------------------- |
+    | int getResponseCode()           | 获取服务器的响应代码。 |
+    | String getResponseMessage()     | 获取服务器的响应消息。 |
+    | String getRequestMethod()       | 获取发送请求的方法。   |
+    | setRequestMethod(String method) | 设置发送请求的方法。   |
 
 - 多线程下载步骤
   1. 创建URL对象。
@@ -2914,15 +2847,15 @@ ServerSocket方法
 
   2. 通过Request. Builder构建Request对象。Request 代表一次请求， 所有和请求有关的信息都通过Request.Builder进行设置。Request.Builder对象方法
 
-| 方法                                    | 说明                                                         |
-| --------------------------------------- | ------------------------------------------------------------ |
-| url(String url)                         | 设置请求的URL。该方法有三个重载版本，该方法的参数可以是String、URL、HttpUrl。 |
-| addHeader(String name, String value)    | 设置请求头。                                                 |
-| removeHeader(String name)               | 删除请求头。                                                 |
-| cacheControl(CacheControl cacheControl) | 设置Cache-Control请求头，用于控制缓存。                      |
-| method(String method, RequestBody body) | 设置请求方法和请求参数。其中RequestBody代表请求参数。        |
-| get()                                   | method(method, body)方法的简化版本，用来发送GET请求。默认就是发送GET请求的，所以这个方法通常无须执行。 |
-| delete/post/put/patch(RequestBody body) | 这几个方法都是method(method, body)方法的简化版本，分别代表发送DELETE、POST、PUT、PATCH请求，这些请求对于RESTful服务很常用。 |
+     - | 方法                                    | 说明                                                         |
+       | --------------------------------------- | ------------------------------------------------------------ |
+       | url(String url)                         | 设置请求的URL。该方法有三个重载版本，该方法的参数可以是String、URL、HttpUrl。 |
+       | addHeader(String name, String value)    | 设置请求头。                                                 |
+       | removeHeader(String name)               | 删除请求头。                                                 |
+       | cacheControl(CacheControl cacheControl) | 设置Cache-Control请求头，用于控制缓存。                      |
+       | method(String method, RequestBody body) | 设置请求方法和请求参数。其中RequestBody代表请求参数。        |
+       | get()                                   | method(method, body)方法的简化版本，用来发送GET请求。默认就是发送GET请求的，所以这个方法通常无须执行。 |
+       | delete/post/put/patch(RequestBody body) | 这几个方法都是method(method, body)方法的简化版本，分别代表发送DELETE、POST、PUT、PATCH请求，这些请求对于RESTful服务很常用。 |
 
   3. 调用OkHttpClient的newCall（）方法，以Request对象为参数创建Call对象。
 
@@ -2938,16 +2871,15 @@ ServerSocket方法
 
 - WebView方法
 
-
-| 方法                                                         | 说明                           |
-| ------------------------------------------------------------ | ------------------------------ |
-| goBack()                                                     | 后退。                         |
-| goForward()                                                  | 前进。                         |
-| loadUrl(String url)                                          | 加载指定URL对应的网页。        |
-| boolean zoomIn()                                             | 放大网页。                     |
-| boolean zoomOut()                                            | 缩小网页。                     |
-| loadData(String data, String mime Type, String encoding)     | 用于加载并显示data(HTML)代码。 |
-| loadDataWithBaseURL(String baseUrl, String data, String mimeType,String encoding, String historyUrl) | 用于加载并显示data(HTML)代码。 |
+  - | 方法                                                         | 说明                           |
+    | ------------------------------------------------------------ | ------------------------------ |
+    | goBack()                                                     | 后退。                         |
+    | goForward()                                                  | 前进。                         |
+    | loadUrl(String url)                                          | 加载指定URL对应的网页。        |
+    | boolean zoomIn()                                             | 放大网页。                     |
+    | boolean zoomOut()                                            | 缩小网页。                     |
+    | loadData(String data, String mime Type, String encoding)     | 用于加载并显示data(HTML)代码。 |
+    | loadDataWithBaseURL(String baseUrl, String data, String mimeType,String encoding, String historyUrl) | 用于加载并显示data(HTML)代码。 |
 
     - data:指定需要加载的HTML代码。
       
