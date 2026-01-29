@@ -96,7 +96,7 @@
 
 - 问题规模足够大时就会暴露出问题
 
-![image-20220506212202207](C:\Users\15271\AppData\Roaming\Typora\typora-user-images\image-20220506212202207.png)
+![image-20220506212202207](assets\image-20220506212202207.png)
 
 - 最坏时间复杂度
 - 平均时间复杂度
@@ -106,7 +106,7 @@
 
 # 线性表
 
-![image-20220506220113292](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220506220113292.png)
+![image-20220506220113292](assets\image-20220506220113292.png)
 
 
 
@@ -171,31 +171,31 @@
 - 用顺序存储的方式实现线性表
   - 顺序存储。把逻辑上相邻的元素存储在物理 位置上也相邻的存储单元中，元素之间的关系由存储单元的邻接关系来体现。
 - 包括两个部分，实现逻辑结构和基本操作
-- ![image-20220508210607859](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508210607859.png)
+- ![image-20220508210607859](assets\image-20220508210607859.png)
 
 #### 定义
 
-![image-20220508210446294](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508210446294.png)
+![image-20220508210446294](assets\image-20220508210446294.png)
 
-![image-20220507213838148](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220507213838148.png)
+![image-20220507213838148](assets\image-20220507213838148.png)
 
 ##### 静态分配
 
-![image-20220507214000406](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220507214000406.png)
+![image-20220507214000406](assets\image-20220507214000406.png)
 
-![image-20220507214042196](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220507214042196.png)
+![image-20220507214042196](assets\image-20220507214042196.png)
 
 ###### 注意
 
-![image-20220507214244407](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220507214244407.png)
+![image-20220507214244407](assets\image-20220507214244407.png)
 
-![image-20220507214340277](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220507214340277.png)
+![image-20220507214340277](assets\image-20220507214340277.png)
 
 ##### 动态分配
 
-![image-20220507215456757](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220507215456757.png)
+![image-20220507215456757](assets\image-20220507215456757.png)
 
-![image-20220507215538238](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220507215538238.png)
+![image-20220507215538238](assets\image-20220507215538238.png)
 
 ##### 特点
 
@@ -207,59 +207,59 @@
 
 #### 插入删除
 
-![image-20220507235537982](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220507235537982.png)
+![image-20220507235537982](assets\image-20220507235537982.png)
 
 ##### 插入
 
-![image-20220508201730922](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508201730922.png)
+![image-20220508201730922](assets\image-20220508201730922.png)
 
-![image-20220508201814832](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508201814832.png)
+![image-20220508201814832](assets\image-20220508201814832.png)
 
-![image-20220508201841062](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508201841062.png)
+![image-20220508201841062](assets\image-20220508201841062.png)
 
 ##### 插入时间复杂度
 
-![image-20220508202002539](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202002539.png)
+![image-20220508202002539](assets\image-20220508202002539.png)
 
 ##### 删除
 
-![image-20220508202035204](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202035204.png)
+![image-20220508202035204](assets\image-20220508202035204.png)
 
-![image-20220508202105821](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202105821.png)
+![image-20220508202105821](assets\image-20220508202105821.png)
 
 ##### 删除时间复杂度
 
-![image-20220508202150440](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202150440.png)
+![image-20220508202150440](assets\image-20220508202150440.png)
 
 #### 查找
 
-![image-20220508202244170](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202244170.png)
+![image-20220508202244170](assets\image-20220508202244170.png)
 
 ##### 按位查找
 
-![image-20220508202344202](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202344202.png)
+![image-20220508202344202](assets\image-20220508202344202.png)
 
-![image-20220508202430170](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202430170.png)
+![image-20220508202430170](assets\image-20220508202430170.png)
 
-![image-20220508202520920](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202520920.png)
+![image-20220508202520920](assets\image-20220508202520920.png)
 
-![image-20220508202540979](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202540979.png)
+![image-20220508202540979](assets\image-20220508202540979.png)
 
 ##### 按位查找时间复杂度
 
-![image-20220508202625108](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202625108.png)
+![image-20220508202625108](assets\image-20220508202625108.png)
 
 ##### 按值查找
 
-![image-20220508202638569](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202638569.png)
+![image-20220508202638569](assets\image-20220508202638569.png)
 
-![image-20220508202731913](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202731913.png)
+![image-20220508202731913](assets\image-20220508202731913.png)
 
-![image-20220508202757799](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202757799.png)
+![image-20220508202757799](assets\image-20220508202757799.png)
 
 ##### 按值查找时间复杂度
 
-![image-20220508202949908](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508202949908.png)
+![image-20220508202949908](assets\image-20220508202949908.png)
 
 ### 单链表
 
@@ -274,31 +274,31 @@
          - 当链表设头结点时,无论链表是否为空，头指针都是指向头结点的非空指针，判空条件都是`L->nxet==null`
   - 头指针是指指向链表的第一结点的指正。若链表设有头结点，则头指针所指结点为线性表的头结点；若链表不设头结点，则头指针所指结点为该线性表的首元结点
 
-![image-20220508210700977](Data Structure.assets\image-20220508210700977.png)
+![image-20220508210700977](assets\image-20220508210700977.png)
 
 #### 定义
 
-![image-20220508210754968](Data Structure.assets\image-20220508210754968.png)
+![image-20220508210754968](assets\image-20220508210754968.png)
 
-![image-20220508210856980](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508210856980.png)
+![image-20220508210856980](assets\image-20220508210856980.png)
 
-![image-20220508210915989](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508210915989.png)
+![image-20220508210915989](assets\image-20220508210915989.png)
 
-![image-20220508212652739](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508212652739.png)
+![image-20220508212652739](assets\image-20220508212652739.png)
 
-![image-20220508212733687](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508212733687.png)
+![image-20220508212733687](assets\image-20220508212733687.png)
 
 ##### 不带头结点
 
-![image-20220508212809438](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508212809438.png)
+![image-20220508212809438](assets\image-20220508212809438.png)
 
 ##### 带头结点
 
-![image-20220508213232084](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508213232084.png)
+![image-20220508213232084](assets\image-20220508213232084.png)
 
 ##### 创建多个结点
 
-![image-20220511234725741](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511234725741.png)
+![image-20220511234725741](assets\image-20220511234725741.png)
 
 
 
@@ -320,145 +320,145 @@
 
 #### 插入和删除
 
-![image-20220508213509108](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220508213509108.png)
+![image-20220508213509108](assets\image-20220508213509108.png)
 
-![image-20220511202907121](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511202907121.png)
+![image-20220511202907121](assets\image-20220511202907121.png)
 
 ##### 按位序插入
 
 ###### 带头结点
 
-![image-20220511203102998](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511203102998.png)
+![image-20220511203102998](assets\image-20220511203102998.png)
 
-![image-20220511203211019](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511203211019.png)
+![image-20220511203211019](assets\image-20220511203211019.png)
 
 ###### 不带头结点
 
-![image-20220511203433030](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511203433030.png)
+![image-20220511203433030](assets\image-20220511203433030.png)
 
-![image-20220511203504029](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511203504029.png)
+![image-20220511203504029](assets\image-20220511203504029.png)
 
 ##### 指定结点插入
 
 ###### 后插
 
-![image-20220511203927787](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511203927787.png)
+![image-20220511203927787](assets\image-20220511203927787.png)
 
 ###### 前插
 
-![image-20220511204132650](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511204132650.png)
+![image-20220511204132650](assets\image-20220511204132650.png)
 
-![image-20220511204153450](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511204153450.png)
+![image-20220511204153450](assets\image-20220511204153450.png)
 
-![image-20220511204318660](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511204318660.png)
+![image-20220511204318660](assets\image-20220511204318660.png)
 
 ##### 按位序删除
 
-![image-20220511204428720](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511204428720.png)
+![image-20220511204428720](assets\image-20220511204428720.png)
 
-![image-20220511204449141](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511204449141.png)
+![image-20220511204449141](assets\image-20220511204449141.png)
 
 
 
 ##### 指定结点删除
 
-![image-20220511204640228](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511204640228.png)
+![image-20220511204640228](assets\image-20220511204640228.png)
 
-![	](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511204723920.png)
+![	](assets\image-20220511204723920.png)
 
 ##### 局限性
 
-![image-20220511204742329](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511204742329.png)
+![image-20220511204742329](assets\image-20220511204742329.png)
 
 #### 查找
 
-![image-20220511233932160](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511233932160.png)
+![image-20220511233932160](assets\image-20220511233932160.png)
 
 ##### 按位查找
 
-![image-20220511234109630](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511234109630.png)
+![image-20220511234109630](assets\image-20220511234109630.png)
 
 ##### 按值查找
 
-![image-20220511234239820](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511234239820.png)
+![image-20220511234239820](assets\image-20220511234239820.png)
 
 ##### 表长
 
-![image-20220511234312273](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220511234312273.png)
+![image-20220511234312273](assets\image-20220511234312273.png)
 
 ### 双链表
 
-![image-20220513211024897](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513211024897.png)
+![image-20220513211024897](assets\image-20220513211024897.png)
 
 #### 定义
 
-![image-20220513211059061](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513211059061.png)
+![image-20220513211059061](assets\image-20220513211059061.png)
 
-![image-20220513211216396](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513211216396.png)
+![image-20220513211216396](assets\image-20220513211216396.png)
 
 #### 插入
 
-![image-20220513211321946](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513211321946.png)
+![image-20220513211321946](assets\image-20220513211321946.png)
 
 #### 删除
 
-![image-20220513211410537](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513211410537.png)
+![image-20220513211410537](assets\image-20220513211410537.png)
 
 #### 遍历
 
-![image-20220513211512356](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513211512356.png)
+![image-20220513211512356](assets\image-20220513211512356.png)
 
 ### 循环链表
 
-![image-20220513210528371](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513210528371.png)
+![image-20220513210528371](assets\image-20220513210528371.png)
 
 #### 循环单链表
 
-![image-20220513210604526](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513210604526.png)
+![image-20220513210604526](assets\image-20220513210604526.png)
 
-![image-20220513210657538](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513210657538.png)
+![image-20220513210657538](assets\image-20220513210657538.png)
 
-![image-20220513210728966](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513210728966.png)
+![image-20220513210728966](assets\image-20220513210728966.png)
 
 #### 循环双链表
 
-![image-20220513210828097](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513210828097.png)
+![image-20220513210828097](assets\image-20220513210828097.png)
 
 ##### 定义
 
-![image-20220513211648599](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513211648599.png)
+![image-20220513211648599](assets\image-20220513211648599.png)
 
 ##### 插入
 
-![image-20220513211716517](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513211716517.png)
+![image-20220513211716517](assets\image-20220513211716517.png)
 
 ##### 删除
 
-![image-20220513211728745](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513211728745.png)
+![image-20220513211728745](assets\image-20220513211728745.png)
 
 ### 静态链表
 
-![image-20220513211844817](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513211844817.png)
+![image-20220513211844817](assets\image-20220513211844817.png)
 
-![image-20220513213009906](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513213009906.png)
+![image-20220513213009906](assets\image-20220513213009906.png)
 
 ##### 定义
 
-![image-20220513213046017](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513213046017.png)
+![image-20220513213046017](assets\image-20220513213046017.png)
 
-![image-20220513213130919](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513213130919.png)
+![image-20220513213130919](assets\image-20220513213130919.png)
 
-![image-20220513213149576](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513213149576.png)
+![image-20220513213149576](assets\image-20220513213149576.png)
 
 ##### 基本操作
 
-![image-20220513213242219](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513213242219.png)
+![image-20220513213242219](assets\image-20220513213242219.png)
 
-![image-20220513213257127](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513213257127.png)
+![image-20220513213257127](assets\image-20220513213257127.png)
 
 ##### 总结
 
-![image-20220513213332906](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513213332906.png)
+![image-20220513213332906](assets\image-20220513213332906.png)
 
 ### 顺序表VS链表
 
@@ -490,7 +490,7 @@
 
 #### 选择
 
-![image-20220513220638301](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513220638301.png)
+![image-20220513220638301](assets\image-20220513220638301.png)
 
 ### 应用
 
@@ -502,17 +502,17 @@
 
 # 栈和队列
 
-![image-20220513222011020](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513222011020.png)
+![image-20220513222011020](assets\image-20220513222011020.png)
 
 ## 栈
 
-![image-20220513223103619](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513223103619.png)
+![image-20220513223103619](assets\image-20220513223103619.png)
 
 ### 定义（逻辑结构）
 
-![image-20220513223219074](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513223219074.png)
+![image-20220513223219074](assets\image-20220513223219074.png)
 
-![image-20220513223248811](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513223248811.png)
+![image-20220513223248811](assets\image-20220513223248811.png)
 
 ### 基本操作（运算）
 
@@ -535,47 +535,47 @@
 
 #### 顺序栈
 
-![image-20220513230004590](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513230004590.png)
+![image-20220513230004590](assets\image-20220513230004590.png)
 
 ##### 定义
 
-![image-20220513230120343](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513230120343.png)
+![image-20220513230120343](assets\image-20220513230120343.png)
 
 ##### 进栈（插入）
 
-![image-20220513230237211](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513230237211.png)
+![image-20220513230237211](assets\image-20220513230237211.png)
 
 ##### 出栈（删除）
 
-![image-20220513230342112](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513230342112.png)
+![image-20220513230342112](assets\image-20220513230342112.png)
 
 ##### 读栈顶元素（查询）
 
-![image-20220513230445622](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513230445622.png)
+![image-20220513230445622](assets\image-20220513230445622.png)
 
 ##### 栈顶指针为第一个元素时
 
-![image-20220513230815640](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513230815640.png)
+![image-20220513230815640](assets\image-20220513230815640.png)
 
 ##### 共享栈
 
-![image-20220513230858931](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513230858931.png)
+![image-20220513230858931](assets\image-20220513230858931.png)
 
 #### 链栈
 
-![image-20220513231102352](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513231102352.png)
+![image-20220513231102352](assets\image-20220513231102352.png)
 
 ##### 定义
 
-![image-20220513231237259](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513231237259.png)
+![image-20220513231237259](assets\image-20220513231237259.png)
 
 ##### 进栈（插入）
 
-![image-20220513231444829](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513231444829.png)
+![image-20220513231444829](assets\image-20220513231444829.png)
 
 ##### 出栈（删除）
 
-![image-20220513231508010](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220513231508010.png)
+![image-20220513231508010](assets\image-20220513231508010.png)
 
 ##### 获得栈顶元素（查询）
 
@@ -585,37 +585,37 @@
 
 #### 括号匹配
 
-![image-20220517185320037](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517185320037.png)
+![image-20220517185320037](assets\image-20220517185320037.png)
 
 #### 表达式求值
 
-![image-20220517185626200](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517185626200.png)
+![image-20220517185626200](assets\image-20220517185626200.png)
 
 ##### 中转后
 
-![image-20220517185827321](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517185827321.png)
+![image-20220517185827321](assets\image-20220517185827321.png)
 
-![image-20220517185930144](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517185930144.png)
+![image-20220517185930144](assets\image-20220517185930144.png)
 
-![image-20220517190336300](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517190336300.png)
+![image-20220517190336300](assets\image-20220517190336300.png)
 
 ##### 中转前
 
-![image-20220517190038562](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517190038562.png)
+![image-20220517190038562](assets\image-20220517190038562.png)
 
 
 
-![image-20220517190115000](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517190115000.png)
+![image-20220517190115000](assets\image-20220517190115000.png)
 
 ## 队列
 
-![image-20220515164229235](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515164229235.png)
+![image-20220515164229235](assets\image-20220515164229235.png)
 
 ### 定义
 
-![image-20220515164055438](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515164055438.png)
+![image-20220515164055438](assets\image-20220515164055438.png)
 
-![image-20220515164136154](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515164136154.png)
+![image-20220515164136154](assets\image-20220515164136154.png)
 
 ### 基本操作
 
@@ -638,21 +638,21 @@
 
 #### 顺序队列
 
-![image-20220515164813126](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515164813126.png)
+![image-20220515164813126](assets\image-20220515164813126.png)
 
 ##### 定义
 
-![image-20220515173056005](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515173056005.png)
+![image-20220515173056005](assets\image-20220515173056005.png)
 
-![image-20220515180323405](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515180323405.png)
+![image-20220515180323405](assets\image-20220515180323405.png)
 
 ##### 入栈（插入）
 
-![image-20220515180614993](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515180614993.png)
+![image-20220515180614993](assets\image-20220515180614993.png)
 
 ##### 出栈（删除）
 
-![image-20220515180642212](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515180642212.png)
+![image-20220515180642212](assets\image-20220515180642212.png)
 
 ##### 读栈头元素（查找）
 
@@ -667,53 +667,53 @@
 
 ###### rear指向队尾元素的后一个位置
 
-![image-20220515182726448](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515182726448.png)
+![image-20220515182726448](assets\image-20220515182726448.png)
 
-![image-20220515182853923](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515182853923.png)
+![image-20220515182853923](assets\image-20220515182853923.png)
 
-![image-20220515183006974](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515183006974.png)
+![image-20220515183006974](assets\image-20220515183006974.png)
 
 ###### rear指向队尾元素
 
-![image-20220515183134501](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515183134501.png)
+![image-20220515183134501](assets\image-20220515183134501.png)
 
-![image-20220515183319161](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515183319161.png)
+![image-20220515183319161](assets\image-20220515183319161.png)
 
 #### 链队列
 
-![image-20220515183642981](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515183642981.png)
+![image-20220515183642981](assets\image-20220515183642981.png)
 
 ##### 定义
 
-![image-20220515183756523](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515183756523.png)
+![image-20220515183756523](assets\image-20220515183756523.png)
 
-![image-20220515183810070](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515183810070.png)
+![image-20220515183810070](assets\image-20220515183810070.png)
 
-![image-20220515184124347](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515184124347.png)
+![image-20220515184124347](assets\image-20220515184124347.png)
 
 ##### 入队
 
-![image-20220515184231140](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515184231140.png)
+![image-20220515184231140](assets\image-20220515184231140.png)
 
-![image-20220515184252529](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515184252529.png)
+![image-20220515184252529](assets\image-20220515184252529.png)
 
 ##### 出队
 
-![image-20220515184849022](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515184849022.png)
+![image-20220515184849022](assets\image-20220515184849022.png)
 
-![image-20220515185002870](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515185002870.png)
+![image-20220515185002870](assets\image-20220515185002870.png)
 
 ##### 查对头元素
 
 ##### 双端队列
 
-![image-20220515190443232](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515190443232.png)
+![image-20220515190443232](assets\image-20220515190443232.png)
 
-![image-20220515190518322](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515190518322.png)
+![image-20220515190518322](assets\image-20220515190518322.png)
 
-![image-20220515190528398](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220515190528398.png)
+![image-20220515190528398](assets\image-20220515190528398.png)
 
-![image-20220517184715784](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517184715784.png)
+![image-20220517184715784](assets\image-20220517184715784.png)
 
 ### 应用
 
@@ -731,11 +731,11 @@
   - 串的数据对象限定为字符集（如中文字符、英文字符、数字字符、标点字符等）
   - 串的基本操作，如增删改查等通常以子串为操作对象
 
-- ![image-20220517193124129](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517193124129.png)
+- ![image-20220517193124129](assets\image-20220517193124129.png)
 
 ### 定义
 
-![image-20220517193210160](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517193210160.png)
+![image-20220517193210160](assets\image-20220517193210160.png)
 
 ### 基本操作
 
@@ -758,23 +758,23 @@
 
 ### 实现
 
-![image-20220517194145682](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517194145682.png)
+![image-20220517194145682](assets\image-20220517194145682.png)
 
 #### 顺序存储
 
-![image-20220517194240679](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517194240679.png)
+![image-20220517194240679](assets\image-20220517194240679.png)
 
 ##### 求子串
 
-![image-20220517194521440](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517194521440.png)
+![image-20220517194521440](assets\image-20220517194521440.png)
 
 ##### 比较
 
-![image-20220517194539870](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517194539870.png)
+![image-20220517194539870](assets\image-20220517194539870.png)
 
 ##### 定位
 
-![image-20220517194610601](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517194610601.png)
+![image-20220517194610601](assets\image-20220517194610601.png)
 
 ##### 应用
 
@@ -783,19 +783,19 @@
 - 串的模式匹配：在主串中找到与模式串相同的子串，并返回其所在位置
 
 - BF算法：BF：Brute-Force算法。
-  - ![image-20220527220328622](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220527220328622.png)
-  - ![image-20220527220537153](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220527220537153.png)
-  - ![image-20220527220746247](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220527220746247.png)
-  - ![image-20220527221241356](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220527221241356.png)
-  - ![image-20220527221300017](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220527221300017.png)
-  - ![image-20220527221318945](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220527221318945.png)
+  - ![image-20220527220328622](assets\image-20220527220328622.png)
+  - ![image-20220527220537153](assets\image-20220527220537153.png)
+  - ![image-20220527220746247](assets\image-20220527220746247.png)
+  - ![image-20220527221241356](assets\image-20220527221241356.png)
+  - ![image-20220527221300017](assets\image-20220527221300017.png)
+  - ![image-20220527221318945](assets\image-20220527221318945.png)
 
 - KMP算法：KMP：由Knuth、Morris和Pratt同时设计实现，取三人首字母命名。
   - 
 
 #### 链式存储
 
-![image-20220517194425409](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517194425409.png)
+![image-20220517194425409](assets\image-20220517194425409.png)
 
 ## 数组
 
@@ -808,17 +808,17 @@
 
 ### 物理结构
 
-![image-20220517191520318](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517191520318.png)
+![image-20220517191520318](assets\image-20220517191520318.png)
 
-![image-20220517191609649](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517191609649.png)
+![image-20220517191609649](assets\image-20220517191609649.png)
 
-![image-20220517191617789](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517191617789.png)
+![image-20220517191617789](assets\image-20220517191617789.png)
 
 ### 应用
 
 #### 特殊矩阵压缩存储
 
-![image-20220517190700420](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517190700420.png)
+![image-20220517190700420](assets\image-20220517190700420.png)
 
 # 树与二叉树
 
@@ -862,7 +862,7 @@
 
 ### 树的定义
 
-- ![image-20220517202131507](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517202131507.png)
+- ![image-20220517202131507](assets\image-20220517202131507.png)
 
 - 有序树——逻辑上看，树中结点的各子树从左至右是有次序的，不能互换 
 
@@ -870,7 +870,7 @@
 
 ### 树的性质
 
-![image-20220517210952503](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517210952503.png)
+![image-20220517210952503](assets\image-20220517210952503.png)
 
 - 结点数=总度数+1
 
@@ -883,41 +883,41 @@
     | 至少有一个结点度 = m（有m个孩子） | 允许所有结点的度都 ＜ m              |
     | 一定是非空树，至少有m+1个结点     | 可以是空树                           |
 
-- ![image-20220517211041872](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517211041872.png)
+- ![image-20220517211041872](assets\image-20220517211041872.png)
 
-- ![image-20220517211100533](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517211100533.png)
+- ![image-20220517211100533](assets\image-20220517211100533.png)
 
-- ![image-20220517211756242](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517211756242.png)
+- ![image-20220517211756242](assets\image-20220517211756242.png)
 
-- ![image-20220517211808128](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517211808128.png)
+- ![image-20220517211808128](assets\image-20220517211808128.png)
 
 ### 二叉树的定义
 
-![image-20220517211956713](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517211956713.png)
+![image-20220517211956713](assets\image-20220517211956713.png)
 
-![image-20220517211837953](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517211837953.png)
+![image-20220517211837953](assets\image-20220517211837953.png)
 
-![image-20220517211913622](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517211913622.png)
+![image-20220517211913622](assets\image-20220517211913622.png)
 
-![image-20220517212343994](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517212343994.png)
+![image-20220517212343994](assets\image-20220517212343994.png)
 
-![image-20220517212424242](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517212424242.png)
+![image-20220517212424242](assets\image-20220517212424242.png)
 
-![image-20220517212449395](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517212449395.png)
+![image-20220517212449395](assets\image-20220517212449395.png)
 
 ### 二叉树的性质
 
-![image-20220517212705325](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517212705325.png)
+![image-20220517212705325](assets\image-20220517212705325.png)
 
-![image-20220517212724132](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517212724132.png)
+![image-20220517212724132](assets\image-20220517212724132.png)
 
-![image-20220517212853025](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517212853025.png)
+![image-20220517212853025](assets\image-20220517212853025.png)
 
 ### 完全二叉树的性质
 
-![image-20220517212934665](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517212934665.png)
+![image-20220517212934665](assets\image-20220517212934665.png)
 
-![image-20220517213023953](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517213023953.png)
+![image-20220517213023953](assets\image-20220517213023953.png)
 
 
 
@@ -933,301 +933,301 @@
 
 ### 二叉树的顺序存储
 
-![image-20220517221507514](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517221507514.png)
+![image-20220517221507514](assets\image-20220517221507514.png)
 
-![image-20220517221537822](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517221537822.png)
+![image-20220517221537822](assets\image-20220517221537822.png)
 
-![image-20220517221605225](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517221605225.png)
+![image-20220517221605225](assets\image-20220517221605225.png)
 
-![image-20220517221848961](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517221848961.png)
+![image-20220517221848961](assets\image-20220517221848961.png)
 
 ### 二叉树的链式存储
 
 #### 定义
 
-![image-20220517221625595](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517221625595.png)
+![image-20220517221625595](assets\image-20220517221625595.png)
 
-![image-20220517221733230](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517221733230.png)
+![image-20220517221733230](assets\image-20220517221733230.png)
 
-![image-20220517221753914](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517221753914.png)
+![image-20220517221753914](assets\image-20220517221753914.png)
 
 #### 深度遍历
 
-![image-20220517222056033](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517222056033.png)
+![image-20220517222056033](assets\image-20220517222056033.png)
 
 ##### 介绍
 
-![image-20220517222230441](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517222230441.png)
+![image-20220517222230441](assets\image-20220517222230441.png)
 
 ##### 方式
 
-![image-20220517222308011](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517222308011.png)
+![image-20220517222308011](assets\image-20220517222308011.png)
 
-![image-20220517222328252](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517222328252.png)
+![image-20220517222328252](assets\image-20220517222328252.png)
 
 ##### 代码实现
 
-![image-20220517222412780](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517222412780.png)
+![image-20220517222412780](assets\image-20220517222412780.png)
 
-![image-20220517222424691](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517222424691.png)	
+![image-20220517222424691](assets\image-20220517222424691.png)	
 
-![image-20220517222439889](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517222439889.png)
+![image-20220517222439889](assets\image-20220517222439889.png)
 
 ##### 树的深度
 
-![image-20220517222711670](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517222711670.png)
+![image-20220517222711670](assets\image-20220517222711670.png)
 
 #### 层序遍历
 
-![image-20220517224247565](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517224247565.png)
+![image-20220517224247565](assets\image-20220517224247565.png)
 
-![image-20220517224306939](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517224306939.png)
+![image-20220517224306939](assets\image-20220517224306939.png)
 
 #### 构建二叉树
 
-![image-20220517233504611](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220517233504611.png)
+![image-20220517233504611](assets\image-20220517233504611.png)
 
 #### 线索二叉树
 
-![image-20220518191133013](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191133013.png)
+![image-20220518191133013](assets\image-20220518191133013.png)
 
-![image-20220518190007084](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518190007084.png)
+![image-20220518190007084](assets\image-20220518190007084.png)
 
-![image-20220518190039392](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518190039392.png)
+![image-20220518190039392](assets\image-20220518190039392.png)
 
-![image-20220518190056001](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518190056001.png)
+![image-20220518190056001](assets\image-20220518190056001.png)
 
-![image-20220518190228251](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518190228251.png)
+![image-20220518190228251](assets\image-20220518190228251.png)
 
 ##### 线索化
 
 ###### 普通版
 
-![image-20220518190540442](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518190540442.png)
+![image-20220518190540442](assets\image-20220518190540442.png)
 
 ###### 中序线索化
 
-![image-20220518190704137](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518190704137.png)
+![image-20220518190704137](assets\image-20220518190704137.png)
 
-![image-20220518190751206](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518190751206.png)
+![image-20220518190751206](assets\image-20220518190751206.png)
 
 ###### 先序线索化
 
-![image-20220518190938365](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518190938365.png)
+![image-20220518190938365](assets\image-20220518190938365.png)
 
-![image-20220518190953305](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518190953305.png)
+![image-20220518190953305](assets\image-20220518190953305.png)
 
 ###### 后序线索化
 
-![image-20220518191100528](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191100528.png)
+![image-20220518191100528](assets\image-20220518191100528.png)
 
-![image-20220518191112045](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191112045.png)
+![image-20220518191112045](assets\image-20220518191112045.png)
 
 ##### 找前驱/后继
 
-![image-20220518191327753](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191327753.png)
+![image-20220518191327753](assets\image-20220518191327753.png)
 
-![image-20220518191404252](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191404252.png)
+![image-20220518191404252](assets\image-20220518191404252.png)
 
 ###### 中序
 
-![image-20220518191541941](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191541941.png)
+![image-20220518191541941](assets\image-20220518191541941.png)
 
-![image-20220518191607034](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191607034.png)
+![image-20220518191607034](assets\image-20220518191607034.png)
 
 ###### 先序
 
-![image-20220518191733713](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191733713.png)
+![image-20220518191733713](assets\image-20220518191733713.png)
 
-![image-20220518191744053](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191744053.png)
+![image-20220518191744053](assets\image-20220518191744053.png)
 
-![image-20220518191800423](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191800423.png)
+![image-20220518191800423](assets\image-20220518191800423.png)
 
 ###### 后序
 
-![image-20220518191811654](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518191811654.png)
+![image-20220518191811654](assets\image-20220518191811654.png)
 
-![image-20220518192301142](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518192301142.png)
+![image-20220518192301142](assets\image-20220518192301142.png)
 
-![image-20220518192322611](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220518192322611.png)
+![image-20220518192322611](assets\image-20220518192322611.png)
 
 ### 树的存储结构
 
-![image-20220519161455979](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519161455979.png)
+![image-20220519161455979](assets\image-20220519161455979.png)
 
 #### 双亲表示法（顺序存储）
 
-![image-20220519161725859](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519161725859.png)
+![image-20220519161725859](assets\image-20220519161725859.png)
 
-![image-20220519161844682](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519161844682.png)
+![image-20220519161844682](assets\image-20220519161844682.png)
 
 #### 孩子表示法（顺序+链表）
 
-![image-20220519162004511](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519162004511.png)
+![image-20220519162004511](assets\image-20220519162004511.png)
 
 #### 孩子兄弟表示法（链式存储）
 
-![image-20220519162014786](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519162014786.png)
+![image-20220519162014786](assets\image-20220519162014786.png)
 
-![image-20220519162215472](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519162215472.png)
+![image-20220519162215472](assets\image-20220519162215472.png)
 
-![image-20220519162231168](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519162231168.png)
+![image-20220519162231168](assets\image-20220519162231168.png)
 
 #### 树和森林的转换
 
-![image-20220519162348777](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519162348777.png)
+![image-20220519162348777](assets\image-20220519162348777.png)
 
 #### 树的遍历
 
-![image-20220519181822364](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519181822364.png)
+![image-20220519181822364](assets\image-20220519181822364.png)
 
-![image-20220519183439441](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519183439441.png)
+![image-20220519183439441](assets\image-20220519183439441.png)
 
 ##### 先根遍历
 
-![image-20220519181919425](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519181919425.png)
+![image-20220519181919425](assets\image-20220519181919425.png)
 
 ##### 后根遍历
 
-![image-20220519182050506](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519182050506.png)
+![image-20220519182050506](assets\image-20220519182050506.png)
 
 ##### 层序遍历
 
-![image-20220519182833946](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519182833946.png)
+![image-20220519182833946](assets\image-20220519182833946.png)
 
 #### 森林的遍历
 
-![image-20220519183450932](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519183450932.png)
+![image-20220519183450932](assets\image-20220519183450932.png)
 
 ##### 先序遍历
 
-![image-20220519183117855](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519183117855.png)
+![image-20220519183117855](assets\image-20220519183117855.png)
 
-![image-20220519183143647](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519183143647.png)
+![image-20220519183143647](assets\image-20220519183143647.png)
 
 ##### 中序遍历
 
-![image-20220519183355486](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519183355486.png)
+![image-20220519183355486](assets\image-20220519183355486.png)
 
-![image-20220519183408337](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519183408337.png)
+![image-20220519183408337](assets\image-20220519183408337.png)
 
 ## 应用
 
 ### 二叉排序树
 
-![image-20220519185247124](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519185247124.png)
+![image-20220519185247124](assets\image-20220519185247124.png)
 
 #### 定义
 
-![image-20220519185339363](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519185339363.png)
+![image-20220519185339363](assets\image-20220519185339363.png)
 
 #### 查找
 
-![image-20220519185549676](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519185549676.png)
+![image-20220519185549676](assets\image-20220519185549676.png)
 
-![image-20220519185716423](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519185716423.png)
+![image-20220519185716423](assets\image-20220519185716423.png)
 
 #### 插入
 
-![image-20220519185832864](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519185832864.png)
+![image-20220519185832864](assets\image-20220519185832864.png)
 
 #### 构建
 
-![image-20220519190101817](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519190101817.png)
+![image-20220519190101817](assets\image-20220519190101817.png)
 
 #### 删除
 
-![image-20220519190714524](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519190714524.png)
+![image-20220519190714524](assets\image-20220519190714524.png)
 
-![image-20220519190904262](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519190904262.png)
+![image-20220519190904262](assets\image-20220519190904262.png)
 
-![image-20220519190915881](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519190915881.png)
+![image-20220519190915881](assets\image-20220519190915881.png)
 
-![image-20220519191004474](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519191004474.png)
+![image-20220519191004474](assets\image-20220519191004474.png)
 
-![image-20220519191334781](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519191334781.png)
+![image-20220519191334781](assets\image-20220519191334781.png)
 
-![image-20220519191610603](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519191610603.png)
+![image-20220519191610603](assets\image-20220519191610603.png)
 
-![image-20220519191625956](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519191625956.png)
+![image-20220519191625956](assets\image-20220519191625956.png)
 
 #### 查找效率分析
 
-![image-20220519191754145](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519191754145.png)
+![image-20220519191754145](assets\image-20220519191754145.png)
 
-![image-20220519191922792](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519191922792.png)
+![image-20220519191922792](assets\image-20220519191922792.png)
 
-![image-20220519192017101](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519192017101.png)
+![image-20220519192017101](assets\image-20220519192017101.png)
 
 ### 平衡二叉树
 
-![image-20220519193436015](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519193436015.png)
+![image-20220519193436015](assets\image-20220519193436015.png)
 
 #### 定义
 
-![image-20220519193808204](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519193808204.png)
+![image-20220519193808204](assets\image-20220519193808204.png)
 
 #### 插入
 
-![image-20220519194028983](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519194028983.png)
+![image-20220519194028983](assets\image-20220519194028983.png)
 
 #### 调整最小不平衡子树
 
-![image-20220519194149332](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519194149332.png)
+![image-20220519194149332](assets\image-20220519194149332.png)
 
-![image-20220519204111561](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519204111561.png)
+![image-20220519204111561](assets\image-20220519204111561.png)
 
 ##### LL
 
-![image-20220519194331172](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519194331172.png)
+![image-20220519194331172](assets\image-20220519194331172.png)
 
 ##### RR
 
-![image-20220519194344522](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519194344522.png)
+![image-20220519194344522](assets\image-20220519194344522.png)
 
-![image-20220519194403697](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519194403697.png)
+![image-20220519194403697](assets\image-20220519194403697.png)
 
 ##### LR
 
-![image-20220519194414803](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519194414803.png)
+![image-20220519194414803](assets\image-20220519194414803.png)
 
-![image-20220519194505863](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519194505863.png)
+![image-20220519194505863](assets\image-20220519194505863.png)
 
-![image-20220519203510634](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519203510634.png)
+![image-20220519203510634](assets\image-20220519203510634.png)
 
-![image-20220519203819083](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519203819083.png)
+![image-20220519203819083](assets\image-20220519203819083.png)
 
 ##### RL
 
-![image-20220519203853461](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519203853461.png)
+![image-20220519203853461](assets\image-20220519203853461.png)
 
-![image-20220519203927150](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519203927150.png)
+![image-20220519203927150](assets\image-20220519203927150.png)
 
-![image-20220519204025421](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519204025421.png)
+![image-20220519204025421](assets\image-20220519204025421.png)
 
 #### 查找效率分析
 
-![image-20220519204705037](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519204705037.png)
+![image-20220519204705037](assets\image-20220519204705037.png)
 
 ### 哈夫曼树
 
-![image-20220519205100393](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519205100393.png)
+![image-20220519205100393](assets\image-20220519205100393.png)
 
 #### 带权路径长度
 
-![image-20220519205720524](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519205720524.png)
+![image-20220519205720524](assets\image-20220519205720524.png)
 
 #### 定义
 
-![image-20220519205928303](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519205928303.png)
+![image-20220519205928303](assets\image-20220519205928303.png)
 
 #### 构造
 
-![image-20220519210038810](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519210038810.png)
+![image-20220519210038810](assets\image-20220519210038810.png)
 
 #### 哈夫曼编码
 
-![image-20220519212803771](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220519212803771.png)
+![image-20220519212803771](assets\image-20220519212803771.png)
 
 # 图
 
@@ -1235,309 +1235,309 @@
 
 ### 图的定义
 
-![image-20220528170532797](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528170532797.png)
+![image-20220528170532797](assets\image-20220528170532797.png)
 
 ### 基本概念
 
-![image-20220528170447920](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528170447920.png)
+![image-20220528170447920](assets\image-20220528170447920.png)
 
-![image-20220528171055010](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528171055010.png)
+![image-20220528171055010](assets\image-20220528171055010.png)
 
-![image-20220528171159430](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528171159430.png)
+![image-20220528171159430](assets\image-20220528171159430.png)
 
-![image-20220528171401181](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528171401181.png)
+![image-20220528171401181](assets\image-20220528171401181.png)
 
 - 入度：ID in degree
 - 出度：OD out degree
 - 度：TD total degree
 
-![image-20220528171544716](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528171544716.png)
+![image-20220528171544716](assets\image-20220528171544716.png)
 
-![image-20220528171616488](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528171616488.png)
+![image-20220528171616488](assets\image-20220528171616488.png)
 
-![image-20220528174519568](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528174519568.png)
+![image-20220528174519568](assets\image-20220528174519568.png)
 
-![image-20220528174538610](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528174538610.png)
+![image-20220528174538610](assets\image-20220528174538610.png)
 
-![image-20220528174622985](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528174622985.png)
+![image-20220528174622985](assets\image-20220528174622985.png)
 
-![image-20220528174656789](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528174656789.png)
+![image-20220528174656789](assets\image-20220528174656789.png)
 
-![image-20220528174737550](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528174737550.png)
+![image-20220528174737550](assets\image-20220528174737550.png)
 
-![image-20220528174829774](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528174829774.png)
+![image-20220528174829774](assets\image-20220528174829774.png)
 
-![image-20220528174916209](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528174916209.png)
+![image-20220528174916209](assets\image-20220528174916209.png)
 
-![image-20220528174935445](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528174935445.png)
+![image-20220528174935445](assets\image-20220528174935445.png)
 
-![image-20220528174948508](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528174948508.png)
+![image-20220528174948508](assets\image-20220528174948508.png)
 
-![image-20220528175024716](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528175024716.png)
+![image-20220528175024716](assets\image-20220528175024716.png)
 
 ## 基本操作
 
-![image-20220528221230203](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221230203.png)
+![image-20220528221230203](assets\image-20220528221230203.png)
 
 ## 实现
 
-![image-20220528203532317](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528203532317.png)
+![image-20220528203532317](assets\image-20220528203532317.png)
 
-![image-20220528211948730](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528211948730.png)
+![image-20220528211948730](assets\image-20220528211948730.png)
 
 ### 邻接矩阵
 
-![image-20220528204349582](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528204349582.png)
+![image-20220528204349582](assets\image-20220528204349582.png)
 
-![image-20220528203710642](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528203710642.png)
+![image-20220528203710642](assets\image-20220528203710642.png)
 
-![image-20220528203759021](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528203759021.png)
+![image-20220528203759021](assets\image-20220528203759021.png)
 
-![image-20220528204000602](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528204000602.png)
+![image-20220528204000602](assets\image-20220528204000602.png)
 
-![image-20220528204103560](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528204103560.png)
+![image-20220528204103560](assets\image-20220528204103560.png)
 
-![image-20220528204202163](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528204202163.png)
+![image-20220528204202163](assets\image-20220528204202163.png)
 
-![image-20220528204236771](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528204236771.png)
+![image-20220528204236771](assets\image-20220528204236771.png)
 
-![image-20220528204319201](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528204319201.png)
+![image-20220528204319201](assets\image-20220528204319201.png)
 
 ### 邻接表
 
-![image-20220528210247172](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528210247172.png)
+![image-20220528210247172](assets\image-20220528210247172.png)
 
-![image-20220528210747412](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528210747412.png)
+![image-20220528210747412](assets\image-20220528210747412.png)
 
-![image-20220528210908876](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528210908876.png)
+![image-20220528210908876](assets\image-20220528210908876.png)
 
-![image-20220528211204833](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528211204833.png)
+![image-20220528211204833](assets\image-20220528211204833.png)
 
-![image-20220528211515675](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528211515675.png)
+![image-20220528211515675](assets\image-20220528211515675.png)
 
-![image-20220528211530435](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528211530435.png)
+![image-20220528211530435](assets\image-20220528211530435.png)
 
 ### 十字链表、邻接多重表
 
-![image-20220528211702310](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528211702310.png)
+![image-20220528211702310](assets\image-20220528211702310.png)
 
 #### 十字链表（有向图）
 
-![image-20220528212040152](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528212040152.png)
+![image-20220528212040152](assets\image-20220528212040152.png)
 
-![image-20220528212110019](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528212110019.png)
+![image-20220528212110019](assets\image-20220528212110019.png)
 
-![image-20220528212118841](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528212118841.png)
+![image-20220528212118841](assets\image-20220528212118841.png)
 
-![image-20220528215442804](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528215442804.png)
+![image-20220528215442804](assets\image-20220528215442804.png)
 
 #### 邻接多重表（无向图）
 
-![image-20220528212210082](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528212210082.png)
+![image-20220528212210082](assets\image-20220528212210082.png)
 
-![image-20220528220703030](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528220703030.png)
+![image-20220528220703030](assets\image-20220528220703030.png)
 
-![image-20220528220803071](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528220803071.png)
+![image-20220528220803071](assets\image-20220528220803071.png)
 
 #### 十字链表vs邻接多重表
 
-![image-20220528220845089](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528220845089.png)
+![image-20220528220845089](assets\image-20220528220845089.png)
 
 ### 基本操作
 
-![image-20220528221429616](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221429616.png)
+![image-20220528221429616](assets\image-20220528221429616.png)
 
-![image-20220528221453769](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221453769.png)
+![image-20220528221453769](assets\image-20220528221453769.png)
 
-![image-20220528221501820](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221501820.png)
+![image-20220528221501820](assets\image-20220528221501820.png)
 
-![image-20220528221511358](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221511358.png)
+![image-20220528221511358](assets\image-20220528221511358.png)
 
-![image-20220528221521138](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221521138.png)
+![image-20220528221521138](assets\image-20220528221521138.png)
 
-![image-20220528221536298](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221536298.png)
+![image-20220528221536298](assets\image-20220528221536298.png)
 
-![image-20220528221544268](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221544268.png)
+![image-20220528221544268](assets\image-20220528221544268.png)
 
-![image-20220528221553668](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221553668.png)
+![image-20220528221553668](assets\image-20220528221553668.png)
 
-![image-20220528221602068](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221602068.png)
+![image-20220528221602068](assets\image-20220528221602068.png)
 
-![image-20220528221621658](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221621658.png)
+![image-20220528221621658](assets\image-20220528221621658.png)
 
-![image-20220528221634869](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221634869.png)
+![image-20220528221634869](assets\image-20220528221634869.png)
 
-![image-20220528221644310](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221644310.png)	
+![image-20220528221644310](assets\image-20220528221644310.png)	
 
-![image-20220528221654589](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221654589.png)
+![image-20220528221654589](assets\image-20220528221654589.png)
 
-![image-20220528221709793](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221709793.png)
+![image-20220528221709793](assets\image-20220528221709793.png)
 
-![image-20220528221719930](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528221719930.png)
+![image-20220528221719930](assets\image-20220528221719930.png)
 
 ### 图的遍历
 
 #### 广度优先遍历
 
-![image-20220528222551380](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528222551380.png)
+![image-20220528222551380](assets\image-20220528222551380.png)
 
-![image-20220528222707819](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528222707819.png)
+![image-20220528222707819](assets\image-20220528222707819.png)
 
-![image-20220528222835209](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528222835209.png)
+![image-20220528222835209](assets\image-20220528222835209.png)
 
-![image-20220528222935050](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528222935050.png)	![image-20220528223102749](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528223102749.png)
+![image-20220528222935050](assets\image-20220528222935050.png)	![image-20220528223102749](assets\image-20220528223102749.png)
 
-![image-20220528223118016](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528223118016.png)
+![image-20220528223118016](assets\image-20220528223118016.png)
 
-![image-20220528223130744](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528223130744.png)
+![image-20220528223130744](assets\image-20220528223130744.png)
 
-![image-20220528223155343](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528223155343.png)
+![image-20220528223155343](assets\image-20220528223155343.png)
 
-![image-20220528224929840](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528224929840.png)
+![image-20220528224929840](assets\image-20220528224929840.png)
 
-![image-20220528225001399](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528225001399.png)
+![image-20220528225001399](assets\image-20220528225001399.png)
 
-![image-20220528225017681](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528225017681.png)
+![image-20220528225017681](assets\image-20220528225017681.png)
 
-![image-20220528223214389](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528223214389.png)
+![image-20220528223214389](assets\image-20220528223214389.png)
 
-![image-20220528223233641](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220528223233641.png)
+![image-20220528223233641](assets\image-20220528223233641.png)
 
 #### 深度优先遍历
 
-![image-20220529152549449](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529152549449.png)
+![image-20220529152549449](assets\image-20220529152549449.png)
 
-![image-20220529152609436](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529152609436.png)
+![image-20220529152609436](assets\image-20220529152609436.png)
 
-![image-20220529152715136](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529152715136.png)
+![image-20220529152715136](assets\image-20220529152715136.png)
 
-![image-20220529152819173](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529152819173.png)
+![image-20220529152819173](assets\image-20220529152819173.png)
 
-![image-20220529152837403](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529152837403.png)
+![image-20220529152837403](assets\image-20220529152837403.png)
 
-![image-20220529152856061](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529152856061.png)
+![image-20220529152856061](assets\image-20220529152856061.png)
 
-![image-20220529152924009](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529152924009.png)
+![image-20220529152924009](assets\image-20220529152924009.png)
 
 ### 应用
 
 #### 最小生成树
 
-![image-20220529153828719](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529153828719.png)
+![image-20220529153828719](assets\image-20220529153828719.png)
 
-![image-20220529153937830](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529153937830.png)
+![image-20220529153937830](assets\image-20220529153937830.png)
 
-![image-20220529154019048](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529154019048.png)
+![image-20220529154019048](assets\image-20220529154019048.png)
 
-![image-20220529154032749](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529154032749.png)
+![image-20220529154032749](assets\image-20220529154032749.png)
 
-![image-20220529154122021](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529154122021.png)
+![image-20220529154122021](assets\image-20220529154122021.png)
 
 ##### Prim算法
 
-![image-20220529154215407](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529154215407.png)
+![image-20220529154215407](assets\image-20220529154215407.png)
 
 ##### Kruskal算法
 
-![image-20220529154546856](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529154546856.png)
+![image-20220529154546856](assets\image-20220529154546856.png)
 
 prim VS kruskal
 
-![image-20220529154653948](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529154653948.png)
+![image-20220529154653948](assets\image-20220529154653948.png)
 
-![image-20220529155701019](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529155701019.png)
+![image-20220529155701019](assets\image-20220529155701019.png)
 
-![image-20220529155726616](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529155726616.png)
+![image-20220529155726616](assets\image-20220529155726616.png)
 
 #### 最短路径
 
-![image-20220529160643051](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529160643051.png)
+![image-20220529160643051](assets\image-20220529160643051.png)
 
-![image-20220529160812827](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529160812827.png)
+![image-20220529160812827](assets\image-20220529160812827.png)
 
 ##### BFS算法（单源最短路径无权图）
 
-![image-20220529161634305](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529161634305.png)
+![image-20220529161634305](assets\image-20220529161634305.png)
 
-![image-20220529161726280](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529161726280.png)
+![image-20220529161726280](assets\image-20220529161726280.png)
 
-![image-20220529162111318](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529162111318.png)
+![image-20220529162111318](assets\image-20220529162111318.png)
 
 ##### dijkstra算法（单源最短路径带权图）
 
-![image-20220529162241637](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529162241637.png)
+![image-20220529162241637](assets\image-20220529162241637.png)
 
-![image-20220529162345247](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529162345247.png)
+![image-20220529162345247](assets\image-20220529162345247.png)
 
-![image-20220531191506872](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531191506872.png)
+![image-20220531191506872](assets\image-20220531191506872.png)
 
-![image-20220531191527992](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531191527992.png)
+![image-20220531191527992](assets\image-20220531191527992.png)
 
-![image-20220531191546972](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531191546972.png)
+![image-20220531191546972](assets\image-20220531191546972.png)
 
-![image-20220531191956119](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531191956119.png)
+![image-20220531191956119](assets\image-20220531191956119.png)
 
-![image-20220531193037169](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531193037169.png)
+![image-20220531193037169](assets\image-20220531193037169.png)
 
 ##### Floyd算法
 
-![image-20220531193151926](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531193151926.png)
+![image-20220531193151926](assets\image-20220531193151926.png)
 
-![image-20220531193218319](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531193218319.png)
+![image-20220531193218319](assets\image-20220531193218319.png)
 
-![image-20220531204723480](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531204723480.png)
+![image-20220531204723480](assets\image-20220531204723480.png)
 
-![image-20220531204802529](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531204802529.png)
+![image-20220531204802529](assets\image-20220531204802529.png)
 
-![image-20220531204823093](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531204823093.png)
+![image-20220531204823093](assets\image-20220531204823093.png)
 
 #### 有向无环图
 
-![image-20220531213000796](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531213000796.png)
+![image-20220531213000796](assets\image-20220531213000796.png)
 
-![image-20220531213019670](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531213019670.png)
+![image-20220531213019670](assets\image-20220531213019670.png)
 
-![image-20220531213042026](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531213042026.png)
+![image-20220531213042026](assets\image-20220531213042026.png)
 
 #### 拓扑排序
 
-![image-20220531220135781](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531220135781.png)
+![image-20220531220135781](assets\image-20220531220135781.png)
 
-![image-20220531213233654](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531213233654.png)
+![image-20220531213233654](assets\image-20220531213233654.png)
 
-![image-20220531213355778](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531213355778.png)
+![image-20220531213355778](assets\image-20220531213355778.png)
 
-![image-20220531215608743](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531215608743.png)
+![image-20220531215608743](assets\image-20220531215608743.png)
 
-![image-20220531215637155](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531215637155.png)
+![image-20220531215637155](assets\image-20220531215637155.png)
 
-![image-20220531215719550](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531215719550.png)
+![image-20220531215719550](assets\image-20220531215719550.png)
 
-![image-20220531215933151](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531215933151.png)
+![image-20220531215933151](assets\image-20220531215933151.png)
 
-![image-20220531220003570](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531220003570.png)
+![image-20220531220003570](assets\image-20220531220003570.png)
 
-![image-20220531220110585](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531220110585.png)
+![image-20220531220110585](assets\image-20220531220110585.png)
 
 #### 关键路径
 
-![image-20220531220334161](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531220334161.png)
+![image-20220531220334161](assets\image-20220531220334161.png)
 
-![image-20220531220355571](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531220355571.png)
+![image-20220531220355571](assets\image-20220531220355571.png)
 
-![image-20220531223906005](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531223906005.png)
+![image-20220531223906005](assets\image-20220531223906005.png)
 
 
 
-![image-20220531223959857](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531223959857.png)
+![image-20220531223959857](assets\image-20220531223959857.png)
 
-![image-20220531224132018](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531224132018.png)
+![image-20220531224132018](assets\image-20220531224132018.png)
 
-![image-20220531224025845](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531224025845.png)
+![image-20220531224025845](assets\image-20220531224025845.png)
 
-![image-20220531224035814](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531224035814.png)
+![image-20220531224035814](assets\image-20220531224035814.png)
 
-![image-20220531224055490](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220531224055490.png)
+![image-20220531224055490](assets\image-20220531224055490.png)
 
 # 查找
 
@@ -1547,11 +1547,11 @@ prim VS kruskal
 
 ### B树
 
-![image-20220529164858259](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529164858259.png)
+![image-20220529164858259](assets\image-20220529164858259.png)
 
-![image-20220529165449774](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529165449774.png)
+![image-20220529165449774](assets\image-20220529165449774.png)
 
-![image-20220529165652633](E:\My Documents\xmind\Computer_Science\Data Structure.assets\image-20220529165652633.png)
+![image-20220529165652633](assets\image-20220529165652633.png)
 
 ## 散列表的查找
 
@@ -1559,8 +1559,8 @@ prim VS kruskal
 
 ## 线性表
 
-- ![image-20231110162402034](Data Structure.assets/image-20231110162402034.png)
+- ![image-20231110162402034](assets/image-20231110162402034.png)
 
 ## 栈
 
-- ![image-20231110162458990](Data Structure.assets/image-20231110162458990.png)
+- ![image-20231110162458990](assets/image-20231110162458990.png)
