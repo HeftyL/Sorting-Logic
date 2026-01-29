@@ -7,7 +7,7 @@
 ## 主机规划和磁盘分区
 
 - 设备名称与linux文件的对应
-  - ![image-20220914140824098](Linux.assets/image-20220914140824098.png)
+  - ![image-20220914140824098](assets/image-20220914140824098.png)
 
 ### MBR
 
@@ -29,7 +29,7 @@
 
 ### Bios和UEFI
 
-- ![image-20220914151026290](Linux.assets/image-20220914151026290.png)
+- ![image-20220914151026290](assets/image-20220914151026290.png)
 
 ## vim和linux的安装
 
@@ -268,7 +268,7 @@
 - vi是“Visual”的不正规的缩写，来源于另外一个文本编辑器ex的命令visual。
 - Linux系统会内置vi文本编辑器
 - Vim 具有程序编辑的能力，可以看做是Vi的增强版本，可以主动的以字体颜色辨别语法的正确性，方便程序设计。代码补完、编译及错误跳转等方便编程的功能特别丰富，在程序员中被广泛使用。
-- ![img](Linux.assets/vi-vim-cheat-sheet-sch.gif)
+- ![img](assets/vi-vim-cheat-sheet-sch.gif)
 
 ### 模式
 
@@ -356,7 +356,7 @@
 - man command、help command、command --help查看帮助
 
   - man：manual
-    - man代号：![image-20220914171749688](Linux.assets/image-20220914171749688.png)
+    - man代号：![image-20220914171749688](assets/image-20220914171749688.png)
 
 - Path
 
