@@ -13,7 +13,7 @@
 - 手机分类
   - 功能手机( Feature Phone )：具有传统手机的基本功能，如打电话、发短信、照相等。
   - 智能手机( Smart Phone )：具有开放的操作系统、硬件和软件的可扩充性和支持第三方的二次开发。
-- ![img](Android Telephone.assets/format,f_auto.jpeg)
+- ![img](assets/format,f_auto.jpeg)
   - 智能手机的基本硬件结构大多采用双处理器架构:主处理器和从处理器。
     - 主处理器运行开放式操作系统以及操作系统之上的各种应用，负责整个系统的控制;
     - 从处理器负责无线通信基本能力，主要包括DBB ( Digital Baseband,数字基带)和ABB( Analog Baseband,模拟基带), 完成语音信号和数字信号调制解调、信道编码解码和无线Modem控制。
@@ -32,7 +32,7 @@
 
 ## Android Telephony框架结构
 
-- ![img](Android Telephone.assets/webp.webp)
+- ![img](assets/webp.webp)
   - Android Telephony的业务应用跨越AP和BP，AP与BP相互通信，符合前面介绍的智能手机的硬件基本结构。
   - Android系统在AP上运行，而Telephony运行在Linux Kernel之上的用户空间。
   - Android Telephony也采用了分层结构的设计,共跨越了三层:应用层、应用框架层和系统运行库层，与Android操作系统整体分层结构保持一致;
@@ -44,7 +44,7 @@
 - HAL ( Hardware Abstraction Layer, 硬件抽象层)在Linux和Windows操作系统平台下有不同的实现方式。
   - Windows下的HAL位于操作系统的最底层，它直接操作物理硬件设备，用来隔离与不同硬件相关的信息，为上层的操作系统和设备驱动程序提供一个统一接口， 起到对硬件的抽象作用。
   - Linux下的HAL并不是位于操作系统的最底层，它位于操作系统核心层和驱动程序之上，是一个运行在用户空间中的服务程序。
-- ![image-20220624163209086](Android Telephone.assets/image-20220624163209086.png)
+- ![image-20220624163209086](assets/image-20220624163209086.png)
 
 - 作用
   - HAL是一个位于操作系统和驱动程序之上，运行在用户空间中的服务程序。其目的是对上层应用提供一个统一的查询硬件设备的接口。HAL所谓的抽象并不提供对硬件的实际操作，对硬件的操作仍然由具体的驱动程序来完成。
@@ -52,12 +52,12 @@
 
 #### HAL的运行结构
 
-- ![image-20220624164620165](Android Telephone.assets/image-20220624164620165.png)
+- ![image-20220624164620165](assets/image-20220624164620165.png)
   - 分类
     - 老式HAL结构：应用或框架通过so动态链接库调用从而达到对硬件驱动的访问。在so动态链接库里，实现了对驱动的访问逻辑处理。
     - 新式HAL结构：采用Stub代理方式调用。HAL Stub是一种代理概念，虽然Stub仍是以`*.so`的形式存在，但HAL已经将`*.so` 的具体实
       现隐藏了起来。Stub 向HAL提供operations方法，Runtime 通过Stub提供的so获取它的operations方法，并告知Runtime的callback方法。这样Runtime和Stub都有对方调用的方法，一个应用的请求通过Runtime调用Stub的operations方法，而Stub响应operations方法并完成后，再调用Runtime的callback方法返回。
-      - ![image-20220624165135191](Android Telephone.assets/image-20220624165135191.png)
+      - ![image-20220624165135191](assets/image-20220624165135191.png)
       - HAL Stub有一种包含关系， 即HAL里包含了很多的Stub。Runtime 只要说明请求类型，就可以取得并操作Stub对应的operations方法。其实现主要在hardware.c和hardware.h文件中。实质也是通过dlopen方法加载.so动态链接库,从而调用.so里的符号( symbol )实现。
 
 # 搭建Android源代码编译调试环境
@@ -413,7 +413,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ### Android通话模型
 
-- ![image-20220628175628708](Android Telephone.assets/image-20220628175628708.png)
+- ![image-20220628175628708](assets/image-20220628175628708.png)
 
 - 系统的分层
   - Dialer 应用是普通的Android App应用，其运行进程的用户信息和进程信息，也能说明此问题; 
@@ -444,7 +444,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ## Telecom包结构
 
-- ![image-20220629102315902](Android Telephone.assets/image-20220629102315902.png)
+- ![image-20220629102315902](assets/image-20220629102315902.png)
 
 - 代码库：明确代码库packages/services/Telecomm,注意Telecomm有两个m字符，而其编译出的应用文件名为Telecom.apk。
 - 系统签名：packages/services/Telecomm代码库根据Android.mk编译脚本,将编译出Telecom.apk Android应用文件，并使用平台签名，可以保障获取到system用户权限并运行在system_server系统进程空间。
@@ -471,7 +471,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 - ![image-20220715112749896](assets/image-20220715112749896.png)
 
-- ![image-20220629104653079](Android Telephone.assets/image-20220629104653079.png)
+- ![image-20220629104653079](assets/image-20220629104653079.png)
 
 - AndroidManifest.xml应用配置文件中对android.telecom.ITelecomService服务的配置，可以找到com.android.server.telecom.components. TelecomService类，它就是Telecom应用的加载入口。此服务将在SystemServer系统启动过程中被加载。
 - 流程
@@ -494,7 +494,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ### frameworks/base/telecomm包结构
 
-- ![image-20220629110309836](Android Telephone.assets/image-20220629110309836.png)
+- ![image-20220629110309836](assets/image-20220629110309836.png)
   - InCallService和ConnectionService等Java程序放在frameworks/base/telecomm中的原因：涉及一个非常有用的设计模式——模板方法。 也就是在Android Framework中定义模板，在具体的应用实现类中重写模板的方法。
 
 
@@ -504,7 +504,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
   - 绑定服务
   - setInCallAdapter
   - addCall
-  - ![image-20220629111713554](Android Telephone.assets/image-20220629111713554.png)
+  - ![image-20220629111713554](assets/image-20220629111713554.png)
   - InCallService.aidl 和lInCallAdapter .aidI接口实现
     - com.android.server. telecom.InCallAdapter实现了InCallAdapter.aidl 接口; 
     - android.telecom.InCallService抽象类的私有内部类InCallServiceBinder继承实现了InCallService.aidl 接口。
@@ -515,7 +515,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
     - com.android.server.telecom.InCallAdapter和InCallController对象运行在Telecom应用进程空间。Telecom应用提供lInCallAdapter服务，InCallController 对象绑定InCallService时保存了lInCallService Binder 对象，从而使用此对象可以调用addCall/updateCall等接口，跨进程访问Dialer应用提供的InCallService 服务;
     - 除com.android.server.telecom.InCallAdapter和InCallController的其他类都运行在Dialer应用的进程空间。
 - Telecom应用主动发起的绑定InCallService服务，其入口是InCallController类的onCallAdded()方法
-  - ![image-20220629112502340](Android Telephone.assets/image-20220629112502340.png)
+  - ![image-20220629112502340](assets/image-20220629112502340.png)
   - InCallController内部类：InCallController有六个内部类: InCallServiceConnection 、InCallServicelnfo、 InCallService、BindingConnection、EmergencyInCallServiceConnection、 CarSwappingInCallServiceConnection和NonUlInCallServiceConnectionCollection
   - CarSwappinglnCallServiceConnection的代理关系：通过调用setCarMode方法设置mlsCarMode和mCurrentConnection属性，在调用connect或
     disconnect方法时则调用mCurrentConnection 对象的对应方法，而mCurrentConnection是InCallServiceConnection对象类型，即InCallServiceBindingConnection对象。
@@ -528,7 +528,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
   - bind Service
   - addConnectionServiceAdapter
   - createConnection
-- ![image-20220629113405852](Android Telephone.assets/image-20220629113405852.png)
+- ![image-20220629113405852](assets/image-20220629113405852.png)
   - ConnectionService.aidl 和IConnectionServiceAdapter .aidl接口实现
     - 抽象类ConnectionService的匿名内部类实现了ConnectionService.aidl 接口，而ConnectionService的mBinder属性对象将同步创建该匿名内部类对象。
     - 在Telecom应用中，ConnectionServiceWrapper类的私有内部类Adapter 继承实现了ConnectionService.aidl。
@@ -537,7 +537,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
     - TeleService 应用进程空间：除了ConnectionServiceWrapper类，其他类均运行在TeleService应用的进程空间。
 
 - Telecom应用主动发起的绑定IConnectionService 调用过程的入口是ConnectionServiceWrapper类的createConnection 方法
-  - ![image-20220629114106304](Android Telephone.assets/image-20220629114106304.png)
+  - ![image-20220629114106304](assets/image-20220629114106304.png)
   - ConnectionServiceWrapper 内部类及继承关系
     - ConnectionServiceWrapper是一个普通的Java类型，继承了抽象的ServiceBinder类，但是在Telecom应用中，此对象是通过ConnectionServiceRepository的getService方法获取
     - ConnectionServiceWrapper 有一个内部类Adapter ，它实现了lConnectionServiceAdapter服务接口，并且在方法调用过程中临时创建三个BindCallback的匿名对象。
@@ -554,10 +554,10 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ## 演进Telecom交互模型
 
-- ![image-20220629134057343](Android Telephone.assets/image-20220629134057343.png)
+- ![image-20220629134057343](assets/image-20220629134057343.png)
   - 通话控制消息下发:Dialer应用接收用户操作后，通过InCallAdapter服务接口调用发出通话控制消息; Telecom 接收通话控制消息，经过处理后通过IConnectionService服务接口，将通话控制消息发送给TeleService 应用。
   - 通话状态变化消息上报:右边的模型说明了通话状态变化消息上报的过程，TeleService应用接收RIL消息后，通过IConnectionServiceAdapter服务接口调用发出通话状态变化消息; Telecom 接收通话状态变化消息，经过处理后通过IInCallService服务接口，将通话状态变化消息发送给Dialer应用。
-  - ![image-20220629134553871](Android Telephone.assets/image-20220629134553871.png)
+  - ![image-20220629134553871](assets/image-20220629134553871.png)
     - 消息顺时针方向传递为通话控制消息下发的流程。
     - 消息逆时针方向传递为通话状态变化消息上报的流程。
     - Telecom应用承载lInCallAdapter和IConnectionServiceAdapter两个Adapter服务;而Dialer和TeleService应用各自承载着InCallService和IConnectionService两个Service服务。
@@ -570,7 +570,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 - 在Telecom应用中主要处理两种消息类型:顺时针方向下发的通话控制消息和逆时针方向上报的通话状态变化消息。而Listener消息回调承载着上报消息的业务处理逻辑，其应用场景是ConnectionServiceWrapper 的Adapter服务对象接收到TeleService应用的接口调用，通知当前Connection和Call的状态或属性发生的变化，再经过一系列的Listener消息回调处理，最终由InCallController创建ParcelableCall对象，使用IInCallService服务接口调用发送给Dialer应用。
 - Telecom应用中消息回调的全貌
-  - ![image-20220629150820007](Android Telephone.assets/image-20220629150820007.png)
+  - ![image-20220629150820007](assets/image-20220629150820007.png)
     - 接收上报消息的入口：IConnectionServiceAdapter服务即Adapter对象。
     - 第一条消息回调通道：CreateConnectionResponse消息回调的过程是第一条消息回调通道，也就是在Connection 相关的接口调用过程中，IConnectionServiceAdapter 服务即Adapter 对象接收到上报消息，通过消息回调将消息发送到Call对象，再通过Call.Listener对象进行消息回调CallsManager对象和InCallController的内部匿名对象。
     - 第二条消息回调通道：Adapter对象接收到.上报消息，绕过了Call 对象的相关消息处理过程，直接使用ConnectionServiceWrapper对象的mCallsManager属性调用CallsManager对象的方法，再通过CallsManagerListener对象进行Listener消息回调，最后交给InCallController处理。
@@ -579,7 +579,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 - 在TelecomSystem初始化过程中创建CallsManager对象时，将同步创建CallsManagerListener对象，并增加到CallsManager对象的`Set<CallsManagerListener> mListeners`集合中;而通话的相关状态或属性发生改变时，CallsManager将遍历mListeners列表，进行onXXX的消息回调
 
-- ![image-20220629140902353](Android Telephone.assets/image-20220629140902353.png)
+- ![image-20220629140902353](assets/image-20220629140902353.png)
 
   - CallsManagerListener 接口定义
 
@@ -620,7 +620,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 ### Call.Listener
 
 - 拨号流程或是来电流程中，都会创建com.android.server.telecom.Call对象，此类中定义了Listener接口，主要有onSuccessfulOutgoingCall、onFailedOutgoingCall、onSuccessullncomingCall、onFailedIncomingCall、onXXXChanged，都是以onXXX开头的，并且都传递Call对象的引用，当前Call类中的内部抽象类ListenerBase实现了Listener接口的所有方法，ListenerBase 实现的所有方法没有具体的代码逻辑。
-- ![image-20220629143321844](Android Telephone.assets/image-20220629143321844.png)
+- ![image-20220629143321844](assets/image-20220629143321844.png)
   - Call.Listener接口定义
     - Call. Listener接口在Call类中定义，ListenerBase 抽象类实现了此接口的所有方法，并且这些方法都没有任何的业务逻辑代码，与CallsManagerListenerBase类的设计思想是一致的。
   - ListenerBase子类
@@ -644,7 +644,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
   - 响应InCallAdapter服务调用，完成通话控制消息转发。
   - 响应IConnectionServiceAdapter服务调用，完成通话状态变化消息转发。
 - Telecom应用接收到外界的通话关键信息后，将统一汇总到CallsManager 中处理
-  - ![image-20220629151810129](Android Telephone.assets/image-20220629151810129.png)
+  - ![image-20220629151810129](assets/image-20220629151810129.png)
 
 ### 记录通话日志
 
@@ -688,7 +688,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ### TeleService包结构
 
-- ![image-20220629162035207](Android Telephone.assets/image-20220629162035207.png)
+- ![image-20220629162035207](assets/image-20220629162035207.png)
   - TeleService系统应用的编译文件Android.mk依赖telephony-common.jar包,即Telephony业务模型的实现。
   - com.android.phone:TeleService:系统应用基础包，主要包括phoneApp、PhoneInterfaceManager等Java代码文件。
   - com.android.services.telephony:与lonnectionService 服务实现相关的Java 代码，如TelephonyConnection、TelephonyConnectionService 等Java代码文件。
@@ -726,7 +726,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ### GsmCdmaPhone
 
-- ![image-20220629171920047](Android Telephone.assets/image-20220629171920047.png)
+- ![image-20220629171920047](assets/image-20220629171920047.png)
 
   - GsmCdmaPhone 对象本质
     - Phone抽象类实现PhoneInterallnterface接口并继承Handler 类，通过重写handleMessage方法实现消息的异步处理。
@@ -920,7 +920,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 ### IConnectionService应用服务
 
 - Telecom交互模型绑定IConnectionService服务的处理机制，IConnectionService 服务接收到createConnection请求后，通过ConnectionRequest对象获取相关信息创建TelephonyConnection对象，在完成通话相关操作后，通过TelephonyConnection对象的相关信息创建ParcelableConnection对象并返回给Telecom进程。
-- ![image-20220630160855082](Android Telephone.assets/image-20220630160855082.png)
+- ![image-20220630160855082](assets/image-20220630160855082.png)
   - IConnectionService核心类图的代码归属于两个库: frameworks/base/telecomm( Android Framework )和packages/services/Telephony ( TeleService系统应用)。
   - TelephonyConnectionService继承抽象类ConnectionService,运行在TeleService系统应用空间，承载IConnectionService服务; TelephonyConnection 继承抽象类Connection,同样运行在TeleService系统应用空间。
 - 区分Connection
@@ -954,7 +954,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 - GsmCdmaPhone对象将语音通话业务交给GsmCdmaCallTracker对象来管理和维护
   - 查询语音通话状态
   - 提供语音通话控制能力
-- ![image-20220630174949813](Android Telephone.assets/image-20220630174949813.png)
+- ![image-20220630174949813](assets/image-20220630174949813.png)
   - CalITracker抽象类是一个自定义的Handler 消息处理类，它实现了pollCallsWhenSafe 、handleRadioAvailable等重要方法。
   - CallTracker抽象类有两个子类: GsmCdmaCallTracker 和ImsPhoneCalTracker类，分别在CS域(Circuit Switch,电路交换)域和PS ( Packet Switch,分组交换)域完成通话能力管理和控制的处理逻辑。
 
@@ -1002,7 +1002,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
   3. 接下来GsmCdmaCallTracker对象会进行第二次的Handler 消息回调处理流程，调用operationComplete方法来查询当前最新的Call List列表
   4. RIL处理完GsmCdmaCallTracker对象发出的查询当前最新的Call List 列表的请求后，由RILJ对象使用Message消息对象发出Handler消息通知, GsmCdmaCallTracker对象中的handleMessage方法接收和响应此消息，至此，完成了第二次的Handler消息回调处理。
 
-- ![image-20220701104440855](Android Telephone.assets/image-20220701104440855.png)
+- ![image-20220701104440855](assets/image-20220701104440855.png)
   1. ConnectionService和TelephonyConnection是TeleService 系统应用中的代码，运行在com.android.phone进程空间，用来接收Telecom系统应用发起的通话控制请求，并通过Telecom alld匹配到TelephonyConnection对象。
   2. TelephonyConnection通过getPhone方法，首先获取GsmCdmaConnection对象，然后获取到GsmCdmaPhone 对象，再调用GsmCdmaPhone对象的dial、acceptCall、rejectCall 等通话管理和控制方法。
   3. GsmCdmaPhone对象接收到这些方法调用请求后，使用mCT对象(即GsmCdmaCallTracker对象)继续调用对应的通话管理和控制方法
@@ -1017,7 +1017,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 #### CallTracker对象被动接收
 
 - GsmCdmaCallTracker对象的Handler 消息处理机制会被动接收和处理RILJ对象上报的三种类型的Handler消息，这三个消息与通话状态的关系非常密切
-- ![image-20220701105313556](Android Telephone.assets/image-20220701105313556.png)
+- ![image-20220701105313556](assets/image-20220701105313556.png)
   1. TeleService 系统应用加载Telephony业务模型创建GsmCdmaCallTracker对象的同时，向RILJ对象注册EVENT_CALL_STATE_CHANGE等三个类型的Handler消息。
   2. RILJ层接收到Modem发出的通话状态变化消息,向GsmCdmaCallTracker对象发出EVENT_CALL_ STATE_ CHANGE类型的Handler消息通知
   3. GsmCdmaCallTracker对象调用pollCallsWhenSafe方法响应EVENT_CALL STATE_CHANGE类型的Message消息。pollCallsWhenSafe方法首先会生成EVENT_POLL_CALLS_RESULT类型的Handler消息对象，接着使用此对象作为参数发起mCi.getCurrentCalls调用，向RILJ对象发出查询最新Cal lList列表的消息
@@ -1071,7 +1071,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 - 通过 Call对象获取其mState状态从而更新GsmCdmaCallTracker的mState属性，它们之间的状态是保持同步的。
 - 发出mState状态变化的消息通知。
 - Call.State和PhoneConstants.State之间的状态转换
-  - ![image-20220704111920200](Android Telephone.assets/image-20220704111920200.png)
+  - ![image-20220704111920200](assets/image-20220704111920200.png)
   - Call.State 共有九个状态，可对应PhoneConstants.State的三个状态。
   - 除去非IDLE 和INCOMING这两个状态，Call State剩余的七个状态将对应PhoneConstants.State的OFFHOOK状态。
   - PhoneConstants.State.RINGING 可理解为特殊的OFFHOOK状态。
@@ -1121,7 +1121,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ### GsmCdmaCall和GsmCdmaConnection的关系
 
-- ![image-20220704105827293](Android Telephone.assets/image-20220704105827293.png)
+- ![image-20220704105827293](assets/image-20220704105827293.png)
   - GsmCdmaConnection 作为基石，保存了通话连接的基本信息，多个GsmCdmaConnection对象组合成一路通话;GsmCdmaCall作为框架，主要管理mState当前通话状态和mConnections列表，一路通话中有多个通话连接。
   - 二者都在同一个包: com. andrid.iteteal.telephony。
   - GsmCdmaCall 类的mConnections属性可以保存多个GsmCdmaConnection对象;而GsmCdmaConnection对象的mParent属性，则是它对应的唯一GsmCdmaCall对象。
@@ -1164,7 +1164,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 - attach、detach 和update方法更新GsmCdmaCall对象时，仅在GsmCdmaConnection类中有相关方法的调用，意味着RIL上报的DriverCall 对象发生变化后，首先通过创建或更新GsmCdmaConnection对象来同步调用GsmCdmaCall 对象的更新方法，从而更新GsmCdmaCall对象的mState和mConnections。
 
 - Telephony Voice Call语音通话模型分析过程中，有三种与Call相关的State：Call.State、DriverCall.State、PhoneConstants.State
-  - ![image-20220704114152270](Android Telephone.assets/image-20220704114152270.png)
+  - ![image-20220704114152270](assets/image-20220704114152270.png)
     - Call.State和DriverCall.State 的状态一一对应，但Call.State 多出IDLE、 DISCONNECTED和DISCONNECTING三种状态; 
     - PhoneConstants.State与DrivrCall.State 没有直接的转换关系，需要通过Call.State进行中转。
 
@@ -1208,7 +1208,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ## 区分Connection
 
-- ![image-20220704143855712](Android Telephone.assets/image-20220704143855712.png)
+- ![image-20220704143855712](assets/image-20220704143855712.png)
   - 两个Connection抽象类对应的代码分别在frameworks/base/telecomm 和frameworks/opt/telephony代码库中
   - android.telecom.Connection的子类位于在TeleService代码库中，有TelephonyConnection抽象类，GsmConnection 和CdmaConnection作为TelephonyConnection抽象类的子类。
   - com.android.internal.telephony.Connection的子类代码在frameworks/opt/telephony代码库中，仅有一个子类com.android.internal.telephony.GsmCdmaConnection。
@@ -1238,7 +1238,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
   - setInCallAdapter
     - 创建Phone对象并初始化其Listener消息处理框架。
 - InCallPresenter与CalList的关系
-  - ![image-20220704151830385](Android Telephone.assets/image-20220704151830385.png)
+  - ![image-20220704151830385](assets/image-20220704151830385.png)
     - InCallPresenter类实现了CallList.Listener接口，在Dialer应用进程中,可通过getinstance方法获取单例的InCallPresenter对象。
     - InCallPresenter 是InCallUi通话界面的消息中转和处理中心。
     - 在Dialer应用进程中，可通过Call ist.getInstance方法获取单例的CallList对象，其mListeners列表中有一个CallList.Listener对象是InCallPresenter, 在InCallPresenter的setUp方法中的调用逻辑为mCall ist. addl istener(this)。随后，InCallService的onBind 响应逻辑将启动InCallActivity 界面
@@ -1249,8 +1249,8 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 - 创建以 android.telecom.Phone和android.telecom.Call 对象为中心的Call.Callback 消息处理框架。加载 InCallFragment和InCallButtonGridFragment 界面，同时创建CallCardPresenter、CallButtonPresenter与InCallPresenter的消息处理框架。
 
 - Telecom系统应用处理拨号请求或是接收到来电消息时，都会创建对象com.android.server.telecom.Call,并将其转换为ParcelableCall 对象,再通过调用lInCallService服务的addCall方法，传递ParcelableCall对象给InCallUi通话界面以进行通话信息的展示;
-- ![image-20220704153526671](Android Telephone.assets/image-20220704153526671.png)
-- ![image-20220704153712144](Android Telephone.assets/image-20220704153712144.png)
+- ![image-20220704153526671](assets/image-20220704153526671.png)
+- ![image-20220704153712144](assets/image-20220704153712144.png)
 
 #### InCallUi通话界面
 
@@ -1346,7 +1346,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ### 关键属性
 
-- ![image-20220707095821439](Android Telephone.assets/image-20220707095821439.png)
+- ![image-20220707095821439](assets/image-20220707095821439.png)
   - ServiceStateTracker与GsmCdmaCallITracker类相同，它继承于Handler类，其实质是自定义Handler消息处理类。
   - ServiceState、Cellnfo 和SignalStrength三个类均实现了Parcelable 接口，对象都可以跨进程传递
   - ServiceStateTracker和GsmCdmaPhone对象相互引用。
@@ -1411,7 +1411,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 
 ##### 被动接受
 
-- ![image-20220707150744396](Android Telephone.assets/image-20220707150744396.png)
+- ![image-20220707150744396](assets/image-20220707150744396.png)
   - ServiceStateTracker 对象的Handler消息处理机制，它会被动接收RILJ 对象上报的七种类型的Handler消息,其中EVENT_ RADIO_STATE_CHANGED和EVENT_NETWORK_ STATE_CHANGED类型的Handler消息将触发modemTriggeredPollState调用
   - ServiceStateTracker与GsmCdmaPhone对象具有相同的生命周期。TeleService 系统应用加载Telephony业务模型的过程中,同步完成ServiceStateTracker对象的创建
   - 在handlePollStateResult方法中，对四种不同类型Handler 消息区分处理，主要是更新mNewSS对象对应的属性，最后调用pollStateDone方法完成收尾工作。pollStateDone方法主要是通过mNewSS更新mSS对象，若网络服务信息发生了改变，将发起对应的消息通知。
@@ -1471,7 +1471,7 @@ CallNotifier的showIncomingCall()方法更新通知栏和加载来电界面。�
 - PhoneStateL istener类为了实现跨进程的Callback调用，有一个IPhoneStatel istenerStub类型的内部类对象callback, 继承了IPhoneStateListener .Stub，其中的方法逻辑是通过Handler消息转化为对主类方法的调用，从而实现了模板方法。
 - ITelephonyRegistry系统服务运行在system_server 进程空间，加载Android系统的过程中将同步加入到系统服务中，服务名为"telephony.registry"。
 
-- ![image-20220707175956156](Android Telephone.assets/image-20220707175956156.png)
+- ![image-20220707175956156](assets/image-20220707175956156.png)
   - TelephonyRegistry实现了ITelephonyRegistry, 提供的系统服务主要有两个类型: listen/listenForSubscriber对mRecords进行管理( Callback列表)。
   - TelephonyRegistry的内部类Record将记录Callback信息。
   - GsmCdmaPhone对象触发PhoneState变化消息Callback调用。在创建GsmCdmaPhone对象时，将同步创建DefaultPhoneNotifier 对象并保存mNotifier引用。在DefaultPhoneNotifier的构造方法中，将获取ITelephonyRegistry服务的Binder对象。因此，GsmCdmaPhone 通过mNotifier发起PhoneState变化消息通知，通过第一次的跨进程调用( com.android.phone→system_ server )触发TelephonyRegistry提供的消息通知接口。
